@@ -1,0 +1,4 @@
+#!/bin/bash
+
+git config --global --add safe.directory /workspaces/HDML-Utilities
+git config core.sshCommand "$(which ssh) -i ~/.ssh/hdml.github"
