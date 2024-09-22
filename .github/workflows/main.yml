@@ -104,4 +104,6 @@ jobs:
         with:
           push: never
           cacheFrom: hdio/hdml-schemas-dev
-          runCmd: npm run build --workspaces
+          runCmd: |
+            npm ci
+            npm run build --workspaces
