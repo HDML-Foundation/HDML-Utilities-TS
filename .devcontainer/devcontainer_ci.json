@@ -1,0 +1,7 @@
+{
+  "name": "HDML Utilities Environment",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": ".."
+  }
+}
