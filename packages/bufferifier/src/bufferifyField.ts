@@ -28,11 +28,49 @@ import {
 } from "@hdml/schemas";
 
 /**
- * Converts a TypeScript IField object to a FlatBuffers Field
+ * Converts a TypeScript `IField` object into a FlatBuffers `Field`
  * structure.
- * @param builder The FlatBuffers builder instance.
- * @param field The TypeScript Field object to convert.
- * @returns The FlatBuffers offset for the Field structure.
+ *
+ * This function takes a TypeScript `IField` object, serializes it
+ * into a FlatBuffers `Field` structure, and returns the offset of the
+ * serialized structure within the FlatBuffers `Builder`. This allows
+ * the `Field` structure to be efficiently transferred or stored in
+ * binary format.
+ *
+ * The `IField` object consists of various properties such as name,
+ * description, origin, and clause, as well as a type that determines
+ * the structure's underlying data type (e.g., Decimal, Date, Time).
+ * Each data type may have its own set of parameters, which are also
+ * serialized into corresponding FlatBuffers parameter structures.
+ *
+ * @param builder - The FlatBuffers `Builder` instance used to
+ *                  construct the binary buffer.
+ * @param field - The TypeScript `IField` object to convert. This
+ *                object contains metadata such as `name`,
+ *                `description`, `origin`, `clause`, `type`,
+ *                `aggregation`, and `order`. The `type` property is
+ *                crucial, as it defines the underlying data type and
+ *                associated parameters.
+ *
+ * @returns The offset of the serialized `Field` structure within the
+ *          FlatBuffers `Builder`. This offset can be used to
+ *          reference the serialized data within the final FlatBuffer.
+ *
+ * @example
+ * ```typescript
+ * const builder = new flatbuffers.Builder();
+ * const field: IField = {
+ *   name: "age",
+ *   type: {
+ *     type: DataType.Int32,
+ *     options: { nullable: false }
+ *   },
+ *   aggregation: AggregationType.None,
+ *   order: OrderType.Ascending
+ * };
+ * const offset = bufferifyField(builder, field);
+ * builder.finish(offset);
+ * ```
  */
 export function bufferifyField(
   builder: Builder,
@@ -50,55 +88,51 @@ export function bufferifyField(
     : 0;
 
   let typeOffset = 0;
+  let optionsOffset = 0;
   if (field.type) {
     switch (field.type.type) {
       case DataType.Decimal:
-        const decimalParams: IDecimalParameters = field.type.options;
-        const decimalOptionsOffset = createDecimalOptions(
+        optionsOffset = createDecimalOptions(
           builder,
-          decimalParams,
+          field.type.options,
         );
         typeOffset = createFieldType(
           builder,
           field.type.type,
-          decimalOptionsOffset,
+          optionsOffset,
         );
         break;
       case DataType.Date:
-        const dateParams: IDateParameters = field.type.options;
-        const dateOptionsOffset = createDateOptions(
+        optionsOffset = createDateOptions(
           builder,
-          dateParams,
+          field.type.options,
         );
         typeOffset = createFieldType(
           builder,
           field.type.type,
-          dateOptionsOffset,
+          optionsOffset,
         );
         break;
       case DataType.Time:
-        const timeParams: ITimeParameters = field.type.options;
-        const timeOptionsOffset = createTimeOptions(
+        optionsOffset = createTimeOptions(
           builder,
-          timeParams,
+          field.type.options,
         );
         typeOffset = createFieldType(
           builder,
           field.type.type,
-          timeOptionsOffset,
+          optionsOffset,
         );
         break;
       case DataType.Timestamp:
-        const timestampParameters: ITimestampParameters =
-          field.type.options;
-        const timestampOptionsOffset = createTimestampOptions(
+        optionsOffset = createTimestampOptions(
           builder,
-          timestampParameters,
+          field.type.options,
         );
         typeOffset = createFieldType(
           builder,
           field.type.type,
-          timestampOptionsOffset,
+          optionsOffset,
         );
         break;
       case DataType.Binary:
@@ -110,15 +144,14 @@ export function bufferifyField(
       case DataType.Int8:
       case DataType.Utf8:
       default:
-        const commonParams: ICommonParameters = field.type.options;
-        const commonOptionsOffset = createCommonParameters(
+        optionsOffset = createCommonParameters(
           builder,
-          commonParams,
+          field.type.options,
         );
         typeOffset = createFieldType(
           builder,
           field.type.type,
-          commonOptionsOffset,
+          optionsOffset,
         );
         break;
     }
