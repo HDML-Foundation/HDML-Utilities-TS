@@ -1,8 +1,7 @@
 {
   "name": "@hdml/utilities",
   "workspaces": [
-    "packages/hasher",
-    "packages/parser"
+    "packages/bufferifier"
   ],
   "private": true,
   "devDependencies": {
@@ -32,15 +31,16 @@
     "typescript": "^4.9.5"
   },
   "scripts": {
+    "clear": "npm run clear --workspaces",
     "docs": "npm run docs --workspaces",
     "lint": "npm run lint --workspaces",
     "test": "npm run test --workspaces",
+    "build": "npm run build --workspaces",
     "compile_cjs": "npm run compile_cjs --workspaces",
     "compile_esm": "npm run compile_esm --workspaces",
     "compile_dts": "npm run compile_dts --workspaces",
     "compile_bin": "npm run compile_bin --workspaces",
-    "compile_all": "npm run compile_all --workspaces",
     "compile_tst": "npm run compile_tst --workspaces",
-    "build": "lerna run build --workspaces"
+    "compile_all": "npm run compile_all --workspaces"
   }
 }

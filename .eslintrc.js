@@ -26,6 +26,7 @@ module.exports = {
     "@typescript-eslint/explicit-module-boundary-types": "error",
     "@typescript-eslint/no-explicit-any": "error",
     "@typescript-eslint/unbound-method": "off",
+    "no-case-declarations": "warn",
     "max-len": ["error", {
       "code": 70
     }],
