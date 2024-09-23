@@ -5,3 +5,5 @@
  */
 
 export { bufferifyField } from "./bufferifyField";
+export { bufferifyModel } from "./bufferifyModel";
+export { bufferifyFilterClause } from "./bufferifyFilterClause";
