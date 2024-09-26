@@ -207,10 +207,30 @@ function add32(a: number, b: number): number {
   return (a + b) & 0xffffffff;
 }
 
-/** Generate the MD5 hash of a string.
- * @param s - The input string to hash.
- * @returns The MD5 hash as a hexadecimal string.
+/**
+ * Generates an MD5 hash of the given input string.
+ *
+ * The MD5 (Message-Digest Algorithm 5) is a widely-used hash function
+ * that produces a 128-bit (16-byte) hash value, typically represented
+ * as a 32-character hexadecimal number. Although MD5 is no longer
+ * considered secure for cryptographic purposes due to
+ * vulnerabilities, it remains useful for checksums and non-critical
+ * hash-related tasks.
+ *
+ * @param input - The input string to hash.
+ * @returns A 32-character hexadecimal string representing the MD5
+ * hash.
+ *
+ * @example
+ * ```TypeScript
+ * import { md5 } from "./md5";
+ *
+ * const hash = md5("hello");
+ * console.log(hash); // Output: 5d41402abc4b2a76b9719d911017c592
+ * ```
+ *
+ * @see https://en.wikipedia.org/wiki/MD5 for more details about MD5.
  */
-export function md5(s: string): string {
-  return hex(md51(s));
+export function md5(input: string): string {
+  return hex(md51(input));
 }

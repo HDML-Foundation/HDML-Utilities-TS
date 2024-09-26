@@ -5,3 +5,5 @@
  */
 
 export { md5 } from "./md5";
+export { uid } from "./uid";
+export { hashify } from "./hashify";
