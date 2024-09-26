@@ -2,7 +2,7 @@
 
 This module is part of the **HDML-Utilities** monorepo and provides a set of utility functions to serialize key components of the **HDML** (HyperData Markup Language) document model into FlatBuffers binary format. It enables efficient data transmission and storage of complex hierarchical structures such as fields, models, filter clauses, frames, connections, and full HDML documents.
 
-## Exports
+## Features
 
 This package provides the following `bufferify` functions:
 
