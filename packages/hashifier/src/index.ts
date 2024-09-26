@@ -7,3 +7,5 @@
 export { md5 } from "./md5";
 export { uid } from "./uid";
 export { hashify } from "./hashify";
+export { hashtime } from "./hashtime";
+export { parsetime } from "./parsetime";
