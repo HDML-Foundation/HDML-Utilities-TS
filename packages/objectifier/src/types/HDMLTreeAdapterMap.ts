@@ -4,42 +4,26 @@
  * @license Apache-2.0
  */
 
-import { html, Token } from "parse5";
+import { Token } from "parse5";
+import { IHDDM } from "@hdml/schemas";
 import { TreeAdapterTypeMap } from "./TreeAdapterTypeMap";
 
-type DOCUMENT_MODE = html.DOCUMENT_MODE;
-type NS = html.NS;
 type Attribute = Token.Attribute;
-type Location = Token.Location;
-type ElementLocation = Token.ElementLocation;
 
 export interface Document {
   /** The name of the node. */
   nodeName: "#document";
-  /**
-   * Document mode.
-   *
-   * @see {@link DOCUMENT_MODE} */
-  mode: DOCUMENT_MODE;
   /** The node's children. */
   childNodes: ChildNode[];
-  /**
-   * Comment source code location info. Available if location info is
-   * enabled.
-   */
-  sourceCodeLocation?: Location | null;
 }
 
-export interface DocumentFragment {
+export interface HDMLDocument {
   /** The name of the node. */
-  nodeName: "#document-fragment";
+  nodeName: "#hdml-document";
   /** The node's children. */
   childNodes: ChildNode[];
-  /**
-   * Comment source code location info. Available if location info is
-   * enabled.
-   */
-  sourceCodeLocation?: Location | null;
+  /** HDML document children. */
+  hddm: IHDDM;
 }
 
 export interface Element {
@@ -49,82 +33,27 @@ export interface Element {
   tagName: string;
   /** List of element attributes. */
   attrs: Attribute[];
-  /** Element namespace. */
-  namespaceURI: NS;
-  /**
-   * Element source code location info, with attributes. Available if
-   * location info is enabled.
-   */
-  sourceCodeLocation?: ElementLocation | null;
   /** Parent node. */
   parentNode: ParentNode | null;
   /** The node's children. */
   childNodes: ChildNode[];
-}
-
-export interface CommentNode {
-  /** The name of the node. */
-  nodeName: "#comment";
-  /** Parent node. */
-  parentNode: ParentNode | null;
-  /** Comment text. */
-  data: string;
-  /**
-   * Comment source code location info. Available if location info is
-   * enabled.
-   */
-  sourceCodeLocation?: Location | null;
-}
-
-export interface TextNode {
-  nodeName: "#text";
-  /** Parent node. */
-  parentNode: ParentNode | null;
-  /** Text content. */
-  value: string;
-  /**
-   * Comment source code location info. Available if location info is
-   * enabled.
-   */
-  sourceCodeLocation?: Location | null;
+  /** HDML element flag. */
+  isHdml: boolean;
+  /** HDDM parent node. */
+  hddmParentNode: ParentNode | null;
+  /** The HDDM node's children. */
+  hddmChildNodes: ChildNode[];
 }
 
 export interface Template extends Element {
   nodeName: "template";
   tagName: "template";
   /** The content of a `template` tag. */
-  content: DocumentFragment;
+  content: HDMLDocument;
 }
 
-export interface DocumentType {
-  /** The name of the node. */
-  nodeName: "#documentType";
-  /** Parent node. */
-  parentNode: ParentNode | null;
-  /** Document type name. */
-  name: string;
-  /** Document type public identifier. */
-  publicId: string;
-  /** Document type system identifier. */
-  systemId: string;
-  /**
-   * Comment source code location info. Available if location info is
-   * enabled.
-   */
-  sourceCodeLocation?: Location | null;
-}
-
-export type ParentNode =
-  | Document
-  | DocumentFragment
-  | Element
-  | Template;
-export type ChildNode =
-  | Element
-  | Template
-  | CommentNode
-  | TextNode
-  | DocumentType;
+export type ParentNode = Document | HDMLDocument | Element | Template;
+export type ChildNode = null | Element | Template;
 export type Node = ParentNode | ChildNode;
 
 export type HDMLTreeAdapterMap = TreeAdapterTypeMap<
@@ -132,10 +61,10 @@ export type HDMLTreeAdapterMap = TreeAdapterTypeMap<
   ParentNode,
   ChildNode,
   Document,
-  DocumentFragment,
+  HDMLDocument,
   Element,
-  CommentNode,
-  TextNode,
+  null,
+  null,
   Template,
-  DocumentType
+  null
 >;

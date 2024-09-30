@@ -5,14 +5,15 @@
  */
 
 import { IHDDM } from "@hdml/schemas";
-import { parse } from "parse5";
+import { parseFragment } from "parse5";
 import { hdmlTreeAdapter } from "./hdmlTreeAdapter";
+import { HDMLTreeAdapterMap } from "./types/HDMLTreeAdapterMap";
 
 export function objectify(content: string): IHDDM {
-  return parse(content, {
-    // onParseError?: null | ParserErrorHandler;
+  return parseFragment<HDMLTreeAdapterMap>(content, {
+    onParseError: console.error,
     scriptingEnabled: false,
     sourceCodeLocationInfo: false,
     treeAdapter: hdmlTreeAdapter,
-  }) as unknown as IHDDM;
+  }).hddm;
 }
