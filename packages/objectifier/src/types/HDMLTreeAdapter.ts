@@ -5,7 +5,8 @@
  */
 
 import { html, Token } from "parse5";
-import { TreeAdapterTypeMap } from "./TreeAdapterTypeMap";
+import { HDMLTreeAdapterMap, ChildNode } from "./HDMLTreeAdapterMap";
+import { HDML_TAG_NAMES } from "../enums/HDML_TAG_NAMES";
 
 type DOCUMENT_MODE = html.DOCUMENT_MODE;
 type NS = html.NS;
@@ -22,9 +23,15 @@ type ElementLocation = Token.ElementLocation;
  *
  * @see Have a look at the default tree adapter for reference.
  */
-export interface TreeAdapter<
-  T extends TreeAdapterTypeMap = TreeAdapterTypeMap,
+export interface HDMLTreeAdapter<
+  T extends HDMLTreeAdapterMap = HDMLTreeAdapterMap,
 > {
+  appendHddmChild(element: ChildNode): void;
+  getHdmlParentTag(
+    element: ChildNode,
+    hdmlTag: HDML_TAG_NAMES,
+  ): null | ChildNode;
+
   /**
    * Copies attributes to the given element. Only attributes that are
    * not yet present in the element are copied.

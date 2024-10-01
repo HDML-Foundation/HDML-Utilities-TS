@@ -4,9 +4,9 @@
  * @license Apache-2.0
  */
 
-import { Token } from "parse5";
+import { Token, TreeAdapterTypeMap } from "parse5";
 import { IHDDM } from "@hdml/schemas";
-import { TreeAdapterTypeMap } from "./TreeAdapterTypeMap";
+import { HDDMData } from "./HDDMData";
 
 type Attribute = Token.Attribute;
 
@@ -22,8 +22,6 @@ export interface HDMLDocument {
   nodeName: "#hdml-document";
   /** The node's children. */
   childNodes: ChildNode[];
-  /** HDML document children. */
-  hddm: IHDDM;
 }
 
 export interface Element {
@@ -33,16 +31,16 @@ export interface Element {
   tagName: string;
   /** List of element attributes. */
   attrs: Attribute[];
+  /** Root node. */
+  rootNode: ChildNode | null;
   /** Parent node. */
   parentNode: ParentNode | null;
   /** The node's children. */
   childNodes: ChildNode[];
-  /** HDML element flag. */
-  isHdml: boolean;
+  /** HyperData Document Model. */
+  hddm: null | IHDDM;
   /** HDDM parent node. */
-  hddmParentNode: ParentNode | null;
-  /** The HDDM node's children. */
-  hddmChildNodes: ChildNode[];
+  hddmData: null | HDDMData;
 }
 
 export interface Template extends Element {

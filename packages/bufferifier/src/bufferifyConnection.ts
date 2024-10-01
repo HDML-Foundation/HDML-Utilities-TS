@@ -106,6 +106,7 @@ function bufferifyConnectionOptions(
     case ConnectorTypes.Druid:
     case ConnectorTypes.Ignite:
     case ConnectorTypes.Redshift:
+    case ConnectorTypes.MariaDB:
       return bufferifyJDBCParameters(builder, options.parameters);
     case ConnectorTypes.BigQuery:
       return bufferifyBigQueryParameters(builder, options.parameters);

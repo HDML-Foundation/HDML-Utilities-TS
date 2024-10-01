@@ -6,14 +6,22 @@
 
 import { IHDDM } from "@hdml/schemas";
 import { parseFragment } from "parse5";
-import { hdmlTreeAdapter } from "./hdmlTreeAdapter";
+import { hdmlTreeAdapter } from "./hdmlTreeAdapter/hdmlTreeAdapter";
 import { HDMLTreeAdapterMap } from "./types/HDMLTreeAdapterMap";
 
 export function objectify(content: string): IHDDM {
-  return parseFragment<HDMLTreeAdapterMap>(content, {
+  const fragment = parseFragment<HDMLTreeAdapterMap>(content, {
     onParseError: console.error,
     scriptingEnabled: false,
     sourceCodeLocationInfo: false,
     treeAdapter: hdmlTreeAdapter,
-  }).hddm;
+  });
+  const node = hdmlTreeAdapter.getFirstChild(fragment);
+  const hddm = node?.rootNode?.hddm || {
+    includes: [],
+    connections: [],
+    models: [],
+    frames: [],
+  };
+  return hddm;
 }
