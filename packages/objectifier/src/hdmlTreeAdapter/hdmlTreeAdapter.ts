@@ -25,14 +25,7 @@ import { getModelData } from "./getModelData";
 import { getFrameData } from "./getFrameData";
 
 export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
-  //Node construction
-  createDocument(): Document {
-    return {
-      nodeName: "#document",
-      childNodes: [],
-    };
-  },
-
+  // HDML related methods
   createDocumentFragment(): HDMLDocument {
     return {
       nodeName: "#hdml-document",
@@ -74,15 +67,6 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
     };
   },
 
-  createCommentNode(): null {
-    return null;
-  },
-
-  createTextNode(): null {
-    return null;
-  },
-
-  //Tree mutation
   appendChild(parentNode: ParentNode, newNode: ChildNode): void {
     if (
       parentNode &&
@@ -174,81 +158,6 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
     }
   },
 
-  insertBefore(
-    parentNode: ParentNode,
-    newNode: ChildNode,
-    referenceNode: ChildNode,
-  ): void {
-    const insertionIdx = parentNode.childNodes.indexOf(referenceNode);
-
-    if (newNode) {
-      parentNode.childNodes.splice(insertionIdx, 0, newNode);
-      newNode.parentNode = parentNode;
-    }
-  },
-
-  setTemplateContent(
-    templateElement: Template,
-    contentElement: HDMLDocument,
-  ): void {
-    templateElement.content = contentElement;
-  },
-
-  getTemplateContent(templateElement: Template): HDMLDocument {
-    return templateElement.content;
-  },
-
-  setDocumentType(): void {},
-
-  setDocumentMode(): void {},
-
-  getDocumentMode(): html.DOCUMENT_MODE {
-    return html.DOCUMENT_MODE.NO_QUIRKS;
-  },
-
-  detachNode(node: ChildNode): void {
-    if (node && node.parentNode) {
-      const idx = node.parentNode.childNodes.indexOf(node);
-      node.parentNode.childNodes.splice(idx, 1);
-      node.parentNode = null;
-    }
-  },
-
-  insertText(): void {},
-
-  insertTextBefore(): void {},
-
-  adoptAttributes(
-    recipient: Element,
-    attrs: Token.Attribute[],
-  ): void {
-    const recipientAttrsMap = new Set(
-      recipient.attrs.map((attr) => attr.name),
-    );
-    for (let j = 0; j < attrs.length; j++) {
-      if (!recipientAttrsMap.has(attrs[j].name)) {
-        recipient.attrs.push(attrs[j]);
-      }
-    }
-  },
-
-  //Tree traversing
-  getFirstChild(node: ParentNode): null | ChildNode {
-    return node.childNodes[0];
-  },
-
-  getChildNodes(node: ParentNode): ChildNode[] {
-    return node.childNodes;
-  },
-
-  getParentNode(node: ChildNode): null | ParentNode {
-    return node ? node.parentNode : null;
-  },
-
-  getAttrList(element: Element): Token.Attribute[] {
-    return element.attrs;
-  },
-
   getHdmlParentTag(
     element: ChildNode,
     hdmlTag: HDML_TAG_NAMES,
@@ -268,7 +177,26 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
     }
   },
 
-  //Node data
+  detachNode(node: ChildNode): void {
+    if (node && node.parentNode) {
+      const idx = node.parentNode.childNodes.indexOf(node);
+      node.parentNode.childNodes.splice(idx, 1);
+      node.parentNode = null;
+    }
+  },
+
+  getFirstChild(node: ParentNode): null | ChildNode {
+    return node.childNodes[0];
+  },
+
+  getChildNodes(node: ParentNode): ChildNode[] {
+    return node.childNodes;
+  },
+
+  getParentNode(node: ChildNode): null | ParentNode {
+    return node ? node.parentNode : null;
+  },
+
   getTagName(element: Element): string {
     return element.tagName;
   },
@@ -276,6 +204,67 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
   getNamespaceURI(): html.NS {
     return html.NS.HTML;
   },
+
+  isElementNode(node: Node): node is Element {
+    return Object.prototype.hasOwnProperty.call(node, "tagName");
+  },
+
+  setNodeSourceCodeLocation(): void {},
+
+  getNodeSourceCodeLocation():
+    | Token.ElementLocation
+    | undefined
+    | null {
+    return null;
+  },
+
+  // Default methods (not in use for the HDML parsing)
+
+  //Node construction
+  createDocument(): Document {
+    return {
+      nodeName: "#document",
+      childNodes: [],
+    };
+  },
+
+  createCommentNode(): null {
+    return null;
+  },
+
+  createTextNode(): null {
+    return null;
+  },
+
+  //Tree mutation
+  insertBefore(): void {},
+
+  setTemplateContent(): void {},
+
+  getTemplateContent(templateElement: Template): HDMLDocument {
+    return templateElement.content;
+  },
+
+  setDocumentType(): void {},
+
+  setDocumentMode(): void {},
+
+  getDocumentMode(): html.DOCUMENT_MODE {
+    return html.DOCUMENT_MODE.NO_QUIRKS;
+  },
+
+  insertText(): void {},
+
+  insertTextBefore(): void {},
+
+  adoptAttributes(): void {},
+
+  //Tree traversing
+  getAttrList(element: Element): Token.Attribute[] {
+    return element.attrs;
+  },
+
+  //Node data
 
   getTextNodeContent(): string {
     return "";
@@ -308,20 +297,6 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
 
   isDocumentTypeNode(node: Node): node is null {
     return !node;
-  },
-
-  isElementNode(node: Node): node is Element {
-    return Object.prototype.hasOwnProperty.call(node, "tagName");
-  },
-
-  // Source code location
-  setNodeSourceCodeLocation(): void {},
-
-  getNodeSourceCodeLocation():
-    | Token.ElementLocation
-    | undefined
-    | null {
-    return null;
   },
 
   updateNodeSourceCodeLocation(): void {},

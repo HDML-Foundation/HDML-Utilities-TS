@@ -13,7 +13,7 @@ export function objectify(content: string): IHDDM {
   const fragment = parseFragment<HDMLTreeAdapterMap>(content, {
     onParseError: console.error,
     scriptingEnabled: false,
-    sourceCodeLocationInfo: false,
+    // sourceCodeLocationInfo: false,
     treeAdapter: hdmlTreeAdapter,
   });
   const node = hdmlTreeAdapter.getFirstChild(fragment);
