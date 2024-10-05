@@ -22,6 +22,7 @@ import { HDDMData } from "../types/HDDMData";
 import { getIncludeData } from "./getIncludeData";
 import { getConnectionData } from "./getConnectionData";
 import { getModelData } from "./getModelData";
+import { getFrameData } from "./getFrameData";
 
 export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
   //Node construction
@@ -57,6 +58,7 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
         hddmData = getModelData(attrs);
         break;
       case HDML_TAG_NAMES.FRAME:
+        hddmData = getFrameData(attrs);
         break;
     }
 
