@@ -8,7 +8,17 @@
 
 import { objectify } from "./objectify";
 
-const model = `
+const html = `
+  <!doctype html>
+  <html itemtype="http://schema.org/WebPage" lang="en-US">
+    <head></head>
+    <body>
+      Content
+    </body>
+  </html>
+`;
+
+const hdml = `
   <!-- Includes -->
   <div>
     <hdml-include
@@ -445,10 +455,79 @@ const model = `
 `;
 
 describe("The `objectify` function", () => {
-  it("shoud be executable", () => {
-    const doc1 = objectify(model);
-    const doc2 = objectify(model);
-    expect(typeof doc1).toBe("object");
-    expect(typeof doc2).toBe("object");
+  it("sould return empty HDDM object if no HDML tags in HTML document", () => {
+    const hddm = objectify(html);
+
+    expect(hddm).toEqual({
+      includes: [],
+      connections: [],
+      models: [],
+      frames: [],
+    });
+  });
+
+  it("shoud parse HDML string", () => {
+    const hddm = objectify(hdml);
+    expect(hddm).toEqual({
+      includes: [
+        {
+          path: "/my/path/include.hdml",
+        },
+      ],
+      connections: [
+        {
+          name: "db1",
+          meta: "",
+          options: {
+            connector: 0,
+            parameters: {
+              host: "example.com",
+              user: "user",
+              password: "pass",
+              ssl: false,
+            },
+          },
+        },
+        {
+          name: "db2",
+          meta: "MongoDB test connection",
+          options: {
+            connector: 12,
+            parameters: {
+              host: "example.com",
+              port: 27017,
+              user: "user",
+              password: "pass",
+              ssl: true,
+              schema: "data_schema",
+            },
+          },
+        },
+      ],
+      models: [
+        {
+          name: "maang_stock",
+          tables: [],
+          joins: [],
+        },
+      ],
+      frames: [
+        {
+          name: "maang_stock",
+          source: "/maang/model.html?hdml-model=maang_stock",
+          offset: 0,
+          limit: 100000,
+          fields: [],
+          filter_by: {
+            type: 2,
+            filters: [],
+            children: [],
+          },
+          group_by: [],
+          sort_by: [],
+          split_by: [],
+        },
+      ],
+    });
   });
 });
