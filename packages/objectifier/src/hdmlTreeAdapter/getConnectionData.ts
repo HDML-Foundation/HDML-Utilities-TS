@@ -93,7 +93,7 @@ export function getConnectionData(
     }
   });
 
-  if (!type) {
+  if (!type || !name) {
     return null;
   }
 
@@ -248,7 +248,7 @@ export function getConnectionData(
 }
 
 function getJdbcConnection(
-  name: null | string,
+  name: string,
   meta: null | string,
   type:
     | ConnectorTypes.Postgres
@@ -265,13 +265,7 @@ function getJdbcConnection(
   password: null | string,
   ssl: null | string,
 ): null | IConnection {
-  if (
-    !name ||
-    typeof type !== "number" ||
-    !host ||
-    !user ||
-    !password
-  ) {
+  if (!host || !user || !password) {
     return null;
   }
   return {
@@ -290,13 +284,13 @@ function getJdbcConnection(
 }
 
 function getBigQueryConnection(
-  name: null | string,
+  name: string,
   meta: null | string,
   type: ConnectorTypes.BigQuery,
   projectId: null | string,
   credentialsKey: null | string,
 ): null | IConnection {
-  if (!name || !type || !projectId || !credentialsKey) {
+  if (!projectId || !credentialsKey) {
     return null;
   }
 
@@ -314,13 +308,13 @@ function getBigQueryConnection(
 }
 
 function getGoogleSheetsConnection(
-  name: null | string,
+  name: string,
   meta: null | string,
   type: ConnectorTypes.GoogleSheets,
   credentialsKey: null | string,
   sheetId: null | string,
 ): null | IConnection {
-  if (!name || !type || !sheetId || !credentialsKey) {
+  if (!sheetId || !credentialsKey) {
     return null;
   }
 
@@ -338,7 +332,7 @@ function getGoogleSheetsConnection(
 }
 
 function getElasticSearchConnection(
-  name: null | string,
+  name: string,
   meta: null | string,
   type: ConnectorTypes.ElasticSearch,
   host: null | string,
@@ -350,7 +344,7 @@ function getElasticSearchConnection(
   accessKey: null | string,
   secretKey: null | string,
 ): null | IConnection {
-  if (!name || !type || !host) {
+  if (!host) {
     return null;
   }
 
@@ -381,7 +375,7 @@ function getElasticSearchConnection(
 }
 
 function getMongoDbConnection(
-  name: null | string,
+  name: string,
   meta: null | string,
   type: ConnectorTypes.MongoDB,
   host: null | string,
@@ -391,7 +385,7 @@ function getMongoDbConnection(
   ssl: null | string,
   schema: null | string,
 ): null | IConnection {
-  if (!name || !type || !host || !user || !password || !schema) {
+  if (!host || !user || !password || !schema) {
     return null;
   }
 
@@ -413,7 +407,7 @@ function getMongoDbConnection(
 }
 
 function getSnowflakeConnection(
-  name: null | string,
+  name: string,
   meta: null | string,
   type: ConnectorTypes.Snowflake,
   account: null | string,
@@ -424,8 +418,6 @@ function getSnowflakeConnection(
   warehouse: null | string,
 ): null | IConnection {
   if (
-    !name ||
-    !type ||
     !account ||
     !user ||
     !password ||
