@@ -6,6 +6,7 @@
 
 /* eslint-disable max-len */
 
+import { performance } from "perf_hooks";
 import { objectify } from "./objectify";
 
 const html = `
@@ -529,5 +530,33 @@ describe("The `objectify` function", () => {
         },
       ],
     });
+  });
+
+  it("should parse provided HDML string in less then 10ms (100 iter)", () => {
+    const measures: number[] = [];
+
+    for (let i = 0; i < 100; i++) {
+      const start = performance.now();
+      objectify(hdml);
+      measures.push(performance.now() - start);
+    }
+    const avg =
+      measures.reduce((a, b) => a + b, 0) / measures.length || 0;
+
+    expect(avg).toBeLessThan(10);
+  });
+
+  it("should parse provided HDML string in less then 5ms (1000 iter)", () => {
+    const measures: number[] = [];
+
+    for (let i = 0; i < 1000; i++) {
+      const start = performance.now();
+      objectify(hdml);
+      measures.push(performance.now() - start);
+    }
+    const avg =
+      measures.reduce((a, b) => a + b, 0) / measures.length || 0;
+
+    expect(avg).toBeLessThan(5);
   });
 });
