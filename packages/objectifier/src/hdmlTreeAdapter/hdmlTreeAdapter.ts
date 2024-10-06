@@ -22,6 +22,7 @@ import { HDDMData } from "../types/HDDMData";
 import { getIncludeData } from "./getIncludeData";
 import { getConnectionData } from "./getConnectionData";
 import { getModelData } from "./getModelData";
+import { getTableData } from "./getTableData";
 import { getFrameData } from "./getFrameData";
 
 export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
@@ -49,6 +50,9 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
         break;
       case HDML_TAG_NAMES.MODEL:
         hddmData = getModelData(attrs);
+        break;
+      case HDML_TAG_NAMES.TABLE:
+        hddmData = getTableData(attrs);
         break;
       case HDML_TAG_NAMES.FRAME:
         hddmData = getFrameData(attrs);
@@ -135,6 +139,12 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
           );
         }
         break;
+      case HDML_TAG_NAMES.TABLE:
+        //   const model = hdmlTreeAdapter.hddmLookupParentTag(
+        //     element,
+        //     HDML_TAG_NAMES.MODEL,
+        //   );
+        break;
       case HDML_TAG_NAMES.FRAME:
         if (
           element.hddmData &&
@@ -149,12 +159,6 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
           );
         }
         break;
-      // case HDML_TAG_NAMES.TABLE:
-      //   const model = hdmlTreeAdapter.hddmLookupParentTag(
-      //     element,
-      //     HDML_TAG_NAMES.MODEL,
-      //   );
-      //   break;
     }
   },
 

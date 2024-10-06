@@ -63,7 +63,7 @@ const hdml = `
       <hdml-table
         name="amazon"
         type="table"
-        source="\`tenant_postgres\`.\`public\`.\`amazon_stock\`">
+        identifier="\`tenant_postgres\`.\`public\`.\`amazon_stock\`">
 
         <hdml-field
           name="open">
@@ -98,7 +98,7 @@ const hdml = `
       <hdml-table
         name="apple"
         type="table"
-        source="\`tenant_postgres\`.\`public\`.\`apple_stock\`">
+        identifier="\`tenant_postgres\`.\`public\`.\`apple_stock\`">
 
         <hdml-field
           name="open">
@@ -133,7 +133,7 @@ const hdml = `
       <hdml-table
         name="google"
         type="table"
-        source="\`tenant_postgres\`.\`public\`.\`google_stock\`">
+        identifier="\`tenant_postgres\`.\`public\`.\`google_stock\`">
 
         <hdml-field
           name="open">
@@ -168,7 +168,7 @@ const hdml = `
       <hdml-table
         name="microsoft"
         type="table"
-        source="\`tenant_postgres\`.\`public\`.\`microsoft_stock\`">
+        identifier="\`tenant_postgres\`.\`public\`.\`microsoft_stock\`">
 
         <hdml-field
           name="open">
@@ -203,7 +203,7 @@ const hdml = `
       <hdml-table
         name="netflix"
         type="table"
-        source="\`tenant_postgres\`.\`public\`.\`netflix_stock\`">
+        identifier="\`tenant_postgres\`.\`public\`.\`netflix_stock\`">
 
         <hdml-field
           name="open">
