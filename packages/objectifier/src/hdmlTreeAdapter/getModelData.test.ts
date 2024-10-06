@@ -8,7 +8,7 @@
 
 import { IModel } from "@hdml/schemas";
 import { getModelData } from "./getModelData";
-import { MODEL_ATTRS_LIST } from "../enums/MODEL_ATTR_LIST";
+import { MODEL_ATTRS_LIST } from "../enums/MODEL_ATTRS_LIST";
 
 describe("The `getModelData` function", () => {
   it("shoud return `null` if empty attributes passed", () => {

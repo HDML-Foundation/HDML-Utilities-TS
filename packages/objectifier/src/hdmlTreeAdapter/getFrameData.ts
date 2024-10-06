@@ -6,7 +6,7 @@
 
 import { IFrame, FilterOperator } from "@hdml/schemas";
 import { Token } from "parse5";
-import { FRAME_ATTRS_LIST } from "../enums/FRAME_ATTR_LIST";
+import { FRAME_ATTRS_LIST } from "../enums/FRAME_ATTRS_LIST";
 
 export function getFrameData(
   attrs: Token.Attribute[],

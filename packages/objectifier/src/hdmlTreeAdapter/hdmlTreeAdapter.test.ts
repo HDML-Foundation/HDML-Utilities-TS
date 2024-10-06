@@ -8,8 +8,37 @@
 
 import { html } from "parse5";
 import { hdmlTreeAdapter } from "./hdmlTreeAdapter";
+import { HDML_TAG_NAMES } from "../enums/HDML_TAG_NAMES";
 
 describe("The `hdmlTreeAdapter` object", () => {
+  it("`getHdmlParentTag` method should return `null` if `element` is equal to null", () => {
+    expect(
+      hdmlTreeAdapter.getHdmlParentTag(null, HDML_TAG_NAMES.MODEL),
+    ).toBeNull();
+  });
+
+  it("`getHdmlParentTag` method should return `null` if specified parent wasn't found", () => {
+    expect(
+      hdmlTreeAdapter.getHdmlParentTag(
+        {
+          nodeName: "nodeName",
+          tagName: "tagName",
+          attrs: [],
+          rootNode: null,
+          parentNode: null,
+          hddm: null,
+          hddmData: null,
+          childNodes: [],
+        },
+        HDML_TAG_NAMES.MODEL,
+      ),
+    ).toBeNull();
+  });
+
+  it("`getParentNode` method should return `null` if `element` is equal to null", () => {
+    expect(hdmlTreeAdapter.getParentNode(null)).toBeNull();
+  });
+
   it("should return valid result if `createDocument` method was called", () => {
     expect(hdmlTreeAdapter.createDocument()).toEqual({
       nodeName: "#document",

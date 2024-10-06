@@ -56,7 +56,7 @@ describe("The `getTableData` function", () => {
     expect(data).toBeNull();
   });
 
-  it.only("shoud return `ITable` object if correct attributes are passed", () => {
+  it("shoud return `ITable` object if correct attributes are passed", () => {
     // table type
     let data = getTableData([
       { name: TABLE_ATTRS_LIST.NAME, value: "name" },

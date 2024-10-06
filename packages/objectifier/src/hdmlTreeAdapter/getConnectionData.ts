@@ -7,6 +7,7 @@
 import { IConnection, ConnectorTypes } from "@hdml/schemas";
 import { Token } from "parse5";
 import { CONN_ATTRS_LIST } from "../enums/CONN_ATTRS_LIST";
+import { CONN_TYPE_VALUES } from "../enums/CONN_TYPE_VALUES";
 
 export function getConnectionData(
   attrs: Token.Attribute[],
@@ -97,8 +98,8 @@ export function getConnectionData(
     return null;
   }
 
-  switch (type) {
-    case "postgres":
+  switch (type as CONN_TYPE_VALUES) {
+    case CONN_TYPE_VALUES.POSTGRES:
       return getJdbcConnection(
         name,
         meta,
@@ -108,7 +109,7 @@ export function getConnectionData(
         password,
         ssl,
       );
-    case "mysql":
+    case CONN_TYPE_VALUES.MYSQL:
       return getJdbcConnection(
         name,
         meta,
@@ -118,7 +119,7 @@ export function getConnectionData(
         password,
         ssl,
       );
-    case "mssql":
+    case CONN_TYPE_VALUES.MSSQL:
       return getJdbcConnection(
         name,
         meta,
@@ -128,7 +129,7 @@ export function getConnectionData(
         password,
         ssl,
       );
-    case "mariadb":
+    case CONN_TYPE_VALUES.MARIADB:
       return getJdbcConnection(
         name,
         meta,
@@ -138,7 +139,7 @@ export function getConnectionData(
         password,
         ssl,
       );
-    case "oracle":
+    case CONN_TYPE_VALUES.ORACLE:
       return getJdbcConnection(
         name,
         meta,
@@ -148,7 +149,7 @@ export function getConnectionData(
         password,
         ssl,
       );
-    case "clickhouse":
+    case CONN_TYPE_VALUES.CLICKHOUSE:
       return getJdbcConnection(
         name,
         meta,
@@ -158,7 +159,7 @@ export function getConnectionData(
         password,
         ssl,
       );
-    case "druid":
+    case CONN_TYPE_VALUES.DRUID:
       return getJdbcConnection(
         name,
         meta,
@@ -168,7 +169,7 @@ export function getConnectionData(
         password,
         ssl,
       );
-    case "ignite":
+    case CONN_TYPE_VALUES.IGNITE:
       return getJdbcConnection(
         name,
         meta,
@@ -178,7 +179,7 @@ export function getConnectionData(
         password,
         ssl,
       );
-    case "redshift":
+    case CONN_TYPE_VALUES.REDSHIFT:
       return getJdbcConnection(
         name,
         meta,
@@ -188,7 +189,7 @@ export function getConnectionData(
         password,
         ssl,
       );
-    case "bigquery":
+    case CONN_TYPE_VALUES.BIGQUERY:
       return getBigQueryConnection(
         name,
         meta,
@@ -196,7 +197,7 @@ export function getConnectionData(
         projectId,
         credentialsKey,
       );
-    case "googlesheets":
+    case CONN_TYPE_VALUES.GOOGLESHEETS:
       return getGoogleSheetsConnection(
         name,
         meta,
@@ -204,7 +205,7 @@ export function getConnectionData(
         credentialsKey,
         sheetId,
       );
-    case "elasticsearch":
+    case CONN_TYPE_VALUES.ELASTICSEARCH:
       return getElasticSearchConnection(
         name,
         meta,
@@ -218,7 +219,7 @@ export function getConnectionData(
         accessKey,
         secretKey,
       );
-    case "mongodb":
+    case CONN_TYPE_VALUES.MONGODB:
       return getMongoDbConnection(
         name,
         meta,
@@ -230,7 +231,7 @@ export function getConnectionData(
         ssl,
         schema,
       );
-    case "snowflake":
+    case CONN_TYPE_VALUES.SNOWFLAKE:
       return getSnowflakeConnection(
         name,
         meta,

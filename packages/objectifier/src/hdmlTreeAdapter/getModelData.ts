@@ -6,7 +6,7 @@
 
 import { IModel } from "@hdml/schemas";
 import { Token } from "parse5";
-import { MODEL_ATTRS_LIST } from "../enums/MODEL_ATTR_LIST";
+import { MODEL_ATTRS_LIST } from "../enums/MODEL_ATTRS_LIST";
 
 export function getModelData(
   attrs: Token.Attribute[],

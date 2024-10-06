@@ -7,6 +7,7 @@
 import { ITable, TableType } from "@hdml/schemas";
 import { Token } from "parse5";
 import { TABLE_ATTRS_LIST } from "../enums/TABLE_ATTRS_LIST";
+import { TABLE_TYPE_VALUES } from "../enums/TABLE_TYPE_VALUES";
 
 export function getTableData(
   attrs: Token.Attribute[],
@@ -21,10 +22,13 @@ export function getTableData(
         name = attr.value;
         break;
       case TABLE_ATTRS_LIST.TYPE:
-        if (attr.value === "table") {
-          type = TableType.Table;
-        } else if (attr.value === "query") {
-          type = TableType.Query;
+        switch (attr.value as TABLE_TYPE_VALUES) {
+          case TABLE_TYPE_VALUES.TABLE:
+            type = TableType.Table;
+            break;
+          case TABLE_TYPE_VALUES.QUERY:
+            type = TableType.Query;
+            break;
         }
         break;
       case TABLE_ATTRS_LIST.IDENTIFIER:
