@@ -508,7 +508,40 @@ describe("The `objectify` function", () => {
       models: [
         {
           name: "maang_stock",
-          tables: [],
+          tables: [
+            {
+              name: "amazon",
+              type: 0,
+              identifier: "`tenant_postgres`.`public`.`amazon_stock`",
+              fields: [],
+            },
+            {
+              name: "apple",
+              type: 0,
+              identifier: "`tenant_postgres`.`public`.`apple_stock`",
+              fields: [],
+            },
+            {
+              name: "google",
+              type: 0,
+              identifier: "`tenant_postgres`.`public`.`google_stock`",
+              fields: [],
+            },
+            {
+              name: "microsoft",
+              type: 0,
+              identifier:
+                "`tenant_postgres`.`public`.`microsoft_stock`",
+              fields: [],
+            },
+            {
+              name: "netflix",
+              type: 0,
+              identifier:
+                "`tenant_postgres`.`public`.`netflix_stock`",
+              fields: [],
+            },
+          ],
           joins: [],
         },
       ],

@@ -4,7 +4,13 @@
  * @license Apache-2.0
  */
 
-import { IConnection, IFrame, IInclude, IModel } from "@hdml/schemas";
+import {
+  IConnection,
+  IFrame,
+  IInclude,
+  IModel,
+  ITable,
+} from "@hdml/schemas";
 import { html, Token } from "parse5";
 import {
   HDMLTreeAdapterMap,
@@ -96,6 +102,8 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
   },
 
   appendHddmChild(element: ChildNode): void {
+    let parent: null | ChildNode = null;
+    let data: null | IModel = null;
     switch (element?.nodeName) {
       case HDML_TAG_NAMES.INCLUDE:
         if (
@@ -140,10 +148,14 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
         }
         break;
       case HDML_TAG_NAMES.TABLE:
-        //   const model = hdmlTreeAdapter.hddmLookupParentTag(
-        //     element,
-        //     HDML_TAG_NAMES.MODEL,
-        //   );
+        parent = hdmlTreeAdapter.getHdmlParentTag(
+          element,
+          HDML_TAG_NAMES.MODEL,
+        );
+        if (parent) {
+          data = parent.hddmData as IModel;
+          data.tables.push(element.hddmData as ITable);
+        }
         break;
       case HDML_TAG_NAMES.FRAME:
         if (
