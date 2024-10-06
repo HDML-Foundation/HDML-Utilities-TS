@@ -29,7 +29,7 @@ export interface HDMLTreeAdapter<
   appendHddmChild(element: ChildNode): void;
   getHdmlParentTag(
     element: ChildNode,
-    hdmlTag: HDML_TAG_NAMES,
+    hdmlTag: HDML_TAG_NAMES[],
   ): null | ChildNode;
 
   /**

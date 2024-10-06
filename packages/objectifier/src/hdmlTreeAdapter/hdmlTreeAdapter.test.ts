@@ -13,7 +13,7 @@ import { HDML_TAG_NAMES } from "../enums/HDML_TAG_NAMES";
 describe("The `hdmlTreeAdapter` object", () => {
   it("`getHdmlParentTag` method should return `null` if `element` is equal to null", () => {
     expect(
-      hdmlTreeAdapter.getHdmlParentTag(null, HDML_TAG_NAMES.MODEL),
+      hdmlTreeAdapter.getHdmlParentTag(null, [HDML_TAG_NAMES.MODEL]),
     ).toBeNull();
   });
 
@@ -30,7 +30,7 @@ describe("The `hdmlTreeAdapter` object", () => {
           hddmData: null,
           childNodes: [],
         },
-        HDML_TAG_NAMES.MODEL,
+        [HDML_TAG_NAMES.MODEL],
       ),
     ).toBeNull();
   });

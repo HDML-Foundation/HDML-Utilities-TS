@@ -6,6 +6,7 @@
 
 import {
   IConnection,
+  IField,
   IFrame,
   IInclude,
   IModel,
@@ -30,6 +31,7 @@ import { getConnectionData } from "./getConnectionData";
 import { getModelData } from "./getModelData";
 import { getTableData } from "./getTableData";
 import { getFrameData } from "./getFrameData";
+import { getFieldData } from "./getFieldData";
 
 export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
   // HDML related methods
@@ -62,6 +64,9 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
         break;
       case HDML_TAG_NAMES.FRAME:
         hddmData = getFrameData(attrs);
+        break;
+      case HDML_TAG_NAMES.FIELD:
+        hddmData = getFieldData(attrs);
         break;
     }
 
@@ -103,7 +108,7 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
 
   appendHddmChild(element: ChildNode): void {
     let parent: null | ChildNode = null;
-    let data: null | IModel = null;
+    let data: null | IModel | { fields: IField[] } = null;
     switch (element?.nodeName) {
       case HDML_TAG_NAMES.INCLUDE:
         if (
@@ -148,13 +153,22 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
         }
         break;
       case HDML_TAG_NAMES.TABLE:
-        parent = hdmlTreeAdapter.getHdmlParentTag(
-          element,
+        parent = hdmlTreeAdapter.getHdmlParentTag(element, [
           HDML_TAG_NAMES.MODEL,
-        );
+        ]);
         if (parent) {
           data = parent.hddmData as IModel;
           data.tables.push(element.hddmData as ITable);
+        }
+        break;
+      case HDML_TAG_NAMES.FIELD:
+        parent = hdmlTreeAdapter.getHdmlParentTag(element, [
+          HDML_TAG_NAMES.TABLE,
+          HDML_TAG_NAMES.FRAME,
+        ]);
+        if (parent) {
+          data = parent.hddmData as { fields: IField[] };
+          data.fields.push(element.hddmData as IField);
         }
         break;
       case HDML_TAG_NAMES.FRAME:
@@ -176,14 +190,14 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
 
   getHdmlParentTag(
     element: ChildNode,
-    hdmlTag: HDML_TAG_NAMES,
+    hdmlTag: HDML_TAG_NAMES[],
   ): null | ChildNode {
     if (!element) {
       return null;
     } else {
       let parent = element.parentNode;
       while (parent && hdmlTreeAdapter.isElementNode(parent)) {
-        if (parent.nodeName === <string>hdmlTag) {
+        if (~hdmlTag.indexOf(parent.nodeName as HDML_TAG_NAMES)) {
           return parent;
         } else {
           parent = parent.parentNode;
