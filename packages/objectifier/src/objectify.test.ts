@@ -827,7 +827,48 @@ describe("The `objectify` function", () => {
               ],
             },
           ],
-          joins: [],
+          joins: [
+            {
+              type: 5,
+              left: "amazon",
+              right: "apple",
+              clause: {
+                type: 2,
+                filters: [],
+                children: [],
+              },
+            },
+            {
+              type: 5,
+              left: "google",
+              right: "apple",
+              clause: {
+                type: 2,
+                filters: [],
+                children: [],
+              },
+            },
+            {
+              type: 5,
+              left: "google",
+              right: "microsoft",
+              clause: {
+                type: 2,
+                filters: [],
+                children: [],
+              },
+            },
+            {
+              type: 5,
+              left: "microsoft",
+              right: "netflix",
+              clause: {
+                type: 2,
+                filters: [],
+                children: [],
+              },
+            },
+          ],
         },
       ],
       frames: [
