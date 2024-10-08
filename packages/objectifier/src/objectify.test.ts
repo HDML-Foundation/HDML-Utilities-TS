@@ -20,7 +20,7 @@ const html = `
 `;
 
 const hdml = `
-  <!-- Includes -->
+  <!-- Includes ----------------------------------------------------->
   <div>
     <hdml-include
       path="/my/path/include.hdml">
@@ -31,7 +31,7 @@ const hdml = `
     </hdml-include>
   </div>
 
-  <!-- Connections -->
+  <!-- Connections -------------------------------------------------->
   <div>
     <hdml-connection
       name="db1"
@@ -53,7 +53,7 @@ const hdml = `
     </hdml-connection>
   </div>
 
-  <!-- HDML Data model -->
+  <!-- HDML Data model ---------------------------------------------->
   <hdml-model
     name="maang_stock">
 
@@ -238,36 +238,79 @@ const hdml = `
     <!-- Joins -->
     <div>
       <!-- Join amazon with apple -->
-      <hdml-join type="full-outer" left="amazon" right="apple">
-        <hdml-connective operator="and">
-          <hdml-filter type="keys" left="date" right="date"></hdml-filter>
+      <hdml-join
+        type="full-outer"
+        left="amazon"
+        right="apple">
+        <hdml-connective
+          operator="and">
+          <hdml-filter
+            type="keys"
+            left="date"
+            right="date">
+          </hdml-filter>
+          <hdml-connective
+            operator="or">
+            <hdml-filter
+              type="expr"
+              clause="1 = 1">
+            </hdml-filter>
+            <hdml-filter
+              type="expr"
+              clause="2 = 2">
+            </hdml-filter>
+          </hdml-connective>
         </hdml-connective>
       </hdml-join>
 
       <!-- Join google with apple -->
-      <hdml-join type="full-outer" left="google" right="apple">
-        <hdml-connective operator="and">
-          <hdml-filter type="keys" left="date" right="date"></hdml-filter>
+      <hdml-join
+        type="full-outer"
+        left="google"
+        right="apple">
+        <hdml-connective
+          operator="and">
+          <hdml-filter
+            type="keys"
+            left="date"
+            right="date">
+          </hdml-filter>
         </hdml-connective>
       </hdml-join>
 
       <!-- Join google with microsoft -->
-      <hdml-join type="full-outer" left="google" right="microsoft">
-        <hdml-connective operator="and">
-          <hdml-filter type="keys" left="date" right="date"></hdml-filter>
+      <hdml-join
+        type="full-outer"
+        left="google"
+        right="microsoft">
+        <hdml-connective
+          operator="and">
+          <hdml-filter
+            type="keys"
+            left="date"
+            right="date">
+          </hdml-filter>
         </hdml-connective>
       </hdml-join>
 
       <!-- Join microsoft with netflix -->
-      <hdml-join type="full-outer" left="microsoft" right="netflix">
-        <hdml-connective operator="and">
-          <hdml-filter type="keys" left="date" right="date"></hdml-filter>
+      <hdml-join
+        type="full-outer"
+        left="microsoft"
+        right="netflix">
+        <hdml-connective
+          operator="and">
+          <hdml-filter
+            type="keys"
+            left="date"
+            right="date">
+          </hdml-filter>
         </hdml-connective>
       </hdml-join>
     </div>
   </hdml-model>
 
-  <!-- HDML Data frame -->
+  <!-- HDML Data frame ---------------------------------------------->
   <hdml-frame
     name="maang_stock"
     source="/maang/model.html?hdml-model=maang_stock">
@@ -451,6 +494,23 @@ const hdml = `
       name="netflix_volume"
       origin="netflix_volume">
     </hdml-field>
+
+    <!-- Filters -->
+    <hdml-filter-by>
+      <hdml-connective
+         operator="or">
+         <hdml-filter
+            type="named"
+            name="equal"
+            field="year"
+            value="2021">
+         </hdml-filter>
+         <hdml-filter
+            type="expr"
+            clause="\`maang_stock\`.\`year\` = 2021">
+         </hdml-filter>
+      </hdml-connective>
+    </hdml-filter-by>
 
   </hdml-frame>
 `;
@@ -833,9 +893,15 @@ describe("The `objectify` function", () => {
               left: "amazon",
               right: "apple",
               clause: {
-                type: 2,
+                type: 1,
                 filters: [],
-                children: [],
+                children: [
+                  {
+                    type: 0,
+                    filters: [],
+                    children: [],
+                  },
+                ],
               },
             },
             {
@@ -843,7 +909,7 @@ describe("The `objectify` function", () => {
               left: "google",
               right: "apple",
               clause: {
-                type: 2,
+                type: 1,
                 filters: [],
                 children: [],
               },
@@ -853,7 +919,7 @@ describe("The `objectify` function", () => {
               left: "google",
               right: "microsoft",
               clause: {
-                type: 2,
+                type: 1,
                 filters: [],
                 children: [],
               },
@@ -863,7 +929,7 @@ describe("The `objectify` function", () => {
               left: "microsoft",
               right: "netflix",
               clause: {
-                type: 2,
+                type: 1,
                 filters: [],
                 children: [],
               },
@@ -1147,7 +1213,7 @@ describe("The `objectify` function", () => {
             },
           ],
           filter_by: {
-            type: 2,
+            type: 0,
             filters: [],
             children: [],
           },

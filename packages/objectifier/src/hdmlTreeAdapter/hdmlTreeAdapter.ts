@@ -12,6 +12,7 @@ import {
   IJoin,
   IModel,
   ITable,
+  IFilterClause,
 } from "@hdml/schemas";
 import { html, Token } from "parse5";
 import {
@@ -34,6 +35,7 @@ import { getTableData } from "./getTableData";
 import { getFrameData } from "./getFrameData";
 import { getFieldData } from "./getFieldData";
 import { getJoinData } from "./getJoinData";
+import { getConnectiveData } from "./getConnectiveData";
 
 export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
   // HDML related methods
@@ -74,10 +76,10 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
         hddmData = getJoinData(attrs);
         break;
       case HDML_TAG_NAMES.FILTER_BY:
-        //
+        // no data
         break;
       case HDML_TAG_NAMES.CONNECTIVE:
-        //
+        hddmData = getConnectiveData(attrs);
         break;
       case HDML_TAG_NAMES.FILTER:
         //
@@ -131,7 +133,13 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
 
   appendHddmChild(element: ChildNode): void {
     let parent: null | ChildNode = null;
-    let data: null | IModel | { fields: IField[] } = null;
+    let data:
+      | null
+      | IModel
+      | ITable
+      | IFrame
+      | IJoin
+      | IFilterClause = null;
     switch (element?.nodeName) {
       case HDML_TAG_NAMES.INCLUDE:
         if (
@@ -207,7 +215,7 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
             HDML_TAG_NAMES.FRAME,
           ]);
           if (parent) {
-            data = parent.hddmData as { fields: IField[] };
+            data = parent.hddmData as ITable | IFrame;
             data.fields.push(element.hddmData as IField);
           }
         }
@@ -224,10 +232,30 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
         }
         break;
       case HDML_TAG_NAMES.FILTER_BY:
-        //
+        // no data
         break;
       case HDML_TAG_NAMES.CONNECTIVE:
-        //
+        parent = hdmlTreeAdapter.getHdmlParentTag(element, [
+          HDML_TAG_NAMES.JOIN,
+          HDML_TAG_NAMES.FRAME,
+          HDML_TAG_NAMES.CONNECTIVE,
+        ]);
+        if (parent) {
+          switch (parent.nodeName as HDML_TAG_NAMES) {
+            case HDML_TAG_NAMES.JOIN:
+              data = parent.hddmData as IJoin;
+              data.clause = element.hddmData as IFilterClause;
+              break;
+            case HDML_TAG_NAMES.FRAME:
+              data = parent.hddmData as IFrame;
+              data.filter_by = element.hddmData as IFilterClause;
+              break;
+            case HDML_TAG_NAMES.CONNECTIVE:
+              data = parent.hddmData as IFilterClause;
+              data.children.push(element.hddmData as IFilterClause);
+              break;
+          }
+        }
         break;
       case HDML_TAG_NAMES.FILTER:
         //
