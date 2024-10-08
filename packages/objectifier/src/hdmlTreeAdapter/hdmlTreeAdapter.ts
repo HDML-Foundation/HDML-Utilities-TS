@@ -36,6 +36,7 @@ import { getFrameData } from "./getFrameData";
 import { getFieldData } from "./getFieldData";
 import { getJoinData } from "./getJoinData";
 import { getConnectiveData } from "./getConnectiveData";
+import { getFilterData } from "./getFilterData";
 
 export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
   // HDML related methods
@@ -82,7 +83,7 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
         hddmData = getConnectiveData(attrs);
         break;
       case HDML_TAG_NAMES.FILTER:
-        //
+        hddmData = getFilterData(attrs);
         break;
       case HDML_TAG_NAMES.GROUP_BY:
         //

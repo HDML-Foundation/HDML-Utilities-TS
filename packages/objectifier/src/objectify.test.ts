@@ -509,7 +509,7 @@ const hdml = `
             type="named"
             name="equals"
             field="year"
-            value="2021">
+            values="2021">
           </hdml-filter>
         </hdml-connective>
         <hdml-connective
