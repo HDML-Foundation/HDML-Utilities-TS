@@ -498,17 +498,31 @@ const hdml = `
     <!-- Filters -->
     <hdml-filter-by>
       <hdml-connective
-         operator="or">
-         <hdml-filter
+        operator="or">
+        <hdml-connective
+          operator="and">
+          <hdml-filter
+            type="expr"
+            clause="1 = 1">
+          </hdml-filter>
+          <hdml-filter
             type="named"
-            name="equal"
+            name="equals"
             field="year"
             value="2021">
-         </hdml-filter>
-         <hdml-filter
+          </hdml-filter>
+        </hdml-connective>
+        <hdml-connective
+          operator="and">
+          <hdml-filter
+            type="expr"
+            clause="1 = 1">
+          </hdml-filter>
+          <hdml-filter
             type="expr"
             clause="\`maang_stock\`.\`year\` = 2021">
-         </hdml-filter>
+          </hdml-filter>
+        </hdml-connective>
       </hdml-connective>
     </hdml-filter-by>
 
@@ -1215,7 +1229,18 @@ describe("The `objectify` function", () => {
           filter_by: {
             type: 0,
             filters: [],
-            children: [],
+            children: [
+              {
+                type: 1,
+                filters: [],
+                children: [],
+              },
+              {
+                type: 1,
+                filters: [],
+                children: [],
+              },
+            ],
           },
           group_by: [],
           sort_by: [],
