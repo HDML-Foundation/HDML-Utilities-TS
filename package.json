@@ -2,7 +2,8 @@
   "name": "@hdml/utilities",
   "workspaces": [
     "packages/bufferifier",
-    "packages/hashifier"
+    "packages/hashifier",
+    "packages/objectifier"
   ],
   "private": true,
   "devDependencies": {

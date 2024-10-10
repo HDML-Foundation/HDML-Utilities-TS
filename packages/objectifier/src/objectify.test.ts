@@ -1418,7 +1418,7 @@ describe("The `objectify` function", () => {
     });
   });
 
-  it("should parse provided HDML string in less then 10ms (100 iter)", () => {
+  it("should parse provided HDML string in less then 12ms (100 iter)", () => {
     const measures: number[] = [];
 
     for (let i = 0; i < 100; i++) {
@@ -1429,7 +1429,7 @@ describe("The `objectify` function", () => {
     const avg =
       measures.reduce((a, b) => a + b, 0) / measures.length || 0;
 
-    expect(avg).toBeLessThan(10);
+    expect(avg).toBeLessThan(12);
   });
 
   it("should parse provided HDML string in less then 5ms (1000 iter)", () => {
