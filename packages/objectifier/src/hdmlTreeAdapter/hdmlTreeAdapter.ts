@@ -13,6 +13,7 @@ import {
   IModel,
   ITable,
   IFilterClause,
+  IFilter,
 } from "@hdml/schemas";
 import { html, Token } from "parse5";
 import {
@@ -259,7 +260,15 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
         }
         break;
       case HDML_TAG_NAMES.FILTER:
-        //
+        if (element.hddmData) {
+          parent = hdmlTreeAdapter.getHdmlParentTag(element, [
+            HDML_TAG_NAMES.CONNECTIVE,
+          ]);
+          if (parent) {
+            data = parent.hddmData as IFilterClause;
+            data.filters.push(element.hddmData as IFilter);
+          }
+        }
         break;
       case HDML_TAG_NAMES.GROUP_BY:
         //

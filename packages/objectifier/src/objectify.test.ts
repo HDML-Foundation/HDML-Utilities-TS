@@ -908,11 +908,32 @@ describe("The `objectify` function", () => {
               right: "apple",
               clause: {
                 type: 1,
-                filters: [],
+                filters: [
+                  {
+                    type: 1,
+                    options: {
+                      left: "date",
+                      right: "date",
+                    },
+                  },
+                ],
                 children: [
                   {
                     type: 0,
-                    filters: [],
+                    filters: [
+                      {
+                        type: 0,
+                        options: {
+                          clause: "1 = 1",
+                        },
+                      },
+                      {
+                        type: 0,
+                        options: {
+                          clause: "2 = 2",
+                        },
+                      },
+                    ],
                     children: [],
                   },
                 ],
@@ -924,7 +945,15 @@ describe("The `objectify` function", () => {
               right: "apple",
               clause: {
                 type: 1,
-                filters: [],
+                filters: [
+                  {
+                    type: 1,
+                    options: {
+                      left: "date",
+                      right: "date",
+                    },
+                  },
+                ],
                 children: [],
               },
             },
@@ -934,7 +963,15 @@ describe("The `objectify` function", () => {
               right: "microsoft",
               clause: {
                 type: 1,
-                filters: [],
+                filters: [
+                  {
+                    type: 1,
+                    options: {
+                      left: "date",
+                      right: "date",
+                    },
+                  },
+                ],
                 children: [],
               },
             },
@@ -944,7 +981,15 @@ describe("The `objectify` function", () => {
               right: "netflix",
               clause: {
                 type: 1,
-                filters: [],
+                filters: [
+                  {
+                    type: 1,
+                    options: {
+                      left: "date",
+                      right: "date",
+                    },
+                  },
+                ],
                 children: [],
               },
             },
@@ -1232,12 +1277,40 @@ describe("The `objectify` function", () => {
             children: [
               {
                 type: 1,
-                filters: [],
+                filters: [
+                  {
+                    type: 0,
+                    options: {
+                      clause: "1 = 1",
+                    },
+                  },
+                  {
+                    type: 2,
+                    options: {
+                      name: 0,
+                      field: "year",
+                      values: ["2021"],
+                    },
+                  },
+                ],
                 children: [],
               },
               {
                 type: 1,
-                filters: [],
+                filters: [
+                  {
+                    type: 0,
+                    options: {
+                      clause: "1 = 1",
+                    },
+                  },
+                  {
+                    type: 0,
+                    options: {
+                      clause: "`maang_stock`.`year` = 2021",
+                    },
+                  },
+                ],
                 children: [],
               },
             ],
