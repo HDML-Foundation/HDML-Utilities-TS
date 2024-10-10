@@ -526,6 +526,42 @@ const hdml = `
       </hdml-connective>
     </hdml-filter-by>
 
+    <!-- Group By -->
+    <hdml-group-by>
+      <hdml-field
+        name="year">
+      </hdml-field>
+      <hdml-field
+        name="month">
+      </hdml-field>
+      <hdml-field
+        name="day">
+      </hdml-field>
+    </hdml-group-by>
+
+    <!-- Sort By -->
+    <hdml-sort-by>
+      <hdml-field
+        name="year"
+        order="asc">
+      </hdml-field>
+      <hdml-field
+        name="month"
+        order="asc">
+      </hdml-field>
+      <hdml-field
+        name="day"
+        order="desc">
+      </hdml-field>
+    </hdml-sort-by>
+
+    <!-- Split By -->
+    <hdml-split-by>
+      <hdml-field
+        name="year">
+      </hdml-field>
+    </hdml-split-by>
+
   </hdml-frame>
 `;
 
@@ -1315,9 +1351,68 @@ describe("The `objectify` function", () => {
               },
             ],
           },
-          group_by: [],
-          sort_by: [],
-          split_by: [],
+          group_by: [
+            {
+              name: "year",
+              description: undefined,
+              origin: undefined,
+              clause: undefined,
+              aggregation: 0,
+              order: 0,
+            },
+            {
+              name: "month",
+              description: undefined,
+              origin: undefined,
+              clause: undefined,
+              aggregation: 0,
+              order: 0,
+            },
+            {
+              name: "day",
+              description: undefined,
+              origin: undefined,
+              clause: undefined,
+              aggregation: 0,
+              order: 0,
+            },
+          ],
+          sort_by: [
+            {
+              name: "year",
+              description: undefined,
+              origin: undefined,
+              clause: undefined,
+              aggregation: 0,
+              order: 1,
+            },
+            {
+              name: "month",
+              description: undefined,
+              origin: undefined,
+              clause: undefined,
+              aggregation: 0,
+              order: 1,
+            },
+            {
+              name: "day",
+              description: undefined,
+              origin: undefined,
+              clause: undefined,
+              aggregation: 0,
+              order: 2,
+            },
+          ],
+          split_by: [
+            {
+              name: "year",
+              description: undefined,
+              origin: undefined,
+              clause: undefined,
+              aggregation: 0,
+              order: 0,
+            },
+          ],
         },
       ],
     });

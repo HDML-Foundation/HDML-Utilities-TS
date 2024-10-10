@@ -71,14 +71,8 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
       case HDML_TAG_NAMES.FRAME:
         hddmData = getFrameData(attrs);
         break;
-      case HDML_TAG_NAMES.FIELD:
-        hddmData = getFieldData(attrs);
-        break;
       case HDML_TAG_NAMES.JOIN:
         hddmData = getJoinData(attrs);
-        break;
-      case HDML_TAG_NAMES.FILTER_BY:
-        // no data
         break;
       case HDML_TAG_NAMES.CONNECTIVE:
         hddmData = getConnectiveData(attrs);
@@ -86,14 +80,13 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
       case HDML_TAG_NAMES.FILTER:
         hddmData = getFilterData(attrs);
         break;
+      case HDML_TAG_NAMES.FIELD:
+        hddmData = getFieldData(attrs);
+        break;
+      case HDML_TAG_NAMES.FILTER_BY:
       case HDML_TAG_NAMES.GROUP_BY:
-        //
-        break;
       case HDML_TAG_NAMES.SORT_BY:
-        //
-        break;
       case HDML_TAG_NAMES.SPLIT_BY:
-        //
         break;
     }
 
@@ -210,18 +203,6 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
           );
         }
         break;
-      case HDML_TAG_NAMES.FIELD:
-        if (element.hddmData) {
-          parent = hdmlTreeAdapter.getHdmlParentTag(element, [
-            HDML_TAG_NAMES.TABLE,
-            HDML_TAG_NAMES.FRAME,
-          ]);
-          if (parent) {
-            data = parent.hddmData as ITable | IFrame;
-            data.fields.push(element.hddmData as IField);
-          }
-        }
-        break;
       case HDML_TAG_NAMES.JOIN:
         if (element.hddmData) {
           parent = hdmlTreeAdapter.getHdmlParentTag(element, [
@@ -232,9 +213,6 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
             data.joins.push(element.hddmData as IJoin);
           }
         }
-        break;
-      case HDML_TAG_NAMES.FILTER_BY:
-        // no data
         break;
       case HDML_TAG_NAMES.CONNECTIVE:
         parent = hdmlTreeAdapter.getHdmlParentTag(element, [
@@ -270,14 +248,54 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
           }
         }
         break;
-      case HDML_TAG_NAMES.GROUP_BY:
-        //
+      case HDML_TAG_NAMES.FIELD:
+        if (element.hddmData) {
+          parent = hdmlTreeAdapter.getHdmlParentTag(element, [
+            HDML_TAG_NAMES.TABLE,
+            HDML_TAG_NAMES.FRAME,
+            HDML_TAG_NAMES.GROUP_BY,
+            HDML_TAG_NAMES.SORT_BY,
+            HDML_TAG_NAMES.SPLIT_BY,
+          ]);
+          if (parent) {
+            switch (parent.nodeName as HDML_TAG_NAMES) {
+              case HDML_TAG_NAMES.TABLE:
+              case HDML_TAG_NAMES.FRAME:
+                data = parent.hddmData as ITable | IFrame;
+                data.fields.push(element.hddmData as IField);
+                break;
+              case HDML_TAG_NAMES.GROUP_BY:
+                parent = hdmlTreeAdapter.getHdmlParentTag(element, [
+                  HDML_TAG_NAMES.FRAME,
+                ]);
+                if (parent) {
+                  data = parent.hddmData as IFrame;
+                  data.group_by.push(element.hddmData as IField);
+                }
+                break;
+              case HDML_TAG_NAMES.SORT_BY:
+                parent = hdmlTreeAdapter.getHdmlParentTag(element, [
+                  HDML_TAG_NAMES.FRAME,
+                ]);
+                if (parent) {
+                  data = parent.hddmData as IFrame;
+                  data.sort_by.push(element.hddmData as IField);
+                }
+                break;
+              case HDML_TAG_NAMES.SPLIT_BY:
+                parent = hdmlTreeAdapter.getHdmlParentTag(element, [
+                  HDML_TAG_NAMES.FRAME,
+                ]);
+                if (parent) {
+                  data = parent.hddmData as IFrame;
+                  data.split_by.push(element.hddmData as IField);
+                }
+                break;
+            }
+          }
+        }
         break;
-      case HDML_TAG_NAMES.SORT_BY:
-        //
-        break;
-      case HDML_TAG_NAMES.SPLIT_BY:
-        //
+      case HDML_TAG_NAMES.FILTER_BY:
         break;
     }
   },
