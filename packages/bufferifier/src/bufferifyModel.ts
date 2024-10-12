@@ -5,54 +5,47 @@
  */
 
 import { Builder } from "flatbuffers";
-import {
-  // interfaces
-  IModel,
-  ITable,
-  IJoin,
-  // structures
-  Model,
-  Table,
-  Join,
-} from "@hdml/schemas";
+import { ModelStruct, TableStruct, JoinStruct } from "@hdml/schemas";
+import { Model, Table, Join } from "@hdml/types";
 import { bufferifyField } from "./bufferifyField";
 import { bufferifyFilterClause } from "./bufferifyFilterClause";
 
 /**
- * Converts a TypeScript `IModel` object into a FlatBuffers `Model`.
+ * Converts a TypeScript `Model` object into a FlatBuffers
+ * `ModelStruct`.
  *
  * This function takes a TypeScript object representing a data model
- * (`IModel`) and serializes it into a FlatBuffers `Model` structure.
- * It maps the `IModel` properties such as the model's name, tables,
- * and joins into their respective FlatBuffers representations.
- * The function handles the necessary conversions for tables and joins
- * by invoking `bufferifyTable` and `bufferifyJoin` for each element
- * in the `tables` and `joins` arrays.
+ * (`Model`) and serializes it into a FlatBuffers `ModelStruct`
+ * structure. It maps the `Model` properties such as the model's name,
+ * tables, and joins into their respective FlatBuffers
+ * representations. The function handles the necessary conversions for
+ * tables and joins by invoking `bufferifyTable` and `bufferifyJoin`
+ * for each element in the `tables` and `joins` arrays.
  *
  * The resulting FlatBuffers structure can then be sent over the wire
  * or stored in a binary format that can be efficiently decoded by
  * other systems or applications that understand the FlatBuffers
  * format.
  *
- * @param builder - The FlatBuffers `Builder` instance used to build
- *                  the byte buffer and serialize the data.
- * @param model - The TypeScript `IModel` object representing the data
- *                model. It includes the following properties:
- *                - `name` (string): The name of the model.
- *                - `tables` (ITable[]): An array of `ITable` objects,
- *                  each representing a table in the data model.
- *                - `joins` (IJoin[]): An array of `IJoin` objects,
- *                  each representing a join operation between tables
- *                  in the data model.
+ * @param builder The FlatBuffers `Builder` instance used to build
+ * the byte buffer and serialize the data.
  *
- * @returns The offset of the serialized `Model` structure in the
- *          FlatBuffers buffer. This offset can be used to retrieve or
- *          manipulate the serialized data.
+ * @param model The TypeScript `Model` object representing the data
+ * model. It includes the following properties:
+ * - `name` (string): The name of the model.
+ * - `tables` (Table[]): An array of `Table` objects, each
+ *   representing a table in the data model.
+ * - `joins` (Join[]): An array of `Join` objects, each representing a
+ *   join operation between tables in the data model.
+ *
+ * @returns The offset of the serialized `ModelStruct` structure in
+ * the FlatBuffers buffer. This offset can be used to retrieve or
+ * manipulate the serialized data.
  *
  * @example
  * ```typescript
  * const builder = new flatbuffers.Builder(1024);
- * const model: IModel = {
+ * const model: Model = {
  *   name: "SalesModel",
  *   tables: [{...}],
  *   joins: [{...}]
@@ -64,49 +57,58 @@ import { bufferifyFilterClause } from "./bufferifyFilterClause";
  */
 export function bufferifyModel(
   builder: Builder,
-  model: IModel,
+  model: Model,
 ): number {
   const nameOffset = builder.createString(model.name);
+  const descriptionOffset = builder.createString(model.description);
   const tableOffsets = model.tables.map((table) =>
     bufferifyTable(builder, table),
   );
-  const tablesVector = Model.createTablesVector(
+  const tablesVector = ModelStruct.createTablesVector(
     builder,
     tableOffsets,
   );
   const joinOffsets = model.joins.map((join) =>
     bufferifyJoin(builder, join),
   );
-  const joinsVector = Model.createJoinsVector(builder, joinOffsets);
-  return Model.createModel(
+  const joinsVector = ModelStruct.createJoinsVector(
+    builder,
+    joinOffsets,
+  );
+  return ModelStruct.createModelStruct(
     builder,
     nameOffset,
+    descriptionOffset,
     tablesVector,
     joinsVector,
   );
 }
 
 /**
- * Converts a TypeScript `ITable` object into a FlatBuffers `Table`.
+ * Converts a TypeScript `Table` object into a FlatBuffers
+ * `TableStruct`.
  *
- * @param builder - The FlatBuffers `Builder` instance.
- * @param table - The TypeScript `ITable` object to convert.
+ * @param builder The FlatBuffers `Builder` instance.
  *
- * @returns The offset of the serialized `Table` structure.
+ * @param table The TypeScript `Table` object to convert.
+ *
+ * @returns The offset of the serialized `TableStruct` structure.
  */
-function bufferifyTable(builder: Builder, table: ITable): number {
+function bufferifyTable(builder: Builder, table: Table): number {
   const nameOffset = builder.createString(table.name);
+  const descriptionOffset = builder.createString(table.description);
   const identifierOffset = builder.createString(table.identifier);
   const fieldOffsets = table.fields.map((field) =>
     bufferifyField(builder, field),
   );
-  const fieldsVector = Table.createFieldsVector(
+  const fieldsVector = TableStruct.createFieldsVector(
     builder,
     fieldOffsets,
   );
-  return Table.createTable(
+  return TableStruct.createTableStruct(
     builder,
     nameOffset,
+    descriptionOffset,
     table.type,
     identifierOffset,
     fieldsVector,
@@ -114,21 +116,23 @@ function bufferifyTable(builder: Builder, table: ITable): number {
 }
 
 /**
- * Converts a TypeScript `IJoin` object into a FlatBuffers `Join`.
+ * Converts a TypeScript `Join` object into a FlatBuffers
+ * `JoinStruct`.
  *
- * @param builder - The FlatBuffers `Builder` instance.
- * @param join - The TypeScript `IJoin` object to convert.
+ * @param builder The FlatBuffers `Builder` instance.
  *
- * @returns The offset of the serialized `Join` structure.
+ * @param join The TypeScript `Join` object to convert.
+ *
+ * @returns The offset of the serialized `JoinStruct` structure.
  */
-function bufferifyJoin(builder: Builder, join: IJoin): number {
+function bufferifyJoin(builder: Builder, join: Join): number {
   const leftOffset = builder.createString(join.left);
   const rightOffset = builder.createString(join.right);
   const clauseOffset = bufferifyFilterClause(builder, join.clause);
-  Join.startJoin(builder);
-  Join.addType(builder, join.type);
-  Join.addLeft(builder, leftOffset);
-  Join.addRight(builder, rightOffset);
-  Join.addClause(builder, clauseOffset);
-  return Join.endJoin(builder);
+  JoinStruct.startJoinStruct(builder);
+  JoinStruct.addType(builder, join.type);
+  JoinStruct.addLeft(builder, leftOffset);
+  JoinStruct.addRight(builder, rightOffset);
+  JoinStruct.addClause(builder, clauseOffset);
+  return JoinStruct.endJoinStruct(builder);
 }

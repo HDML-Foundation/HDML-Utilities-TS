@@ -3,7 +3,8 @@
   "workspaces": [
     "packages/bufferifier",
     "packages/hashifier",
-    "packages/parser"
+    "packages/parser",
+    "packages/types"
   ],
   "private": true,
   "devDependencies": {

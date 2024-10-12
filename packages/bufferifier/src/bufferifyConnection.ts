@@ -6,34 +6,33 @@
 
 import { Builder } from "flatbuffers";
 import {
-  // enums
-  ConnectorTypes,
-  // interfaces
-  IConnection,
-  IConnectionOptions,
-  IJDBCParameters,
-  IBigQueryParameters,
-  IGoogleSheetsParameters,
-  IElasticsearchParameters,
-  IMongoDBParameters,
-  ISnowflakeParameters,
-  // structures
+  ConnectorTypesEnum,
+  ConnectionStruct,
+  JDBCParametersStruct,
+  BigQueryParametersStruct,
+  GoogleSheetsParametersStruct,
+  ElasticsearchParametersStruct,
+  MongoDBParametersStruct,
+  SnowflakeParametersStruct,
+} from "@hdml/schemas";
+import {
   Connection,
+  ConnectionOptions,
   JDBCParameters,
   BigQueryParameters,
   GoogleSheetsParameters,
   ElasticsearchParameters,
   MongoDBParameters,
   SnowflakeParameters,
-} from "@hdml/schemas";
+} from "@hdml/types";
 
 /**
- * Serializes a TypeScript `IConnection` object into its FlatBuffers
+ * Serializes a TypeScript `Connection` object into its FlatBuffers
  * representation.
  *
- * This function converts a TypeScript `IConnection` object, which
+ * This function converts a TypeScript `Connection` object, which
  * defines database or data-source connection parameters, into its
- * FlatBuffers counterpart. The `IConnection` object can represent
+ * FlatBuffers counterpart. The `Connection` object can represent
  * a variety of connection types including JDBC, BigQuery,
  * GoogleSheets, Elasticsearch, MongoDB, and Snowflake.
  *
@@ -41,11 +40,11 @@ import {
  *
  * ```typescript
  * const builder = new Builder(1024);
- * const connection: Connection = {
+ * const connection: ConnectionStruct = {
  *   name: "MyConnection",
  *   meta: "Metadata for connection",
  *   options: {
- *     connector: ConnectorTypes.MongoDB,
+ *     connector: ConnectorTypesEnum.MongoDB,
  *     parameters: {
  *       host: "localhost",
  *       port: 27017,
@@ -59,70 +58,75 @@ import {
  * const bufferOffset = bufferifyConnection(builder, connection);
  * ```
  *
- * @param builder - The FlatBuffers `Builder` instance used to
- *                  serialize data.
- * @param connection - The TypeScript `Connection` object representing
- *                     the connection configuration.
+ * @param builder The FlatBuffers `Builder` instance used to
+ * serialize data.
  *
- * @returns The offset of the serialized `Connection` structure in the
- *          FlatBuffers builder.
+ * @param connection The TypeScript `ConnectionStruct` object
+ * representing the connection configuration.
+ *
+ * @returns The offset of the serialized `ConnectionStruct` structure
+ * in the FlatBuffers builder.
  */
 export function bufferifyConnection(
   builder: Builder,
-  connection: IConnection,
+  connection: Connection,
 ): number {
   const nameOffset = builder.createString(connection.name);
-  const metaOffset = builder.createString(connection.meta);
+  const descriptionOffset = builder.createString(
+    connection.description,
+  );
   const optionsOffset = bufferifyConnectionOptions(
     builder,
     connection.options,
   );
 
-  Connection.startConnection(builder);
-  Connection.addName(builder, nameOffset);
-  Connection.addMeta(builder, metaOffset);
-  Connection.addOptions(builder, optionsOffset);
-  return Connection.endConnection(builder);
+  ConnectionStruct.startConnectionStruct(builder);
+  ConnectionStruct.addName(builder, nameOffset);
+  ConnectionStruct.addDescription(builder, descriptionOffset);
+  ConnectionStruct.addOptions(builder, optionsOffset);
+  return ConnectionStruct.endConnectionStruct(builder);
 }
 
 /**
  * Serializes `ConnectionOptions` into FlatBuffers based on the
  * connector type.
  *
- * @param builder - The FlatBuffers `Builder` instance.
- * @param options - The `ConnectionOptions` object.
+ * @param builder The FlatBuffers `Builder` instance.
+ *
+ * @param options The `ConnectionOptions` object.
+ *
  * @returns The offset of the serialized `ConnectionOptions`.
  */
 function bufferifyConnectionOptions(
   builder: Builder,
-  options: IConnectionOptions,
+  options: ConnectionOptions,
 ): number {
   switch (options.connector) {
-    case ConnectorTypes.Postgres:
-    case ConnectorTypes.MySQL:
-    case ConnectorTypes.MsSQL:
-    case ConnectorTypes.Oracle:
-    case ConnectorTypes.Clickhouse:
-    case ConnectorTypes.Druid:
-    case ConnectorTypes.Ignite:
-    case ConnectorTypes.Redshift:
-    case ConnectorTypes.MariaDB:
+    case ConnectorTypesEnum.Postgres:
+    case ConnectorTypesEnum.MySQL:
+    case ConnectorTypesEnum.MsSQL:
+    case ConnectorTypesEnum.Oracle:
+    case ConnectorTypesEnum.Clickhouse:
+    case ConnectorTypesEnum.Druid:
+    case ConnectorTypesEnum.Ignite:
+    case ConnectorTypesEnum.Redshift:
+    case ConnectorTypesEnum.MariaDB:
       return bufferifyJDBCParameters(builder, options.parameters);
-    case ConnectorTypes.BigQuery:
+    case ConnectorTypesEnum.BigQuery:
       return bufferifyBigQueryParameters(builder, options.parameters);
-    case ConnectorTypes.GoogleSheets:
+    case ConnectorTypesEnum.GoogleSheets:
       return bufferifyGoogleSheetsParameters(
         builder,
         options.parameters,
       );
-    case ConnectorTypes.ElasticSearch:
+    case ConnectorTypesEnum.ElasticSearch:
       return bufferifyElasticsearchParameters(
         builder,
         options.parameters,
       );
-    case ConnectorTypes.MongoDB:
+    case ConnectorTypesEnum.MongoDB:
       return bufferifyMongoDBParameters(builder, options.parameters);
-    case ConnectorTypes.Snowflake:
+    case ConnectorTypesEnum.Snowflake:
       return bufferifySnowflakeParameters(
         builder,
         options.parameters,
@@ -132,13 +136,13 @@ function bufferifyConnectionOptions(
 
 function bufferifyJDBCParameters(
   builder: Builder,
-  params: IJDBCParameters,
+  params: JDBCParameters,
 ): number {
   const hostOffset = builder.createString(params.host);
   const userOffset = builder.createString(params.user);
   const passwordOffset = builder.createString(params.password);
 
-  return JDBCParameters.createJDBCParameters(
+  return JDBCParametersStruct.createJDBCParametersStruct(
     builder,
     hostOffset,
     userOffset,
@@ -149,14 +153,14 @@ function bufferifyJDBCParameters(
 
 function bufferifyBigQueryParameters(
   builder: Builder,
-  params: IBigQueryParameters,
+  params: BigQueryParameters,
 ): number {
   const projectIdOffset = builder.createString(params.project_id);
   const credentialsKeyOffset = builder.createString(
     params.credentials_key,
   );
 
-  return BigQueryParameters.createBigQueryParameters(
+  return BigQueryParametersStruct.createBigQueryParametersStruct(
     builder,
     projectIdOffset,
     credentialsKeyOffset,
@@ -165,23 +169,25 @@ function bufferifyBigQueryParameters(
 
 function bufferifyGoogleSheetsParameters(
   builder: Builder,
-  params: IGoogleSheetsParameters,
+  params: GoogleSheetsParameters,
 ): number {
   const sheetIdOffset = builder.createString(params.sheet_id);
   const credentialsKeyOffset = builder.createString(
     params.credentials_key,
   );
 
-  return GoogleSheetsParameters.createGoogleSheetsParameters(
-    builder,
-    sheetIdOffset,
-    credentialsKeyOffset,
-  );
+  const s =
+    GoogleSheetsParametersStruct.createGoogleSheetsParametersStruct(
+      builder,
+      sheetIdOffset,
+      credentialsKeyOffset,
+    );
+  return s;
 }
 
 function bufferifyElasticsearchParameters(
   builder: Builder,
-  params: IElasticsearchParameters,
+  params: ElasticsearchParameters,
 ): number {
   const hostOffset = builder.createString(params.host);
   const userOffset = builder.createString(params.user);
@@ -190,29 +196,31 @@ function bufferifyElasticsearchParameters(
   const accessKeyOffset = builder.createString(params.access_key);
   const secretKeyOffset = builder.createString(params.secret_key);
 
-  return ElasticsearchParameters.createElasticsearchParameters(
-    builder,
-    hostOffset,
-    params.port,
-    userOffset,
-    passwordOffset,
-    params.ssl,
-    regionOffset,
-    accessKeyOffset,
-    secretKeyOffset,
-  );
+  const s =
+    ElasticsearchParametersStruct.createElasticsearchParametersStruct(
+      builder,
+      hostOffset,
+      params.port,
+      userOffset,
+      passwordOffset,
+      params.ssl,
+      regionOffset,
+      accessKeyOffset,
+      secretKeyOffset,
+    );
+  return s;
 }
 
 function bufferifyMongoDBParameters(
   builder: Builder,
-  params: IMongoDBParameters,
+  params: MongoDBParameters,
 ): number {
   const hostOffset = builder.createString(params.host);
   const userOffset = builder.createString(params.user);
   const passwordOffset = builder.createString(params.password);
   const schemaOffset = builder.createString(params.schema);
 
-  return MongoDBParameters.createMongoDBParameters(
+  return MongoDBParametersStruct.createMongoDBParametersStruct(
     builder,
     hostOffset,
     params.port,
@@ -225,7 +233,7 @@ function bufferifyMongoDBParameters(
 
 function bufferifySnowflakeParameters(
   builder: Builder,
-  params: ISnowflakeParameters,
+  params: SnowflakeParameters,
 ): number {
   const accountOffset = builder.createString(params.account);
   const userOffset = builder.createString(params.user);
@@ -234,7 +242,7 @@ function bufferifySnowflakeParameters(
   const roleOffset = builder.createString(params.role);
   const warehouseOffset = builder.createString(params.warehouse);
 
-  return SnowflakeParameters.createSnowflakeParameters(
+  return SnowflakeParametersStruct.createSnowflakeParametersStruct(
     builder,
     accountOffset,
     userOffset,

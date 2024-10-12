@@ -176,7 +176,7 @@ export type TimeParameters = {
  * const timestampParams: TimestampParameters = {
  *   nullable: false,
  *   unit: TimeUnitEnum.Milliseconds,
- *   TimeZoneEnum: TimeZoneEnum.UTC
+ *   timezone: TimeZoneEnum.UTC
  * };
  * ```
  *
@@ -188,7 +188,7 @@ export type TimeParameters = {
 export type TimestampParameters = {
   nullable: boolean;
   unit: TimeUnitEnum;
-  TimeZoneEnum: TimeZoneEnum;
+  timezone: TimeZoneEnum;
 };
 
 /**

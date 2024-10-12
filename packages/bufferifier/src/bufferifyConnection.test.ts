@@ -5,12 +5,13 @@
  */
 
 import { Builder } from "flatbuffers";
-import { IConnection, ConnectorTypes } from "@hdml/schemas";
+import { ConnectorTypesEnum } from "@hdml/schemas";
+import { Connection } from "@hdml/types";
 import { bufferifyConnection } from "./bufferifyConnection";
 
 /**
  * Jest test suite for `bufferifyConnection`.
- * This suite tests the serialization of `IConnection` objects
+ * This suite tests the serialization of `Connection` objects
  * with different types of connection options.
  */
 describe("The `bufferifyConnection` function", () => {
@@ -21,11 +22,11 @@ describe("The `bufferifyConnection` function", () => {
   });
 
   test("should bufferify a JDBC connection", () => {
-    const connection: IConnection = {
+    const connection: Connection = {
       name: "JDBCConnection",
-      meta: "JDBC metadata",
+      description: null,
       options: {
-        connector: ConnectorTypes.Postgres,
+        connector: ConnectorTypesEnum.Postgres,
         parameters: {
           host: "localhost",
           user: "root",
@@ -40,11 +41,11 @@ describe("The `bufferifyConnection` function", () => {
   });
 
   test("should bufferify a BigQuery connection", () => {
-    const connection: IConnection = {
+    const connection: Connection = {
       name: "BigQueryConnection",
-      meta: "BigQuery metadata",
+      description: "BigQuery metadata",
       options: {
-        connector: ConnectorTypes.BigQuery,
+        connector: ConnectorTypesEnum.BigQuery,
         parameters: {
           project_id: "my-project-id",
           credentials_key: "my-credentials-key",
@@ -57,11 +58,11 @@ describe("The `bufferifyConnection` function", () => {
   });
 
   test("should bufferify a Google Sheets connection", () => {
-    const connection: IConnection = {
+    const connection: Connection = {
       name: "GoogleSheetsConnection",
-      meta: "GoogleSheets metadata",
+      description: "GoogleSheets metadata",
       options: {
-        connector: ConnectorTypes.GoogleSheets,
+        connector: ConnectorTypesEnum.GoogleSheets,
         parameters: {
           sheet_id: "my-sheet-id",
           credentials_key: "my-credentials-key",
@@ -74,11 +75,11 @@ describe("The `bufferifyConnection` function", () => {
   });
 
   test("should bufferify an Elasticsearch connection", () => {
-    const connection: IConnection = {
+    const connection: Connection = {
       name: "ElasticSearchConnection",
-      meta: "ElasticSearch metadata",
+      description: "ElasticSearch metadata",
       options: {
-        connector: ConnectorTypes.ElasticSearch,
+        connector: ConnectorTypesEnum.ElasticSearch,
         parameters: {
           host: "localhost",
           port: 9200,
@@ -97,11 +98,11 @@ describe("The `bufferifyConnection` function", () => {
   });
 
   test("should bufferify a MongoDB connection", () => {
-    const connection: IConnection = {
+    const connection: Connection = {
       name: "MongoDBConnection",
-      meta: "MongoDB metadata",
+      description: "MongoDB metadata",
       options: {
-        connector: ConnectorTypes.MongoDB,
+        connector: ConnectorTypesEnum.MongoDB,
         parameters: {
           host: "localhost",
           port: 27017,
@@ -118,11 +119,11 @@ describe("The `bufferifyConnection` function", () => {
   });
 
   test("should bufferify a Snowflake connection", () => {
-    const connection: IConnection = {
+    const connection: Connection = {
       name: "SnowflakeConnection",
-      meta: "Snowflake metadata",
+      description: "Snowflake metadata",
       options: {
-        connector: ConnectorTypes.Snowflake,
+        connector: ConnectorTypesEnum.Snowflake,
         parameters: {
           account: "my_account",
           user: "my_user",

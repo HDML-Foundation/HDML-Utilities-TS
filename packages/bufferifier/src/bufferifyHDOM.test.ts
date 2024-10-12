@@ -6,26 +6,29 @@
 
 import * as flatbuffers from "flatbuffers";
 import {
-  IHDDM,
-  HDDM,
-  ConnectorTypes,
-  TableType,
-  FilterOperator,
+  HDOMStruct,
+  ConnectorTypesEnum,
+  TableTypeEnum,
+  FilterOperatorEnum,
+  DataTypeEnum,
+  AggregationTypeEnum,
+  OrderTypeEnum,
 } from "@hdml/schemas";
-import { bufferifyHDDM } from "./bufferifyHDDM";
+import { HDOM } from "@hdml/types";
+import { bufferifyHDOM } from "./bufferifyHDOM";
 
-describe("bufferifyHDDM", () => {
-  it("should serialize an IHDDM object to FlatBuffers", () => {
+describe("bufferifyHDOM", () => {
+  it("should serialize an HDOM object to FlatBuffers", () => {
     const builder = new flatbuffers.Builder(1024);
 
-    const hddm: IHDDM = {
+    const hddm: HDOM = {
       includes: [{ path: "/path/to/doc.hdml" }],
       connections: [
         {
           name: "JDBCConnection",
-          meta: "JDBC metadata",
+          description: "JDBC metadata",
           options: {
-            connector: ConnectorTypes.Postgres,
+            connector: ConnectorTypesEnum.Postgres,
             parameters: {
               host: "localhost",
               user: "root",
@@ -38,12 +41,26 @@ describe("bufferifyHDDM", () => {
       models: [
         {
           name: "TestModel",
+          description: null,
           tables: [
             {
               name: "Table1",
-              type: TableType.Table,
+              description: null,
+              type: TableTypeEnum.Table,
               identifier: "database.schema.table1",
-              fields: [{ name: "Field1" }],
+              fields: [
+                {
+                  name: "field1",
+                  description: null,
+                  origin: null,
+                  clause: null,
+                  type: {
+                    type: DataTypeEnum.Unspecified,
+                  },
+                  aggregation: AggregationTypeEnum.None,
+                  order: OrderTypeEnum.None,
+                },
+              ],
             },
           ],
           joins: [],
@@ -52,12 +69,25 @@ describe("bufferifyHDDM", () => {
       frames: [
         {
           name: "test_frame",
+          description: null,
           source: "test_model",
           offset: 0,
           limit: 100,
-          fields: [{ name: "field1" }],
+          fields: [
+            {
+              name: "field1",
+              description: null,
+              origin: null,
+              clause: null,
+              type: {
+                type: DataTypeEnum.Unspecified,
+              },
+              aggregation: AggregationTypeEnum.None,
+              order: OrderTypeEnum.None,
+            },
+          ],
           filter_by: {
-            type: FilterOperator.None,
+            type: FilterOperatorEnum.None,
             filters: [],
             children: [],
           },
@@ -68,12 +98,12 @@ describe("bufferifyHDDM", () => {
       ],
     };
 
-    const offset = bufferifyHDDM(builder, hddm);
+    const offset = bufferifyHDOM(builder, hddm);
     builder.finish(offset);
 
     const buffer = builder.asUint8Array();
     const byteBuffer = new flatbuffers.ByteBuffer(buffer);
-    const fbHDDM = HDDM.getRootAsHDDM(byteBuffer);
+    const fbHDDM = HDOMStruct.getRootAsHDOMStruct(byteBuffer);
 
     expect(fbHDDM.includesLength()).toBe(1);
     expect(fbHDDM.includes(0)?.path()).toBe("/path/to/doc.hdml");
@@ -82,22 +112,22 @@ describe("bufferifyHDDM", () => {
     expect(fbHDDM.framesLength()).toBe(1);
   });
 
-  it("should handle empty IHDDM object", () => {
+  it("should handle empty HDOM object", () => {
     const builder = new flatbuffers.Builder(1024);
 
-    const hddm: IHDDM = {
+    const hddm: HDOM = {
       includes: [],
       connections: [],
       models: [],
       frames: [],
     };
 
-    const offset = bufferifyHDDM(builder, hddm);
+    const offset = bufferifyHDOM(builder, hddm);
     builder.finish(offset);
 
     const buffer = builder.asUint8Array();
     const byteBuffer = new flatbuffers.ByteBuffer(buffer);
-    const fbHDDM = HDDM.getRootAsHDDM(byteBuffer);
+    const fbHDDM = HDOMStruct.getRootAsHDOMStruct(byteBuffer);
 
     expect(fbHDDM.includesLength()).toBe(0);
     expect(fbHDDM.connectionsLength()).toBe(0);

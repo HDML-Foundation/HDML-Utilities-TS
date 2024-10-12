@@ -7,7 +7,13 @@
 /* eslint-disable max-len */
 
 import { Builder } from "flatbuffers";
-import { IFrame, FilterOperator } from "@hdml/schemas";
+import {
+  FilterOperatorEnum,
+  DataTypeEnum,
+  AggregationTypeEnum,
+  OrderTypeEnum,
+} from "@hdml/schemas";
+import { Frame } from "@hdml/types";
 import { bufferifyFrame } from "./bufferifyFrame";
 import { bufferifyField } from "./bufferifyField";
 import { bufferifyFilterClause } from "./bufferifyFilterClause";
@@ -28,14 +34,27 @@ describe("The `bufferifyFrame` function", () => {
   });
 
   it("should correctly serialize a basic Frame", () => {
-    const frame: IFrame = {
+    const frame: Frame = {
       name: "test_frame",
+      description: null,
       source: "test_model",
       offset: 0,
       limit: 100,
-      fields: [{ name: "field1" }],
+      fields: [
+        {
+          name: "field1",
+          description: null,
+          origin: null,
+          clause: null,
+          type: {
+            type: DataTypeEnum.Unspecified,
+          },
+          aggregation: AggregationTypeEnum.None,
+          order: OrderTypeEnum.None,
+        },
+      ],
       filter_by: {
-        type: FilterOperator.None,
+        type: FilterOperatorEnum.None,
         filters: [],
         children: [],
       },
@@ -70,14 +89,38 @@ describe("The `bufferifyFrame` function", () => {
   });
 
   it("should correctly serialize a Frame with multiple fields", () => {
-    const frame: IFrame = {
+    const frame: Frame = {
       name: "test_frame",
+      description: null,
       source: "test_model",
       offset: 0,
       limit: 100,
-      fields: [{ name: "field1" }, { name: "field2" }],
+      fields: [
+        {
+          name: "field1",
+          description: null,
+          origin: null,
+          clause: null,
+          type: {
+            type: DataTypeEnum.Unspecified,
+          },
+          aggregation: AggregationTypeEnum.None,
+          order: OrderTypeEnum.None,
+        },
+        {
+          name: "field2",
+          description: "description",
+          origin: null,
+          clause: null,
+          type: {
+            type: DataTypeEnum.Unspecified,
+          },
+          aggregation: AggregationTypeEnum.None,
+          order: OrderTypeEnum.None,
+        },
+      ],
       filter_by: {
-        type: FilterOperator.None,
+        type: FilterOperatorEnum.None,
         filters: [],
         children: [],
       },
@@ -116,20 +159,72 @@ describe("The `bufferifyFrame` function", () => {
   });
 
   it("should correctly serialize a Frame with group_by, split_by, and sort_by fields", () => {
-    const frame: IFrame = {
+    const frame: Frame = {
       name: "complex_frame",
+      description: "description",
       source: "complex_model",
       offset: 0,
       limit: 100,
-      fields: [{ name: "field1" }],
+      fields: [
+        {
+          name: "field1",
+          description: null,
+          origin: null,
+          clause: null,
+          type: {
+            type: DataTypeEnum.Int8,
+            options: {
+              nullable: false,
+            },
+          },
+          aggregation: AggregationTypeEnum.Sum,
+          order: OrderTypeEnum.Ascending,
+        },
+      ],
       filter_by: {
-        type: FilterOperator.None,
+        type: FilterOperatorEnum.None,
         filters: [],
         children: [],
       },
-      group_by: [{ name: "group_field" }],
-      split_by: [{ name: "split_field" }],
-      sort_by: [{ name: "sort_field" }],
+      group_by: [
+        {
+          name: "field1",
+          description: null,
+          origin: null,
+          clause: null,
+          type: {
+            type: DataTypeEnum.Unspecified,
+          },
+          aggregation: AggregationTypeEnum.None,
+          order: OrderTypeEnum.None,
+        },
+      ],
+      split_by: [
+        {
+          name: "field1",
+          description: null,
+          origin: null,
+          clause: null,
+          type: {
+            type: DataTypeEnum.Unspecified,
+          },
+          aggregation: AggregationTypeEnum.None,
+          order: OrderTypeEnum.None,
+        },
+      ],
+      sort_by: [
+        {
+          name: "field1",
+          description: null,
+          origin: null,
+          clause: null,
+          type: {
+            type: DataTypeEnum.Unspecified,
+          },
+          aggregation: AggregationTypeEnum.None,
+          order: OrderTypeEnum.None,
+        },
+      ],
     };
 
     (bufferifyField as jest.Mock)

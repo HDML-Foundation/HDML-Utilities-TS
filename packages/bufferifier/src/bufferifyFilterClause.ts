@@ -6,55 +6,54 @@
 
 import { Builder } from "flatbuffers";
 import {
-  // enums
-  FilterType,
-  FilterOptions,
-  // interfaces
-  IFilterClause,
-  IFilter,
-  IKeysParameters,
-  IExpressionParameters,
-  INamedParameters,
-  // structures
+  FilterTypeEnum,
+  FilterOptionsStruct,
+  FilterClauseStruct,
+  KeysParametersStruct,
+  ExpressionParametersStruct,
+  NamedParametersStruct,
+  FilterStruct,
+} from "@hdml/schemas";
+import {
   FilterClause,
+  Filter,
   KeysParameters,
   ExpressionParameters,
   NamedParameters,
-  Filter,
-} from "@hdml/schemas";
+} from "@hdml/types";
 
 /**
- * Converts a `IFilterClause` object into a FlatBuffers
- * `FilterClause`.
+ * Converts a `FilterClause` object into a FlatBuffers
+ * `FilterClauseStruct`.
  *
- * This function serializes a `IFilterClause` object, which consists
+ * This function serializes a `FilterClause` object, which consists
  * of filter conditions and optional nested child clauses, into a
- * corresponding FlatBuffers `FilterClause` structure. It processes
- * two main elements of the clause: `filters` (the array of filter
- * conditions) and `children` (the nested `FilterClause` instances
- * within the parent clause). Each element is serialized and stored
- * as a vector in FlatBuffers, which can later be deserialized to
- * reconstruct the original `FilterClause` object.
+ * corresponding FlatBuffers `FilterClauseStruct` structure. It
+ * processes two main elements of the clause: `filters` (the array of
+ * filter conditions) and `children` (the nested `FilterClauseStruct`
+ * instances within the parent clause). Each element is serialized and
+ * stored as a vector in FlatBuffers, which can later be deserialized
+ * to reconstruct the original `FilterClauseStruct` object.
  *
- * @param builder - The FlatBuffers `Builder` instance, responsible
+ * @param builder The FlatBuffers `Builder` instance, responsible
  * for constructing the serialized buffer.
  *
- * @param clause - The `IFilterClause` object to convert. This object
- * contains an array of `IFilter` objects and potentially an array
- * of nested `FilterClause` instances (`children`), which are all
- * serialized into FlatBuffers structures.
+ * @param clause The `FilterClause` object to convert. This object
+ * contains an array of `Filter` objects and potentially an array
+ * of nested `FilterClauseStruct` instances (`children`), which are
+ * all serialized into FlatBuffers structures.
  *
- * @returns The offset of the serialized `FilterClause` structure.
- * This offset is used by FlatBuffers to locate the `FilterClause`
- * within the generated binary buffer.
+ * @returns The offset of the serialized `FilterClauseStruct`
+ * structure. This offset is used by FlatBuffers to locate the
+ * `FilterClauseStruct` within the generated binary buffer.
  *
  * ## Example:
  *
  * ```typescript
  * const builder = new flatbuffers.Builder(1024);
- * const filterClause: IFilterClause = {
+ * const filterClause: FilterClause = {
  *   type: FilterOperator.And,
- *   filters: [{ type: FilterType.Keys, options: {...} }],
+ *   filters: [{ type: FilterTypeEnum.Keys, options: {...} }],
  *   children: []
  * };
  * const clauseOffset = bufferifyFilterClause(builder, filterClause);
@@ -63,23 +62,23 @@ import {
  */
 export function bufferifyFilterClause(
   builder: Builder,
-  clause: IFilterClause,
+  clause: FilterClause,
 ): number {
   const filtersOffsets = clause.filters.map((f) =>
     bufferifyFilter(builder, f),
   );
-  const filtersVector = FilterClause.createFiltersVector(
+  const filtersVector = FilterClauseStruct.createFiltersVector(
     builder,
     filtersOffsets,
   );
   const childrenOffsets = clause.children.map((c) =>
     bufferifyFilterClause(builder, c),
   );
-  const childrenVector = FilterClause.createChildrenVector(
+  const childrenVector = FilterClauseStruct.createChildrenVector(
     builder,
     childrenOffsets,
   );
-  return FilterClause.createFilterClause(
+  return FilterClauseStruct.createFilterClauseStruct(
     builder,
     clause.type,
     filtersVector,
@@ -88,44 +87,45 @@ export function bufferifyFilterClause(
 }
 
 /**
- * Converts an `IFilter` object into a FlatBuffers `Filter`.
+ * Converts an `Filter` object into a FlatBuffers `FilterStruct`.
  *
- * @param builder - The FlatBuffers `Builder` instance.
- * @param filter - The `IFilter` object to convert.
+ * @param builder The FlatBuffers `Builder` instance.
  *
- * @returns The offset of the serialized `Filter` structure.
+ * @param filter The `Filter` object to convert.
+ *
+ * @returns The offset of the serialized `FilterStruct` structure.
  */
-function bufferifyFilter(builder: Builder, filter: IFilter): number {
+function bufferifyFilter(builder: Builder, filter: Filter): number {
   let filterOffset = 0;
   let optionsOffset: number;
   switch (filter.type) {
-    case FilterType.Keys:
+    case FilterTypeEnum.Keys:
       optionsOffset = createKeysOptions(builder, filter.options);
-      filterOffset = Filter.createFilter(
+      filterOffset = FilterStruct.createFilterStruct(
         builder,
         filter.type,
-        FilterOptions.KeysParameters,
+        FilterOptionsStruct.KeysParametersStruct,
         optionsOffset,
       );
       break;
-    case FilterType.Expression:
+    case FilterTypeEnum.Expression:
       optionsOffset = createExpressionOptions(
         builder,
         filter.options,
       );
-      filterOffset = Filter.createFilter(
+      filterOffset = FilterStruct.createFilterStruct(
         builder,
         filter.type,
-        FilterOptions.ExpressionParameters,
+        FilterOptionsStruct.ExpressionParametersStruct,
         optionsOffset,
       );
       break;
-    case FilterType.Named:
+    case FilterTypeEnum.Named:
       optionsOffset = createNamedOptions(builder, filter.options);
-      filterOffset = Filter.createFilter(
+      filterOffset = FilterStruct.createFilterStruct(
         builder,
         filter.type,
-        FilterOptions.NamedParameters,
+        FilterOptionsStruct.NamedParametersStruct,
         optionsOffset,
       );
       break;
@@ -134,21 +134,24 @@ function bufferifyFilter(builder: Builder, filter: IFilter): number {
 }
 
 /**
- * Creates FlatBuffers `KeysParameters` for a `Keys` filter type.
+ * Creates FlatBuffers `KeysParametersStruct` for a `Keys` filter
+ * type.
  *
- * @param builder - The FlatBuffers `Builder` instance.
- * @param parameters - The `IKeysParameters` object containing left
- *                     and right keys.
+ * @param builder The FlatBuffers `Builder` instance.
  *
- * @returns The offset for the serialized `KeysParameters` structure.
+ * @param parameters The `KeysParameters` object containing left
+ * and right keys.
+ *
+ * @returns The offset for the serialized `KeysParametersStruct`
+ * structure.
  */
 function createKeysOptions(
   builder: Builder,
-  parameters: IKeysParameters,
+  parameters: KeysParameters,
 ): number {
   const leftOffset = builder.createString(parameters.left);
   const rightOffset = builder.createString(parameters.right);
-  return KeysParameters.createKeysParameters(
+  return KeysParametersStruct.createKeysParametersStruct(
     builder,
     leftOffset,
     rightOffset,
@@ -156,49 +159,55 @@ function createKeysOptions(
 }
 
 /**
- * Creates FlatBuffers `ExpressionParameters` for an `Expression`
- * filter.
+ * Creates FlatBuffers `ExpressionParametersStruct` for an
+ * `Expression` filter.
  *
- * @param builder - The FlatBuffers `Builder` instance.
- * @param parameters - The `IExpressionParameters` object containing
- *                     the clause.
+ * @param builder The FlatBuffers `Builder` instance.
  *
- * @returns The offset for the serialized `ExpressionParameters`
+ * @param parameters The `ExpressionParameters` object containing
+ * the clause.
+ *
+ * @returns The offset for the serialized `ExpressionParametersStruct`
  * structure.
  */
 function createExpressionOptions(
   builder: Builder,
-  parameters: IExpressionParameters,
+  parameters: ExpressionParameters,
 ): number {
   const clauseOffset = builder.createString(parameters.clause);
-  return ExpressionParameters.createExpressionParameters(
-    builder,
-    clauseOffset,
-  );
+  const s =
+    ExpressionParametersStruct.createExpressionParametersStruct(
+      builder,
+      clauseOffset,
+    );
+  return s;
 }
 
 /**
- * Creates FlatBuffers `NamedParameters` for a `Named` filter type.
+ * Creates FlatBuffers `NamedParametersStruct` for a `Named` filter
+ * type.
  *
- * @param builder - The FlatBuffers `Builder` instance.
- * @param parameters - The `INamedParameters` object containing the
- *                     name, field, and values.
+ * @param builder The FlatBuffers `Builder` instance.
  *
- * @returns The offset for the serialized `NamedParameters` structure.
+ * @param parameters The `NamedParameters` object containing the
+ * name, field, and values.
+ *
+ * @returns The offset for the serialized `NamedParametersStruct`
+ * structure.
  */
 function createNamedOptions(
   builder: Builder,
-  parameters: INamedParameters,
+  parameters: NamedParameters,
 ): number {
   const fieldOffset = builder.createString(parameters.field);
   const valuesOffsets = parameters.values.map((v) =>
     builder.createString(v),
   );
-  const valuesVector = NamedParameters.createValuesVector(
+  const valuesVector = NamedParametersStruct.createValuesVector(
     builder,
     valuesOffsets,
   );
-  return NamedParameters.createNamedParameters(
+  return NamedParametersStruct.createNamedParametersStruct(
     builder,
     parameters.name,
     fieldOffset,

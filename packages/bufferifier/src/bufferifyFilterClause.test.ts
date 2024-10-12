@@ -9,11 +9,11 @@
 import { Builder } from "flatbuffers";
 import { bufferifyFilterClause } from "./bufferifyFilterClause";
 import {
-  IFilterClause,
-  FilterType,
-  FilterOperator,
-  FilterName,
+  FilterTypeEnum,
+  FilterOperatorEnum,
+  FilterNameEnum,
 } from "@hdml/schemas";
+import { FilterClause } from "@hdml/types";
 
 describe("The `bufferifyFilterClause` function", () => {
   let builder: Builder;
@@ -23,8 +23,8 @@ describe("The `bufferifyFilterClause` function", () => {
   });
 
   it("should serialize a FilterClause with no filter and no children", () => {
-    const clause: IFilterClause = {
-      type: FilterOperator.And,
+    const clause: FilterClause = {
+      type: FilterOperatorEnum.And,
       filters: [],
       children: [],
     };
@@ -33,11 +33,11 @@ describe("The `bufferifyFilterClause` function", () => {
   });
 
   it("should serialize a FilterClause with a single Keys filter", () => {
-    const clause: IFilterClause = {
-      type: FilterOperator.And,
+    const clause: FilterClause = {
+      type: FilterOperatorEnum.And,
       filters: [
         {
-          type: FilterType.Keys,
+          type: FilterTypeEnum.Keys,
           options: {
             left: "order_id",
             right: "customer_id",
@@ -51,13 +51,13 @@ describe("The `bufferifyFilterClause` function", () => {
   });
 
   it("should serialize a FilterClause with a nested child clause", () => {
-    const childClause: IFilterClause = {
-      type: FilterOperator.Or,
+    const childClause: FilterClause = {
+      type: FilterOperatorEnum.Or,
       filters: [],
       children: [],
     };
-    const parentClause: IFilterClause = {
-      type: FilterOperator.And,
+    const parentClause: FilterClause = {
+      type: FilterOperatorEnum.And,
       filters: [],
       children: [childClause],
     };
@@ -66,26 +66,26 @@ describe("The `bufferifyFilterClause` function", () => {
   });
 
   it("should serialize a FilterClause with multiple filters and children", () => {
-    const clause: IFilterClause = {
-      type: FilterOperator.And,
+    const clause: FilterClause = {
+      type: FilterOperatorEnum.And,
       filters: [
         {
-          type: FilterType.Keys,
+          type: FilterTypeEnum.Keys,
           options: { left: "order_id", right: "customer_id" },
         },
         {
-          type: FilterType.Expression,
+          type: FilterTypeEnum.Expression,
           options: { clause: "total > 1000" },
         },
       ],
       children: [
         {
-          type: FilterOperator.Or,
+          type: FilterOperatorEnum.Or,
           filters: [
             {
-              type: FilterType.Named,
+              type: FilterTypeEnum.Named,
               options: {
-                name: FilterName.Contains,
+                name: FilterNameEnum.Contains,
                 field: "country",
                 values: ["US", "UK"],
               },
@@ -102,13 +102,13 @@ describe("The `bufferifyFilterClause` function", () => {
   });
 
   it("should serialize a FilterClause with a Named filter", () => {
-    const clause: IFilterClause = {
-      type: FilterOperator.And,
+    const clause: FilterClause = {
+      type: FilterOperatorEnum.And,
       filters: [
         {
-          type: FilterType.Named,
+          type: FilterTypeEnum.Named,
           options: {
-            name: FilterName.Contains,
+            name: FilterNameEnum.Contains,
             field: "product",
             values: ["Electronics", "Clothing"],
           },

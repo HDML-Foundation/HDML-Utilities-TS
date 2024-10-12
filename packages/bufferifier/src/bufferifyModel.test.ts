@@ -7,8 +7,15 @@
 /* eslint-disable max-len */
 
 import { Builder } from "flatbuffers";
+import {
+  TableTypeEnum,
+  JoinTypeEnum,
+  DataTypeEnum,
+  AggregationTypeEnum,
+  OrderTypeEnum,
+} from "@hdml/schemas";
+import { Model } from "@hdml/types";
 import { bufferifyModel } from "./bufferifyModel";
-import { TableType, JoinType, DataType, IModel } from "@hdml/schemas";
 
 // jest.mock("./bufferifyField", () => ({
 //   bufferifyField: jest.fn(() => 1),
@@ -26,14 +33,28 @@ describe("The `bufferifyModel` function", () => {
   });
 
   it("should return a valid FlatBuffers offset", () => {
-    const model: IModel = {
+    const model: Model = {
       name: "TestModel",
+      description: null,
       tables: [
         {
           name: "Table1",
-          type: TableType.Table,
+          description: null,
+          type: TableTypeEnum.Table,
           identifier: "database.schema.table1",
-          fields: [{ name: "Field1" }],
+          fields: [
+            {
+              name: "field1",
+              description: null,
+              origin: null,
+              clause: null,
+              type: {
+                type: DataTypeEnum.Unspecified,
+              },
+              aggregation: AggregationTypeEnum.None,
+              order: OrderTypeEnum.None,
+            },
+          ],
         },
       ],
       joins: [],
@@ -46,6 +67,7 @@ describe("The `bufferifyModel` function", () => {
   it("should handle an empty model gracefully", () => {
     const model = {
       name: "EmptyModel",
+      description: null,
       tables: [],
       joins: [],
     };
@@ -53,33 +75,38 @@ describe("The `bufferifyModel` function", () => {
     expect(offset).toBeGreaterThan(0);
   });
 
-  it("should serialize a simple IModel into a FlatBuffers Model", () => {
-    const model: IModel = {
+  it("should serialize a simple Model into a FlatBuffers Model", () => {
+    const model: Model = {
       name: "TestModel",
+      description: "description",
       tables: [
         {
           name: "Table1",
-          type: TableType.Table,
+          description: "description",
+          type: TableTypeEnum.Table,
           identifier: "database.schema.table1",
           fields: [
             {
-              name: "Field1",
+              name: "field1",
+              description: null,
+              origin: null,
+              clause: null,
               type: {
-                type: DataType.Int32,
-                options: {
-                  nullable: false,
-                },
+                type: DataTypeEnum.Unspecified,
               },
+              aggregation: AggregationTypeEnum.None,
+              order: OrderTypeEnum.None,
             },
           ],
         },
       ],
       joins: [
         {
-          type: JoinType.Inner,
+          type: JoinTypeEnum.Inner,
           left: "Table1",
           right: "Table2",
           clause: { type: 0, filters: [], children: [] },
+          description: null,
         },
       ],
     };
@@ -90,7 +117,7 @@ describe("The `bufferifyModel` function", () => {
   });
 
   // it("should call bufferifyTable for each table in the model", () => {
-  //   const model: IModel = {
+  //   const model: Model = {
   //     name: "TestModel",
   //     tables: [
   //       {
@@ -113,7 +140,7 @@ describe("The `bufferifyModel` function", () => {
   // });
 
   // it("should call bufferifyJoin for each join in the model", () => {
-  //   const model: IModel = {
+  //   const model: Model = {
   //     name: "TestModel",
   //     tables: [],
   //     joins: [

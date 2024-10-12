@@ -6,17 +6,15 @@
 
 import { Builder } from "flatbuffers";
 import {
-  // enums
-  DataType,
-  AggregationType,
-  OrderType,
-  DecimalBitWidth,
-  TimeUnit,
-  DateUnit,
-  TimeZone,
-  // ifaces
-  IField,
+  DataTypeEnum,
+  AggregationTypeEnum,
+  OrderTypeEnum,
+  DecimalBitWidthEnum,
+  TimeUnitEnum,
+  DateUnitEnum,
+  TimeZoneEnum,
 } from "@hdml/schemas";
+import { Field } from "@hdml/types";
 import { bufferifyField } from "./bufferifyField";
 
 describe("The `bufferifyField` function", () => {
@@ -27,16 +25,19 @@ describe("The `bufferifyField` function", () => {
   });
 
   it("should serialize a simple Field with common parameters", () => {
-    const field: IField = {
+    const field: Field = {
       name: "testField",
       type: {
-        type: DataType.Int32,
+        type: DataTypeEnum.Int32,
         options: {
           nullable: true,
         },
       },
-      aggregation: AggregationType.None,
-      order: OrderType.None,
+      origin: null,
+      clause: null,
+      aggregation: AggregationTypeEnum.None,
+      order: OrderTypeEnum.None,
+      description: null,
     };
 
     const offset = bufferifyField(builder, field);
@@ -44,17 +45,22 @@ describe("The `bufferifyField` function", () => {
   });
 
   it("should serialize a Field with Decimal parameters", () => {
-    const field: IField = {
+    const field: Field = {
       name: "decimalField",
       type: {
-        type: DataType.Decimal,
+        type: DataTypeEnum.Decimal,
         options: {
           nullable: false,
           scale: 2,
           precision: 10,
-          bit_width: DecimalBitWidth._128,
+          bit_width: DecimalBitWidthEnum._128,
         },
       },
+      origin: null,
+      clause: null,
+      aggregation: AggregationTypeEnum.None,
+      order: OrderTypeEnum.None,
+      description: null,
     };
 
     const offset = bufferifyField(builder, field);
@@ -62,15 +68,20 @@ describe("The `bufferifyField` function", () => {
   });
 
   it("should serialize a Field with Date parameters", () => {
-    const field: IField = {
+    const field: Field = {
       name: "dateField",
       type: {
-        type: DataType.Date,
+        type: DataTypeEnum.Date,
         options: {
           nullable: true,
-          unit: DateUnit.Millisecond,
+          unit: DateUnitEnum.Millisecond,
         },
       },
+      origin: null,
+      clause: null,
+      aggregation: AggregationTypeEnum.None,
+      order: OrderTypeEnum.None,
+      description: null,
     };
 
     const offset = bufferifyField(builder, field);
@@ -78,15 +89,20 @@ describe("The `bufferifyField` function", () => {
   });
 
   it("should serialize a Field with Time parameters", () => {
-    const field: IField = {
+    const field: Field = {
       name: "timeField",
       type: {
-        type: DataType.Time,
+        type: DataTypeEnum.Time,
         options: {
           nullable: false,
-          unit: TimeUnit.Nanosecond,
+          unit: TimeUnitEnum.Nanosecond,
         },
       },
+      origin: null,
+      clause: null,
+      aggregation: AggregationTypeEnum.None,
+      order: OrderTypeEnum.None,
+      description: "description",
     };
 
     const offset = bufferifyField(builder, field);
@@ -94,16 +110,21 @@ describe("The `bufferifyField` function", () => {
   });
 
   it("should serialize a Field with Timestamp parameters", () => {
-    const field: IField = {
+    const field: Field = {
       name: "timestampField",
       type: {
-        type: DataType.Timestamp,
+        type: DataTypeEnum.Timestamp,
         options: {
           nullable: true,
-          unit: TimeUnit.Second,
-          timezone: TimeZone.UTC,
+          unit: TimeUnitEnum.Second,
+          timezone: TimeZoneEnum.UTC,
         },
       },
+      origin: null,
+      clause: null,
+      aggregation: AggregationTypeEnum.None,
+      order: OrderTypeEnum.None,
+      description: "description",
     };
 
     const offset = bufferifyField(builder, field);
