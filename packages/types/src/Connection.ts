@@ -4,7 +4,7 @@
  * @license Apache-2.0
  */
 
-import { ConnectorTypes } from "../enum/connector-types";
+import { ConnectorTypesEnum } from "@hdml/schemas";
 
 /**
  * The `JDBCParameters` interface defines the connection parameters
@@ -314,7 +314,7 @@ export type SnowflakeParameters = {
  *
  * ```ts
  * const connectionOptions: ConnectionOptions = {
- *   connector: ConnectorTypes.Postgres,
+ *   connector: ConnectorTypesEnum.Postgres,
  *   parameters: {
  *     host: "db.example.com",
  *     port: 5432,
@@ -332,35 +332,35 @@ export type SnowflakeParameters = {
 export type ConnectionOptions =
   | {
       connector:
-        | ConnectorTypes.Postgres
-        | ConnectorTypes.MySQL
-        | ConnectorTypes.MsSQL
-        | ConnectorTypes.Oracle
-        | ConnectorTypes.Clickhouse
-        | ConnectorTypes.Druid
-        | ConnectorTypes.Ignite
-        | ConnectorTypes.Redshift
-        | ConnectorTypes.MariaDB;
+        | ConnectorTypesEnum.Postgres
+        | ConnectorTypesEnum.MySQL
+        | ConnectorTypesEnum.MsSQL
+        | ConnectorTypesEnum.Oracle
+        | ConnectorTypesEnum.Clickhouse
+        | ConnectorTypesEnum.Druid
+        | ConnectorTypesEnum.Ignite
+        | ConnectorTypesEnum.Redshift
+        | ConnectorTypesEnum.MariaDB;
       parameters: JDBCParameters;
     }
   | {
-      connector: ConnectorTypes.BigQuery;
+      connector: ConnectorTypesEnum.BigQuery;
       parameters: BigQueryParameters;
     }
   | {
-      connector: ConnectorTypes.GoogleSheets;
+      connector: ConnectorTypesEnum.GoogleSheets;
       parameters: GoogleSheetsParameters;
     }
   | {
-      connector: ConnectorTypes.ElasticSearch;
+      connector: ConnectorTypesEnum.ElasticSearch;
       parameters: ElasticsearchParameters;
     }
   | {
-      connector: ConnectorTypes.MongoDB;
+      connector: ConnectorTypesEnum.MongoDB;
       parameters: MongoDBParameters;
     }
   | {
-      connector: ConnectorTypes.Snowflake;
+      connector: ConnectorTypesEnum.Snowflake;
       parameters: SnowflakeParameters;
     };
 
@@ -388,7 +388,7 @@ export type ConnectionOptions =
  *   name: "my_connection",
  *   meta: "A description of the connection",
  *   options: {
- *     connector: ConnectorTypes.MongoDB,
+ *     connector: ConnectorTypesEnum.MongoDB,
  *     parameters: {
  *       host: "mongodb.example.com",
  *       port: 27017,
@@ -406,6 +406,6 @@ export type ConnectionOptions =
  */
 export interface Connection {
   name: string;
-  meta: string;
+  description: null | string;
   options: ConnectionOptions;
 }

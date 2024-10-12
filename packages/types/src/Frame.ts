@@ -64,6 +64,7 @@ import { FilterClause } from "./FilterClause";
  */
 export interface Frame {
   name: string;
+  description: null | string;
   source: string;
   offset: number;
   limit: number;

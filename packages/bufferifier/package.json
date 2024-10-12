@@ -7,7 +7,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@hdml/schemas": "^0.0.1-alpha.5",
+    "@hdml/schemas": "^0.0.1-alpha.6",
     "flatbuffers": "24.3.25"
   },
   "scripts": {

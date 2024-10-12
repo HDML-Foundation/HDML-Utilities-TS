@@ -10,7 +10,7 @@ import { Model } from "./Model";
 import { Frame } from "./Frame";
 
 /**
- * The `HDDM` interface represents the structure of an HDML document.
+ * The `HDOM` interface represents the structure of an HDML document.
  * It provides a hierarchical representation, allowing for the
  * traversal of elements, attributes, and relationships within the
  * document.
@@ -34,7 +34,7 @@ import { Frame } from "./Frame";
  * ## Example:
  *
  * ```ts
- * const hddm: HDDM = {
+ * const hdom: HDOM = {
  *   includes: [],
  *   connections: [],
  *   models: [],
@@ -42,11 +42,11 @@ import { Frame } from "./Frame";
  * };
  * ```
  *
- * In this example, the `HDDM` interface contains empty arrays for
+ * In this example, the `HDOM` interface contains empty arrays for
  * includes, connections, models, and frames, representing a basic
  * HDML document structure.
  */
-export interface HDDM {
+export interface HDOM {
   includes: Include[];
   connections: Connection[];
   models: Model[];

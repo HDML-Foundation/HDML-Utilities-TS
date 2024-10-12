@@ -4,8 +4,7 @@
  * @license Apache-2.0
  */
 
-import { TableType } from "../enum/table-type";
-import { JoinType } from "../enum/join-type";
+import { TableTypeEnum, JoinTypeEnum } from "@hdml/schemas";
 import { Field } from "./Field";
 import { FilterClause } from "./FilterClause";
 
@@ -21,8 +20,8 @@ import { FilterClause } from "./FilterClause";
  * - `name` (string): The name of the table. This is used to identify
  *   the table within the data model.
  *
- * - `type` (TableType): The type of the table. The type of the table,
- *   either `Table` for an actual database table, view, or
+ * - `type` (TableTypeEnum): The type of the table. The type of the
+ *   table, either `Table` for an actual database table, view, or
  *   materialized view, or `Query` for a table generated from a SQL
  *   query.
  *
@@ -40,7 +39,7 @@ import { FilterClause } from "./FilterClause";
  * ```ts
  * const table: Table = {
  *   name: "sales",
- *   type: TableType.Fact,
+ *   type: TableTypeEnum.Table,
  *   identifier: "`conn`.`db`.`sales_data_source`",
  *   fields: [
  *     {
@@ -66,7 +65,8 @@ import { FilterClause } from "./FilterClause";
  */
 export interface Table {
   name: string;
-  type: TableType;
+  description: null | string;
+  type: TableTypeEnum;
   identifier: string;
   fields: Field[];
 }
@@ -78,8 +78,8 @@ export interface Table {
  *
  * ## Properties:
  *
- * - `type` (JoinType): Specifies the type of join operation
- *   represented by the `JoinType` enum:
+ * - `type` (JoinTypeEnum): Specifies the type of join operation
+ *   represented by the `JoinTypeEnum` enum:
  *   - Cross
  *   - Inner
  *   - Full
@@ -101,7 +101,7 @@ export interface Table {
  *
  * ```ts
  * const join: Join = {
- *   type: JoinType.Inner,
+ *   type: JoinTypeEnum.Inner,
  *   left: "orders",
  *   right: "customers",
  *   clause: {
@@ -122,10 +122,11 @@ export interface Table {
  * and `id`.
  */
 export interface Join {
-  type: JoinType;
+  type: JoinTypeEnum;
   left: string;
   right: string;
   clause: FilterClause;
+  description: null | string;
 }
 
 /**
@@ -152,20 +153,20 @@ export interface Join {
  *   tables: [
  *     {
  *       name: "orders",
- *       type: TableType.Fact,
+ *       type: TableTypeEnum.Table,
  *       identifier: "`conn`.`db`.`orders`",
  *       fields: []
  *     },
  *     {
  *       name: "customers",
- *       type: TableType.Dimension,
+ *       type: TableTypeEnum.Table,
  *       identifier: "`conn`.`db`.`customers`",
  *       fields: []
  *     }
  *   ],
  *   joins: [
  *     {
- *       type: JoinType.Inner,
+ *       type: JoinTypeEnum.Inner,
  *       left: "orders",
  *       right: "customers",
  *       clause: {
@@ -188,6 +189,7 @@ export interface Join {
  */
 export interface Model {
   name: string;
+  description: null | string;
   tables: Table[];
   joins: Join[];
 }

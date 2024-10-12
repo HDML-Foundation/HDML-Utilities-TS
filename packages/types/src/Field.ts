@@ -4,13 +4,15 @@
  * @license Apache-2.0
  */
 
-import { DecimalBitWidth } from "../enum/decimal-bit-width";
-import { DateUnit } from "../enum/date-unit";
-import { TimeUnit } from "../enum/time-unit";
-import { TimeZone } from "../enum/time-zone";
-import { DataType } from "../enum/data-type";
-import { AggregationType } from "../enum/aggregation-type";
-import { OrderType } from "../enum/order-type";
+import {
+  DecimalBitWidthEnum,
+  DateUnitEnum,
+  TimeUnitEnum,
+  TimeZoneEnum,
+  DataTypeEnum,
+  AggregationTypeEnum,
+  OrderTypeEnum,
+} from "@hdml/schemas";
 
 /**
  * The `CommonParameters` interface defines the common parameters
@@ -58,7 +60,7 @@ export type CommonParameters = {
  *   (both to the left and right of the decimal point) that the
  *   decimal type can hold.
  *
- * - `bit_width` (DecimalBitWidth): The bit width of the decimal
+ * - `bit_width` (DecimalBitWidthEnum): The bit width of the decimal
  *   type, specifying the amount of storage allocated for the decimal
  *   number.
  *
@@ -69,7 +71,7 @@ export type CommonParameters = {
  *   nullable: false,
  *   scale: 2,
  *   precision: 10,
- *   bit_width: DecimalBitWidth._128
+ *   bit_width: DecimalBitWidthEnum._128
  * };
  * ```
  *
@@ -81,7 +83,7 @@ export type DecimalParameters = {
   nullable: boolean;
   scale: number;
   precision: number;
-  bit_width: DecimalBitWidth;
+  bit_width: DecimalBitWidthEnum;
 };
 
 /**
@@ -96,7 +98,7 @@ export type DecimalParameters = {
  *   accept `null` values. If `true`, the date can be null;
  *   if `false`, it cannot.
  *
- * - `unit` (DateUnit): The unit of time used to represent the
+ * - `unit` (DateUnitEnum): The unit of time used to represent the
  *   date (seconds or millisecond).
  *
  * ## Example:
@@ -104,7 +106,7 @@ export type DecimalParameters = {
  * ```ts
  * const dateParams: DateParameters = {
  *   nullable: true,
- *   unit: DateUnit.Second
+ *   unit: DateUnitEnum.Second
  * };
  * ```
  *
@@ -113,7 +115,7 @@ export type DecimalParameters = {
  */
 export type DateParameters = {
   nullable: boolean;
-  unit: DateUnit;
+  unit: DateUnitEnum;
 };
 
 /**
@@ -128,7 +130,7 @@ export type DateParameters = {
  *   accept `null` values. If `true`, the time can be null;
  *   if `false`, it cannot.
  *
- * - `unit` (TimeUnit): The unit of time used to represent the
+ * - `unit` (TimeUnitEnum): The unit of time used to represent the
  *   time value, such as seconds, milliseconds, microseconds, or
  *   nanosecond.
  *
@@ -137,7 +139,7 @@ export type DateParameters = {
  * ```ts
  * const timeParams: TimeParameters = {
  *   nullable: false,
- *   unit: TimeUnit.Milliseconds
+ *   unit: TimeUnitEnum.Milliseconds
  * };
  * ```
  *
@@ -146,7 +148,7 @@ export type DateParameters = {
  */
 export type TimeParameters = {
   nullable: boolean;
-  unit: TimeUnit;
+  unit: TimeUnitEnum;
 };
 
 /**
@@ -161,10 +163,10 @@ export type TimeParameters = {
  *   accept `null` values. If `true`, the timestamp can be null;
  *   if `false`, it cannot.
  *
- * - `unit` (TimeUnit): The unit of time used to represent the
+ * - `unit` (TimeUnitEnum): The unit of time used to represent the
  *   timestamp, such as seconds, milliseconds, or microseconds.
  *
- * - `timezone` (TimeZone): The time zone associated with the
+ * - `TimeZoneEnum` (TimeZoneEnum): The time zone associated with the
  *   timestamp, defining how the timestamp should be interpreted
  *   relative to the global time zones.
  *
@@ -173,8 +175,8 @@ export type TimeParameters = {
  * ```ts
  * const timestampParams: TimestampParameters = {
  *   nullable: false,
- *   unit: TimeUnit.Milliseconds,
- *   timezone: TimeZone.UTC
+ *   unit: TimeUnitEnum.Milliseconds,
+ *   TimeZoneEnum: TimeZoneEnum.UTC
  * };
  * ```
  *
@@ -185,8 +187,8 @@ export type TimeParameters = {
 
 export type TimestampParameters = {
   nullable: boolean;
-  unit: TimeUnit;
-  timezone: TimeZone;
+  unit: TimeUnitEnum;
+  TimeZoneEnum: TimeZoneEnum;
 };
 
 /**
@@ -213,12 +215,12 @@ export type TimestampParameters = {
  *
  * ```ts
  * const field: FieldType = {
- *   type: DataType.Decimal,
+ *   type: DataTypeEnum.Decimal,
  *   options: {
  *     nullable: true,
  *     scale: 2,
  *     precision: 10,
- *     bit_width: DecimalBitWidth._128
+ *     bit_width: DecimalBitWidthEnum._128
  *   }
  * };
  * ```
@@ -228,31 +230,34 @@ export type TimestampParameters = {
  */
 export type FieldType =
   | {
+      type: DataTypeEnum.Unspecified;
+    }
+  | {
       type:
-        | DataType.Int8
-        | DataType.Int16
-        | DataType.Int32
-        | DataType.Int64
-        | DataType.Float32
-        | DataType.Float64
-        | DataType.Binary
-        | DataType.Utf8;
+        | DataTypeEnum.Int8
+        | DataTypeEnum.Int16
+        | DataTypeEnum.Int32
+        | DataTypeEnum.Int64
+        | DataTypeEnum.Float32
+        | DataTypeEnum.Float64
+        | DataTypeEnum.Binary
+        | DataTypeEnum.Utf8;
       options: CommonParameters;
     }
   | {
-      type: DataType.Decimal;
+      type: DataTypeEnum.Decimal;
       options: DecimalParameters;
     }
   | {
-      type: DataType.Date;
+      type: DataTypeEnum.Date;
       options: DateParameters;
     }
   | {
-      type: DataType.Time;
+      type: DataTypeEnum.Time;
       options: TimeParameters;
     }
   | {
-      type: DataType.Timestamp;
+      type: DataTypeEnum.Timestamp;
       options: TimestampParameters;
     };
 
@@ -281,11 +286,11 @@ export type FieldType =
  *   kind of data the field can hold, such as integer, decimal, date,
  *   time, or timestamp, along with its associated parameters.
  *
- * - `aggregation` (AggregationType): Specifies an aggregation
+ * - `aggregation` (AggregationTypeEnum): Specifies an aggregation
  *   function for the field. Supported functions include: None, Count,
  *   CountDistinct, CountDistinctApprox, Sum, Avg, Min, Max.
  *
- * - `order` (OrderType): The order type for sorting the field,
+ * - `order` (OrderTypeEnum): The order type for sorting the field,
  *   such as Ascending, Descending, or None.
  *
  * ## Example:
@@ -297,13 +302,13 @@ export type FieldType =
  *   origin: "sales_amount",
  *   clause: undefined,
  *   type: {
- *     type: DataType.Float64,
+ *     type: DataTypeEnum.Float64,
  *     options: {
  *       nullable: false
  *     }
  *   },
- *   aggregation: AggregationType.Sum,
- *   order: OrderType.Descending
+ *   aggregation: AggregationTypeEnum.Sum,
+ *   order: OrderTypeEnum.Descending
  * };
  * ```
  *
@@ -314,9 +319,9 @@ export type FieldType =
 export interface Field {
   name: string;
   description: null | string;
-  origin?: string;
-  clause?: string;
-  type?: FieldType;
-  aggregation?: AggregationType;
-  order?: OrderType;
+  origin: null | string;
+  clause: null | string;
+  type: FieldType;
+  aggregation: AggregationTypeEnum;
+  order: OrderTypeEnum;
 }

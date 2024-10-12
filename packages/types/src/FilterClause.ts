@@ -4,9 +4,11 @@
  * @license Apache-2.0
  */
 
-import { FilterName } from "../enum/filter-name";
-import { FilterType } from "../enum/filter-type";
-import { FilterOperator } from "../enum/filter-operator";
+import {
+  FilterNameEnum,
+  FilterTypeEnum,
+  FilterOperatorEnum,
+} from "@hdml/schemas";
 
 /**
  * The `ExpressionParameters` type defines the parameters required
@@ -72,7 +74,7 @@ export type KeysParameters = {
  *
  * ## Properties:
  *
- * - `name` (FilterName): The name of the predefined filter to be
+ * - `name` (FilterNameEnum): The name of the predefined filter to be
  *   applied:
  *   - Equals
  *   - NotEquals
@@ -98,7 +100,7 @@ export type KeysParameters = {
  *
  * ```ts
  * const namedFilter: NamedParameters = {
- *   name: FilterName.Equals,
+ *   name: FilterNameEnum.Equals,
  *   field: "country",
  *   values: ["USA", "Canada"]
  * };
@@ -108,7 +110,7 @@ export type KeysParameters = {
  * `country` field, filtering for the values `"USA"` and `"Canada"`.
  */
 export type NamedParameters = {
-  name: FilterName;
+  name: FilterNameEnum;
   field: string;
   values: string[];
 };
@@ -120,18 +122,18 @@ export type NamedParameters = {
  *
  * ## Variants:
  *
- * - `type: FilterType.Expression`: Represents a filter based on a
+ * - `type: FilterTypeEnum.Expression`: Represents a filter based on a
  *   conditional SQL-like expression.
  *   - `options`: Parameters for the expression filter, described by
  *     the `ExpressionParameters` type.
  *
- * - `type: FilterType.Keys`: Indicates a filter based on key fields
- *   between two tables, used in joins.
+ * - `type: FilterTypeEnum.Keys`: Indicates a filter based on key
+ *   fields between two tables, used in joins.
  *   - `options`: Parameters for the keys filter, described by the
  *     `KeysParameters` type.
  *
- * - `type: FilterType.Named`: Applies a predefined named filter to a
- *   specific field and set of values.
+ * - `type: FilterTypeEnum.Named`: Applies a predefined named filter
+ *   to a specific field and set of values.
  *   - `options`: Parameters for the named filter, described by the
  *     `NamedParameters` type.
  *
@@ -139,7 +141,7 @@ export type NamedParameters = {
  *
  * ```ts
  * const filter: Filter = {
- *   type: FilterType.Expression,
+ *   type: FilterTypeEnum.Expression,
  *   options: { clause: "`age` > 30" }
  * };
  * ```
@@ -149,15 +151,15 @@ export type NamedParameters = {
  */
 export type Filter =
   | {
-      type: FilterType.Expression;
+      type: FilterTypeEnum.Expression;
       options: ExpressionParameters;
     }
   | {
-      type: FilterType.Keys;
+      type: FilterTypeEnum.Keys;
       options: KeysParameters;
     }
   | {
-      type: FilterType.Named;
+      type: FilterTypeEnum.Named;
       options: NamedParameters;
     };
 
@@ -169,9 +171,9 @@ export type Filter =
  *
  * ## Properties:
  *
- * - `type` (FilterOperator): Specifies the logical operator used to
- *   combine the filters. The `FilterOperator` enum includes values
- *   such as `And`, `Or`, and `None`.
+ * - `type` (FilterOperatorEnum): Specifies the logical operator used
+ *   to combine the filters. The `FilterOperatorEnum` enum includes
+ *   values such as `And`, `Or`, and `None`.
  *
  * - `filters` (Filter[]): An array of filters that are applied in
  *   this clause. Each filter can be of type `Expression`, `Keys`, or
@@ -186,10 +188,10 @@ export type Filter =
  *
  * ```ts
  * const filterClause: FilterClause = {
- *   type: FilterOperator.And,
+ *   type: FilterOperatorEnum.And,
  *   filters: [
  *     {
- *       type: FilterType.Expression,
+ *       type: FilterTypeEnum.Expression,
  *       options: { clause: "`age` > 30" }
  *     }
  *   ],
@@ -202,7 +204,7 @@ export type Filter =
  * `age > 30`.
  */
 export interface FilterClause {
-  type: FilterOperator;
+  type: FilterOperatorEnum;
   filters: Filter[];
   children: FilterClause[];
 }
