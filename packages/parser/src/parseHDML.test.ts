@@ -7,7 +7,7 @@
 /* eslint-disable max-len */
 
 import { performance } from "perf_hooks";
-import { objectify } from "./objectify";
+import { parseHDML } from "./parseHDML";
 
 const html = `
   <!doctype html>
@@ -565,9 +565,9 @@ const hdml = `
   </hdml-frame>
 `;
 
-describe("The `objectify` function", () => {
+describe("The `parseHDML` function", () => {
   it("sould return empty HDDM object if no HDML tags in HTML document", () => {
-    const hddm = objectify(html);
+    const hddm = parseHDML(html);
 
     expect(hddm).toEqual({
       includes: [],
@@ -578,7 +578,7 @@ describe("The `objectify` function", () => {
   });
 
   it("shoud parse HDML string", () => {
-    const hddm = objectify(hdml);
+    const hddm = parseHDML(hdml);
     expect(hddm).toEqual({
       includes: [
         {
@@ -1423,7 +1423,7 @@ describe("The `objectify` function", () => {
 
     for (let i = 0; i < 100; i++) {
       const start = performance.now();
-      objectify(hdml);
+      parseHDML(hdml);
       measures.push(performance.now() - start);
     }
     const avg =
@@ -1437,7 +1437,7 @@ describe("The `objectify` function", () => {
 
     for (let i = 0; i < 1000; i++) {
       const start = performance.now();
-      objectify(hdml);
+      parseHDML(hdml);
       measures.push(performance.now() - start);
     }
     const avg =

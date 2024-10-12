@@ -4,4 +4,4 @@
  * @license Apache-2.0
  */
 
-export { objectify } from "./objectify";
+export { parseHDML } from "./parseHDML";

@@ -4,12 +4,12 @@
  * @license Apache-2.0
  */
 
-import { IHDDM } from "@hdml/schemas";
+import { IHDDM as HDDM } from "@hdml/schemas";
 import { parseFragment } from "parse5";
 import { hdmlTreeAdapter } from "./hdmlTreeAdapter/hdmlTreeAdapter";
 import { HDMLTreeAdapterMap } from "./types/HDMLTreeAdapterMap";
 
-export function objectify(content: string): IHDDM {
+export function parseHDML(content: string): HDDM {
   const fragment = parseFragment<HDMLTreeAdapterMap>(content, {
     onParseError: console.error,
     scriptingEnabled: false,

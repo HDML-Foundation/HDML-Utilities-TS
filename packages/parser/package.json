@@ -1,5 +1,5 @@
 {
-  "name": "@hdml/objectifier",
+  "name": "@hdml/parser",
   "version": "0.0.0-alpha.0",
   "license": "Apache-2.0",
   "publishConfig": {
@@ -14,7 +14,7 @@
     "clear": "rm -rf tst && rm -rf cjs && rm -rf coverage && rm -rf docs && rm -rf dts && rm -rf esm && rm -rf tsconfig/*.tsbuildinfo",
     "docs": "../../node_modules/.bin/typedoc ./src/index.ts --tsconfig ./tsconfig/cjs.json --out ./docs --includes ./",
     "lint": "node ../../node_modules/.bin/eslint -c ../../.eslintrc.js --fix --parser-options=tsconfigRootDir:'./tsconfig' 'src/**/*.ts'",
-    "test": "npm run compile_tst && ../../node_modules/.bin/jest --config ../../.jestrc.js --roots ./packages/objectifier/tst --coverageDirectory ./packages/objectifier/coverage",
+    "test": "npm run compile_tst && ../../node_modules/.bin/jest --config ../../.jestrc.js --roots ./packages/parser/tst --coverageDirectory ./packages/parser/coverage",
     "build": "npm run clear && npm run lint && npm run test -- --coverage && npm run compile_all && npm run docs",
     "compile_cjs": "tsc -b ./tsconfig/cjs.json",
     "compile_esm": "tsc -b ./tsconfig/esm.json",
