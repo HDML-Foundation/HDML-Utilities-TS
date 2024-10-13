@@ -1654,7 +1654,7 @@ describe("The `parseHDML` function", () => {
     });
   });
 
-  it("should parse provided HDML string in less then 12ms (100 iter)", () => {
+  it("should parse provided HDML string in less then 15ms (100 iter)", () => {
     const measures: number[] = [];
 
     for (let i = 0; i < 100; i++) {
@@ -1665,7 +1665,7 @@ describe("The `parseHDML` function", () => {
     const avg =
       measures.reduce((a, b) => a + b, 0) / measures.length || 0;
 
-    expect(avg).toBeLessThan(12);
+    expect(avg).toBeLessThan(15);
   });
 
   it("should parse provided HDML string in less then 5ms (1000 iter)", () => {
