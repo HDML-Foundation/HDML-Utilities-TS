@@ -26,18 +26,16 @@ npm install @hdml/buffer
 Here’s a basic example of how to use the bufferify functions in your project:
 
 ```typescript
-import { Builder } from "flatbuffers";
-import { IHDDM } from "@hdml/schemas";
+import { HDOM } from "@hdml/types";
 import { serialize, deserialize } from "@hdml/buffer";
 
-const hddm: IHDDM = { ... };  // Your HyperData Document
+const hdom: HDOM = { ... };  // Your HyperData Document
 
 const bytes = serialize(hdom);
 // Transmit or store the binary.
 
 const struct = deserialize(bytes);
 // Interact with the FlatBuffers struct.
-
 ```
 
 ## License
