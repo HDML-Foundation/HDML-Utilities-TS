@@ -5,24 +5,24 @@
  */
 
 import {
-  IInclude,
-  IConnection,
-  IFrame,
-  IModel,
-  ITable,
-  IField,
-  IJoin,
-  IFilterClause,
-  IFilter,
-} from "@hdml/schemas";
+  Include,
+  Connection,
+  Frame,
+  Model,
+  Table,
+  Field,
+  Join,
+  FilterClause,
+  Filter,
+} from "@hdml/types";
 
 export type HDDMData =
-  | IInclude
-  | IConnection
-  | IFrame
-  | IModel
-  | ITable
-  | IField
-  | IJoin
-  | IFilterClause
-  | IFilter;
+  | Include
+  | Connection
+  | Frame
+  | Model
+  | Table
+  | Field
+  | Join
+  | FilterClause
+  | Filter;

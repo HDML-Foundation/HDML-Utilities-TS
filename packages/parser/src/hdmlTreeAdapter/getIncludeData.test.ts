@@ -6,7 +6,7 @@
 
 /* eslint-disable max-len */
 
-import { IInclude } from "@hdml/schemas";
+import { Include } from "@hdml/types";
 import { getIncludeData } from "./getIncludeData";
 import { INCLUDE_ATTRS_LIST } from "../enums/INCLUDE_ATTRS_LIST";
 
@@ -19,10 +19,10 @@ describe("The `getIncludeData` function", () => {
     expect(getIncludeData([{ name: "a", value: "b" }])).toBeNull();
   });
 
-  it("shoud return `IInclude` object if correct attributes passed", () => {
+  it("shoud return `Include` object if correct attributes passed", () => {
     const include = getIncludeData([
       { name: INCLUDE_ATTRS_LIST.PATH, value: "value" },
-    ]) as IInclude;
+    ]) as Include;
 
     expect(include).toBeDefined();
     expect(

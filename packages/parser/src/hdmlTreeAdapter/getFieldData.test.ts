@@ -7,15 +7,15 @@
 /* eslint-disable max-len */
 
 import {
-  AggregationType,
-  DataType,
-  DateUnit,
-  DecimalBitWidth,
-  IField,
-  OrderType,
-  TimeUnit,
-  TimeZone,
+  AggregationTypeEnum,
+  DataTypeEnum,
+  DateUnitEnum,
+  DecimalBitWidthEnum,
+  OrderTypeEnum,
+  TimeUnitEnum,
+  TimeZoneEnum,
 } from "@hdml/schemas";
+import { Field } from "@hdml/types";
 import { getFieldData } from "./getFieldData";
 import { FIELD_ATTRS_LIST } from "../enums/FIELD_ATTRS_LIST";
 import { AGGREGATION_VALUES } from "../enums/AGGREGATION_VALUES";
@@ -38,63 +38,78 @@ describe("The `getFieldData` function", () => {
     const data = getFieldData([
       { name: FIELD_ATTRS_LIST.NULLABLE, value: "true" },
       { name: FIELD_ATTRS_LIST.CLAUSE, value: "clause" },
-    ]) as IField;
+    ]) as Field;
 
     expect(data).toBeNull();
   });
 
-  it("shoud return `IField` object if `name` attribute passed", () => {
+  it("shoud return `Field` object if `name` attribute passed", () => {
     const data = getFieldData([
       { name: FIELD_ATTRS_LIST.NAME, value: "name" },
-    ]) as IField;
+    ]) as Field;
 
     expect(data).not.toBeNull();
     expect(data).toEqual({
       name: "name",
-      aggregation: AggregationType.None,
-      order: OrderType.None,
+      aggregation: AggregationTypeEnum.None,
+      order: OrderTypeEnum.None,
+      clause: null,
+      description: null,
+      origin: null,
+      type: {
+        type: DataTypeEnum.Unspecified,
+      },
     });
   });
 
-  it("shoud return `IField` object if `description` attribute passed", () => {
+  it("shoud return `Field` object if `description` attribute passed", () => {
     const data = getFieldData([
       { name: FIELD_ATTRS_LIST.NAME, value: "name" },
       { name: FIELD_ATTRS_LIST.DESCRIPTION, value: "description" },
-    ]) as IField;
+    ]) as Field;
 
     expect(data).not.toBeNull();
     expect(data).toEqual({
       name: "name",
       description: "description",
-      aggregation: AggregationType.None,
-      order: OrderType.None,
+      aggregation: AggregationTypeEnum.None,
+      order: OrderTypeEnum.None,
+      clause: null,
+      origin: null,
+      type: {
+        type: DataTypeEnum.Unspecified,
+      },
     });
   });
 
-  it("shoud return `IField` object if `origin` attribute passed", () => {
+  it("shoud return `Field` object if `origin` attribute passed", () => {
     const data = getFieldData([
       { name: FIELD_ATTRS_LIST.NAME, value: "name" },
       { name: FIELD_ATTRS_LIST.DESCRIPTION, value: "description" },
       { name: FIELD_ATTRS_LIST.ORIGIN, value: "origin" },
-    ]) as IField;
+    ]) as Field;
 
     expect(data).not.toBeNull();
     expect(data).toEqual({
       name: "name",
       description: "description",
       origin: "origin",
-      aggregation: AggregationType.None,
-      order: OrderType.None,
+      aggregation: AggregationTypeEnum.None,
+      order: OrderTypeEnum.None,
+      clause: null,
+      type: {
+        type: DataTypeEnum.Unspecified,
+      },
     });
   });
 
-  it("shoud return `IField` object if `clause` attribute passed", () => {
+  it("shoud return `Field` object if `clause` attribute passed", () => {
     const data = getFieldData([
       { name: FIELD_ATTRS_LIST.NAME, value: "name" },
       { name: FIELD_ATTRS_LIST.DESCRIPTION, value: "description" },
       { name: FIELD_ATTRS_LIST.ORIGIN, value: "origin" },
       { name: FIELD_ATTRS_LIST.CLAUSE, value: "clause" },
-    ]) as IField;
+    ]) as Field;
 
     expect(data).not.toBeNull();
     expect(data).toEqual({
@@ -102,12 +117,15 @@ describe("The `getFieldData` function", () => {
       description: "description",
       origin: "origin",
       clause: "clause",
-      aggregation: AggregationType.None,
-      order: OrderType.None,
+      aggregation: AggregationTypeEnum.None,
+      order: OrderTypeEnum.None,
+      type: {
+        type: DataTypeEnum.Unspecified,
+      },
     });
   });
 
-  it("shoud return `IField` object if `aggregation` attribute passed", () => {
+  it("shoud return `Field` object if `aggregation` attribute passed", () => {
     let data = getFieldData([
       { name: FIELD_ATTRS_LIST.NAME, value: "name" },
       { name: FIELD_ATTRS_LIST.DESCRIPTION, value: "description" },
@@ -117,10 +135,10 @@ describe("The `getFieldData` function", () => {
         name: FIELD_ATTRS_LIST.AGGREGATION,
         value: "invalid",
       },
-    ]) as IField;
+    ]) as Field;
 
     expect(data).not.toBeNull();
-    expect(data.aggregation).toEqual(AggregationType.None);
+    expect(data.aggregation).toEqual(AggregationTypeEnum.None);
 
     data = getFieldData([
       { name: FIELD_ATTRS_LIST.NAME, value: "name" },
@@ -131,10 +149,10 @@ describe("The `getFieldData` function", () => {
         name: FIELD_ATTRS_LIST.AGGREGATION,
         value: AGGREGATION_VALUES.AVG,
       },
-    ]) as IField;
+    ]) as Field;
 
     expect(data).not.toBeNull();
-    expect(data.aggregation).toEqual(AggregationType.Avg);
+    expect(data.aggregation).toEqual(AggregationTypeEnum.Avg);
 
     data = getFieldData([
       { name: FIELD_ATTRS_LIST.NAME, value: "name" },
@@ -145,10 +163,10 @@ describe("The `getFieldData` function", () => {
         name: FIELD_ATTRS_LIST.AGGREGATION,
         value: AGGREGATION_VALUES.COUNT,
       },
-    ]) as IField;
+    ]) as Field;
 
     expect(data).not.toBeNull();
-    expect(data.aggregation).toEqual(AggregationType.Count);
+    expect(data.aggregation).toEqual(AggregationTypeEnum.Count);
 
     data = getFieldData([
       { name: FIELD_ATTRS_LIST.NAME, value: "name" },
@@ -159,10 +177,12 @@ describe("The `getFieldData` function", () => {
         name: FIELD_ATTRS_LIST.AGGREGATION,
         value: AGGREGATION_VALUES.COUNT_DISTINCT,
       },
-    ]) as IField;
+    ]) as Field;
 
     expect(data).not.toBeNull();
-    expect(data.aggregation).toEqual(AggregationType.CountDistinct);
+    expect(data.aggregation).toEqual(
+      AggregationTypeEnum.CountDistinct,
+    );
 
     data = getFieldData([
       { name: FIELD_ATTRS_LIST.NAME, value: "name" },
@@ -173,11 +193,11 @@ describe("The `getFieldData` function", () => {
         name: FIELD_ATTRS_LIST.AGGREGATION,
         value: AGGREGATION_VALUES.COUNT_DISTINCT_APPROX,
       },
-    ]) as IField;
+    ]) as Field;
 
     expect(data).not.toBeNull();
     expect(data.aggregation).toEqual(
-      AggregationType.CountDistinctApprox,
+      AggregationTypeEnum.CountDistinctApprox,
     );
 
     data = getFieldData([
@@ -189,10 +209,10 @@ describe("The `getFieldData` function", () => {
         name: FIELD_ATTRS_LIST.AGGREGATION,
         value: AGGREGATION_VALUES.MAX,
       },
-    ]) as IField;
+    ]) as Field;
 
     expect(data).not.toBeNull();
-    expect(data.aggregation).toEqual(AggregationType.Max);
+    expect(data.aggregation).toEqual(AggregationTypeEnum.Max);
 
     data = getFieldData([
       { name: FIELD_ATTRS_LIST.NAME, value: "name" },
@@ -203,10 +223,10 @@ describe("The `getFieldData` function", () => {
         name: FIELD_ATTRS_LIST.AGGREGATION,
         value: AGGREGATION_VALUES.MIN,
       },
-    ]) as IField;
+    ]) as Field;
 
     expect(data).not.toBeNull();
-    expect(data.aggregation).toEqual(AggregationType.Min);
+    expect(data.aggregation).toEqual(AggregationTypeEnum.Min);
 
     data = getFieldData([
       { name: FIELD_ATTRS_LIST.NAME, value: "name" },
@@ -217,23 +237,23 @@ describe("The `getFieldData` function", () => {
         name: FIELD_ATTRS_LIST.AGGREGATION,
         value: AGGREGATION_VALUES.SUM,
       },
-    ]) as IField;
+    ]) as Field;
 
     expect(data).not.toBeNull();
-    expect(data.aggregation).toEqual(AggregationType.Sum);
+    expect(data.aggregation).toEqual(AggregationTypeEnum.Sum);
   });
 
-  it("shoud return `IField` object if `aggregation` attribute passed", () => {
+  it("shoud return `Field` object if `aggregation` attribute passed", () => {
     let data = getFieldData([
       { name: FIELD_ATTRS_LIST.NAME, value: "name" },
       {
         name: FIELD_ATTRS_LIST.ORDER,
         value: "invalid",
       },
-    ]) as IField;
+    ]) as Field;
 
     expect(data).not.toBeNull();
-    expect(data.order).toEqual(OrderType.None);
+    expect(data.order).toEqual(OrderTypeEnum.None);
 
     data = getFieldData([
       { name: FIELD_ATTRS_LIST.NAME, value: "name" },
@@ -241,10 +261,10 @@ describe("The `getFieldData` function", () => {
         name: FIELD_ATTRS_LIST.ORDER,
         value: ORDER_VALUES.ASC,
       },
-    ]) as IField;
+    ]) as Field;
 
     expect(data).not.toBeNull();
-    expect(data.order).toEqual(OrderType.Ascending);
+    expect(data.order).toEqual(OrderTypeEnum.Ascending);
 
     data = getFieldData([
       { name: FIELD_ATTRS_LIST.NAME, value: "name" },
@@ -252,282 +272,333 @@ describe("The `getFieldData` function", () => {
         name: FIELD_ATTRS_LIST.ORDER,
         value: ORDER_VALUES.DESC,
       },
-    ]) as IField;
+    ]) as Field;
 
     expect(data).not.toBeNull();
-    expect(data.order).toEqual(OrderType.Descending);
+    expect(data.order).toEqual(OrderTypeEnum.Descending);
   });
 
-  it("shoud return `IField` object for invalid type", () => {
+  it("shoud return `Field` object for invalid type", () => {
     let data = getFieldData([
       { name: FIELD_ATTRS_LIST.NAME, value: "name" },
       { name: FIELD_ATTRS_LIST.TYPE, value: "int-12" },
-    ]) as IField;
+    ]) as Field;
 
     expect(data).not.toBeNull();
     expect(data).toEqual({
       name: "name",
-      aggregation: AggregationType.None,
-      order: OrderType.None,
+      aggregation: AggregationTypeEnum.None,
+      order: OrderTypeEnum.None,
+      clause: null,
+      description: null,
+      origin: null,
+      type: {
+        type: DataTypeEnum.Unspecified,
+      },
     });
 
     data = getFieldData([
       { name: FIELD_ATTRS_LIST.NAME, value: "name" },
       { name: FIELD_ATTRS_LIST.TYPE, value: "int-12" },
       { name: FIELD_ATTRS_LIST.NULLABLE, value: "any" },
-    ]) as IField;
+    ]) as Field;
 
     expect(data).not.toBeNull();
     expect(data).toEqual({
       name: "name",
-      aggregation: AggregationType.None,
-      order: OrderType.None,
+      aggregation: AggregationTypeEnum.None,
+      order: OrderTypeEnum.None,
+      clause: null,
+      description: null,
+      origin: null,
+      type: {
+        type: DataTypeEnum.Unspecified,
+      },
     });
 
     data = getFieldData([
       { name: FIELD_ATTRS_LIST.NAME, value: "name" },
       { name: FIELD_ATTRS_LIST.TYPE, value: "int-12" },
       { name: FIELD_ATTRS_LIST.NULLABLE, value: "true" },
-    ]) as IField;
+    ]) as Field;
 
     expect(data).not.toBeNull();
     expect(data).toEqual({
       name: "name",
-      aggregation: AggregationType.None,
-      order: OrderType.None,
+      aggregation: AggregationTypeEnum.None,
+      order: OrderTypeEnum.None,
+      clause: null,
+      description: null,
+      origin: null,
+      type: {
+        type: DataTypeEnum.Unspecified,
+      },
     });
   });
 
-  it("shoud return `IField` object for `Int-8` type", () => {
+  it("shoud return `Field` object for `Int-8` type", () => {
     let data = getFieldData([
       { name: FIELD_ATTRS_LIST.NAME, value: "name" },
       { name: FIELD_ATTRS_LIST.TYPE, value: FIELD_TYPE_VALUES.INT8 },
-    ]) as IField;
+    ]) as Field;
 
     expect(data).not.toBeNull();
     expect(data).toEqual({
       name: "name",
-      aggregation: AggregationType.None,
-      order: OrderType.None,
+      aggregation: AggregationTypeEnum.None,
+      order: OrderTypeEnum.None,
       type: {
-        type: DataType.Int8,
+        type: DataTypeEnum.Int8,
         options: {
           nullable: false,
         },
       },
+      clause: null,
+      description: null,
+      origin: null,
     });
 
     data = getFieldData([
       { name: FIELD_ATTRS_LIST.NAME, value: "name" },
       { name: FIELD_ATTRS_LIST.TYPE, value: FIELD_TYPE_VALUES.INT8 },
       { name: FIELD_ATTRS_LIST.NULLABLE, value: "any" },
-    ]) as IField;
+    ]) as Field;
 
     expect(data).not.toBeNull();
     expect(data).toEqual({
       name: "name",
-      aggregation: AggregationType.None,
-      order: OrderType.None,
+      aggregation: AggregationTypeEnum.None,
+      order: OrderTypeEnum.None,
       type: {
-        type: DataType.Int8,
+        type: DataTypeEnum.Int8,
         options: {
           nullable: false,
         },
       },
+      clause: null,
+      description: null,
+      origin: null,
     });
 
     data = getFieldData([
       { name: FIELD_ATTRS_LIST.NAME, value: "name" },
       { name: FIELD_ATTRS_LIST.TYPE, value: FIELD_TYPE_VALUES.INT8 },
       { name: FIELD_ATTRS_LIST.NULLABLE, value: "true" },
-    ]) as IField;
+    ]) as Field;
 
     expect(data).not.toBeNull();
     expect(data).toEqual({
       name: "name",
-      aggregation: AggregationType.None,
-      order: OrderType.None,
+      aggregation: AggregationTypeEnum.None,
+      order: OrderTypeEnum.None,
       type: {
-        type: DataType.Int8,
+        type: DataTypeEnum.Int8,
         options: {
           nullable: true,
         },
       },
+      clause: null,
+      description: null,
+      origin: null,
     });
   });
 
-  it("shoud return `IField` object for `Int-16` type", () => {
+  it("shoud return `Field` object for `Int-16` type", () => {
     const data = getFieldData([
       { name: FIELD_ATTRS_LIST.NAME, value: "name" },
       { name: FIELD_ATTRS_LIST.TYPE, value: FIELD_TYPE_VALUES.INT16 },
-    ]) as IField;
+    ]) as Field;
 
     expect(data).not.toBeNull();
     expect(data).toEqual({
       name: "name",
-      aggregation: AggregationType.None,
-      order: OrderType.None,
+      aggregation: AggregationTypeEnum.None,
+      order: OrderTypeEnum.None,
       type: {
-        type: DataType.Int16,
+        type: DataTypeEnum.Int16,
         options: {
           nullable: false,
         },
       },
+      clause: null,
+      description: null,
+      origin: null,
     });
   });
 
-  it("shoud return `IField` object for `Int-32` type", () => {
+  it("shoud return `Field` object for `Int-32` type", () => {
     const data = getFieldData([
       { name: FIELD_ATTRS_LIST.NAME, value: "name" },
       { name: FIELD_ATTRS_LIST.TYPE, value: FIELD_TYPE_VALUES.INT32 },
-    ]) as IField;
+    ]) as Field;
 
     expect(data).not.toBeNull();
     expect(data).toEqual({
       name: "name",
-      aggregation: AggregationType.None,
-      order: OrderType.None,
+      aggregation: AggregationTypeEnum.None,
+      order: OrderTypeEnum.None,
       type: {
-        type: DataType.Int32,
+        type: DataTypeEnum.Int32,
         options: {
           nullable: false,
         },
       },
+      clause: null,
+      description: null,
+      origin: null,
     });
   });
 
-  it("shoud return `IField` object for `Int-64` type", () => {
+  it("shoud return `Field` object for `Int-64` type", () => {
     const data = getFieldData([
       { name: FIELD_ATTRS_LIST.NAME, value: "name" },
       { name: FIELD_ATTRS_LIST.TYPE, value: FIELD_TYPE_VALUES.INT64 },
-    ]) as IField;
+    ]) as Field;
 
     expect(data).not.toBeNull();
     expect(data).toEqual({
       name: "name",
-      aggregation: AggregationType.None,
-      order: OrderType.None,
+      aggregation: AggregationTypeEnum.None,
+      order: OrderTypeEnum.None,
       type: {
-        type: DataType.Int64,
+        type: DataTypeEnum.Int64,
         options: {
           nullable: false,
         },
       },
+      clause: null,
+      description: null,
+      origin: null,
     });
   });
 
-  it("shoud return `IField` object for `Float-32` type", () => {
+  it("shoud return `Field` object for `Float-32` type", () => {
     const data = getFieldData([
       { name: FIELD_ATTRS_LIST.NAME, value: "name" },
       {
         name: FIELD_ATTRS_LIST.TYPE,
         value: FIELD_TYPE_VALUES.FLOAT32,
       },
-    ]) as IField;
+    ]) as Field;
 
     expect(data).not.toBeNull();
     expect(data).toEqual({
       name: "name",
-      aggregation: AggregationType.None,
-      order: OrderType.None,
+      aggregation: AggregationTypeEnum.None,
+      order: OrderTypeEnum.None,
       type: {
-        type: DataType.Float32,
+        type: DataTypeEnum.Float32,
         options: {
           nullable: false,
         },
       },
+      clause: null,
+      description: null,
+      origin: null,
     });
   });
 
-  it("shoud return `IField` object for `Float-64` type", () => {
+  it("shoud return `Field` object for `Float-64` type", () => {
     const data = getFieldData([
       { name: FIELD_ATTRS_LIST.NAME, value: "name" },
       {
         name: FIELD_ATTRS_LIST.TYPE,
         value: FIELD_TYPE_VALUES.FLOAT64,
       },
-    ]) as IField;
+    ]) as Field;
 
     expect(data).not.toBeNull();
     expect(data).toEqual({
       name: "name",
-      aggregation: AggregationType.None,
-      order: OrderType.None,
+      aggregation: AggregationTypeEnum.None,
+      order: OrderTypeEnum.None,
       type: {
-        type: DataType.Float64,
+        type: DataTypeEnum.Float64,
         options: {
           nullable: false,
         },
       },
+      clause: null,
+      description: null,
+      origin: null,
     });
   });
 
-  it("shoud return `IField` object for `Binary` type", () => {
+  it("shoud return `Field` object for `Binary` type", () => {
     const data = getFieldData([
       { name: FIELD_ATTRS_LIST.NAME, value: "name" },
       {
         name: FIELD_ATTRS_LIST.TYPE,
         value: FIELD_TYPE_VALUES.BINARY,
       },
-    ]) as IField;
+    ]) as Field;
 
     expect(data).not.toBeNull();
     expect(data).toEqual({
       name: "name",
-      aggregation: AggregationType.None,
-      order: OrderType.None,
+      aggregation: AggregationTypeEnum.None,
+      order: OrderTypeEnum.None,
       type: {
-        type: DataType.Binary,
+        type: DataTypeEnum.Binary,
         options: {
           nullable: false,
         },
       },
+      clause: null,
+      description: null,
+      origin: null,
     });
   });
 
-  it("shoud return `IField` object for `UTF8` type", () => {
+  it("shoud return `Field` object for `UTF8` type", () => {
     const data = getFieldData([
       { name: FIELD_ATTRS_LIST.NAME, value: "name" },
       { name: FIELD_ATTRS_LIST.TYPE, value: FIELD_TYPE_VALUES.UTF8 },
-    ]) as IField;
+    ]) as Field;
 
     expect(data).not.toBeNull();
     expect(data).toEqual({
       name: "name",
-      aggregation: AggregationType.None,
-      order: OrderType.None,
+      aggregation: AggregationTypeEnum.None,
+      order: OrderTypeEnum.None,
       type: {
-        type: DataType.Utf8,
+        type: DataTypeEnum.Utf8,
         options: {
           nullable: false,
         },
       },
+      clause: null,
+      description: null,
+      origin: null,
     });
   });
 
-  it("shoud return `IField` object for `Decimal` type", () => {
+  it("shoud return `Field` object for `Decimal` type", () => {
     let data = getFieldData([
       { name: FIELD_ATTRS_LIST.NAME, value: "name" },
       {
         name: FIELD_ATTRS_LIST.TYPE,
         value: FIELD_TYPE_VALUES.DECIMAL,
       },
-    ]) as IField;
+    ]) as Field;
 
     expect(data).not.toBeNull();
     expect(data).toEqual({
       name: "name",
-      aggregation: AggregationType.None,
-      order: OrderType.None,
+      aggregation: AggregationTypeEnum.None,
+      order: OrderTypeEnum.None,
       type: {
-        type: DataType.Decimal,
+        type: DataTypeEnum.Decimal,
         options: {
           nullable: false,
           precision: 18,
           scale: 0,
-          bit_width: DecimalBitWidth._128,
+          bit_width: DecimalBitWidthEnum._128,
         },
       },
+      clause: null,
+      description: null,
+      origin: null,
     });
 
     data = getFieldData([
@@ -540,22 +611,25 @@ describe("The `getFieldData` function", () => {
         name: FIELD_ATTRS_LIST.PRECISION,
         value: "24",
       },
-    ]) as IField;
+    ]) as Field;
 
     expect(data).not.toBeNull();
     expect(data).toEqual({
       name: "name",
-      aggregation: AggregationType.None,
-      order: OrderType.None,
+      aggregation: AggregationTypeEnum.None,
+      order: OrderTypeEnum.None,
       type: {
-        type: DataType.Decimal,
+        type: DataTypeEnum.Decimal,
         options: {
           nullable: false,
           precision: 24,
           scale: 0,
-          bit_width: DecimalBitWidth._128,
+          bit_width: DecimalBitWidthEnum._128,
         },
       },
+      clause: null,
+      description: null,
+      origin: null,
     });
 
     data = getFieldData([
@@ -568,22 +642,25 @@ describe("The `getFieldData` function", () => {
         name: FIELD_ATTRS_LIST.SCALE,
         value: "5",
       },
-    ]) as IField;
+    ]) as Field;
 
     expect(data).not.toBeNull();
     expect(data).toEqual({
       name: "name",
-      aggregation: AggregationType.None,
-      order: OrderType.None,
+      aggregation: AggregationTypeEnum.None,
+      order: OrderTypeEnum.None,
       type: {
-        type: DataType.Decimal,
+        type: DataTypeEnum.Decimal,
         options: {
           nullable: false,
           precision: 18,
           scale: 5,
-          bit_width: DecimalBitWidth._128,
+          bit_width: DecimalBitWidthEnum._128,
         },
       },
+      clause: null,
+      description: null,
+      origin: null,
     });
 
     data = getFieldData([
@@ -596,22 +673,25 @@ describe("The `getFieldData` function", () => {
         name: FIELD_ATTRS_LIST.BITWIDTH,
         value: BITWIDTH_VALUES._128,
       },
-    ]) as IField;
+    ]) as Field;
 
     expect(data).not.toBeNull();
     expect(data).toEqual({
       name: "name",
-      aggregation: AggregationType.None,
-      order: OrderType.None,
+      aggregation: AggregationTypeEnum.None,
+      order: OrderTypeEnum.None,
       type: {
-        type: DataType.Decimal,
+        type: DataTypeEnum.Decimal,
         options: {
           nullable: false,
           precision: 18,
           scale: 0,
-          bit_width: DecimalBitWidth._128,
+          bit_width: DecimalBitWidthEnum._128,
         },
       },
+      clause: null,
+      description: null,
+      origin: null,
     });
 
     data = getFieldData([
@@ -624,22 +704,25 @@ describe("The `getFieldData` function", () => {
         name: FIELD_ATTRS_LIST.BITWIDTH,
         value: BITWIDTH_VALUES._256,
       },
-    ]) as IField;
+    ]) as Field;
 
     expect(data).not.toBeNull();
     expect(data).toEqual({
       name: "name",
-      aggregation: AggregationType.None,
-      order: OrderType.None,
+      aggregation: AggregationTypeEnum.None,
+      order: OrderTypeEnum.None,
       type: {
-        type: DataType.Decimal,
+        type: DataTypeEnum.Decimal,
         options: {
           nullable: false,
           precision: 18,
           scale: 0,
-          bit_width: DecimalBitWidth._256,
+          bit_width: DecimalBitWidthEnum._256,
         },
       },
+      clause: null,
+      description: null,
+      origin: null,
     });
 
     data = getFieldData([
@@ -652,83 +735,95 @@ describe("The `getFieldData` function", () => {
         name: FIELD_ATTRS_LIST.BITWIDTH,
         value: "invalid",
       },
-    ]) as IField;
+    ]) as Field;
 
     expect(data).not.toBeNull();
     expect(data).toEqual({
       name: "name",
-      aggregation: AggregationType.None,
-      order: OrderType.None,
+      aggregation: AggregationTypeEnum.None,
+      order: OrderTypeEnum.None,
       type: {
-        type: DataType.Decimal,
+        type: DataTypeEnum.Decimal,
         options: {
           nullable: false,
           precision: 18,
           scale: 0,
-          bit_width: DecimalBitWidth._128,
+          bit_width: DecimalBitWidthEnum._128,
         },
       },
+      clause: null,
+      description: null,
+      origin: null,
     });
   });
 
-  it("shoud return `IField` object for `Date` type", () => {
+  it("shoud return `Field` object for `Date` type", () => {
     let data = getFieldData([
       { name: FIELD_ATTRS_LIST.NAME, value: "name" },
       { name: FIELD_ATTRS_LIST.TYPE, value: FIELD_TYPE_VALUES.DATE },
-    ]) as IField;
+    ]) as Field;
 
     expect(data).not.toBeNull();
     expect(data).toEqual({
       name: "name",
-      aggregation: AggregationType.None,
-      order: OrderType.None,
+      aggregation: AggregationTypeEnum.None,
+      order: OrderTypeEnum.None,
       type: {
-        type: DataType.Date,
+        type: DataTypeEnum.Date,
         options: {
           nullable: false,
-          unit: DateUnit.Millisecond,
+          unit: DateUnitEnum.Millisecond,
         },
       },
+      clause: null,
+      description: null,
+      origin: null,
     });
 
     data = getFieldData([
       { name: FIELD_ATTRS_LIST.NAME, value: "name" },
       { name: FIELD_ATTRS_LIST.TYPE, value: FIELD_TYPE_VALUES.DATE },
       { name: FIELD_ATTRS_LIST.UNIT, value: "invalid" },
-    ]) as IField;
+    ]) as Field;
 
     expect(data).not.toBeNull();
     expect(data).toEqual({
       name: "name",
-      aggregation: AggregationType.None,
-      order: OrderType.None,
+      aggregation: AggregationTypeEnum.None,
+      order: OrderTypeEnum.None,
       type: {
-        type: DataType.Date,
+        type: DataTypeEnum.Date,
         options: {
           nullable: false,
-          unit: DateUnit.Millisecond,
+          unit: DateUnitEnum.Millisecond,
         },
       },
+      clause: null,
+      description: null,
+      origin: null,
     });
 
     data = getFieldData([
       { name: FIELD_ATTRS_LIST.NAME, value: "name" },
       { name: FIELD_ATTRS_LIST.TYPE, value: FIELD_TYPE_VALUES.DATE },
       { name: FIELD_ATTRS_LIST.UNIT, value: DT_UNIT_VALUES.SECOND },
-    ]) as IField;
+    ]) as Field;
 
     expect(data).not.toBeNull();
     expect(data).toEqual({
       name: "name",
-      aggregation: AggregationType.None,
-      order: OrderType.None,
+      aggregation: AggregationTypeEnum.None,
+      order: OrderTypeEnum.None,
       type: {
-        type: DataType.Date,
+        type: DataTypeEnum.Date,
         options: {
           nullable: false,
-          unit: DateUnit.Second,
+          unit: DateUnitEnum.Second,
         },
       },
+      clause: null,
+      description: null,
+      origin: null,
     });
 
     data = getFieldData([
@@ -738,81 +833,93 @@ describe("The `getFieldData` function", () => {
         name: FIELD_ATTRS_LIST.UNIT,
         value: DT_UNIT_VALUES.MILLISECOND,
       },
-    ]) as IField;
+    ]) as Field;
 
     expect(data).not.toBeNull();
     expect(data).toEqual({
       name: "name",
-      aggregation: AggregationType.None,
-      order: OrderType.None,
+      aggregation: AggregationTypeEnum.None,
+      order: OrderTypeEnum.None,
       type: {
-        type: DataType.Date,
+        type: DataTypeEnum.Date,
         options: {
           nullable: false,
-          unit: DateUnit.Millisecond,
+          unit: DateUnitEnum.Millisecond,
         },
       },
+      clause: null,
+      description: null,
+      origin: null,
     });
   });
 
-  it("shoud return `IField` object for `Time` type", () => {
+  it("shoud return `Field` object for `Time` type", () => {
     let data = getFieldData([
       { name: FIELD_ATTRS_LIST.NAME, value: "name" },
       { name: FIELD_ATTRS_LIST.TYPE, value: FIELD_TYPE_VALUES.TIME },
-    ]) as IField;
+    ]) as Field;
 
     expect(data).not.toBeNull();
     expect(data).toEqual({
       name: "name",
-      aggregation: AggregationType.None,
-      order: OrderType.None,
+      aggregation: AggregationTypeEnum.None,
+      order: OrderTypeEnum.None,
       type: {
-        type: DataType.Time,
+        type: DataTypeEnum.Time,
         options: {
           nullable: false,
-          unit: TimeUnit.Millisecond,
+          unit: TimeUnitEnum.Millisecond,
         },
       },
+      clause: null,
+      description: null,
+      origin: null,
     });
 
     data = getFieldData([
       { name: FIELD_ATTRS_LIST.NAME, value: "name" },
       { name: FIELD_ATTRS_LIST.TYPE, value: FIELD_TYPE_VALUES.TIME },
       { name: FIELD_ATTRS_LIST.UNIT, value: "invalid" },
-    ]) as IField;
+    ]) as Field;
 
     expect(data).not.toBeNull();
     expect(data).toEqual({
       name: "name",
-      aggregation: AggregationType.None,
-      order: OrderType.None,
+      aggregation: AggregationTypeEnum.None,
+      order: OrderTypeEnum.None,
       type: {
-        type: DataType.Time,
+        type: DataTypeEnum.Time,
         options: {
           nullable: false,
-          unit: TimeUnit.Millisecond,
+          unit: TimeUnitEnum.Millisecond,
         },
       },
+      clause: null,
+      description: null,
+      origin: null,
     });
 
     data = getFieldData([
       { name: FIELD_ATTRS_LIST.NAME, value: "name" },
       { name: FIELD_ATTRS_LIST.TYPE, value: FIELD_TYPE_VALUES.TIME },
       { name: FIELD_ATTRS_LIST.UNIT, value: DT_UNIT_VALUES.SECOND },
-    ]) as IField;
+    ]) as Field;
 
     expect(data).not.toBeNull();
     expect(data).toEqual({
       name: "name",
-      aggregation: AggregationType.None,
-      order: OrderType.None,
+      aggregation: AggregationTypeEnum.None,
+      order: OrderTypeEnum.None,
       type: {
-        type: DataType.Time,
+        type: DataTypeEnum.Time,
         options: {
           nullable: false,
-          unit: TimeUnit.Second,
+          unit: TimeUnitEnum.Second,
         },
       },
+      clause: null,
+      description: null,
+      origin: null,
     });
 
     data = getFieldData([
@@ -822,20 +929,23 @@ describe("The `getFieldData` function", () => {
         name: FIELD_ATTRS_LIST.UNIT,
         value: DT_UNIT_VALUES.MILLISECOND,
       },
-    ]) as IField;
+    ]) as Field;
 
     expect(data).not.toBeNull();
     expect(data).toEqual({
       name: "name",
-      aggregation: AggregationType.None,
-      order: OrderType.None,
+      aggregation: AggregationTypeEnum.None,
+      order: OrderTypeEnum.None,
       type: {
-        type: DataType.Time,
+        type: DataTypeEnum.Time,
         options: {
           nullable: false,
-          unit: TimeUnit.Millisecond,
+          unit: TimeUnitEnum.Millisecond,
         },
       },
+      clause: null,
+      description: null,
+      origin: null,
     });
 
     data = getFieldData([
@@ -845,20 +955,23 @@ describe("The `getFieldData` function", () => {
         name: FIELD_ATTRS_LIST.UNIT,
         value: DT_UNIT_VALUES.MICROSECOND,
       },
-    ]) as IField;
+    ]) as Field;
 
     expect(data).not.toBeNull();
     expect(data).toEqual({
       name: "name",
-      aggregation: AggregationType.None,
-      order: OrderType.None,
+      aggregation: AggregationTypeEnum.None,
+      order: OrderTypeEnum.None,
       type: {
-        type: DataType.Time,
+        type: DataTypeEnum.Time,
         options: {
           nullable: false,
-          unit: TimeUnit.Microsecond,
+          unit: TimeUnitEnum.Microsecond,
         },
       },
+      clause: null,
+      description: null,
+      origin: null,
     });
 
     data = getFieldData([
@@ -868,45 +981,51 @@ describe("The `getFieldData` function", () => {
         name: FIELD_ATTRS_LIST.UNIT,
         value: DT_UNIT_VALUES.NANOSECOND,
       },
-    ]) as IField;
+    ]) as Field;
 
     expect(data).not.toBeNull();
     expect(data).toEqual({
       name: "name",
-      aggregation: AggregationType.None,
-      order: OrderType.None,
+      aggregation: AggregationTypeEnum.None,
+      order: OrderTypeEnum.None,
       type: {
-        type: DataType.Time,
+        type: DataTypeEnum.Time,
         options: {
           nullable: false,
-          unit: TimeUnit.Nanosecond,
+          unit: TimeUnitEnum.Nanosecond,
         },
       },
+      clause: null,
+      description: null,
+      origin: null,
     });
   });
 
-  it("shoud return `IField` object for `Timestamp` type", () => {
+  it("shoud return `Field` object for `Timestamp` type", () => {
     let data = getFieldData([
       { name: FIELD_ATTRS_LIST.NAME, value: "name" },
       {
         name: FIELD_ATTRS_LIST.TYPE,
         value: FIELD_TYPE_VALUES.TIMESTAMP,
       },
-    ]) as IField;
+    ]) as Field;
 
     expect(data).not.toBeNull();
     expect(data).toEqual({
       name: "name",
-      aggregation: AggregationType.None,
-      order: OrderType.None,
+      aggregation: AggregationTypeEnum.None,
+      order: OrderTypeEnum.None,
       type: {
-        type: DataType.Timestamp,
+        type: DataTypeEnum.Timestamp,
         options: {
           nullable: false,
-          unit: TimeUnit.Millisecond,
-          timezone: TimeZone.UTC,
+          unit: TimeUnitEnum.Millisecond,
+          timezone: TimeZoneEnum.UTC,
         },
       },
+      clause: null,
+      description: null,
+      origin: null,
     });
 
     data = getFieldData([
@@ -916,21 +1035,24 @@ describe("The `getFieldData` function", () => {
         value: FIELD_TYPE_VALUES.TIMESTAMP,
       },
       { name: FIELD_ATTRS_LIST.UNIT, value: "invalid" },
-    ]) as IField;
+    ]) as Field;
 
     expect(data).not.toBeNull();
     expect(data).toEqual({
       name: "name",
-      aggregation: AggregationType.None,
-      order: OrderType.None,
+      aggregation: AggregationTypeEnum.None,
+      order: OrderTypeEnum.None,
       type: {
-        type: DataType.Timestamp,
+        type: DataTypeEnum.Timestamp,
         options: {
           nullable: false,
-          unit: TimeUnit.Millisecond,
-          timezone: TimeZone.UTC,
+          unit: TimeUnitEnum.Millisecond,
+          timezone: TimeZoneEnum.UTC,
         },
       },
+      clause: null,
+      description: null,
+      origin: null,
     });
 
     data = getFieldData([
@@ -940,21 +1062,24 @@ describe("The `getFieldData` function", () => {
         value: FIELD_TYPE_VALUES.TIMESTAMP,
       },
       { name: FIELD_ATTRS_LIST.UNIT, value: DT_UNIT_VALUES.SECOND },
-    ]) as IField;
+    ]) as Field;
 
     expect(data).not.toBeNull();
     expect(data).toEqual({
       name: "name",
-      aggregation: AggregationType.None,
-      order: OrderType.None,
+      aggregation: AggregationTypeEnum.None,
+      order: OrderTypeEnum.None,
       type: {
-        type: DataType.Timestamp,
+        type: DataTypeEnum.Timestamp,
         options: {
           nullable: false,
-          unit: TimeUnit.Second,
-          timezone: TimeZone.UTC,
+          unit: TimeUnitEnum.Second,
+          timezone: TimeZoneEnum.UTC,
         },
       },
+      clause: null,
+      description: null,
+      origin: null,
     });
 
     data = getFieldData([
@@ -967,21 +1092,24 @@ describe("The `getFieldData` function", () => {
         name: FIELD_ATTRS_LIST.UNIT,
         value: DT_UNIT_VALUES.MILLISECOND,
       },
-    ]) as IField;
+    ]) as Field;
 
     expect(data).not.toBeNull();
     expect(data).toEqual({
       name: "name",
-      aggregation: AggregationType.None,
-      order: OrderType.None,
+      aggregation: AggregationTypeEnum.None,
+      order: OrderTypeEnum.None,
       type: {
-        type: DataType.Timestamp,
+        type: DataTypeEnum.Timestamp,
         options: {
           nullable: false,
-          unit: TimeUnit.Millisecond,
-          timezone: TimeZone.UTC,
+          unit: TimeUnitEnum.Millisecond,
+          timezone: TimeZoneEnum.UTC,
         },
       },
+      clause: null,
+      description: null,
+      origin: null,
     });
 
     data = getFieldData([
@@ -994,21 +1122,24 @@ describe("The `getFieldData` function", () => {
         name: FIELD_ATTRS_LIST.UNIT,
         value: DT_UNIT_VALUES.MICROSECOND,
       },
-    ]) as IField;
+    ]) as Field;
 
     expect(data).not.toBeNull();
     expect(data).toEqual({
       name: "name",
-      aggregation: AggregationType.None,
-      order: OrderType.None,
+      aggregation: AggregationTypeEnum.None,
+      order: OrderTypeEnum.None,
       type: {
-        type: DataType.Timestamp,
+        type: DataTypeEnum.Timestamp,
         options: {
           nullable: false,
-          unit: TimeUnit.Microsecond,
-          timezone: TimeZone.UTC,
+          unit: TimeUnitEnum.Microsecond,
+          timezone: TimeZoneEnum.UTC,
         },
       },
+      clause: null,
+      description: null,
+      origin: null,
     });
 
     data = getFieldData([
@@ -1021,21 +1152,24 @@ describe("The `getFieldData` function", () => {
         name: FIELD_ATTRS_LIST.UNIT,
         value: DT_UNIT_VALUES.NANOSECOND,
       },
-    ]) as IField;
+    ]) as Field;
 
     expect(data).not.toBeNull();
     expect(data).toEqual({
       name: "name",
-      aggregation: AggregationType.None,
-      order: OrderType.None,
+      aggregation: AggregationTypeEnum.None,
+      order: OrderTypeEnum.None,
       type: {
-        type: DataType.Timestamp,
+        type: DataTypeEnum.Timestamp,
         options: {
           nullable: false,
-          unit: TimeUnit.Nanosecond,
-          timezone: TimeZone.UTC,
+          unit: TimeUnitEnum.Nanosecond,
+          timezone: TimeZoneEnum.UTC,
         },
       },
+      clause: null,
+      description: null,
+      origin: null,
     });
 
     data = getFieldData([
@@ -1052,21 +1186,24 @@ describe("The `getFieldData` function", () => {
         name: FIELD_ATTRS_LIST.TIMEZONE,
         value: "invalid",
       },
-    ]) as IField;
+    ]) as Field;
 
     expect(data).not.toBeNull();
     expect(data).toEqual({
       name: "name",
-      aggregation: AggregationType.None,
-      order: OrderType.None,
+      aggregation: AggregationTypeEnum.None,
+      order: OrderTypeEnum.None,
       type: {
-        type: DataType.Timestamp,
+        type: DataTypeEnum.Timestamp,
         options: {
           nullable: false,
-          unit: TimeUnit.Nanosecond,
-          timezone: TimeZone.UTC,
+          unit: TimeUnitEnum.Nanosecond,
+          timezone: TimeZoneEnum.UTC,
         },
       },
+      clause: null,
+      description: null,
+      origin: null,
     });
 
     data = getFieldData([
@@ -1083,21 +1220,24 @@ describe("The `getFieldData` function", () => {
         name: FIELD_ATTRS_LIST.TIMEZONE,
         value: TIMEZONE_VALUES.UTC,
       },
-    ]) as IField;
+    ]) as Field;
 
     expect(data).not.toBeNull();
     expect(data).toEqual({
       name: "name",
-      aggregation: AggregationType.None,
-      order: OrderType.None,
+      aggregation: AggregationTypeEnum.None,
+      order: OrderTypeEnum.None,
       type: {
-        type: DataType.Timestamp,
+        type: DataTypeEnum.Timestamp,
         options: {
           nullable: false,
-          unit: TimeUnit.Nanosecond,
-          timezone: TimeZone.UTC,
+          unit: TimeUnitEnum.Nanosecond,
+          timezone: TimeZoneEnum.UTC,
         },
       },
+      clause: null,
+      description: null,
+      origin: null,
     });
 
     data = getFieldData([
@@ -1114,25 +1254,28 @@ describe("The `getFieldData` function", () => {
         name: FIELD_ATTRS_LIST.TIMEZONE,
         value: TIMEZONE_VALUES.GMT,
       },
-    ]) as IField;
+    ]) as Field;
 
     expect(data).not.toBeNull();
     expect(data).toEqual({
       name: "name",
-      aggregation: AggregationType.None,
-      order: OrderType.None,
+      aggregation: AggregationTypeEnum.None,
+      order: OrderTypeEnum.None,
       type: {
-        type: DataType.Timestamp,
+        type: DataTypeEnum.Timestamp,
         options: {
           nullable: false,
-          unit: TimeUnit.Nanosecond,
-          timezone: TimeZone.GMT,
+          unit: TimeUnitEnum.Nanosecond,
+          timezone: TimeZoneEnum.GMT,
         },
       },
+      clause: null,
+      description: null,
+      origin: null,
     });
 
     type SKey = keyof typeof TIMEZONE_VALUES;
-    type NKey = keyof typeof TimeZone;
+    type NKey = keyof typeof TimeZoneEnum;
     for (let i = 1; i <= 14; i++) {
       let id: string;
       let skey: SKey;
@@ -1159,21 +1302,24 @@ describe("The `getFieldData` function", () => {
             name: FIELD_ATTRS_LIST.TIMEZONE,
             value: TIMEZONE_VALUES[skey],
           },
-        ]) as IField;
+        ]) as Field;
 
         expect(data).not.toBeNull();
         expect(data).toEqual({
           name: "name",
-          aggregation: AggregationType.None,
-          order: OrderType.None,
+          aggregation: AggregationTypeEnum.None,
+          order: OrderTypeEnum.None,
           type: {
-            type: DataType.Timestamp,
+            type: DataTypeEnum.Timestamp,
             options: {
               nullable: false,
-              unit: TimeUnit.Nanosecond,
-              timezone: TimeZone[nkey],
+              unit: TimeUnitEnum.Nanosecond,
+              timezone: TimeZoneEnum[nkey],
             },
           },
+          clause: null,
+          description: null,
+          origin: null,
         });
       }
       skey = `GMT_p_${id}` as SKey;
@@ -1192,21 +1338,24 @@ describe("The `getFieldData` function", () => {
           name: FIELD_ATTRS_LIST.TIMEZONE,
           value: TIMEZONE_VALUES[skey] as TIMEZONE_VALUES,
         },
-      ]) as IField;
+      ]) as Field;
 
       expect(data).not.toBeNull();
       expect(data).toEqual({
         name: "name",
-        aggregation: AggregationType.None,
-        order: OrderType.None,
+        aggregation: AggregationTypeEnum.None,
+        order: OrderTypeEnum.None,
         type: {
-          type: DataType.Timestamp,
+          type: DataTypeEnum.Timestamp,
           options: {
             nullable: false,
-            unit: TimeUnit.Nanosecond,
-            timezone: TimeZone[nkey],
+            unit: TimeUnitEnum.Nanosecond,
+            timezone: TimeZoneEnum[nkey],
           },
         },
+        clause: null,
+        description: null,
+        origin: null,
       });
     }
   });

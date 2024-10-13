@@ -4,14 +4,14 @@
  * @license Apache-2.0
  */
 
-import { IInclude } from "@hdml/schemas";
+import { Include } from "@hdml/types";
 import { Token } from "parse5";
 import { INCLUDE_ATTRS_LIST } from "../enums/INCLUDE_ATTRS_LIST";
 
 export function getIncludeData(
   attrs: Token.Attribute[],
-): null | IInclude {
-  let include: null | IInclude = null;
+): null | Include {
+  let include: null | Include = null;
   attrs.forEach((attr) => {
     switch (attr.name as INCLUDE_ATTRS_LIST) {
       case INCLUDE_ATTRS_LIST.PATH:

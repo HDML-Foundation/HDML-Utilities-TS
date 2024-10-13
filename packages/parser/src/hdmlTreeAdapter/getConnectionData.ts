@@ -4,17 +4,18 @@
  * @license Apache-2.0
  */
 
-import { IConnection, ConnectorTypes } from "@hdml/schemas";
+import { ConnectorTypesEnum } from "@hdml/schemas";
+import { Connection } from "@hdml/types";
 import { Token } from "parse5";
 import { CONN_ATTRS_LIST } from "../enums/CONN_ATTRS_LIST";
 import { CONN_TYPE_VALUES } from "../enums/CONN_TYPE_VALUES";
 
 export function getConnectionData(
   attrs: Token.Attribute[],
-): null | IConnection {
+): null | Connection {
   let name: null | string = null;
   let type: null | string = null;
-  let meta: null | string = null;
+  let description: null | string = null;
   let ssl: null | string = null;
   let host: null | string = null;
   let port: null | string = null;
@@ -46,8 +47,8 @@ export function getConnectionData(
       case CONN_ATTRS_LIST.PORT:
         port = attr.value;
         break;
-      case CONN_ATTRS_LIST.META:
-        meta = attr.value;
+      case CONN_ATTRS_LIST.DESCRIPTION:
+        description = attr.value;
         break;
       case CONN_ATTRS_LIST.NAME:
         name = attr.value;
@@ -102,8 +103,8 @@ export function getConnectionData(
     case CONN_TYPE_VALUES.POSTGRES:
       return getJdbcConnection(
         name,
-        meta,
-        ConnectorTypes.Postgres,
+        description,
+        ConnectorTypesEnum.Postgres,
         host,
         user,
         password,
@@ -112,8 +113,8 @@ export function getConnectionData(
     case CONN_TYPE_VALUES.MYSQL:
       return getJdbcConnection(
         name,
-        meta,
-        ConnectorTypes.MySQL,
+        description,
+        ConnectorTypesEnum.MySQL,
         host,
         user,
         password,
@@ -122,8 +123,8 @@ export function getConnectionData(
     case CONN_TYPE_VALUES.MSSQL:
       return getJdbcConnection(
         name,
-        meta,
-        ConnectorTypes.MsSQL,
+        description,
+        ConnectorTypesEnum.MsSQL,
         host,
         user,
         password,
@@ -132,8 +133,8 @@ export function getConnectionData(
     case CONN_TYPE_VALUES.MARIADB:
       return getJdbcConnection(
         name,
-        meta,
-        ConnectorTypes.MariaDB,
+        description,
+        ConnectorTypesEnum.MariaDB,
         host,
         user,
         password,
@@ -142,8 +143,8 @@ export function getConnectionData(
     case CONN_TYPE_VALUES.ORACLE:
       return getJdbcConnection(
         name,
-        meta,
-        ConnectorTypes.Oracle,
+        description,
+        ConnectorTypesEnum.Oracle,
         host,
         user,
         password,
@@ -152,8 +153,8 @@ export function getConnectionData(
     case CONN_TYPE_VALUES.CLICKHOUSE:
       return getJdbcConnection(
         name,
-        meta,
-        ConnectorTypes.Clickhouse,
+        description,
+        ConnectorTypesEnum.Clickhouse,
         host,
         user,
         password,
@@ -162,8 +163,8 @@ export function getConnectionData(
     case CONN_TYPE_VALUES.DRUID:
       return getJdbcConnection(
         name,
-        meta,
-        ConnectorTypes.Druid,
+        description,
+        ConnectorTypesEnum.Druid,
         host,
         user,
         password,
@@ -172,8 +173,8 @@ export function getConnectionData(
     case CONN_TYPE_VALUES.IGNITE:
       return getJdbcConnection(
         name,
-        meta,
-        ConnectorTypes.Ignite,
+        description,
+        ConnectorTypesEnum.Ignite,
         host,
         user,
         password,
@@ -182,8 +183,8 @@ export function getConnectionData(
     case CONN_TYPE_VALUES.REDSHIFT:
       return getJdbcConnection(
         name,
-        meta,
-        ConnectorTypes.Redshift,
+        description,
+        ConnectorTypesEnum.Redshift,
         host,
         user,
         password,
@@ -192,24 +193,24 @@ export function getConnectionData(
     case CONN_TYPE_VALUES.BIGQUERY:
       return getBigQueryConnection(
         name,
-        meta,
-        ConnectorTypes.BigQuery,
+        description,
+        ConnectorTypesEnum.BigQuery,
         projectId,
         credentialsKey,
       );
     case CONN_TYPE_VALUES.GOOGLESHEETS:
       return getGoogleSheetsConnection(
         name,
-        meta,
-        ConnectorTypes.GoogleSheets,
+        description,
+        ConnectorTypesEnum.GoogleSheets,
         credentialsKey,
         sheetId,
       );
     case CONN_TYPE_VALUES.ELASTICSEARCH:
       return getElasticSearchConnection(
         name,
-        meta,
-        ConnectorTypes.ElasticSearch,
+        description,
+        ConnectorTypesEnum.ElasticSearch,
         host,
         port,
         user,
@@ -222,8 +223,8 @@ export function getConnectionData(
     case CONN_TYPE_VALUES.MONGODB:
       return getMongoDbConnection(
         name,
-        meta,
-        ConnectorTypes.MongoDB,
+        description,
+        ConnectorTypesEnum.MongoDB,
         host,
         port,
         user,
@@ -234,8 +235,8 @@ export function getConnectionData(
     case CONN_TYPE_VALUES.SNOWFLAKE:
       return getSnowflakeConnection(
         name,
-        meta,
-        ConnectorTypes.Snowflake,
+        description,
+        ConnectorTypesEnum.Snowflake,
         account,
         user,
         password,
@@ -250,28 +251,28 @@ export function getConnectionData(
 
 function getJdbcConnection(
   name: string,
-  meta: null | string,
+  description: null | string,
   type:
-    | ConnectorTypes.Postgres
-    | ConnectorTypes.MySQL
-    | ConnectorTypes.MsSQL
-    | ConnectorTypes.Oracle
-    | ConnectorTypes.Clickhouse
-    | ConnectorTypes.Druid
-    | ConnectorTypes.Ignite
-    | ConnectorTypes.Redshift
-    | ConnectorTypes.MariaDB,
+    | ConnectorTypesEnum.Postgres
+    | ConnectorTypesEnum.MySQL
+    | ConnectorTypesEnum.MsSQL
+    | ConnectorTypesEnum.Oracle
+    | ConnectorTypesEnum.Clickhouse
+    | ConnectorTypesEnum.Druid
+    | ConnectorTypesEnum.Ignite
+    | ConnectorTypesEnum.Redshift
+    | ConnectorTypesEnum.MariaDB,
   host: null | string,
   user: null | string,
   password: null | string,
   ssl: null | string,
-): null | IConnection {
+): null | Connection {
   if (!host || !user || !password) {
     return null;
   }
   return {
     name,
-    meta: meta || "",
+    description,
     options: {
       connector: type,
       parameters: {
@@ -286,18 +287,18 @@ function getJdbcConnection(
 
 function getBigQueryConnection(
   name: string,
-  meta: null | string,
-  type: ConnectorTypes.BigQuery,
+  description: null | string,
+  type: ConnectorTypesEnum.BigQuery,
   projectId: null | string,
   credentialsKey: null | string,
-): null | IConnection {
+): null | Connection {
   if (!projectId || !credentialsKey) {
     return null;
   }
 
   return {
     name,
-    meta: meta || "",
+    description,
     options: {
       connector: type,
       parameters: {
@@ -310,18 +311,18 @@ function getBigQueryConnection(
 
 function getGoogleSheetsConnection(
   name: string,
-  meta: null | string,
-  type: ConnectorTypes.GoogleSheets,
+  description: null | string,
+  type: ConnectorTypesEnum.GoogleSheets,
   credentialsKey: null | string,
   sheetId: null | string,
-): null | IConnection {
+): null | Connection {
   if (!sheetId || !credentialsKey) {
     return null;
   }
 
   return {
     name,
-    meta: meta || "",
+    description,
     options: {
       connector: type,
       parameters: {
@@ -334,8 +335,8 @@ function getGoogleSheetsConnection(
 
 function getElasticSearchConnection(
   name: string,
-  meta: null | string,
-  type: ConnectorTypes.ElasticSearch,
+  description: null | string,
+  type: ConnectorTypesEnum.ElasticSearch,
   host: null | string,
   port: null | string,
   user: null | string,
@@ -344,7 +345,7 @@ function getElasticSearchConnection(
   region: null | string,
   accessKey: null | string,
   secretKey: null | string,
-): null | IConnection {
+): null | Connection {
   if (!host) {
     return null;
   }
@@ -358,7 +359,7 @@ function getElasticSearchConnection(
 
   return {
     name,
-    meta: meta || "",
+    description,
     options: {
       connector: type,
       parameters: {
@@ -377,22 +378,22 @@ function getElasticSearchConnection(
 
 function getMongoDbConnection(
   name: string,
-  meta: null | string,
-  type: ConnectorTypes.MongoDB,
+  description: null | string,
+  type: ConnectorTypesEnum.MongoDB,
   host: null | string,
   port: null | string,
   user: null | string,
   password: null | string,
   ssl: null | string,
   schema: null | string,
-): null | IConnection {
+): null | Connection {
   if (!host || !user || !password || !schema) {
     return null;
   }
 
   return {
     name,
-    meta: meta || "",
+    description,
     options: {
       connector: type,
       parameters: {
@@ -409,15 +410,15 @@ function getMongoDbConnection(
 
 function getSnowflakeConnection(
   name: string,
-  meta: null | string,
-  type: ConnectorTypes.Snowflake,
+  description: null | string,
+  type: ConnectorTypesEnum.Snowflake,
   account: null | string,
   user: null | string,
   password: null | string,
   database: null | string,
   role: null | string,
   warehouse: null | string,
-): null | IConnection {
+): null | Connection {
   if (
     !account ||
     !user ||
@@ -431,7 +432,7 @@ function getSnowflakeConnection(
 
   return {
     name,
-    meta: meta || "",
+    description,
     options: {
       connector: type,
       parameters: {

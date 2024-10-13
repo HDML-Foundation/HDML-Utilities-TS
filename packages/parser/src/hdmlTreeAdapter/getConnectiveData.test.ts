@@ -6,7 +6,7 @@
 
 /* eslint-disable max-len */
 
-import { FilterOperator } from "@hdml/schemas";
+import { FilterOperatorEnum } from "@hdml/schemas";
 import { getConnectiveData } from "./getConnectiveData";
 import { CONNECTIVE_ATTRS_LIST } from "../enums/CONNECTIVE_ATTRS_LIST";
 import { CONNECTIVE_OP_VALUES } from "../enums/CONNECTIVE_OP_VALUES";
@@ -14,7 +14,7 @@ import { CONNECTIVE_OP_VALUES } from "../enums/CONNECTIVE_OP_VALUES";
 describe("The `getConnectiveData` function", () => {
   it("shoud return `IFilterClause` object if empty attributes are passed", () => {
     expect(getConnectiveData([])).toEqual({
-      type: FilterOperator.None,
+      type: FilterOperatorEnum.None,
       filters: [],
       children: [],
     });
@@ -22,7 +22,7 @@ describe("The `getConnectiveData` function", () => {
 
   it("shoud return `IFilterClause` object if incorrect attributes are passed", () => {
     expect(getConnectiveData([{ name: "a", value: "b" }])).toEqual({
-      type: FilterOperator.None,
+      type: FilterOperatorEnum.None,
       filters: [],
       children: [],
     });
@@ -34,7 +34,7 @@ describe("The `getConnectiveData` function", () => {
         { name: CONNECTIVE_ATTRS_LIST.OPERATOR, value: "incorrect" },
       ]),
     ).toEqual({
-      type: FilterOperator.None,
+      type: FilterOperatorEnum.None,
       filters: [],
       children: [],
     });
@@ -49,7 +49,7 @@ describe("The `getConnectiveData` function", () => {
         },
       ]),
     ).toEqual({
-      type: FilterOperator.None,
+      type: FilterOperatorEnum.None,
       filters: [],
       children: [],
     });
@@ -62,7 +62,7 @@ describe("The `getConnectiveData` function", () => {
         },
       ]),
     ).toEqual({
-      type: FilterOperator.Or,
+      type: FilterOperatorEnum.Or,
       filters: [],
       children: [],
     });
@@ -75,7 +75,7 @@ describe("The `getConnectiveData` function", () => {
         },
       ]),
     ).toEqual({
-      type: FilterOperator.And,
+      type: FilterOperatorEnum.And,
       filters: [],
       children: [],
     });

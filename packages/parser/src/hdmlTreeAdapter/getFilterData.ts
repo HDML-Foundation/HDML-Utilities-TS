@@ -4,7 +4,8 @@
  * @license Apache-2.0
  */
 
-import { IFilter, FilterType, FilterName } from "@hdml/schemas";
+import { FilterTypeEnum, FilterNameEnum } from "@hdml/schemas";
+import { Filter } from "@hdml/types";
 import { Token } from "parse5";
 import { FILTER_ATTRS_LIST } from "../enums/FILTER_ATTRS_LIST";
 import { FILTER_TYPE_VALUES } from "../enums/FILTER_TYPE_VALUES";
@@ -12,13 +13,13 @@ import { FILTER_NAME_VALUES } from "../enums/FILTER_NAME_VALUES";
 
 export function getFilterData(
   attrs: Token.Attribute[],
-): null | IFilter {
-  let data: null | IFilter = null;
-  let type: null | FilterType = null;
+): null | Filter {
+  let data: null | Filter = null;
+  let type: null | FilterTypeEnum = null;
   let clause: null | string = null;
   let left: null | string = null;
   let right: null | string = null;
-  let name: null | FilterName = null;
+  let name: null | FilterNameEnum = null;
   let field: null | string = null;
   let values: string[] = [];
 
@@ -27,13 +28,13 @@ export function getFilterData(
       case FILTER_ATTRS_LIST.TYPE:
         switch (attr.value as FILTER_TYPE_VALUES) {
           case FILTER_TYPE_VALUES.EXPR:
-            type = FilterType.Expression;
+            type = FilterTypeEnum.Expression;
             break;
           case FILTER_TYPE_VALUES.KEYS:
-            type = FilterType.Keys;
+            type = FilterTypeEnum.Keys;
             break;
           case FILTER_TYPE_VALUES.NAMED:
-            type = FilterType.Named;
+            type = FilterTypeEnum.Named;
             break;
         }
         break;
@@ -49,43 +50,43 @@ export function getFilterData(
       case FILTER_ATTRS_LIST.NAME:
         switch (attr.value as FILTER_NAME_VALUES) {
           case FILTER_NAME_VALUES.BETWEEN:
-            name = FilterName.Between;
+            name = FilterNameEnum.Between;
             break;
           case FILTER_NAME_VALUES.CONTAINS:
-            name = FilterName.Contains;
+            name = FilterNameEnum.Contains;
             break;
           case FILTER_NAME_VALUES.ENDS_WITH:
-            name = FilterName.EndsWith;
+            name = FilterNameEnum.EndsWith;
             break;
           case FILTER_NAME_VALUES.EQUALS:
-            name = FilterName.Equals;
+            name = FilterNameEnum.Equals;
             break;
           case FILTER_NAME_VALUES.GREATER:
-            name = FilterName.Greater;
+            name = FilterNameEnum.Greater;
             break;
           case FILTER_NAME_VALUES.GREATER_EQUAL:
-            name = FilterName.GreaterEqual;
+            name = FilterNameEnum.GreaterEqual;
             break;
           case FILTER_NAME_VALUES.IS_NOT_NULL:
-            name = FilterName.IsNotNull;
+            name = FilterNameEnum.IsNotNull;
             break;
           case FILTER_NAME_VALUES.IS_NULL:
-            name = FilterName.IsNull;
+            name = FilterNameEnum.IsNull;
             break;
           case FILTER_NAME_VALUES.LESS:
-            name = FilterName.Less;
+            name = FilterNameEnum.Less;
             break;
           case FILTER_NAME_VALUES.LESS_EQUAL:
-            name = FilterName.LessEqual;
+            name = FilterNameEnum.LessEqual;
             break;
           case FILTER_NAME_VALUES.NOT_CONTAINS:
-            name = FilterName.NotContains;
+            name = FilterNameEnum.NotContains;
             break;
           case FILTER_NAME_VALUES.NOT_EQUALS:
-            name = FilterName.NotEquals;
+            name = FilterNameEnum.NotEquals;
             break;
           case FILTER_NAME_VALUES.STARTS_WITH:
-            name = FilterName.StartsWith;
+            name = FilterNameEnum.StartsWith;
             break;
         }
         break;
@@ -102,7 +103,7 @@ export function getFilterData(
     return null;
   } else {
     switch (type) {
-      case FilterType.Keys:
+      case FilterTypeEnum.Keys:
         if (!left || !right) {
           return null;
         } else {
@@ -115,7 +116,7 @@ export function getFilterData(
           };
           break;
         }
-      case FilterType.Expression:
+      case FilterTypeEnum.Expression:
         if (!clause) {
           return null;
         } else {
@@ -127,7 +128,7 @@ export function getFilterData(
           };
           break;
         }
-      case FilterType.Named:
+      case FilterTypeEnum.Named:
         if (name === null || !field || !values.length) {
           return null;
         } else {

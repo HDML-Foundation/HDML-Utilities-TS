@@ -8,4 +8,5 @@ export enum TABLE_ATTRS_LIST {
   NAME = "name",
   TYPE = "type",
   IDENTIFIER = "identifier",
+  DESCRIPTION = "description",
 }

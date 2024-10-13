@@ -8,4 +8,5 @@ export enum JOIN_ATTRS_LIST {
   TYPE = "type",
   LEFT = "left",
   RIGHT = "right",
+  DESCRIPTION = "description",
 }

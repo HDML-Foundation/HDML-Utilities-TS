@@ -6,7 +6,7 @@
 
 /* eslint-disable max-len */
 
-import { JoinType, FilterOperator } from "@hdml/schemas";
+import { JoinTypeEnum, FilterOperatorEnum } from "@hdml/schemas";
 import { getJoinData } from "./getJoinData";
 import { JOIN_ATTRS_LIST } from "../enums/JOIN_ATTRS_LIST";
 import { JOIN_TYPE_VALUES } from "../enums/JOIN_TYPE_VALUES";
@@ -38,21 +38,23 @@ describe("The `getJoinData` function", () => {
     ).toBeNull();
   });
 
-  it("shoud return `IJoin` object if correct attributes passed", () => {
+  it("shoud return `Join` object if correct attributes passed", () => {
     let data = getJoinData([
       { name: JOIN_ATTRS_LIST.LEFT, value: "left" },
       { name: JOIN_ATTRS_LIST.RIGHT, value: "right" },
+      { name: JOIN_ATTRS_LIST.DESCRIPTION, value: "description" },
     ]);
     expect(data).not.toBeNull();
     expect(data).toEqual({
-      type: JoinType.Cross,
+      type: JoinTypeEnum.Cross,
       left: "left",
       right: "right",
       clause: {
-        type: FilterOperator.None,
+        type: FilterOperatorEnum.None,
         filters: [],
         children: [],
       },
+      description: "description",
     });
 
     data = getJoinData([
@@ -62,14 +64,15 @@ describe("The `getJoinData` function", () => {
     ]);
     expect(data).not.toBeNull();
     expect(data).toEqual({
-      type: JoinType.Cross,
+      type: JoinTypeEnum.Cross,
       left: "left",
       right: "right",
       clause: {
-        type: FilterOperator.None,
+        type: FilterOperatorEnum.None,
         filters: [],
         children: [],
       },
+      description: null,
     });
 
     data = getJoinData([
@@ -79,14 +82,15 @@ describe("The `getJoinData` function", () => {
     ]);
     expect(data).not.toBeNull();
     expect(data).toEqual({
-      type: JoinType.Full,
+      type: JoinTypeEnum.Full,
       left: "left",
       right: "right",
       clause: {
-        type: FilterOperator.None,
+        type: FilterOperatorEnum.None,
         filters: [],
         children: [],
       },
+      description: null,
     });
 
     data = getJoinData([
@@ -99,14 +103,15 @@ describe("The `getJoinData` function", () => {
     ]);
     expect(data).not.toBeNull();
     expect(data).toEqual({
-      type: JoinType.FullOuter,
+      type: JoinTypeEnum.FullOuter,
       left: "left",
       right: "right",
       clause: {
-        type: FilterOperator.None,
+        type: FilterOperatorEnum.None,
         filters: [],
         children: [],
       },
+      description: null,
     });
 
     data = getJoinData([
@@ -116,14 +121,15 @@ describe("The `getJoinData` function", () => {
     ]);
     expect(data).not.toBeNull();
     expect(data).toEqual({
-      type: JoinType.Inner,
+      type: JoinTypeEnum.Inner,
       left: "left",
       right: "right",
       clause: {
-        type: FilterOperator.None,
+        type: FilterOperatorEnum.None,
         filters: [],
         children: [],
       },
+      description: null,
     });
 
     data = getJoinData([
@@ -133,14 +139,15 @@ describe("The `getJoinData` function", () => {
     ]);
     expect(data).not.toBeNull();
     expect(data).toEqual({
-      type: JoinType.Left,
+      type: JoinTypeEnum.Left,
       left: "left",
       right: "right",
       clause: {
-        type: FilterOperator.None,
+        type: FilterOperatorEnum.None,
         filters: [],
         children: [],
       },
+      description: null,
     });
 
     data = getJoinData([
@@ -153,14 +160,15 @@ describe("The `getJoinData` function", () => {
     ]);
     expect(data).not.toBeNull();
     expect(data).toEqual({
-      type: JoinType.LeftOuter,
+      type: JoinTypeEnum.LeftOuter,
       left: "left",
       right: "right",
       clause: {
-        type: FilterOperator.None,
+        type: FilterOperatorEnum.None,
         filters: [],
         children: [],
       },
+      description: null,
     });
 
     data = getJoinData([
@@ -170,14 +178,15 @@ describe("The `getJoinData` function", () => {
     ]);
     expect(data).not.toBeNull();
     expect(data).toEqual({
-      type: JoinType.Right,
+      type: JoinTypeEnum.Right,
       left: "left",
       right: "right",
       clause: {
-        type: FilterOperator.None,
+        type: FilterOperatorEnum.None,
         filters: [],
         children: [],
       },
+      description: null,
     });
 
     data = getJoinData([
@@ -190,14 +199,15 @@ describe("The `getJoinData` function", () => {
     ]);
     expect(data).not.toBeNull();
     expect(data).toEqual({
-      type: JoinType.RightOuter,
+      type: JoinTypeEnum.RightOuter,
       left: "left",
       right: "right",
       clause: {
-        type: FilterOperator.None,
+        type: FilterOperatorEnum.None,
         filters: [],
         children: [],
       },
+      description: null,
     });
   });
 });

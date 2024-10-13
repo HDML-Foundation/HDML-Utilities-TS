@@ -6,7 +6,7 @@
 
 /* eslint-disable max-len */
 
-import { FilterType, FilterName } from "@hdml/schemas";
+import { FilterTypeEnum, FilterNameEnum } from "@hdml/schemas";
 import { getFilterData } from "./getFilterData";
 import { FILTER_ATTRS_LIST } from "../enums/FILTER_ATTRS_LIST";
 import { FILTER_TYPE_VALUES } from "../enums/FILTER_TYPE_VALUES";
@@ -145,7 +145,7 @@ describe("The `getFilterData` function", () => {
     ).toBeNull();
   });
 
-  it("shoud return `IFilter` object if correct attributes passed for `keys` filter", () => {
+  it("shoud return `Filter` object if correct attributes passed for `keys` filter", () => {
     expect(
       getFilterData([
         {
@@ -162,7 +162,7 @@ describe("The `getFilterData` function", () => {
         },
       ]),
     ).toEqual({
-      type: FilterType.Keys,
+      type: FilterTypeEnum.Keys,
       options: {
         left: "left",
         right: "right",
@@ -170,7 +170,7 @@ describe("The `getFilterData` function", () => {
     });
   });
 
-  it("shoud return `IFilter` object if correct attributes passed for `expr` filter", () => {
+  it("shoud return `Filter` object if correct attributes passed for `expr` filter", () => {
     expect(
       getFilterData([
         {
@@ -183,14 +183,14 @@ describe("The `getFilterData` function", () => {
         },
       ]),
     ).toEqual({
-      type: FilterType.Expression,
+      type: FilterTypeEnum.Expression,
       options: {
         clause: "clause",
       },
     });
   });
 
-  it("shoud return `IFilter` object if correct attributes passed for `named` filter", () => {
+  it("shoud return `Filter` object if correct attributes passed for `named` filter", () => {
     expect(
       getFilterData([
         {
@@ -211,9 +211,9 @@ describe("The `getFilterData` function", () => {
         },
       ]),
     ).toEqual({
-      type: FilterType.Named,
+      type: FilterTypeEnum.Named,
       options: {
-        name: FilterName.Between,
+        name: FilterNameEnum.Between,
         field: "field",
         values: ["'value1'", "'value2'"],
       },
@@ -239,9 +239,9 @@ describe("The `getFilterData` function", () => {
         },
       ]),
     ).toEqual({
-      type: FilterType.Named,
+      type: FilterTypeEnum.Named,
       options: {
-        name: FilterName.Contains,
+        name: FilterNameEnum.Contains,
         field: "field",
         values: ["value"],
       },
@@ -267,9 +267,9 @@ describe("The `getFilterData` function", () => {
         },
       ]),
     ).toEqual({
-      type: FilterType.Named,
+      type: FilterTypeEnum.Named,
       options: {
-        name: FilterName.EndsWith,
+        name: FilterNameEnum.EndsWith,
         field: "field",
         values: ["value"],
       },
@@ -295,9 +295,9 @@ describe("The `getFilterData` function", () => {
         },
       ]),
     ).toEqual({
-      type: FilterType.Named,
+      type: FilterTypeEnum.Named,
       options: {
-        name: FilterName.Equals,
+        name: FilterNameEnum.Equals,
         field: "field",
         values: ["value"],
       },
@@ -323,9 +323,9 @@ describe("The `getFilterData` function", () => {
         },
       ]),
     ).toEqual({
-      type: FilterType.Named,
+      type: FilterTypeEnum.Named,
       options: {
-        name: FilterName.Greater,
+        name: FilterNameEnum.Greater,
         field: "field",
         values: ["value"],
       },
@@ -351,9 +351,9 @@ describe("The `getFilterData` function", () => {
         },
       ]),
     ).toEqual({
-      type: FilterType.Named,
+      type: FilterTypeEnum.Named,
       options: {
-        name: FilterName.GreaterEqual,
+        name: FilterNameEnum.GreaterEqual,
         field: "field",
         values: ["value"],
       },
@@ -379,9 +379,9 @@ describe("The `getFilterData` function", () => {
         },
       ]),
     ).toEqual({
-      type: FilterType.Named,
+      type: FilterTypeEnum.Named,
       options: {
-        name: FilterName.IsNotNull,
+        name: FilterNameEnum.IsNotNull,
         field: "field",
         values: ["value"],
       },
@@ -407,9 +407,9 @@ describe("The `getFilterData` function", () => {
         },
       ]),
     ).toEqual({
-      type: FilterType.Named,
+      type: FilterTypeEnum.Named,
       options: {
-        name: FilterName.IsNull,
+        name: FilterNameEnum.IsNull,
         field: "field",
         values: ["value"],
       },
@@ -435,9 +435,9 @@ describe("The `getFilterData` function", () => {
         },
       ]),
     ).toEqual({
-      type: FilterType.Named,
+      type: FilterTypeEnum.Named,
       options: {
-        name: FilterName.Less,
+        name: FilterNameEnum.Less,
         field: "field",
         values: ["value"],
       },
@@ -463,9 +463,9 @@ describe("The `getFilterData` function", () => {
         },
       ]),
     ).toEqual({
-      type: FilterType.Named,
+      type: FilterTypeEnum.Named,
       options: {
-        name: FilterName.LessEqual,
+        name: FilterNameEnum.LessEqual,
         field: "field",
         values: ["value"],
       },
@@ -491,9 +491,9 @@ describe("The `getFilterData` function", () => {
         },
       ]),
     ).toEqual({
-      type: FilterType.Named,
+      type: FilterTypeEnum.Named,
       options: {
-        name: FilterName.NotContains,
+        name: FilterNameEnum.NotContains,
         field: "field",
         values: ["value"],
       },
@@ -519,9 +519,9 @@ describe("The `getFilterData` function", () => {
         },
       ]),
     ).toEqual({
-      type: FilterType.Named,
+      type: FilterTypeEnum.Named,
       options: {
-        name: FilterName.NotEquals,
+        name: FilterNameEnum.NotEquals,
         field: "field",
         values: ["value"],
       },
@@ -547,9 +547,9 @@ describe("The `getFilterData` function", () => {
         },
       ]),
     ).toEqual({
-      type: FilterType.Named,
+      type: FilterTypeEnum.Named,
       options: {
-        name: FilterName.StartsWith,
+        name: FilterNameEnum.StartsWith,
         field: "field",
         values: ["value"],
       },

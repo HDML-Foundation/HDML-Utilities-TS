@@ -4,12 +4,12 @@
  * @license Apache-2.0
  */
 
-import { IHDDM as HDDM } from "@hdml/schemas";
+import { HDOM } from "@hdml/types";
 import { parseFragment } from "parse5";
 import { hdmlTreeAdapter } from "./hdmlTreeAdapter/hdmlTreeAdapter";
 import { HDMLTreeAdapterMap } from "./types/HDMLTreeAdapterMap";
 
-export function parseHDML(content: string): HDDM {
+export function parseHDML(content: string): HDOM {
   const fragment = parseFragment<HDMLTreeAdapterMap>(content, {
     onParseError: console.error,
     scriptingEnabled: false,

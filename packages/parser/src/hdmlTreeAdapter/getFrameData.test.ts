@@ -6,7 +6,7 @@
 
 /* eslint-disable max-len */
 
-import { FilterOperator } from "@hdml/schemas";
+import { FilterOperatorEnum } from "@hdml/schemas";
 import { getFrameData } from "./getFrameData";
 import { FRAME_ATTRS_LIST } from "../enums/FRAME_ATTRS_LIST";
 
@@ -39,10 +39,11 @@ describe("The `getFrameData` function", () => {
     ).toBeNull();
   });
 
-  it("shoud return `IFrame` object if correct attributes passed", () => {
+  it("shoud return `Frame` object if correct attributes passed", () => {
     // with limit and offset
     let frame = getFrameData([
       { name: FRAME_ATTRS_LIST.NAME, value: "name" },
+      { name: FRAME_ATTRS_LIST.DESCRIPTION, value: "description" },
       { name: FRAME_ATTRS_LIST.SOURCE, value: "source" },
       { name: FRAME_ATTRS_LIST.OFFSET, value: "100" },
       { name: FRAME_ATTRS_LIST.LIMIT, value: "1000" },
@@ -50,6 +51,7 @@ describe("The `getFrameData` function", () => {
 
     expect(frame).not.toBeNull();
     expect(frame?.name).toBe("name");
+    expect(frame?.description).toBe("description");
     expect(frame?.source).toBe("source");
     expect(frame?.offset).toBe(100);
     expect(frame?.limit).toBe(1000);
@@ -58,7 +60,7 @@ describe("The `getFrameData` function", () => {
     expect(frame?.sort_by).toEqual([]);
     expect(frame?.split_by).toEqual([]);
     expect(frame?.filter_by).toEqual({
-      type: FilterOperator.None,
+      type: FilterOperatorEnum.None,
       filters: [],
       children: [],
     });
@@ -79,7 +81,7 @@ describe("The `getFrameData` function", () => {
     expect(frame?.sort_by).toEqual([]);
     expect(frame?.split_by).toEqual([]);
     expect(frame?.filter_by).toEqual({
-      type: FilterOperator.None,
+      type: FilterOperatorEnum.None,
       filters: [],
       children: [],
     });

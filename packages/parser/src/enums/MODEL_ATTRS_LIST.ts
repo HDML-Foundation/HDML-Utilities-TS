@@ -6,4 +6,5 @@
 
 export enum MODEL_ATTRS_LIST {
   NAME = "name",
+  DESCRIPTION = "description",
 }

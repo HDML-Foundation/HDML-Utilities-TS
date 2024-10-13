@@ -4,7 +4,8 @@
  * @license Apache-2.0
  */
 
-import { IFilterClause, FilterOperator } from "@hdml/schemas";
+import { FilterOperatorEnum } from "@hdml/schemas";
+import { FilterClause } from "@hdml/types";
 import { Token } from "parse5";
 /* eslint-disable-next-line max-len */
 import { CONNECTIVE_ATTRS_LIST } from "../enums/CONNECTIVE_ATTRS_LIST";
@@ -12,9 +13,9 @@ import { CONNECTIVE_OP_VALUES } from "../enums/CONNECTIVE_OP_VALUES";
 
 export function getConnectiveData(
   attrs: Token.Attribute[],
-): IFilterClause {
-  const data: IFilterClause = {
-    type: FilterOperator.None,
+): FilterClause {
+  const data: FilterClause = {
+    type: FilterOperatorEnum.None,
     filters: [],
     children: [],
   };
@@ -23,13 +24,13 @@ export function getConnectiveData(
       case CONNECTIVE_ATTRS_LIST.OPERATOR:
         switch (attr.value as CONNECTIVE_OP_VALUES) {
           case CONNECTIVE_OP_VALUES.NONE:
-            data.type = FilterOperator.None;
+            data.type = FilterOperatorEnum.None;
             break;
           case CONNECTIVE_OP_VALUES.OR:
-            data.type = FilterOperator.Or;
+            data.type = FilterOperatorEnum.Or;
             break;
           case CONNECTIVE_OP_VALUES.AND:
-            data.type = FilterOperator.And;
+            data.type = FilterOperatorEnum.And;
             break;
         }
         break;

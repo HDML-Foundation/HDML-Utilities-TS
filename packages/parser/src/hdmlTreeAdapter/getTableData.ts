@@ -4,18 +4,18 @@
  * @license Apache-2.0
  */
 
-import { ITable, TableType } from "@hdml/schemas";
+import { TableTypeEnum } from "@hdml/schemas";
+import { Table } from "@hdml/types";
 import { Token } from "parse5";
 import { TABLE_ATTRS_LIST } from "../enums/TABLE_ATTRS_LIST";
 import { TABLE_TYPE_VALUES } from "../enums/TABLE_TYPE_VALUES";
 
-export function getTableData(
-  attrs: Token.Attribute[],
-): null | ITable {
-  let data: null | ITable = null;
+export function getTableData(attrs: Token.Attribute[]): null | Table {
+  let data: null | Table = null;
   let name: null | string = null;
-  let type: null | TableType = null;
+  let type: null | TableTypeEnum = null;
   let identifier: null | string = null;
+  let description: null | string = null;
   attrs.forEach((attr) => {
     switch (attr.name as TABLE_ATTRS_LIST) {
       case TABLE_ATTRS_LIST.NAME:
@@ -24,21 +24,25 @@ export function getTableData(
       case TABLE_ATTRS_LIST.TYPE:
         switch (attr.value as TABLE_TYPE_VALUES) {
           case TABLE_TYPE_VALUES.TABLE:
-            type = TableType.Table;
+            type = TableTypeEnum.Table;
             break;
           case TABLE_TYPE_VALUES.QUERY:
-            type = TableType.Query;
+            type = TableTypeEnum.Query;
             break;
         }
         break;
       case TABLE_ATTRS_LIST.IDENTIFIER:
         identifier = attr.value;
         break;
+      case TABLE_ATTRS_LIST.DESCRIPTION:
+        description = attr.value;
+        break;
     }
   });
   if (name && type !== null && identifier) {
     data = {
       name,
+      description,
       type,
       identifier,
       fields: [],

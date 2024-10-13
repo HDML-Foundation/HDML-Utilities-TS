@@ -6,7 +6,7 @@
 
 /* eslint-disable max-len */
 
-import { IModel } from "@hdml/schemas";
+import { Model } from "@hdml/types";
 import { getModelData } from "./getModelData";
 import { MODEL_ATTRS_LIST } from "../enums/MODEL_ATTRS_LIST";
 
@@ -19,13 +19,15 @@ describe("The `getModelData` function", () => {
     expect(getModelData([{ name: "a", value: "b" }])).toBeNull();
   });
 
-  it("shoud return `IModel` object if correct attributes passed", () => {
+  it("shoud return `Model` object if correct attributes passed", () => {
     const model = getModelData([
       { name: MODEL_ATTRS_LIST.NAME, value: "value" },
-    ]) as IModel;
+      { name: MODEL_ATTRS_LIST.DESCRIPTION, value: "description" },
+    ]) as Model;
 
     expect(model).not.toBeNull();
     expect(Object.hasOwn(model, MODEL_ATTRS_LIST.NAME)).toBeTruthy();
     expect(model.name).toBe("value");
+    expect(model.description).toBe("description");
   });
 });

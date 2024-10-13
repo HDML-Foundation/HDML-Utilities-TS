@@ -7,7 +7,7 @@
 export enum CONN_ATTRS_LIST {
   NAME = "name",
   TYPE = "type",
-  META = "meta",
+  DESCRIPTION = "description",
   SSL = "ssl",
   HOST = "host",
   PORT = "port",

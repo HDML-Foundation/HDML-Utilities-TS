@@ -5,7 +5,7 @@
  */
 
 import { Token, TreeAdapterTypeMap } from "parse5";
-import { IHDDM } from "@hdml/schemas";
+import { HDOM } from "@hdml/types";
 import { HDDMData } from "./HDDMData";
 
 type Attribute = Token.Attribute;
@@ -38,7 +38,7 @@ export interface Element {
   /** The node's children. */
   childNodes: ChildNode[];
   /** HyperData Document Model. */
-  hddm: null | IHDDM;
+  hddm: null | HDOM;
   /** HDDM parent node. */
   hddmData: null | HDDMData;
 }

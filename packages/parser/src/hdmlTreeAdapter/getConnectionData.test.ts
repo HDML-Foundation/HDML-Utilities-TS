@@ -6,16 +6,16 @@
 
 /* eslint-disable max-len */
 
+import { ConnectorTypesEnum } from "@hdml/schemas";
 import {
-  IConnection,
-  ConnectorTypes,
-  IJDBCParameters,
-  IBigQueryParameters,
-  IGoogleSheetsParameters,
-  IElasticsearchParameters,
-  IMongoDBParameters,
-  ISnowflakeParameters,
-} from "@hdml/schemas";
+  Connection,
+  JDBCParameters,
+  BigQueryParameters,
+  GoogleSheetsParameters,
+  ElasticsearchParameters,
+  MongoDBParameters,
+  SnowflakeParameters,
+} from "@hdml/types";
 import { getConnectionData } from "./getConnectionData";
 import { CONN_ATTRS_LIST } from "../enums/CONN_ATTRS_LIST";
 
@@ -41,25 +41,31 @@ describe("The `getConnectionData` function", () => {
   it("shoud return `null` if `type` attribute is missing", () => {
     const connection = getConnectionData([
       { name: CONN_ATTRS_LIST.NAME, value: "pg" },
-      { name: CONN_ATTRS_LIST.META, value: "Some meta data." },
+      {
+        name: CONN_ATTRS_LIST.DESCRIPTION,
+        value: "Some description data.",
+      },
       { name: CONN_ATTRS_LIST.HOST, value: "localhost" },
       { name: CONN_ATTRS_LIST.USER, value: "user" },
       { name: CONN_ATTRS_LIST.PASSWORD, value: "password" },
       { name: CONN_ATTRS_LIST.SSL, value: "true" },
-    ]) as IConnection;
+    ]) as Connection;
 
     expect(connection).toBeNull();
   });
 
   it("shoud return `null` if `name` attribute is missing", () => {
     const connection = getConnectionData([
-      { name: CONN_ATTRS_LIST.META, value: "Some meta data." },
+      {
+        name: CONN_ATTRS_LIST.DESCRIPTION,
+        value: "Some description data.",
+      },
       { name: CONN_ATTRS_LIST.TYPE, value: "postgres" },
       { name: CONN_ATTRS_LIST.HOST, value: "localhost" },
       { name: CONN_ATTRS_LIST.USER, value: "user" },
       { name: CONN_ATTRS_LIST.PASSWORD, value: "password" },
       { name: CONN_ATTRS_LIST.SSL, value: "true" },
-    ]) as IConnection;
+    ]) as Connection;
 
     expect(connection).toBeNull();
   });
@@ -68,12 +74,15 @@ describe("The `getConnectionData` function", () => {
   it("shoud return `null` if `host` attribute is missing for JDBC connector", () => {
     const connection = getConnectionData([
       { name: CONN_ATTRS_LIST.NAME, value: "pg" },
-      { name: CONN_ATTRS_LIST.META, value: "Some meta data." },
+      {
+        name: CONN_ATTRS_LIST.DESCRIPTION,
+        value: "Some description data.",
+      },
       { name: CONN_ATTRS_LIST.TYPE, value: "postgres" },
       { name: CONN_ATTRS_LIST.USER, value: "user" },
       { name: CONN_ATTRS_LIST.PASSWORD, value: "password" },
       { name: CONN_ATTRS_LIST.SSL, value: "true" },
-    ]) as IConnection;
+    ]) as Connection;
 
     expect(connection).toBeNull();
   });
@@ -81,12 +90,15 @@ describe("The `getConnectionData` function", () => {
   it("shoud return `null` if `user` attribute is missing for JDBC connector", () => {
     const connection = getConnectionData([
       { name: CONN_ATTRS_LIST.NAME, value: "pg" },
-      { name: CONN_ATTRS_LIST.META, value: "Some meta data." },
+      {
+        name: CONN_ATTRS_LIST.DESCRIPTION,
+        value: "Some description data.",
+      },
       { name: CONN_ATTRS_LIST.TYPE, value: "postgres" },
       { name: CONN_ATTRS_LIST.HOST, value: "localhost" },
       { name: CONN_ATTRS_LIST.PASSWORD, value: "password" },
       { name: CONN_ATTRS_LIST.SSL, value: "true" },
-    ]) as IConnection;
+    ]) as Connection;
 
     expect(connection).toBeNull();
   });
@@ -94,12 +106,15 @@ describe("The `getConnectionData` function", () => {
   it("shoud return `null` if `password` attribute is missing for JDBC connector", () => {
     const connection = getConnectionData([
       { name: CONN_ATTRS_LIST.NAME, value: "pg" },
-      { name: CONN_ATTRS_LIST.META, value: "Some meta data." },
+      {
+        name: CONN_ATTRS_LIST.DESCRIPTION,
+        value: "Some description data.",
+      },
       { name: CONN_ATTRS_LIST.TYPE, value: "postgres" },
       { name: CONN_ATTRS_LIST.HOST, value: "localhost" },
       { name: CONN_ATTRS_LIST.USER, value: "user" },
       { name: CONN_ATTRS_LIST.SSL, value: "true" },
-    ]) as IConnection;
+    ]) as Connection;
 
     expect(connection).toBeNull();
   });
@@ -107,21 +122,24 @@ describe("The `getConnectionData` function", () => {
   it("shoud return valid `ssl` property if correct `ssl` attributes is missed for JDBC connector", () => {
     const connection = getConnectionData([
       { name: CONN_ATTRS_LIST.NAME, value: "pg" },
-      { name: CONN_ATTRS_LIST.META, value: "Some meta data." },
+      {
+        name: CONN_ATTRS_LIST.DESCRIPTION,
+        value: "Some description data.",
+      },
       { name: CONN_ATTRS_LIST.TYPE, value: "postgres" },
       { name: CONN_ATTRS_LIST.HOST, value: "localhost" },
       { name: CONN_ATTRS_LIST.USER, value: "user" },
       { name: CONN_ATTRS_LIST.PASSWORD, value: "password" },
-    ]) as IConnection;
+    ]) as Connection;
 
     expect(connection).not.toBeNull();
     expect(connection.name).toBe("pg");
-    expect(connection.meta).toBe("Some meta data.");
+    expect(connection.description).toBe("Some description data.");
     expect(connection.options.connector).toBe(
-      ConnectorTypes.Postgres,
+      ConnectorTypesEnum.Postgres,
     );
 
-    const params = <IJDBCParameters>connection.options.parameters;
+    const params = <JDBCParameters>connection.options.parameters;
     expect(params.host).toBe("localhost");
     expect(params.user).toBe("user");
     expect(params.password).toBe("password");
@@ -131,22 +149,25 @@ describe("The `getConnectionData` function", () => {
   it("shoud return valid `ssl` property if correct `ssl` attributes is equal to `false` for JDBC connector", () => {
     const connection = getConnectionData([
       { name: CONN_ATTRS_LIST.NAME, value: "pg" },
-      { name: CONN_ATTRS_LIST.META, value: "Some meta data." },
+      {
+        name: CONN_ATTRS_LIST.DESCRIPTION,
+        value: "Some description data.",
+      },
       { name: CONN_ATTRS_LIST.TYPE, value: "postgres" },
       { name: CONN_ATTRS_LIST.HOST, value: "localhost" },
       { name: CONN_ATTRS_LIST.USER, value: "user" },
       { name: CONN_ATTRS_LIST.PASSWORD, value: "password" },
       { name: CONN_ATTRS_LIST.SSL, value: "false" },
-    ]) as IConnection;
+    ]) as Connection;
 
     expect(connection).not.toBeNull();
     expect(connection.name).toBe("pg");
-    expect(connection.meta).toBe("Some meta data.");
+    expect(connection.description).toBe("Some description data.");
     expect(connection.options.connector).toBe(
-      ConnectorTypes.Postgres,
+      ConnectorTypesEnum.Postgres,
     );
 
-    const params = <IJDBCParameters>connection.options.parameters;
+    const params = <JDBCParameters>connection.options.parameters;
     expect(params.host).toBe("localhost");
     expect(params.user).toBe("user");
     expect(params.password).toBe("password");
@@ -156,22 +177,25 @@ describe("The `getConnectionData` function", () => {
   it("shoud return valid `ssl` property if correct `ssl` attributes is equal to `true` for JDBC connector", () => {
     const connection = getConnectionData([
       { name: CONN_ATTRS_LIST.NAME, value: "pg" },
-      { name: CONN_ATTRS_LIST.META, value: "Some meta data." },
+      {
+        name: CONN_ATTRS_LIST.DESCRIPTION,
+        value: "Some description data.",
+      },
       { name: CONN_ATTRS_LIST.TYPE, value: "postgres" },
       { name: CONN_ATTRS_LIST.HOST, value: "localhost" },
       { name: CONN_ATTRS_LIST.USER, value: "user" },
       { name: CONN_ATTRS_LIST.PASSWORD, value: "password" },
       { name: CONN_ATTRS_LIST.SSL, value: "true" },
-    ]) as IConnection;
+    ]) as Connection;
 
     expect(connection).not.toBeNull();
     expect(connection.name).toBe("pg");
-    expect(connection.meta).toBe("Some meta data.");
+    expect(connection.description).toBe("Some description data.");
     expect(connection.options.connector).toBe(
-      ConnectorTypes.Postgres,
+      ConnectorTypesEnum.Postgres,
     );
 
-    const params = <IJDBCParameters>connection.options.parameters;
+    const params = <JDBCParameters>connection.options.parameters;
     expect(params.host).toBe("localhost");
     expect(params.user).toBe("user");
     expect(params.password).toBe("password");
@@ -179,25 +203,28 @@ describe("The `getConnectionData` function", () => {
   });
 
   // PostgreSQL
-  it("shoud return `IConnection` object if correct `postgres` attributes passed", () => {
+  it("shoud return `Connection` object if correct `postgres` attributes passed", () => {
     const connection = getConnectionData([
       { name: CONN_ATTRS_LIST.NAME, value: "pg" },
-      { name: CONN_ATTRS_LIST.META, value: "Some meta data." },
+      {
+        name: CONN_ATTRS_LIST.DESCRIPTION,
+        value: "Some description data.",
+      },
       { name: CONN_ATTRS_LIST.TYPE, value: "postgres" },
       { name: CONN_ATTRS_LIST.HOST, value: "localhost" },
       { name: CONN_ATTRS_LIST.USER, value: "user" },
       { name: CONN_ATTRS_LIST.PASSWORD, value: "password" },
       { name: CONN_ATTRS_LIST.SSL, value: "true" },
-    ]) as IConnection;
+    ]) as Connection;
 
     expect(connection).not.toBeNull();
     expect(connection.name).toBe("pg");
-    expect(connection.meta).toBe("Some meta data.");
+    expect(connection.description).toBe("Some description data.");
     expect(connection.options.connector).toBe(
-      ConnectorTypes.Postgres,
+      ConnectorTypesEnum.Postgres,
     );
 
-    const params = <IJDBCParameters>connection.options.parameters;
+    const params = <JDBCParameters>connection.options.parameters;
     expect(params.host).toBe("localhost");
     expect(params.user).toBe("user");
     expect(params.password).toBe("password");
@@ -205,23 +232,28 @@ describe("The `getConnectionData` function", () => {
   });
 
   // MySQL
-  it("shoud return `IConnection` object if correct `mysql` attributes passed", () => {
+  it("shoud return `Connection` object if correct `mysql` attributes passed", () => {
     const connection = getConnectionData([
       { name: CONN_ATTRS_LIST.NAME, value: "my" },
-      { name: CONN_ATTRS_LIST.META, value: "Some meta data." },
+      {
+        name: CONN_ATTRS_LIST.DESCRIPTION,
+        value: "Some description data.",
+      },
       { name: CONN_ATTRS_LIST.TYPE, value: "mysql" },
       { name: CONN_ATTRS_LIST.HOST, value: "localhost" },
       { name: CONN_ATTRS_LIST.USER, value: "user" },
       { name: CONN_ATTRS_LIST.PASSWORD, value: "password" },
       { name: CONN_ATTRS_LIST.SSL, value: "true" },
-    ]) as IConnection;
+    ]) as Connection;
 
     expect(connection).not.toBeNull();
     expect(connection.name).toBe("my");
-    expect(connection.meta).toBe("Some meta data.");
-    expect(connection.options.connector).toBe(ConnectorTypes.MySQL);
+    expect(connection.description).toBe("Some description data.");
+    expect(connection.options.connector).toBe(
+      ConnectorTypesEnum.MySQL,
+    );
 
-    const params = <IJDBCParameters>connection.options.parameters;
+    const params = <JDBCParameters>connection.options.parameters;
     expect(params.host).toBe("localhost");
     expect(params.user).toBe("user");
     expect(params.password).toBe("password");
@@ -229,23 +261,28 @@ describe("The `getConnectionData` function", () => {
   });
 
   // MsSQL
-  it("shoud return `IConnection` object if correct `mssql` attributes passed", () => {
+  it("shoud return `Connection` object if correct `mssql` attributes passed", () => {
     const connection = getConnectionData([
       { name: CONN_ATTRS_LIST.NAME, value: "ms" },
-      { name: CONN_ATTRS_LIST.META, value: "Some meta data." },
+      {
+        name: CONN_ATTRS_LIST.DESCRIPTION,
+        value: "Some description data.",
+      },
       { name: CONN_ATTRS_LIST.TYPE, value: "mssql" },
       { name: CONN_ATTRS_LIST.HOST, value: "localhost" },
       { name: CONN_ATTRS_LIST.USER, value: "user" },
       { name: CONN_ATTRS_LIST.PASSWORD, value: "password" },
       { name: CONN_ATTRS_LIST.SSL, value: "true" },
-    ]) as IConnection;
+    ]) as Connection;
 
     expect(connection).not.toBeNull();
     expect(connection.name).toBe("ms");
-    expect(connection.meta).toBe("Some meta data.");
-    expect(connection.options.connector).toBe(ConnectorTypes.MsSQL);
+    expect(connection.description).toBe("Some description data.");
+    expect(connection.options.connector).toBe(
+      ConnectorTypesEnum.MsSQL,
+    );
 
-    const params = <IJDBCParameters>connection.options.parameters;
+    const params = <JDBCParameters>connection.options.parameters;
     expect(params.host).toBe("localhost");
     expect(params.user).toBe("user");
     expect(params.password).toBe("password");
@@ -253,23 +290,28 @@ describe("The `getConnectionData` function", () => {
   });
 
   // Oracle
-  it("shoud return `IConnection` object if correct `oracle` attributes passed", () => {
+  it("shoud return `Connection` object if correct `oracle` attributes passed", () => {
     const connection = getConnectionData([
       { name: CONN_ATTRS_LIST.NAME, value: "pl" },
-      { name: CONN_ATTRS_LIST.META, value: "Some meta data." },
+      {
+        name: CONN_ATTRS_LIST.DESCRIPTION,
+        value: "Some description data.",
+      },
       { name: CONN_ATTRS_LIST.TYPE, value: "oracle" },
       { name: CONN_ATTRS_LIST.HOST, value: "localhost" },
       { name: CONN_ATTRS_LIST.USER, value: "user" },
       { name: CONN_ATTRS_LIST.PASSWORD, value: "password" },
       { name: CONN_ATTRS_LIST.SSL, value: "true" },
-    ]) as IConnection;
+    ]) as Connection;
 
     expect(connection).not.toBeNull();
     expect(connection.name).toBe("pl");
-    expect(connection.meta).toBe("Some meta data.");
-    expect(connection.options.connector).toBe(ConnectorTypes.Oracle);
+    expect(connection.description).toBe("Some description data.");
+    expect(connection.options.connector).toBe(
+      ConnectorTypesEnum.Oracle,
+    );
 
-    const params = <IJDBCParameters>connection.options.parameters;
+    const params = <JDBCParameters>connection.options.parameters;
     expect(params.host).toBe("localhost");
     expect(params.user).toBe("user");
     expect(params.password).toBe("password");
@@ -277,25 +319,28 @@ describe("The `getConnectionData` function", () => {
   });
 
   // ClickHouse
-  it("shoud return `IConnection` object if correct `clickhouse` attributes passed", () => {
+  it("shoud return `Connection` object if correct `clickhouse` attributes passed", () => {
     const connection = getConnectionData([
       { name: CONN_ATTRS_LIST.NAME, value: "ch" },
-      { name: CONN_ATTRS_LIST.META, value: "Some meta data." },
+      {
+        name: CONN_ATTRS_LIST.DESCRIPTION,
+        value: "Some description data.",
+      },
       { name: CONN_ATTRS_LIST.TYPE, value: "clickhouse" },
       { name: CONN_ATTRS_LIST.HOST, value: "localhost" },
       { name: CONN_ATTRS_LIST.USER, value: "user" },
       { name: CONN_ATTRS_LIST.PASSWORD, value: "password" },
       { name: CONN_ATTRS_LIST.SSL, value: "true" },
-    ]) as IConnection;
+    ]) as Connection;
 
     expect(connection).not.toBeNull();
     expect(connection.name).toBe("ch");
-    expect(connection.meta).toBe("Some meta data.");
+    expect(connection.description).toBe("Some description data.");
     expect(connection.options.connector).toBe(
-      ConnectorTypes.Clickhouse,
+      ConnectorTypesEnum.Clickhouse,
     );
 
-    const params = <IJDBCParameters>connection.options.parameters;
+    const params = <JDBCParameters>connection.options.parameters;
     expect(params.host).toBe("localhost");
     expect(params.user).toBe("user");
     expect(params.password).toBe("password");
@@ -303,23 +348,28 @@ describe("The `getConnectionData` function", () => {
   });
 
   // Druid
-  it("shoud return `IConnection` object if correct `druid` attributes passed", () => {
+  it("shoud return `Connection` object if correct `druid` attributes passed", () => {
     const connection = getConnectionData([
       { name: CONN_ATTRS_LIST.NAME, value: "dr" },
-      { name: CONN_ATTRS_LIST.META, value: "Some meta data." },
+      {
+        name: CONN_ATTRS_LIST.DESCRIPTION,
+        value: "Some description data.",
+      },
       { name: CONN_ATTRS_LIST.TYPE, value: "druid" },
       { name: CONN_ATTRS_LIST.HOST, value: "localhost" },
       { name: CONN_ATTRS_LIST.USER, value: "user" },
       { name: CONN_ATTRS_LIST.PASSWORD, value: "password" },
       { name: CONN_ATTRS_LIST.SSL, value: "true" },
-    ]) as IConnection;
+    ]) as Connection;
 
     expect(connection).not.toBeNull();
     expect(connection.name).toBe("dr");
-    expect(connection.meta).toBe("Some meta data.");
-    expect(connection.options.connector).toBe(ConnectorTypes.Druid);
+    expect(connection.description).toBe("Some description data.");
+    expect(connection.options.connector).toBe(
+      ConnectorTypesEnum.Druid,
+    );
 
-    const params = <IJDBCParameters>connection.options.parameters;
+    const params = <JDBCParameters>connection.options.parameters;
     expect(params.host).toBe("localhost");
     expect(params.user).toBe("user");
     expect(params.password).toBe("password");
@@ -327,23 +377,28 @@ describe("The `getConnectionData` function", () => {
   });
 
   // Ignite
-  it("shoud return `IConnection` object if correct `ignite` attributes passed", () => {
+  it("shoud return `Connection` object if correct `ignite` attributes passed", () => {
     const connection = getConnectionData([
       { name: CONN_ATTRS_LIST.NAME, value: "ig" },
-      { name: CONN_ATTRS_LIST.META, value: "Some meta data." },
+      {
+        name: CONN_ATTRS_LIST.DESCRIPTION,
+        value: "Some description data.",
+      },
       { name: CONN_ATTRS_LIST.TYPE, value: "ignite" },
       { name: CONN_ATTRS_LIST.HOST, value: "localhost" },
       { name: CONN_ATTRS_LIST.USER, value: "user" },
       { name: CONN_ATTRS_LIST.PASSWORD, value: "password" },
       { name: CONN_ATTRS_LIST.SSL, value: "true" },
-    ]) as IConnection;
+    ]) as Connection;
 
     expect(connection).not.toBeNull();
     expect(connection.name).toBe("ig");
-    expect(connection.meta).toBe("Some meta data.");
-    expect(connection.options.connector).toBe(ConnectorTypes.Ignite);
+    expect(connection.description).toBe("Some description data.");
+    expect(connection.options.connector).toBe(
+      ConnectorTypesEnum.Ignite,
+    );
 
-    const params = <IJDBCParameters>connection.options.parameters;
+    const params = <JDBCParameters>connection.options.parameters;
     expect(params.host).toBe("localhost");
     expect(params.user).toBe("user");
     expect(params.password).toBe("password");
@@ -351,25 +406,28 @@ describe("The `getConnectionData` function", () => {
   });
 
   // Redshift
-  it("shoud return `IConnection` object if correct `redshift` attributes passed", () => {
+  it("shoud return `Connection` object if correct `redshift` attributes passed", () => {
     const connection = getConnectionData([
       { name: CONN_ATTRS_LIST.NAME, value: "rs" },
-      { name: CONN_ATTRS_LIST.META, value: "Some meta data." },
+      {
+        name: CONN_ATTRS_LIST.DESCRIPTION,
+        value: "Some description data.",
+      },
       { name: CONN_ATTRS_LIST.TYPE, value: "redshift" },
       { name: CONN_ATTRS_LIST.HOST, value: "localhost" },
       { name: CONN_ATTRS_LIST.USER, value: "user" },
       { name: CONN_ATTRS_LIST.PASSWORD, value: "password" },
       { name: CONN_ATTRS_LIST.SSL, value: "true" },
-    ]) as IConnection;
+    ]) as Connection;
 
     expect(connection).not.toBeNull();
     expect(connection.name).toBe("rs");
-    expect(connection.meta).toBe("Some meta data.");
+    expect(connection.description).toBe("Some description data.");
     expect(connection.options.connector).toBe(
-      ConnectorTypes.Redshift,
+      ConnectorTypesEnum.Redshift,
     );
 
-    const params = <IJDBCParameters>connection.options.parameters;
+    const params = <JDBCParameters>connection.options.parameters;
     expect(params.host).toBe("localhost");
     expect(params.user).toBe("user");
     expect(params.password).toBe("password");
@@ -377,23 +435,28 @@ describe("The `getConnectionData` function", () => {
   });
 
   // MariaDB
-  it("shoud return `IConnection` object if correct `mariadb` attributes passed", () => {
+  it("shoud return `Connection` object if correct `mariadb` attributes passed", () => {
     const connection = getConnectionData([
       { name: CONN_ATTRS_LIST.NAME, value: "ma" },
-      { name: CONN_ATTRS_LIST.META, value: "Some meta data." },
+      {
+        name: CONN_ATTRS_LIST.DESCRIPTION,
+        value: "Some description data.",
+      },
       { name: CONN_ATTRS_LIST.TYPE, value: "mariadb" },
       { name: CONN_ATTRS_LIST.HOST, value: "localhost" },
       { name: CONN_ATTRS_LIST.USER, value: "user" },
       { name: CONN_ATTRS_LIST.PASSWORD, value: "password" },
       { name: CONN_ATTRS_LIST.SSL, value: "true" },
-    ]) as IConnection;
+    ]) as Connection;
 
     expect(connection).not.toBeNull();
     expect(connection.name).toBe("ma");
-    expect(connection.meta).toBe("Some meta data.");
-    expect(connection.options.connector).toBe(ConnectorTypes.MariaDB);
+    expect(connection.description).toBe("Some description data.");
+    expect(connection.options.connector).toBe(
+      ConnectorTypesEnum.MariaDB,
+    );
 
-    const params = <IJDBCParameters>connection.options.parameters;
+    const params = <JDBCParameters>connection.options.parameters;
     expect(params.host).toBe("localhost");
     expect(params.user).toBe("user");
     expect(params.password).toBe("password");
@@ -404,10 +467,13 @@ describe("The `getConnectionData` function", () => {
   it("shoud return `null` if correct `project-id` attribute is missed for `bigquery` connector", () => {
     const connection = getConnectionData([
       { name: CONN_ATTRS_LIST.NAME, value: "bg" },
-      { name: CONN_ATTRS_LIST.META, value: "Some meta data." },
+      {
+        name: CONN_ATTRS_LIST.DESCRIPTION,
+        value: "Some description data.",
+      },
       { name: CONN_ATTRS_LIST.TYPE, value: "bigquery" },
       { name: CONN_ATTRS_LIST.CREDENTIALS_KEY, value: "key" },
-    ]) as IConnection;
+    ]) as Connection;
 
     expect(connection).toBeNull();
   });
@@ -415,51 +481,57 @@ describe("The `getConnectionData` function", () => {
   it("shoud return `null` if correct `credentials-key` attribute is missed for `bigquery` connector", () => {
     const connection = getConnectionData([
       { name: CONN_ATTRS_LIST.NAME, value: "bg" },
-      { name: CONN_ATTRS_LIST.META, value: "Some meta data." },
+      {
+        name: CONN_ATTRS_LIST.DESCRIPTION,
+        value: "Some description data.",
+      },
       { name: CONN_ATTRS_LIST.TYPE, value: "bigquery" },
       { name: CONN_ATTRS_LIST.PROJECT_ID, value: "id" },
-    ]) as IConnection;
+    ]) as Connection;
 
     expect(connection).toBeNull();
   });
 
-  it("shoud return `IConnection` object if correct `bigquery` attributes passed", () => {
-    // with meta
+  it("shoud return `Connection` object if correct `bigquery` attributes passed", () => {
+    // with description
     let connection = getConnectionData([
       { name: CONN_ATTRS_LIST.NAME, value: "bg" },
-      { name: CONN_ATTRS_LIST.META, value: "Some meta data." },
+      {
+        name: CONN_ATTRS_LIST.DESCRIPTION,
+        value: "Some description data.",
+      },
       { name: CONN_ATTRS_LIST.TYPE, value: "bigquery" },
       { name: CONN_ATTRS_LIST.PROJECT_ID, value: "id" },
       { name: CONN_ATTRS_LIST.CREDENTIALS_KEY, value: "key" },
-    ]) as IConnection;
+    ]) as Connection;
 
     expect(connection).not.toBeNull();
     expect(connection.name).toBe("bg");
-    expect(connection.meta).toBe("Some meta data.");
+    expect(connection.description).toBe("Some description data.");
     expect(connection.options.connector).toBe(
-      ConnectorTypes.BigQuery,
+      ConnectorTypesEnum.BigQuery,
     );
 
-    let params = <IBigQueryParameters>connection.options.parameters;
+    let params = <BigQueryParameters>connection.options.parameters;
     expect(params.credentials_key).toBe("key");
     expect(params.project_id).toBe("id");
 
-    // wo meta
+    // wo description
     connection = getConnectionData([
       { name: CONN_ATTRS_LIST.NAME, value: "bg" },
       { name: CONN_ATTRS_LIST.TYPE, value: "bigquery" },
       { name: CONN_ATTRS_LIST.PROJECT_ID, value: "id" },
       { name: CONN_ATTRS_LIST.CREDENTIALS_KEY, value: "key" },
-    ]) as IConnection;
+    ]) as Connection;
 
     expect(connection).not.toBeNull();
     expect(connection.name).toBe("bg");
-    expect(connection.meta).toBe("");
+    expect(connection.description).toBe(null);
     expect(connection.options.connector).toBe(
-      ConnectorTypes.BigQuery,
+      ConnectorTypesEnum.BigQuery,
     );
 
-    params = <IBigQueryParameters>connection.options.parameters;
+    params = <BigQueryParameters>connection.options.parameters;
     expect(params.credentials_key).toBe("key");
     expect(params.project_id).toBe("id");
   });
@@ -468,10 +540,10 @@ describe("The `getConnectionData` function", () => {
   it("shoud return `null` if correct `sheet-id` attribute is missed for `googlesheets` connector", () => {
     const connection = getConnectionData([
       { name: CONN_ATTRS_LIST.NAME, value: "gs" },
-      { name: CONN_ATTRS_LIST.META, value: "" },
+      { name: CONN_ATTRS_LIST.DESCRIPTION, value: "" },
       { name: CONN_ATTRS_LIST.TYPE, value: "googlesheets" },
       { name: CONN_ATTRS_LIST.CREDENTIALS_KEY, value: "key" },
-    ]) as IConnection;
+    ]) as Connection;
 
     expect(connection).toBeNull();
   });
@@ -479,53 +551,59 @@ describe("The `getConnectionData` function", () => {
   it("shoud return `null` if correct `credentials-key` attribute is missed for `googlesheets` connector", () => {
     const connection = getConnectionData([
       { name: CONN_ATTRS_LIST.NAME, value: "gs" },
-      { name: CONN_ATTRS_LIST.META, value: "Some meta data." },
+      {
+        name: CONN_ATTRS_LIST.DESCRIPTION,
+        value: "Some description data.",
+      },
       { name: CONN_ATTRS_LIST.TYPE, value: "googlesheets" },
       { name: CONN_ATTRS_LIST.SHEET_ID, value: "id" },
-    ]) as IConnection;
+    ]) as Connection;
 
     expect(connection).toBeNull();
   });
 
-  it("shoud return `IConnection` object if correct `googlesheets` attributes passed", () => {
-    // with meta
+  it("shoud return `Connection` object if correct `googlesheets` attributes passed", () => {
+    // with description
     let connection = getConnectionData([
       { name: CONN_ATTRS_LIST.NAME, value: "gs" },
-      { name: CONN_ATTRS_LIST.META, value: "Some meta data." },
+      {
+        name: CONN_ATTRS_LIST.DESCRIPTION,
+        value: "Some description data.",
+      },
       { name: CONN_ATTRS_LIST.TYPE, value: "googlesheets" },
       { name: CONN_ATTRS_LIST.SHEET_ID, value: "id" },
       { name: CONN_ATTRS_LIST.CREDENTIALS_KEY, value: "key" },
-    ]) as IConnection;
+    ]) as Connection;
 
     expect(connection).not.toBeNull();
     expect(connection.name).toBe("gs");
-    expect(connection.meta).toBe("Some meta data.");
+    expect(connection.description).toBe("Some description data.");
     expect(connection.options.connector).toBe(
-      ConnectorTypes.GoogleSheets,
+      ConnectorTypesEnum.GoogleSheets,
     );
 
-    let params = <IGoogleSheetsParameters>(
+    let params = <GoogleSheetsParameters>(
       connection.options.parameters
     );
     expect(params.credentials_key).toBe("key");
     expect(params.sheet_id).toBe("id");
 
-    // wo meta
+    // wo description
     connection = getConnectionData([
       { name: CONN_ATTRS_LIST.NAME, value: "gs" },
       { name: CONN_ATTRS_LIST.TYPE, value: "googlesheets" },
       { name: CONN_ATTRS_LIST.SHEET_ID, value: "id" },
       { name: CONN_ATTRS_LIST.CREDENTIALS_KEY, value: "key" },
-    ]) as IConnection;
+    ]) as Connection;
 
     expect(connection).not.toBeNull();
     expect(connection.name).toBe("gs");
-    expect(connection.meta).toBe("");
+    expect(connection.description).toBe(null);
     expect(connection.options.connector).toBe(
-      ConnectorTypes.GoogleSheets,
+      ConnectorTypesEnum.GoogleSheets,
     );
 
-    params = <IGoogleSheetsParameters>connection.options.parameters;
+    params = <GoogleSheetsParameters>connection.options.parameters;
     expect(params.credentials_key).toBe("key");
     expect(params.sheet_id).toBe("id");
   });
@@ -534,7 +612,10 @@ describe("The `getConnectionData` function", () => {
   it("shoud return `null` if `host` attribute is missed for `elasticsearch` connector", () => {
     const connection = getConnectionData([
       { name: CONN_ATTRS_LIST.NAME, value: "es" },
-      { name: CONN_ATTRS_LIST.META, value: "Some meta data." },
+      {
+        name: CONN_ATTRS_LIST.DESCRIPTION,
+        value: "Some description data.",
+      },
       { name: CONN_ATTRS_LIST.TYPE, value: "elasticsearch" },
       { name: CONN_ATTRS_LIST.PORT, value: "1000" },
       { name: CONN_ATTRS_LIST.SSL, value: "true" },
@@ -543,7 +624,7 @@ describe("The `getConnectionData` function", () => {
       { name: CONN_ATTRS_LIST.REGION, value: "region" },
       { name: CONN_ATTRS_LIST.ACCESS_KEY, value: "key" },
       { name: CONN_ATTRS_LIST.SECRET_KEY, value: "key" },
-    ]) as IConnection;
+    ]) as Connection;
 
     expect(connection).toBeNull();
   });
@@ -552,7 +633,10 @@ describe("The `getConnectionData` function", () => {
     // no region
     let connection = getConnectionData([
       { name: CONN_ATTRS_LIST.NAME, value: "es" },
-      { name: CONN_ATTRS_LIST.META, value: "Some meta data." },
+      {
+        name: CONN_ATTRS_LIST.DESCRIPTION,
+        value: "Some description data.",
+      },
       { name: CONN_ATTRS_LIST.TYPE, value: "elasticsearch" },
       { name: CONN_ATTRS_LIST.HOST, value: "localhost" },
       { name: CONN_ATTRS_LIST.PORT, value: "1000" },
@@ -561,14 +645,17 @@ describe("The `getConnectionData` function", () => {
       { name: CONN_ATTRS_LIST.PASSWORD, value: "password" },
       { name: CONN_ATTRS_LIST.ACCESS_KEY, value: "key" },
       { name: CONN_ATTRS_LIST.SECRET_KEY, value: "key" },
-    ]) as IConnection;
+    ]) as Connection;
 
     expect(connection).toBeNull();
 
     // no access key
     connection = getConnectionData([
       { name: CONN_ATTRS_LIST.NAME, value: "es" },
-      { name: CONN_ATTRS_LIST.META, value: "Some meta data." },
+      {
+        name: CONN_ATTRS_LIST.DESCRIPTION,
+        value: "Some description data.",
+      },
       { name: CONN_ATTRS_LIST.TYPE, value: "elasticsearch" },
       { name: CONN_ATTRS_LIST.HOST, value: "localhost" },
       { name: CONN_ATTRS_LIST.PORT, value: "1000" },
@@ -577,14 +664,17 @@ describe("The `getConnectionData` function", () => {
       { name: CONN_ATTRS_LIST.PASSWORD, value: "password" },
       { name: CONN_ATTRS_LIST.REGION, value: "region" },
       { name: CONN_ATTRS_LIST.SECRET_KEY, value: "key" },
-    ]) as IConnection;
+    ]) as Connection;
 
     expect(connection).toBeNull();
 
     // no secret key
     connection = getConnectionData([
       { name: CONN_ATTRS_LIST.NAME, value: "es" },
-      { name: CONN_ATTRS_LIST.META, value: "Some meta data." },
+      {
+        name: CONN_ATTRS_LIST.DESCRIPTION,
+        value: "Some description data.",
+      },
       { name: CONN_ATTRS_LIST.TYPE, value: "elasticsearch" },
       { name: CONN_ATTRS_LIST.HOST, value: "localhost" },
       { name: CONN_ATTRS_LIST.PORT, value: "1000" },
@@ -593,14 +683,17 @@ describe("The `getConnectionData` function", () => {
       { name: CONN_ATTRS_LIST.PASSWORD, value: "password" },
       { name: CONN_ATTRS_LIST.REGION, value: "region" },
       { name: CONN_ATTRS_LIST.ACCESS_KEY, value: "key" },
-    ]) as IConnection;
+    ]) as Connection;
 
     expect(connection).toBeNull();
 
     // secret key only
     connection = getConnectionData([
       { name: CONN_ATTRS_LIST.NAME, value: "es" },
-      { name: CONN_ATTRS_LIST.META, value: "Some meta data." },
+      {
+        name: CONN_ATTRS_LIST.DESCRIPTION,
+        value: "Some description data.",
+      },
       { name: CONN_ATTRS_LIST.TYPE, value: "elasticsearch" },
       { name: CONN_ATTRS_LIST.HOST, value: "localhost" },
       { name: CONN_ATTRS_LIST.PORT, value: "1000" },
@@ -608,16 +701,19 @@ describe("The `getConnectionData` function", () => {
       { name: CONN_ATTRS_LIST.USER, value: "user" },
       { name: CONN_ATTRS_LIST.PASSWORD, value: "password" },
       { name: CONN_ATTRS_LIST.SECRET_KEY, value: "key" },
-    ]) as IConnection;
+    ]) as Connection;
 
     expect(connection).toBeNull();
   });
 
-  it("shoud return `IConnection` object if correct `elasticsearch` attributes are passed", () => {
-    // with meta, port and ssl
+  it("shoud return `Connection` object if correct `elasticsearch` attributes are passed", () => {
+    // with description, port and ssl
     let connection = getConnectionData([
       { name: CONN_ATTRS_LIST.NAME, value: "es" },
-      { name: CONN_ATTRS_LIST.META, value: "Some meta data." },
+      {
+        name: CONN_ATTRS_LIST.DESCRIPTION,
+        value: "Some description data.",
+      },
       { name: CONN_ATTRS_LIST.TYPE, value: "elasticsearch" },
       { name: CONN_ATTRS_LIST.HOST, value: "localhost" },
       { name: CONN_ATTRS_LIST.PORT, value: "1000" },
@@ -627,16 +723,16 @@ describe("The `getConnectionData` function", () => {
       { name: CONN_ATTRS_LIST.REGION, value: "region" },
       { name: CONN_ATTRS_LIST.ACCESS_KEY, value: "key" },
       { name: CONN_ATTRS_LIST.SECRET_KEY, value: "key" },
-    ]) as IConnection;
+    ]) as Connection;
 
     expect(connection).not.toBeNull();
     expect(connection.name).toBe("es");
-    expect(connection.meta).toBe("Some meta data.");
+    expect(connection.description).toBe("Some description data.");
     expect(connection.options.connector).toBe(
-      ConnectorTypes.ElasticSearch,
+      ConnectorTypesEnum.ElasticSearch,
     );
 
-    let params = <IElasticsearchParameters>(
+    let params = <ElasticsearchParameters>(
       connection.options.parameters
     );
     expect(params.host).toBe("localhost");
@@ -648,7 +744,7 @@ describe("The `getConnectionData` function", () => {
     expect(params.access_key).toBe("key");
     expect(params.secret_key).toBe("key");
 
-    // wo meta, port and ssl
+    // wo description, port and ssl
     connection = getConnectionData([
       { name: CONN_ATTRS_LIST.NAME, value: "es" },
       { name: CONN_ATTRS_LIST.TYPE, value: "elasticsearch" },
@@ -658,16 +754,16 @@ describe("The `getConnectionData` function", () => {
       { name: CONN_ATTRS_LIST.REGION, value: "region" },
       { name: CONN_ATTRS_LIST.ACCESS_KEY, value: "key" },
       { name: CONN_ATTRS_LIST.SECRET_KEY, value: "key" },
-    ]) as IConnection;
+    ]) as Connection;
 
     expect(connection).not.toBeNull();
     expect(connection.name).toBe("es");
-    expect(connection.meta).toBe("");
+    expect(connection.description).toBe(null);
     expect(connection.options.connector).toBe(
-      ConnectorTypes.ElasticSearch,
+      ConnectorTypesEnum.ElasticSearch,
     );
 
-    params = <IElasticsearchParameters>connection.options.parameters;
+    params = <ElasticsearchParameters>connection.options.parameters;
     expect(params.host).toBe("localhost");
     expect(params.port).toBe(9200);
     expect(params.ssl).toBe(false);
@@ -677,7 +773,7 @@ describe("The `getConnectionData` function", () => {
     expect(params.access_key).toBe("key");
     expect(params.secret_key).toBe("key");
 
-    // wo meta, port and ssl equal to false
+    // wo description, port and ssl equal to false
     connection = getConnectionData([
       { name: CONN_ATTRS_LIST.NAME, value: "es" },
       { name: CONN_ATTRS_LIST.TYPE, value: "elasticsearch" },
@@ -688,16 +784,16 @@ describe("The `getConnectionData` function", () => {
       { name: CONN_ATTRS_LIST.REGION, value: "region" },
       { name: CONN_ATTRS_LIST.ACCESS_KEY, value: "key" },
       { name: CONN_ATTRS_LIST.SECRET_KEY, value: "key" },
-    ]) as IConnection;
+    ]) as Connection;
 
     expect(connection).not.toBeNull();
     expect(connection.name).toBe("es");
-    expect(connection.meta).toBe("");
+    expect(connection.description).toBe(null);
     expect(connection.options.connector).toBe(
-      ConnectorTypes.ElasticSearch,
+      ConnectorTypesEnum.ElasticSearch,
     );
 
-    params = <IElasticsearchParameters>connection.options.parameters;
+    params = <ElasticsearchParameters>connection.options.parameters;
     expect(params.host).toBe("localhost");
     expect(params.port).toBe(9200);
     expect(params.ssl).toBe(false);
@@ -712,14 +808,17 @@ describe("The `getConnectionData` function", () => {
   it("shoud return `null` if `host` attribute is missed for `mongodb` connector", () => {
     const connection = getConnectionData([
       { name: CONN_ATTRS_LIST.NAME, value: "mn" },
-      { name: CONN_ATTRS_LIST.META, value: "Some meta data." },
+      {
+        name: CONN_ATTRS_LIST.DESCRIPTION,
+        value: "Some description data.",
+      },
       { name: CONN_ATTRS_LIST.TYPE, value: "mongodb" },
       { name: CONN_ATTRS_LIST.PORT, value: "1000" },
       { name: CONN_ATTRS_LIST.SSL, value: "true" },
       { name: CONN_ATTRS_LIST.USER, value: "user" },
       { name: CONN_ATTRS_LIST.PASSWORD, value: "password" },
       { name: CONN_ATTRS_LIST.SCHEMA, value: "schema" },
-    ]) as IConnection;
+    ]) as Connection;
 
     expect(connection).toBeNull();
   });
@@ -727,14 +826,17 @@ describe("The `getConnectionData` function", () => {
   it("shoud return `null` if `user` attribute is missed for `mongodb` connector", () => {
     const connection = getConnectionData([
       { name: CONN_ATTRS_LIST.NAME, value: "mn" },
-      { name: CONN_ATTRS_LIST.META, value: "Some meta data." },
+      {
+        name: CONN_ATTRS_LIST.DESCRIPTION,
+        value: "Some description data.",
+      },
       { name: CONN_ATTRS_LIST.TYPE, value: "mongodb" },
       { name: CONN_ATTRS_LIST.HOST, value: "localhost" },
       { name: CONN_ATTRS_LIST.PORT, value: "1000" },
       { name: CONN_ATTRS_LIST.SSL, value: "true" },
       { name: CONN_ATTRS_LIST.PASSWORD, value: "password" },
       { name: CONN_ATTRS_LIST.SCHEMA, value: "schema" },
-    ]) as IConnection;
+    ]) as Connection;
 
     expect(connection).toBeNull();
   });
@@ -742,14 +844,17 @@ describe("The `getConnectionData` function", () => {
   it("shoud return `null` if `password` attribute is missed for `mongodb` connector", () => {
     const connection = getConnectionData([
       { name: CONN_ATTRS_LIST.NAME, value: "mn" },
-      { name: CONN_ATTRS_LIST.META, value: "Some meta data." },
+      {
+        name: CONN_ATTRS_LIST.DESCRIPTION,
+        value: "Some description data.",
+      },
       { name: CONN_ATTRS_LIST.TYPE, value: "mongodb" },
       { name: CONN_ATTRS_LIST.HOST, value: "localhost" },
       { name: CONN_ATTRS_LIST.PORT, value: "1000" },
       { name: CONN_ATTRS_LIST.SSL, value: "true" },
       { name: CONN_ATTRS_LIST.USER, value: "user" },
       { name: CONN_ATTRS_LIST.SCHEMA, value: "schema" },
-    ]) as IConnection;
+    ]) as Connection;
 
     expect(connection).toBeNull();
   });
@@ -757,23 +862,29 @@ describe("The `getConnectionData` function", () => {
   it("shoud return `null` if `schema` attribute is missed for `mongodb` connector", () => {
     const connection = getConnectionData([
       { name: CONN_ATTRS_LIST.NAME, value: "mn" },
-      { name: CONN_ATTRS_LIST.META, value: "Some meta data." },
+      {
+        name: CONN_ATTRS_LIST.DESCRIPTION,
+        value: "Some description data.",
+      },
       { name: CONN_ATTRS_LIST.TYPE, value: "mongodb" },
       { name: CONN_ATTRS_LIST.HOST, value: "localhost" },
       { name: CONN_ATTRS_LIST.PORT, value: "1000" },
       { name: CONN_ATTRS_LIST.SSL, value: "true" },
       { name: CONN_ATTRS_LIST.USER, value: "user" },
       { name: CONN_ATTRS_LIST.PASSWORD, value: "password" },
-    ]) as IConnection;
+    ]) as Connection;
 
     expect(connection).toBeNull();
   });
 
-  it("shoud return `IConnection` object if correct `mongodb` attributes are passed", () => {
-    // with meta, port and ssl
+  it("shoud return `Connection` object if correct `mongodb` attributes are passed", () => {
+    // with description, port and ssl
     let connection = getConnectionData([
       { name: CONN_ATTRS_LIST.NAME, value: "mn" },
-      { name: CONN_ATTRS_LIST.META, value: "Some meta data." },
+      {
+        name: CONN_ATTRS_LIST.DESCRIPTION,
+        value: "Some description data.",
+      },
       { name: CONN_ATTRS_LIST.TYPE, value: "mongodb" },
       { name: CONN_ATTRS_LIST.HOST, value: "localhost" },
       { name: CONN_ATTRS_LIST.PORT, value: "1000" },
@@ -781,14 +892,16 @@ describe("The `getConnectionData` function", () => {
       { name: CONN_ATTRS_LIST.USER, value: "user" },
       { name: CONN_ATTRS_LIST.PASSWORD, value: "password" },
       { name: CONN_ATTRS_LIST.SCHEMA, value: "schema" },
-    ]) as IConnection;
+    ]) as Connection;
 
     expect(connection).not.toBeNull();
     expect(connection.name).toBe("mn");
-    expect(connection.meta).toBe("Some meta data.");
-    expect(connection.options.connector).toBe(ConnectorTypes.MongoDB);
+    expect(connection.description).toBe("Some description data.");
+    expect(connection.options.connector).toBe(
+      ConnectorTypesEnum.MongoDB,
+    );
 
-    let params = <IMongoDBParameters>connection.options.parameters;
+    let params = <MongoDBParameters>connection.options.parameters;
     expect(params.host).toBe("localhost");
     expect(params.port).toBe(1000);
     expect(params.ssl).toBe(true);
@@ -796,7 +909,7 @@ describe("The `getConnectionData` function", () => {
     expect(params.password).toBe("password");
     expect(params.schema).toBe("schema");
 
-    // wo meta, port and ssl
+    // wo description, port and ssl
     connection = getConnectionData([
       { name: CONN_ATTRS_LIST.NAME, value: "mn" },
       { name: CONN_ATTRS_LIST.TYPE, value: "mongodb" },
@@ -804,14 +917,16 @@ describe("The `getConnectionData` function", () => {
       { name: CONN_ATTRS_LIST.USER, value: "user" },
       { name: CONN_ATTRS_LIST.PASSWORD, value: "password" },
       { name: CONN_ATTRS_LIST.SCHEMA, value: "schema" },
-    ]) as IConnection;
+    ]) as Connection;
 
     expect(connection).not.toBeNull();
     expect(connection.name).toBe("mn");
-    expect(connection.meta).toBe("");
-    expect(connection.options.connector).toBe(ConnectorTypes.MongoDB);
+    expect(connection.description).toBe(null);
+    expect(connection.options.connector).toBe(
+      ConnectorTypesEnum.MongoDB,
+    );
 
-    params = <IMongoDBParameters>connection.options.parameters;
+    params = <MongoDBParameters>connection.options.parameters;
     expect(params.host).toBe("localhost");
     expect(params.port).toBe(27017);
     expect(params.ssl).toBe(false);
@@ -819,10 +934,10 @@ describe("The `getConnectionData` function", () => {
     expect(params.password).toBe("password");
     expect(params.schema).toBe("schema");
 
-    // with empty meta, port and ssl equal to false
+    // with empty description, port and ssl equal to false
     connection = getConnectionData([
       { name: CONN_ATTRS_LIST.NAME, value: "mn" },
-      { name: CONN_ATTRS_LIST.META, value: "" },
+      { name: CONN_ATTRS_LIST.DESCRIPTION, value: "" },
       { name: CONN_ATTRS_LIST.TYPE, value: "mongodb" },
       { name: CONN_ATTRS_LIST.HOST, value: "localhost" },
       { name: CONN_ATTRS_LIST.PORT, value: "1000" },
@@ -830,14 +945,16 @@ describe("The `getConnectionData` function", () => {
       { name: CONN_ATTRS_LIST.USER, value: "user" },
       { name: CONN_ATTRS_LIST.PASSWORD, value: "password" },
       { name: CONN_ATTRS_LIST.SCHEMA, value: "schema" },
-    ]) as IConnection;
+    ]) as Connection;
 
     expect(connection).not.toBeNull();
     expect(connection.name).toBe("mn");
-    expect(connection.meta).toBe("");
-    expect(connection.options.connector).toBe(ConnectorTypes.MongoDB);
+    expect(connection.description).toBe("");
+    expect(connection.options.connector).toBe(
+      ConnectorTypesEnum.MongoDB,
+    );
 
-    params = <IMongoDBParameters>connection.options.parameters;
+    params = <MongoDBParameters>connection.options.parameters;
     expect(params.host).toBe("localhost");
     expect(params.port).toBe(1000);
     expect(params.ssl).toBe(false);
@@ -850,14 +967,17 @@ describe("The `getConnectionData` function", () => {
   it("shoud return `null` if `account` attribute is missed for `snowflake` connector", () => {
     const connection = getConnectionData([
       { name: CONN_ATTRS_LIST.NAME, value: "sn" },
-      { name: CONN_ATTRS_LIST.META, value: "Some meta data." },
+      {
+        name: CONN_ATTRS_LIST.DESCRIPTION,
+        value: "Some description data.",
+      },
       { name: CONN_ATTRS_LIST.TYPE, value: "snowflake" },
       { name: CONN_ATTRS_LIST.USER, value: "user" },
       { name: CONN_ATTRS_LIST.PASSWORD, value: "password" },
       { name: CONN_ATTRS_LIST.DATABASE, value: "database" },
       { name: CONN_ATTRS_LIST.ROLE, value: "role" },
       { name: CONN_ATTRS_LIST.WAREHOUSE, value: "warehouse" },
-    ]) as IConnection;
+    ]) as Connection;
 
     expect(connection).toBeNull();
   });
@@ -865,14 +985,17 @@ describe("The `getConnectionData` function", () => {
   it("shoud return `null` if `user` attribute is missed for `snowflake` connector", () => {
     const connection = getConnectionData([
       { name: CONN_ATTRS_LIST.NAME, value: "sn" },
-      { name: CONN_ATTRS_LIST.META, value: "Some meta data." },
+      {
+        name: CONN_ATTRS_LIST.DESCRIPTION,
+        value: "Some description data.",
+      },
       { name: CONN_ATTRS_LIST.TYPE, value: "snowflake" },
       { name: CONN_ATTRS_LIST.ACCOUNT, value: "account" },
       { name: CONN_ATTRS_LIST.PASSWORD, value: "password" },
       { name: CONN_ATTRS_LIST.DATABASE, value: "database" },
       { name: CONN_ATTRS_LIST.ROLE, value: "role" },
       { name: CONN_ATTRS_LIST.WAREHOUSE, value: "warehouse" },
-    ]) as IConnection;
+    ]) as Connection;
 
     expect(connection).toBeNull();
   });
@@ -880,14 +1003,17 @@ describe("The `getConnectionData` function", () => {
   it("shoud return `null` if `password` attribute is missed for `snowflake` connector", () => {
     const connection = getConnectionData([
       { name: CONN_ATTRS_LIST.NAME, value: "sn" },
-      { name: CONN_ATTRS_LIST.META, value: "Some meta data." },
+      {
+        name: CONN_ATTRS_LIST.DESCRIPTION,
+        value: "Some description data.",
+      },
       { name: CONN_ATTRS_LIST.TYPE, value: "snowflake" },
       { name: CONN_ATTRS_LIST.ACCOUNT, value: "account" },
       { name: CONN_ATTRS_LIST.USER, value: "user" },
       { name: CONN_ATTRS_LIST.DATABASE, value: "database" },
       { name: CONN_ATTRS_LIST.ROLE, value: "role" },
       { name: CONN_ATTRS_LIST.WAREHOUSE, value: "warehouse" },
-    ]) as IConnection;
+    ]) as Connection;
 
     expect(connection).toBeNull();
   });
@@ -895,14 +1021,17 @@ describe("The `getConnectionData` function", () => {
   it("shoud return `null` if `role` attribute is missed for `snowflake` connector", () => {
     const connection = getConnectionData([
       { name: CONN_ATTRS_LIST.NAME, value: "sn" },
-      { name: CONN_ATTRS_LIST.META, value: "Some meta data." },
+      {
+        name: CONN_ATTRS_LIST.DESCRIPTION,
+        value: "Some description data.",
+      },
       { name: CONN_ATTRS_LIST.TYPE, value: "snowflake" },
       { name: CONN_ATTRS_LIST.ACCOUNT, value: "account" },
       { name: CONN_ATTRS_LIST.USER, value: "user" },
       { name: CONN_ATTRS_LIST.PASSWORD, value: "password" },
       { name: CONN_ATTRS_LIST.DATABASE, value: "database" },
       { name: CONN_ATTRS_LIST.WAREHOUSE, value: "warehouse" },
-    ]) as IConnection;
+    ]) as Connection;
 
     expect(connection).toBeNull();
   });
@@ -910,23 +1039,29 @@ describe("The `getConnectionData` function", () => {
   it("shoud return `null` if `warehouse` attribute is missed for `snowflake` connector", () => {
     const connection = getConnectionData([
       { name: CONN_ATTRS_LIST.NAME, value: "sn" },
-      { name: CONN_ATTRS_LIST.META, value: "Some meta data." },
+      {
+        name: CONN_ATTRS_LIST.DESCRIPTION,
+        value: "Some description data.",
+      },
       { name: CONN_ATTRS_LIST.TYPE, value: "snowflake" },
       { name: CONN_ATTRS_LIST.ACCOUNT, value: "account" },
       { name: CONN_ATTRS_LIST.USER, value: "user" },
       { name: CONN_ATTRS_LIST.PASSWORD, value: "password" },
       { name: CONN_ATTRS_LIST.DATABASE, value: "database" },
       { name: CONN_ATTRS_LIST.ROLE, value: "role" },
-    ]) as IConnection;
+    ]) as Connection;
 
     expect(connection).toBeNull();
   });
 
-  it("shoud return `IConnection` object if correct `snowflake` attributes are passed", () => {
-    // with meta
+  it("shoud return `Connection` object if correct `snowflake` attributes are passed", () => {
+    // with description
     let connection = getConnectionData([
       { name: CONN_ATTRS_LIST.NAME, value: "sn" },
-      { name: CONN_ATTRS_LIST.META, value: "Some meta data." },
+      {
+        name: CONN_ATTRS_LIST.DESCRIPTION,
+        value: "Some description data.",
+      },
       { name: CONN_ATTRS_LIST.TYPE, value: "snowflake" },
       { name: CONN_ATTRS_LIST.ACCOUNT, value: "account" },
       { name: CONN_ATTRS_LIST.USER, value: "user" },
@@ -934,16 +1069,16 @@ describe("The `getConnectionData` function", () => {
       { name: CONN_ATTRS_LIST.DATABASE, value: "database" },
       { name: CONN_ATTRS_LIST.ROLE, value: "role" },
       { name: CONN_ATTRS_LIST.WAREHOUSE, value: "warehouse" },
-    ]) as IConnection;
+    ]) as Connection;
 
     expect(connection).not.toBeNull();
     expect(connection.name).toBe("sn");
-    expect(connection.meta).toBe("Some meta data.");
+    expect(connection.description).toBe("Some description data.");
     expect(connection.options.connector).toBe(
-      ConnectorTypes.Snowflake,
+      ConnectorTypesEnum.Snowflake,
     );
 
-    let params = <ISnowflakeParameters>connection.options.parameters;
+    let params = <SnowflakeParameters>connection.options.parameters;
     expect(params.account).toBe("account");
     expect(params.user).toBe("user");
     expect(params.password).toBe("password");
@@ -951,7 +1086,7 @@ describe("The `getConnectionData` function", () => {
     expect(params.database).toBe("database");
     expect(params.warehouse).toBe("warehouse");
 
-    // wo meta
+    // wo description
     connection = getConnectionData([
       { name: CONN_ATTRS_LIST.NAME, value: "sn" },
       { name: CONN_ATTRS_LIST.TYPE, value: "snowflake" },
@@ -961,16 +1096,16 @@ describe("The `getConnectionData` function", () => {
       { name: CONN_ATTRS_LIST.DATABASE, value: "database" },
       { name: CONN_ATTRS_LIST.ROLE, value: "role" },
       { name: CONN_ATTRS_LIST.WAREHOUSE, value: "warehouse" },
-    ]) as IConnection;
+    ]) as Connection;
 
     expect(connection).not.toBeNull();
     expect(connection.name).toBe("sn");
-    expect(connection.meta).toBe("");
+    expect(connection.description).toBe(null);
     expect(connection.options.connector).toBe(
-      ConnectorTypes.Snowflake,
+      ConnectorTypesEnum.Snowflake,
     );
 
-    params = <ISnowflakeParameters>connection.options.parameters;
+    params = <SnowflakeParameters>connection.options.parameters;
     expect(params.account).toBe("account");
     expect(params.user).toBe("user");
     expect(params.password).toBe("password");

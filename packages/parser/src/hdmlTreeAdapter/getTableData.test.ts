@@ -6,7 +6,8 @@
 
 /* eslint-disable max-len */
 
-import { ITable, TableType } from "@hdml/schemas";
+import { TableTypeEnum } from "@hdml/schemas";
+import { Table } from "@hdml/types";
 import { getTableData } from "./getTableData";
 import { TABLE_ATTRS_LIST } from "../enums/TABLE_ATTRS_LIST";
 
@@ -23,7 +24,7 @@ describe("The `getTableData` function", () => {
     const data = getTableData([
       { name: TABLE_ATTRS_LIST.TYPE, value: "table" },
       { name: TABLE_ATTRS_LIST.IDENTIFIER, value: "identifier" },
-    ]) as ITable;
+    ]) as Table;
 
     expect(data).toBeNull();
   });
@@ -32,7 +33,7 @@ describe("The `getTableData` function", () => {
     const data = getTableData([
       { name: TABLE_ATTRS_LIST.NAME, value: "name" },
       { name: TABLE_ATTRS_LIST.IDENTIFIER, value: "identifier" },
-    ]) as ITable;
+    ]) as Table;
 
     expect(data).toBeNull();
   });
@@ -41,7 +42,7 @@ describe("The `getTableData` function", () => {
     const data = getTableData([
       { name: TABLE_ATTRS_LIST.NAME, value: "name" },
       { name: TABLE_ATTRS_LIST.TYPE, value: "table" },
-    ]) as ITable;
+    ]) as Table;
 
     expect(data).toBeNull();
   });
@@ -51,23 +52,25 @@ describe("The `getTableData` function", () => {
       { name: TABLE_ATTRS_LIST.NAME, value: "name" },
       { name: TABLE_ATTRS_LIST.TYPE, value: "type" },
       { name: TABLE_ATTRS_LIST.IDENTIFIER, value: "identifier" },
-    ]) as ITable;
+    ]) as Table;
 
     expect(data).toBeNull();
   });
 
-  it("shoud return `ITable` object if correct attributes are passed", () => {
+  it("shoud return `Table` object if correct attributes are passed", () => {
     // table type
     let data = getTableData([
       { name: TABLE_ATTRS_LIST.NAME, value: "name" },
       { name: TABLE_ATTRS_LIST.TYPE, value: "table" },
       { name: TABLE_ATTRS_LIST.IDENTIFIER, value: "identifier" },
-    ]) as ITable;
+      { name: TABLE_ATTRS_LIST.DESCRIPTION, value: "description" },
+    ]) as Table;
 
     expect(data).not.toBeNull();
     expect(data).toEqual({
       name: "name",
-      type: TableType.Table,
+      description: "description",
+      type: TableTypeEnum.Table,
       identifier: "identifier",
       fields: [],
     });
@@ -77,12 +80,13 @@ describe("The `getTableData` function", () => {
       { name: TABLE_ATTRS_LIST.NAME, value: "name" },
       { name: TABLE_ATTRS_LIST.TYPE, value: "query" },
       { name: TABLE_ATTRS_LIST.IDENTIFIER, value: "identifier" },
-    ]) as ITable;
+    ]) as Table;
 
     expect(data).not.toBeNull();
     expect(data).toEqual({
       name: "name",
-      type: TableType.Query,
+      description: null,
+      type: TableTypeEnum.Query,
       identifier: "identifier",
       fields: [],
     });

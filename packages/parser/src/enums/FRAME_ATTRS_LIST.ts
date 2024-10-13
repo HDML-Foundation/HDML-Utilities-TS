@@ -6,6 +6,7 @@
 
 export enum FRAME_ATTRS_LIST {
   NAME = "name",
+  DESCRIPTION = "description",
   SOURCE = "source",
   OFFSET = "offset",
   LIMIT = "limit",

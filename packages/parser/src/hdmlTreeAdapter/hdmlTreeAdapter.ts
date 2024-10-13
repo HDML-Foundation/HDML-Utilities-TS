@@ -5,16 +5,16 @@
  */
 
 import {
-  IConnection,
-  IField,
-  IFrame,
-  IInclude,
-  IJoin,
-  IModel,
-  ITable,
-  IFilterClause,
-  IFilter,
-} from "@hdml/schemas";
+  Connection,
+  Field,
+  Frame,
+  Include,
+  Join,
+  Model,
+  Table,
+  FilterClause,
+  Filter,
+} from "@hdml/types";
 import { html, Token } from "parse5";
 import {
   HDMLTreeAdapterMap,
@@ -128,13 +128,8 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
 
   appendHddmChild(element: ChildNode): void {
     let parent: null | ChildNode = null;
-    let data:
-      | null
-      | IModel
-      | ITable
-      | IFrame
-      | IJoin
-      | IFilterClause = null;
+    let data: null | Model | Table | Frame | Join | FilterClause =
+      null;
     switch (element?.nodeName) {
       case HDML_TAG_NAMES.INCLUDE:
         if (
@@ -142,11 +137,11 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
           element.rootNode &&
           element.rootNode.hddm &&
           !~element.rootNode.hddm.includes.indexOf(
-            element.hddmData as IInclude,
+            element.hddmData as Include,
           )
         ) {
           element.rootNode?.hddm?.includes.push(
-            element.hddmData as IInclude,
+            element.hddmData as Include,
           );
         }
         break;
@@ -156,11 +151,11 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
           element.rootNode &&
           element.rootNode.hddm &&
           !~element.rootNode.hddm.connections.indexOf(
-            element.hddmData as IConnection,
+            element.hddmData as Connection,
           )
         ) {
           element.rootNode?.hddm?.connections.push(
-            element.hddmData as IConnection,
+            element.hddmData as Connection,
           );
         }
         break;
@@ -170,11 +165,11 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
           element.rootNode &&
           element.rootNode.hddm &&
           !~element.rootNode.hddm.models.indexOf(
-            element.hddmData as IModel,
+            element.hddmData as Model,
           )
         ) {
           element.rootNode.hddm.models.push(
-            element.hddmData as IModel,
+            element.hddmData as Model,
           );
         }
         break;
@@ -184,8 +179,8 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
             HDML_TAG_NAMES.MODEL,
           ]);
           if (parent) {
-            data = parent.hddmData as IModel;
-            data.tables.push(element.hddmData as ITable);
+            data = parent.hddmData as Model;
+            data.tables.push(element.hddmData as Table);
           }
         }
         break;
@@ -195,11 +190,11 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
           element.rootNode &&
           element.rootNode.hddm &&
           !~element.rootNode.hddm.frames.indexOf(
-            element.hddmData as IFrame,
+            element.hddmData as Frame,
           )
         ) {
           element.rootNode.hddm.frames.push(
-            element.hddmData as IFrame,
+            element.hddmData as Frame,
           );
         }
         break;
@@ -209,8 +204,8 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
             HDML_TAG_NAMES.MODEL,
           ]);
           if (parent) {
-            data = parent.hddmData as IModel;
-            data.joins.push(element.hddmData as IJoin);
+            data = parent.hddmData as Model;
+            data.joins.push(element.hddmData as Join);
           }
         }
         break;
@@ -223,16 +218,16 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
         if (parent) {
           switch (parent.nodeName as HDML_TAG_NAMES) {
             case HDML_TAG_NAMES.JOIN:
-              data = parent.hddmData as IJoin;
-              data.clause = element.hddmData as IFilterClause;
+              data = parent.hddmData as Join;
+              data.clause = element.hddmData as FilterClause;
               break;
             case HDML_TAG_NAMES.FRAME:
-              data = parent.hddmData as IFrame;
-              data.filter_by = element.hddmData as IFilterClause;
+              data = parent.hddmData as Frame;
+              data.filter_by = element.hddmData as FilterClause;
               break;
             case HDML_TAG_NAMES.CONNECTIVE:
-              data = parent.hddmData as IFilterClause;
-              data.children.push(element.hddmData as IFilterClause);
+              data = parent.hddmData as FilterClause;
+              data.children.push(element.hddmData as FilterClause);
               break;
           }
         }
@@ -243,8 +238,8 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
             HDML_TAG_NAMES.CONNECTIVE,
           ]);
           if (parent) {
-            data = parent.hddmData as IFilterClause;
-            data.filters.push(element.hddmData as IFilter);
+            data = parent.hddmData as FilterClause;
+            data.filters.push(element.hddmData as Filter);
           }
         }
         break;
@@ -261,16 +256,16 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
             switch (parent.nodeName as HDML_TAG_NAMES) {
               case HDML_TAG_NAMES.TABLE:
               case HDML_TAG_NAMES.FRAME:
-                data = parent.hddmData;
-                data.fields.push(element.hddmData as IField);
+                data = parent.hddmData as Table | Frame;
+                data.fields.push(element.hddmData as Field);
                 break;
               case HDML_TAG_NAMES.GROUP_BY:
                 parent = hdmlTreeAdapter.getHdmlParentTag(element, [
                   HDML_TAG_NAMES.FRAME,
                 ]);
                 if (parent) {
-                  data = parent.hddmData as IFrame;
-                  data.group_by.push(element.hddmData as IField);
+                  data = parent.hddmData as Frame;
+                  data.group_by.push(element.hddmData as Field);
                 }
                 break;
               case HDML_TAG_NAMES.SORT_BY:
@@ -278,8 +273,8 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
                   HDML_TAG_NAMES.FRAME,
                 ]);
                 if (parent) {
-                  data = parent.hddmData as IFrame;
-                  data.sort_by.push(element.hddmData as IField);
+                  data = parent.hddmData as Frame;
+                  data.sort_by.push(element.hddmData as Field);
                 }
                 break;
               case HDML_TAG_NAMES.SPLIT_BY:
@@ -287,8 +282,8 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
                   HDML_TAG_NAMES.FRAME,
                 ]);
                 if (parent) {
-                  data = parent.hddmData as IFrame;
-                  data.split_by.push(element.hddmData as IField);
+                  data = parent.hddmData as Frame;
+                  data.split_by.push(element.hddmData as Field);
                 }
                 break;
             }

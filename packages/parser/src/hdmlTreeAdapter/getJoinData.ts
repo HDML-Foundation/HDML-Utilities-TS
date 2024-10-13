@@ -4,42 +4,44 @@
  * @license Apache-2.0
  */
 
-import { IJoin, JoinType, FilterOperator } from "@hdml/schemas";
+import { JoinTypeEnum, FilterOperatorEnum } from "@hdml/schemas";
+import { Join } from "@hdml/types";
 import { Token } from "parse5";
 import { JOIN_ATTRS_LIST } from "../enums/JOIN_ATTRS_LIST";
 import { JOIN_TYPE_VALUES } from "../enums/JOIN_TYPE_VALUES";
 
-export function getJoinData(attrs: Token.Attribute[]): null | IJoin {
-  let type: JoinType = JoinType.Cross;
+export function getJoinData(attrs: Token.Attribute[]): null | Join {
+  let type: JoinTypeEnum = JoinTypeEnum.Cross;
   let left: null | string = null;
   let right: null | string = null;
+  let description: null | string = null;
   attrs.forEach((attr) => {
     switch (attr.name as JOIN_ATTRS_LIST) {
       case JOIN_ATTRS_LIST.TYPE:
         switch (attr.value as JOIN_TYPE_VALUES) {
           case JOIN_TYPE_VALUES.CROSS:
-            type = JoinType.Cross;
+            type = JoinTypeEnum.Cross;
             break;
           case JOIN_TYPE_VALUES.FULL:
-            type = JoinType.Full;
+            type = JoinTypeEnum.Full;
             break;
           case JOIN_TYPE_VALUES.FULL_OUTER:
-            type = JoinType.FullOuter;
+            type = JoinTypeEnum.FullOuter;
             break;
           case JOIN_TYPE_VALUES.INNER:
-            type = JoinType.Inner;
+            type = JoinTypeEnum.Inner;
             break;
           case JOIN_TYPE_VALUES.LEFT:
-            type = JoinType.Left;
+            type = JoinTypeEnum.Left;
             break;
           case JOIN_TYPE_VALUES.LEFT_OUTER:
-            type = JoinType.LeftOuter;
+            type = JoinTypeEnum.LeftOuter;
             break;
           case JOIN_TYPE_VALUES.RIGHT:
-            type = JoinType.Right;
+            type = JoinTypeEnum.Right;
             break;
           case JOIN_TYPE_VALUES.RIGHT_OUTER:
-            type = JoinType.RightOuter;
+            type = JoinTypeEnum.RightOuter;
             break;
         }
         break;
@@ -49,6 +51,9 @@ export function getJoinData(attrs: Token.Attribute[]): null | IJoin {
       case JOIN_ATTRS_LIST.RIGHT:
         right = attr.value;
         break;
+      case JOIN_ATTRS_LIST.DESCRIPTION:
+        description = attr.value;
+        break;
     }
   });
 
@@ -57,11 +62,12 @@ export function getJoinData(attrs: Token.Attribute[]): null | IJoin {
   }
 
   return {
+    description,
     type,
     left,
     right,
     clause: {
-      type: FilterOperator.None,
+      type: FilterOperatorEnum.None,
       filters: [],
       children: [],
     },
