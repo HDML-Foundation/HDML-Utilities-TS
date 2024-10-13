@@ -1,8 +1,8 @@
 {
   "name": "@hdml/utilities",
   "workspaces": [
-    "packages/bufferifier",
-    "packages/hashifier",
+    "packages/buffer",
+    "packages/hash",
     "packages/parser",
     "packages/types"
   ],

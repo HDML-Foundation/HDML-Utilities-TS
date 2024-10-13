@@ -261,7 +261,7 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
             switch (parent.nodeName as HDML_TAG_NAMES) {
               case HDML_TAG_NAMES.TABLE:
               case HDML_TAG_NAMES.FRAME:
-                data = parent.hddmData as ITable | IFrame;
+                data = parent.hddmData;
                 data.fields.push(element.hddmData as IField);
                 break;
               case HDML_TAG_NAMES.GROUP_BY:

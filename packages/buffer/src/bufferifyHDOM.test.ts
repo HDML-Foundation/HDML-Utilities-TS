@@ -21,7 +21,7 @@ describe("bufferifyHDOM", () => {
   it("should serialize an HDOM object to FlatBuffers", () => {
     const builder = new flatbuffers.Builder(1024);
 
-    const hddm: HDOM = {
+    const hdom: HDOM = {
       includes: [{ path: "/path/to/doc.hdml" }],
       connections: [
         {
@@ -98,7 +98,7 @@ describe("bufferifyHDOM", () => {
       ],
     };
 
-    const offset = bufferifyHDOM(builder, hddm);
+    const offset = bufferifyHDOM(builder, hdom);
     builder.finish(offset);
 
     const buffer = builder.asUint8Array();
@@ -115,14 +115,14 @@ describe("bufferifyHDOM", () => {
   it("should handle empty HDOM object", () => {
     const builder = new flatbuffers.Builder(1024);
 
-    const hddm: HDOM = {
+    const hdom: HDOM = {
       includes: [],
       connections: [],
       models: [],
       frames: [],
     };
 
-    const offset = bufferifyHDOM(builder, hddm);
+    const offset = bufferifyHDOM(builder, hdom);
     builder.finish(offset);
 
     const buffer = builder.asUint8Array();

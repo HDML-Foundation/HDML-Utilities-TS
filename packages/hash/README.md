@@ -1,6 +1,6 @@
-# @hdml/hashifier
+# @hdml/hash
 
-`@hdml/hashifier` is a lightweight utility library designed for hashing and generating unique identifiers. It provides various functions to handle hashing and timestamp-related operations, making it ideal for applications that require unique and consistent identifiers or time-based hashing. This module is part of the **HDML-Utilities** monorepo, which aims to provide tools for working with hierarchical data structures in web-based environments.
+`@hdml/hash` is a lightweight utility library designed for hashing and generating unique identifiers. It provides various functions to handle hashing and timestamp-related operations, making it ideal for applications that require unique and consistent identifiers or time-based hashing. This module is part of the **HDML-Utilities** monorepo, which aims to provide tools for working with hierarchical data structures in web-based environments.
 
 ## Features
 
@@ -12,10 +12,10 @@
 
 ## Installation
 
-To install `@hdml/hashifier`, use npm:
+To install `@hdml/hash`, use npm:
 
 ```bash
-npm install @hdml/hashifier
+npm install @hdml/hash
 ```
 
 ## API

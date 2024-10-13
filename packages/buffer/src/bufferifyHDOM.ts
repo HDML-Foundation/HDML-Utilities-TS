@@ -45,11 +45,11 @@ import { bufferifyFrame } from "./bufferifyFrame";
  *   models: [],
  *   frames: []
  * };
- * const buffer = bufferifyHDDM(builder, hddm);
+ * const buffer = bufferifyHDOM(builder, hddm);
  * ```
  *
  * In this example, a new `HDOM` object is serialized into a
- * FlatBuffer using the `bufferifyHDDM` function.
+ * FlatBuffer using the `bufferifyHDOM` function.
  */
 export function bufferifyHDOM(
   builder: flatbuffers.Builder,
