@@ -21,7 +21,7 @@ export function getTableFieldSQL(field: FieldStruct): string {
   if (!name) {
     return "";
   } else {
-    if (!type) {
+    if (!type || type.type() === DataTypeEnum.Unspecified) {
       return getNamedField(
         name,
         getPlainClause(name, origin, clause),
@@ -45,7 +45,7 @@ export function getFrameFieldSQL(field: FieldStruct): string {
   if (!name) {
     return "";
   } else {
-    if (!type) {
+    if (!type || type.type() === DataTypeEnum.Unspecified) {
       return getNamedField(
         name,
         getGroupedClause(
@@ -141,8 +141,8 @@ export function getCastedClause(
       ) as DecimalParametersStruct;
       sql =
         `try_cast(${clause} as ` +
-        `decimal(${options.scale()}, ` +
-        `${options.precision()}))`;
+        `decimal(${options.precision()}, ` +
+        `${options.scale()}))`;
       break;
     case DataTypeEnum.Date:
       sql = `try_cast(${clause} as date)`;

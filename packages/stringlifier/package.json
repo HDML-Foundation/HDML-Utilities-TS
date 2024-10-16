@@ -6,6 +6,9 @@
     "registry": "https://registry.npmjs.org/",
     "access": "public"
   },
+  "devDependencies": {
+    "@hdml/buffer": "0.0.0-alpha.0"
+  },
   "dependencies": {
     "@hdml/schemas": "^0.0.1-alpha.9",
     "@hdml/types": "0.0.0-alpha.0"

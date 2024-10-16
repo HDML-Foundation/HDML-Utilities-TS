@@ -12,7 +12,7 @@ import {
   FieldStruct,
 } from "@hdml/schemas";
 import { t } from "../constants";
-import { getTableFieldSQL } from "./fields";
+import { getTableFieldSQL } from "./field";
 
 export function getModelSQL(model: ModelStruct, level = 0): string {
   const prefix = t.repeat(level);
@@ -62,6 +62,8 @@ export function getModelSQL(model: ModelStruct, level = 0): string {
       }
     })
     .join(",\n");
+
+  return "";
 }
 
 function getTableSQL(table: TableStruct, level = 0): string {
@@ -91,4 +93,6 @@ function getTableSQL(table: TableStruct, level = 0): string {
     })
     .map((f) => `${prefix}${t}${t}${getTableFieldSQL(f)}`)
     .join(",\n");
+
+  return "";
 }
