@@ -4,6 +4,8 @@
  * @license Apache-2.0
  */
 
+/* eslint-disable max-len */
+
 import {
   FieldStruct,
   TableTypeEnum,
@@ -351,6 +353,531 @@ const hdom: HDOM = {
               aggregation: AggregationTypeEnum.None,
               order: OrderTypeEnum.None,
             },
+            {
+              name: "time_millisecond_field",
+              description: null,
+              origin: "origin",
+              clause: 'clause("field")',
+              type: {
+                type: DataTypeEnum.Time,
+                options: {
+                  nullable: false,
+                  unit: TimeUnitEnum.Millisecond,
+                },
+              },
+              aggregation: AggregationTypeEnum.None,
+              order: OrderTypeEnum.None,
+            },
+            {
+              name: "time_microsecond_field",
+              description: null,
+              origin: "origin",
+              clause: 'clause("field")',
+              type: {
+                type: DataTypeEnum.Time,
+                options: {
+                  nullable: false,
+                  unit: TimeUnitEnum.Microsecond,
+                },
+              },
+              aggregation: AggregationTypeEnum.None,
+              order: OrderTypeEnum.None,
+            },
+            {
+              name: "time_nanosecond_field",
+              description: null,
+              origin: "origin",
+              clause: 'clause("field")',
+              type: {
+                type: DataTypeEnum.Time,
+                options: {
+                  nullable: false,
+                  unit: TimeUnitEnum.Nanosecond,
+                },
+              },
+              aggregation: AggregationTypeEnum.None,
+              order: OrderTypeEnum.None,
+            },
+            {
+              name: "timestamp_millisecond_field",
+              description: null,
+              origin: "origin",
+              clause: 'clause("field")',
+              type: {
+                type: DataTypeEnum.Timestamp,
+                options: {
+                  nullable: false,
+                  unit: TimeUnitEnum.Millisecond,
+                  timezone: TimeZoneEnum.UTC,
+                },
+              },
+              aggregation: AggregationTypeEnum.None,
+              order: OrderTypeEnum.None,
+            },
+            {
+              name: "timestamp_microsecond_field",
+              description: null,
+              origin: "origin",
+              clause: 'clause("field")',
+              type: {
+                type: DataTypeEnum.Timestamp,
+                options: {
+                  nullable: false,
+                  unit: TimeUnitEnum.Microsecond,
+                  timezone: TimeZoneEnum.UTC,
+                },
+              },
+              aggregation: AggregationTypeEnum.None,
+              order: OrderTypeEnum.None,
+            },
+            {
+              name: "timestamp_nanosecond_field",
+              description: null,
+              origin: "origin",
+              clause: 'clause("field")',
+              type: {
+                type: DataTypeEnum.Timestamp,
+                options: {
+                  nullable: false,
+                  unit: TimeUnitEnum.Nanosecond,
+                  timezone: TimeZoneEnum.UTC,
+                },
+              },
+              aggregation: AggregationTypeEnum.None,
+              order: OrderTypeEnum.None,
+            },
+            {
+              name: "timestamp_gmt_field",
+              description: null,
+              origin: "origin",
+              clause: 'clause("field")',
+              type: {
+                type: DataTypeEnum.Timestamp,
+                options: {
+                  nullable: false,
+                  unit: TimeUnitEnum.Second,
+                  timezone: TimeZoneEnum.GMT,
+                },
+              },
+              aggregation: AggregationTypeEnum.None,
+              order: OrderTypeEnum.None,
+            },
+            {
+              name: "timestamp_gmt_m_01_field",
+              description: null,
+              origin: "origin",
+              clause: 'clause("field")',
+              type: {
+                type: DataTypeEnum.Timestamp,
+                options: {
+                  nullable: false,
+                  unit: TimeUnitEnum.Second,
+                  timezone: TimeZoneEnum.GMT_m_01,
+                },
+              },
+              aggregation: AggregationTypeEnum.None,
+              order: OrderTypeEnum.None,
+            },
+            {
+              name: "timestamp_gmt_m_02_field",
+              description: null,
+              origin: "origin",
+              clause: 'clause("field")',
+              type: {
+                type: DataTypeEnum.Timestamp,
+                options: {
+                  nullable: false,
+                  unit: TimeUnitEnum.Second,
+                  timezone: TimeZoneEnum.GMT_m_02,
+                },
+              },
+              aggregation: AggregationTypeEnum.None,
+              order: OrderTypeEnum.None,
+            },
+            {
+              name: "timestamp_gmt_m_03_field",
+              description: null,
+              origin: "origin",
+              clause: 'clause("field")',
+              type: {
+                type: DataTypeEnum.Timestamp,
+                options: {
+                  nullable: false,
+                  unit: TimeUnitEnum.Second,
+                  timezone: TimeZoneEnum.GMT_m_03,
+                },
+              },
+              aggregation: AggregationTypeEnum.None,
+              order: OrderTypeEnum.None,
+            },
+            {
+              name: "timestamp_gmt_m_04_field",
+              description: null,
+              origin: "origin",
+              clause: 'clause("field")',
+              type: {
+                type: DataTypeEnum.Timestamp,
+                options: {
+                  nullable: false,
+                  unit: TimeUnitEnum.Second,
+                  timezone: TimeZoneEnum.GMT_m_04,
+                },
+              },
+              aggregation: AggregationTypeEnum.None,
+              order: OrderTypeEnum.None,
+            },
+            {
+              name: "timestamp_gmt_m_05_field",
+              description: null,
+              origin: "origin",
+              clause: 'clause("field")',
+              type: {
+                type: DataTypeEnum.Timestamp,
+                options: {
+                  nullable: false,
+                  unit: TimeUnitEnum.Second,
+                  timezone: TimeZoneEnum.GMT_m_05,
+                },
+              },
+              aggregation: AggregationTypeEnum.None,
+              order: OrderTypeEnum.None,
+            },
+            {
+              name: "timestamp_gmt_m_06_field",
+              description: null,
+              origin: "origin",
+              clause: 'clause("field")',
+              type: {
+                type: DataTypeEnum.Timestamp,
+                options: {
+                  nullable: false,
+                  unit: TimeUnitEnum.Second,
+                  timezone: TimeZoneEnum.GMT_m_06,
+                },
+              },
+              aggregation: AggregationTypeEnum.None,
+              order: OrderTypeEnum.None,
+            },
+            {
+              name: "timestamp_gmt_m_07_field",
+              description: null,
+              origin: "origin",
+              clause: 'clause("field")',
+              type: {
+                type: DataTypeEnum.Timestamp,
+                options: {
+                  nullable: false,
+                  unit: TimeUnitEnum.Second,
+                  timezone: TimeZoneEnum.GMT_m_07,
+                },
+              },
+              aggregation: AggregationTypeEnum.None,
+              order: OrderTypeEnum.None,
+            },
+            {
+              name: "timestamp_gmt_m_08_field",
+              description: null,
+              origin: "origin",
+              clause: 'clause("field")',
+              type: {
+                type: DataTypeEnum.Timestamp,
+                options: {
+                  nullable: false,
+                  unit: TimeUnitEnum.Second,
+                  timezone: TimeZoneEnum.GMT_m_08,
+                },
+              },
+              aggregation: AggregationTypeEnum.None,
+              order: OrderTypeEnum.None,
+            },
+            {
+              name: "timestamp_gmt_m_09_field",
+              description: null,
+              origin: "origin",
+              clause: 'clause("field")',
+              type: {
+                type: DataTypeEnum.Timestamp,
+                options: {
+                  nullable: false,
+                  unit: TimeUnitEnum.Second,
+                  timezone: TimeZoneEnum.GMT_m_09,
+                },
+              },
+              aggregation: AggregationTypeEnum.None,
+              order: OrderTypeEnum.None,
+            },
+            {
+              name: "timestamp_gmt_m_10_field",
+              description: null,
+              origin: "origin",
+              clause: 'clause("field")',
+              type: {
+                type: DataTypeEnum.Timestamp,
+                options: {
+                  nullable: false,
+                  unit: TimeUnitEnum.Second,
+                  timezone: TimeZoneEnum.GMT_m_10,
+                },
+              },
+              aggregation: AggregationTypeEnum.None,
+              order: OrderTypeEnum.None,
+            },
+            {
+              name: "timestamp_gmt_m_11_field",
+              description: null,
+              origin: "origin",
+              clause: 'clause("field")',
+              type: {
+                type: DataTypeEnum.Timestamp,
+                options: {
+                  nullable: false,
+                  unit: TimeUnitEnum.Second,
+                  timezone: TimeZoneEnum.GMT_m_11,
+                },
+              },
+              aggregation: AggregationTypeEnum.None,
+              order: OrderTypeEnum.None,
+            },
+            {
+              name: "timestamp_gmt_m_12_field",
+              description: null,
+              origin: "origin",
+              clause: 'clause("field")',
+              type: {
+                type: DataTypeEnum.Timestamp,
+                options: {
+                  nullable: false,
+                  unit: TimeUnitEnum.Second,
+                  timezone: TimeZoneEnum.GMT_m_12,
+                },
+              },
+              aggregation: AggregationTypeEnum.None,
+              order: OrderTypeEnum.None,
+            },
+            {
+              name: "timestamp_gmt_p_01_field",
+              description: null,
+              origin: "origin",
+              clause: 'clause("field")',
+              type: {
+                type: DataTypeEnum.Timestamp,
+                options: {
+                  nullable: false,
+                  unit: TimeUnitEnum.Second,
+                  timezone: TimeZoneEnum.GMT_p_01,
+                },
+              },
+              aggregation: AggregationTypeEnum.None,
+              order: OrderTypeEnum.None,
+            },
+            {
+              name: "timestamp_gmt_p_02_field",
+              description: null,
+              origin: "origin",
+              clause: 'clause("field")',
+              type: {
+                type: DataTypeEnum.Timestamp,
+                options: {
+                  nullable: false,
+                  unit: TimeUnitEnum.Second,
+                  timezone: TimeZoneEnum.GMT_p_02,
+                },
+              },
+              aggregation: AggregationTypeEnum.None,
+              order: OrderTypeEnum.None,
+            },
+            {
+              name: "timestamp_gmt_p_03_field",
+              description: null,
+              origin: "origin",
+              clause: 'clause("field")',
+              type: {
+                type: DataTypeEnum.Timestamp,
+                options: {
+                  nullable: false,
+                  unit: TimeUnitEnum.Second,
+                  timezone: TimeZoneEnum.GMT_p_03,
+                },
+              },
+              aggregation: AggregationTypeEnum.None,
+              order: OrderTypeEnum.None,
+            },
+            {
+              name: "timestamp_gmt_p_04_field",
+              description: null,
+              origin: "origin",
+              clause: 'clause("field")',
+              type: {
+                type: DataTypeEnum.Timestamp,
+                options: {
+                  nullable: false,
+                  unit: TimeUnitEnum.Second,
+                  timezone: TimeZoneEnum.GMT_p_04,
+                },
+              },
+              aggregation: AggregationTypeEnum.None,
+              order: OrderTypeEnum.None,
+            },
+            {
+              name: "timestamp_gmt_p_05_field",
+              description: null,
+              origin: "origin",
+              clause: 'clause("field")',
+              type: {
+                type: DataTypeEnum.Timestamp,
+                options: {
+                  nullable: false,
+                  unit: TimeUnitEnum.Second,
+                  timezone: TimeZoneEnum.GMT_p_05,
+                },
+              },
+              aggregation: AggregationTypeEnum.None,
+              order: OrderTypeEnum.None,
+            },
+            {
+              name: "timestamp_gmt_p_06_field",
+              description: null,
+              origin: "origin",
+              clause: 'clause("field")',
+              type: {
+                type: DataTypeEnum.Timestamp,
+                options: {
+                  nullable: false,
+                  unit: TimeUnitEnum.Second,
+                  timezone: TimeZoneEnum.GMT_p_06,
+                },
+              },
+              aggregation: AggregationTypeEnum.None,
+              order: OrderTypeEnum.None,
+            },
+            {
+              name: "timestamp_gmt_p_07_field",
+              description: null,
+              origin: "origin",
+              clause: 'clause("field")',
+              type: {
+                type: DataTypeEnum.Timestamp,
+                options: {
+                  nullable: false,
+                  unit: TimeUnitEnum.Second,
+                  timezone: TimeZoneEnum.GMT_p_07,
+                },
+              },
+              aggregation: AggregationTypeEnum.None,
+              order: OrderTypeEnum.None,
+            },
+            {
+              name: "timestamp_gmt_p_08_field",
+              description: null,
+              origin: "origin",
+              clause: 'clause("field")',
+              type: {
+                type: DataTypeEnum.Timestamp,
+                options: {
+                  nullable: false,
+                  unit: TimeUnitEnum.Second,
+                  timezone: TimeZoneEnum.GMT_p_08,
+                },
+              },
+              aggregation: AggregationTypeEnum.None,
+              order: OrderTypeEnum.None,
+            },
+            {
+              name: "timestamp_gmt_p_09_field",
+              description: null,
+              origin: "origin",
+              clause: 'clause("field")',
+              type: {
+                type: DataTypeEnum.Timestamp,
+                options: {
+                  nullable: false,
+                  unit: TimeUnitEnum.Second,
+                  timezone: TimeZoneEnum.GMT_p_09,
+                },
+              },
+              aggregation: AggregationTypeEnum.None,
+              order: OrderTypeEnum.None,
+            },
+            {
+              name: "timestamp_gmt_p_10_field",
+              description: null,
+              origin: "origin",
+              clause: 'clause("field")',
+              type: {
+                type: DataTypeEnum.Timestamp,
+                options: {
+                  nullable: false,
+                  unit: TimeUnitEnum.Second,
+                  timezone: TimeZoneEnum.GMT_p_10,
+                },
+              },
+              aggregation: AggregationTypeEnum.None,
+              order: OrderTypeEnum.None,
+            },
+            {
+              name: "timestamp_gmt_p_11_field",
+              description: null,
+              origin: "origin",
+              clause: 'clause("field")',
+              type: {
+                type: DataTypeEnum.Timestamp,
+                options: {
+                  nullable: false,
+                  unit: TimeUnitEnum.Second,
+                  timezone: TimeZoneEnum.GMT_p_11,
+                },
+              },
+              aggregation: AggregationTypeEnum.None,
+              order: OrderTypeEnum.None,
+            },
+            {
+              name: "timestamp_gmt_p_12_field",
+              description: null,
+              origin: "origin",
+              clause: 'clause("field")',
+              type: {
+                type: DataTypeEnum.Timestamp,
+                options: {
+                  nullable: false,
+                  unit: TimeUnitEnum.Second,
+                  timezone: TimeZoneEnum.GMT_p_12,
+                },
+              },
+              aggregation: AggregationTypeEnum.None,
+              order: OrderTypeEnum.None,
+            },
+            {
+              name: "timestamp_gmt_p_13_field",
+              description: null,
+              origin: "origin",
+              clause: 'clause("field")',
+              type: {
+                type: DataTypeEnum.Timestamp,
+                options: {
+                  nullable: false,
+                  unit: TimeUnitEnum.Second,
+                  timezone: TimeZoneEnum.GMT_p_13,
+                },
+              },
+              aggregation: AggregationTypeEnum.None,
+              order: OrderTypeEnum.None,
+            },
+            {
+              name: "timestamp_gmt_p_14_field",
+              description: null,
+              origin: "origin",
+              clause: 'clause("field")',
+              type: {
+                type: DataTypeEnum.Timestamp,
+                options: {
+                  nullable: false,
+                  unit: TimeUnitEnum.Second,
+                  timezone: TimeZoneEnum.GMT_p_14,
+                },
+              },
+              aggregation: AggregationTypeEnum.None,
+              order: OrderTypeEnum.None,
+            },
           ],
         },
       ],
@@ -682,6 +1209,531 @@ const hdom: HDOM = {
           aggregation: AggregationTypeEnum.None,
           order: OrderTypeEnum.None,
         },
+        {
+          name: "time_millisecond_field",
+          description: null,
+          origin: "origin",
+          clause: 'clause("field")',
+          type: {
+            type: DataTypeEnum.Time,
+            options: {
+              nullable: false,
+              unit: TimeUnitEnum.Millisecond,
+            },
+          },
+          aggregation: AggregationTypeEnum.None,
+          order: OrderTypeEnum.None,
+        },
+        {
+          name: "time_microsecond_field",
+          description: null,
+          origin: "origin",
+          clause: 'clause("field")',
+          type: {
+            type: DataTypeEnum.Time,
+            options: {
+              nullable: false,
+              unit: TimeUnitEnum.Microsecond,
+            },
+          },
+          aggregation: AggregationTypeEnum.None,
+          order: OrderTypeEnum.None,
+        },
+        {
+          name: "time_nanosecond_field",
+          description: null,
+          origin: "origin",
+          clause: 'clause("field")',
+          type: {
+            type: DataTypeEnum.Time,
+            options: {
+              nullable: false,
+              unit: TimeUnitEnum.Nanosecond,
+            },
+          },
+          aggregation: AggregationTypeEnum.None,
+          order: OrderTypeEnum.None,
+        },
+        {
+          name: "timestamp_millisecond_field",
+          description: null,
+          origin: "origin",
+          clause: 'clause("field")',
+          type: {
+            type: DataTypeEnum.Timestamp,
+            options: {
+              nullable: false,
+              unit: TimeUnitEnum.Millisecond,
+              timezone: TimeZoneEnum.UTC,
+            },
+          },
+          aggregation: AggregationTypeEnum.None,
+          order: OrderTypeEnum.None,
+        },
+        {
+          name: "timestamp_microsecond_field",
+          description: null,
+          origin: "origin",
+          clause: 'clause("field")',
+          type: {
+            type: DataTypeEnum.Timestamp,
+            options: {
+              nullable: false,
+              unit: TimeUnitEnum.Microsecond,
+              timezone: TimeZoneEnum.UTC,
+            },
+          },
+          aggregation: AggregationTypeEnum.None,
+          order: OrderTypeEnum.None,
+        },
+        {
+          name: "timestamp_nanosecond_field",
+          description: null,
+          origin: "origin",
+          clause: 'clause("field")',
+          type: {
+            type: DataTypeEnum.Timestamp,
+            options: {
+              nullable: false,
+              unit: TimeUnitEnum.Nanosecond,
+              timezone: TimeZoneEnum.UTC,
+            },
+          },
+          aggregation: AggregationTypeEnum.None,
+          order: OrderTypeEnum.None,
+        },
+        {
+          name: "timestamp_gmt_field",
+          description: null,
+          origin: "origin",
+          clause: 'clause("field")',
+          type: {
+            type: DataTypeEnum.Timestamp,
+            options: {
+              nullable: false,
+              unit: TimeUnitEnum.Second,
+              timezone: TimeZoneEnum.GMT,
+            },
+          },
+          aggregation: AggregationTypeEnum.None,
+          order: OrderTypeEnum.None,
+        },
+        {
+          name: "timestamp_gmt_m_01_field",
+          description: null,
+          origin: "origin",
+          clause: 'clause("field")',
+          type: {
+            type: DataTypeEnum.Timestamp,
+            options: {
+              nullable: false,
+              unit: TimeUnitEnum.Second,
+              timezone: TimeZoneEnum.GMT_m_01,
+            },
+          },
+          aggregation: AggregationTypeEnum.None,
+          order: OrderTypeEnum.None,
+        },
+        {
+          name: "timestamp_gmt_m_02_field",
+          description: null,
+          origin: "origin",
+          clause: 'clause("field")',
+          type: {
+            type: DataTypeEnum.Timestamp,
+            options: {
+              nullable: false,
+              unit: TimeUnitEnum.Second,
+              timezone: TimeZoneEnum.GMT_m_02,
+            },
+          },
+          aggregation: AggregationTypeEnum.None,
+          order: OrderTypeEnum.None,
+        },
+        {
+          name: "timestamp_gmt_m_03_field",
+          description: null,
+          origin: "origin",
+          clause: 'clause("field")',
+          type: {
+            type: DataTypeEnum.Timestamp,
+            options: {
+              nullable: false,
+              unit: TimeUnitEnum.Second,
+              timezone: TimeZoneEnum.GMT_m_03,
+            },
+          },
+          aggregation: AggregationTypeEnum.None,
+          order: OrderTypeEnum.None,
+        },
+        {
+          name: "timestamp_gmt_m_04_field",
+          description: null,
+          origin: "origin",
+          clause: 'clause("field")',
+          type: {
+            type: DataTypeEnum.Timestamp,
+            options: {
+              nullable: false,
+              unit: TimeUnitEnum.Second,
+              timezone: TimeZoneEnum.GMT_m_04,
+            },
+          },
+          aggregation: AggregationTypeEnum.None,
+          order: OrderTypeEnum.None,
+        },
+        {
+          name: "timestamp_gmt_m_05_field",
+          description: null,
+          origin: "origin",
+          clause: 'clause("field")',
+          type: {
+            type: DataTypeEnum.Timestamp,
+            options: {
+              nullable: false,
+              unit: TimeUnitEnum.Second,
+              timezone: TimeZoneEnum.GMT_m_05,
+            },
+          },
+          aggregation: AggregationTypeEnum.None,
+          order: OrderTypeEnum.None,
+        },
+        {
+          name: "timestamp_gmt_m_06_field",
+          description: null,
+          origin: "origin",
+          clause: 'clause("field")',
+          type: {
+            type: DataTypeEnum.Timestamp,
+            options: {
+              nullable: false,
+              unit: TimeUnitEnum.Second,
+              timezone: TimeZoneEnum.GMT_m_06,
+            },
+          },
+          aggregation: AggregationTypeEnum.None,
+          order: OrderTypeEnum.None,
+        },
+        {
+          name: "timestamp_gmt_m_07_field",
+          description: null,
+          origin: "origin",
+          clause: 'clause("field")',
+          type: {
+            type: DataTypeEnum.Timestamp,
+            options: {
+              nullable: false,
+              unit: TimeUnitEnum.Second,
+              timezone: TimeZoneEnum.GMT_m_07,
+            },
+          },
+          aggregation: AggregationTypeEnum.None,
+          order: OrderTypeEnum.None,
+        },
+        {
+          name: "timestamp_gmt_m_08_field",
+          description: null,
+          origin: "origin",
+          clause: 'clause("field")',
+          type: {
+            type: DataTypeEnum.Timestamp,
+            options: {
+              nullable: false,
+              unit: TimeUnitEnum.Second,
+              timezone: TimeZoneEnum.GMT_m_08,
+            },
+          },
+          aggregation: AggregationTypeEnum.None,
+          order: OrderTypeEnum.None,
+        },
+        {
+          name: "timestamp_gmt_m_09_field",
+          description: null,
+          origin: "origin",
+          clause: 'clause("field")',
+          type: {
+            type: DataTypeEnum.Timestamp,
+            options: {
+              nullable: false,
+              unit: TimeUnitEnum.Second,
+              timezone: TimeZoneEnum.GMT_m_09,
+            },
+          },
+          aggregation: AggregationTypeEnum.None,
+          order: OrderTypeEnum.None,
+        },
+        {
+          name: "timestamp_gmt_m_10_field",
+          description: null,
+          origin: "origin",
+          clause: 'clause("field")',
+          type: {
+            type: DataTypeEnum.Timestamp,
+            options: {
+              nullable: false,
+              unit: TimeUnitEnum.Second,
+              timezone: TimeZoneEnum.GMT_m_10,
+            },
+          },
+          aggregation: AggregationTypeEnum.None,
+          order: OrderTypeEnum.None,
+        },
+        {
+          name: "timestamp_gmt_m_11_field",
+          description: null,
+          origin: "origin",
+          clause: 'clause("field")',
+          type: {
+            type: DataTypeEnum.Timestamp,
+            options: {
+              nullable: false,
+              unit: TimeUnitEnum.Second,
+              timezone: TimeZoneEnum.GMT_m_11,
+            },
+          },
+          aggregation: AggregationTypeEnum.None,
+          order: OrderTypeEnum.None,
+        },
+        {
+          name: "timestamp_gmt_m_12_field",
+          description: null,
+          origin: "origin",
+          clause: 'clause("field")',
+          type: {
+            type: DataTypeEnum.Timestamp,
+            options: {
+              nullable: false,
+              unit: TimeUnitEnum.Second,
+              timezone: TimeZoneEnum.GMT_m_12,
+            },
+          },
+          aggregation: AggregationTypeEnum.None,
+          order: OrderTypeEnum.None,
+        },
+        {
+          name: "timestamp_gmt_p_01_field",
+          description: null,
+          origin: "origin",
+          clause: 'clause("field")',
+          type: {
+            type: DataTypeEnum.Timestamp,
+            options: {
+              nullable: false,
+              unit: TimeUnitEnum.Second,
+              timezone: TimeZoneEnum.GMT_p_01,
+            },
+          },
+          aggregation: AggregationTypeEnum.None,
+          order: OrderTypeEnum.None,
+        },
+        {
+          name: "timestamp_gmt_p_02_field",
+          description: null,
+          origin: "origin",
+          clause: 'clause("field")',
+          type: {
+            type: DataTypeEnum.Timestamp,
+            options: {
+              nullable: false,
+              unit: TimeUnitEnum.Second,
+              timezone: TimeZoneEnum.GMT_p_02,
+            },
+          },
+          aggregation: AggregationTypeEnum.None,
+          order: OrderTypeEnum.None,
+        },
+        {
+          name: "timestamp_gmt_p_03_field",
+          description: null,
+          origin: "origin",
+          clause: 'clause("field")',
+          type: {
+            type: DataTypeEnum.Timestamp,
+            options: {
+              nullable: false,
+              unit: TimeUnitEnum.Second,
+              timezone: TimeZoneEnum.GMT_p_03,
+            },
+          },
+          aggregation: AggregationTypeEnum.None,
+          order: OrderTypeEnum.None,
+        },
+        {
+          name: "timestamp_gmt_p_04_field",
+          description: null,
+          origin: "origin",
+          clause: 'clause("field")',
+          type: {
+            type: DataTypeEnum.Timestamp,
+            options: {
+              nullable: false,
+              unit: TimeUnitEnum.Second,
+              timezone: TimeZoneEnum.GMT_p_04,
+            },
+          },
+          aggregation: AggregationTypeEnum.None,
+          order: OrderTypeEnum.None,
+        },
+        {
+          name: "timestamp_gmt_p_05_field",
+          description: null,
+          origin: "origin",
+          clause: 'clause("field")',
+          type: {
+            type: DataTypeEnum.Timestamp,
+            options: {
+              nullable: false,
+              unit: TimeUnitEnum.Second,
+              timezone: TimeZoneEnum.GMT_p_05,
+            },
+          },
+          aggregation: AggregationTypeEnum.None,
+          order: OrderTypeEnum.None,
+        },
+        {
+          name: "timestamp_gmt_p_06_field",
+          description: null,
+          origin: "origin",
+          clause: 'clause("field")',
+          type: {
+            type: DataTypeEnum.Timestamp,
+            options: {
+              nullable: false,
+              unit: TimeUnitEnum.Second,
+              timezone: TimeZoneEnum.GMT_p_06,
+            },
+          },
+          aggregation: AggregationTypeEnum.None,
+          order: OrderTypeEnum.None,
+        },
+        {
+          name: "timestamp_gmt_p_07_field",
+          description: null,
+          origin: "origin",
+          clause: 'clause("field")',
+          type: {
+            type: DataTypeEnum.Timestamp,
+            options: {
+              nullable: false,
+              unit: TimeUnitEnum.Second,
+              timezone: TimeZoneEnum.GMT_p_07,
+            },
+          },
+          aggregation: AggregationTypeEnum.None,
+          order: OrderTypeEnum.None,
+        },
+        {
+          name: "timestamp_gmt_p_08_field",
+          description: null,
+          origin: "origin",
+          clause: 'clause("field")',
+          type: {
+            type: DataTypeEnum.Timestamp,
+            options: {
+              nullable: false,
+              unit: TimeUnitEnum.Second,
+              timezone: TimeZoneEnum.GMT_p_08,
+            },
+          },
+          aggregation: AggregationTypeEnum.None,
+          order: OrderTypeEnum.None,
+        },
+        {
+          name: "timestamp_gmt_p_09_field",
+          description: null,
+          origin: "origin",
+          clause: 'clause("field")',
+          type: {
+            type: DataTypeEnum.Timestamp,
+            options: {
+              nullable: false,
+              unit: TimeUnitEnum.Second,
+              timezone: TimeZoneEnum.GMT_p_09,
+            },
+          },
+          aggregation: AggregationTypeEnum.None,
+          order: OrderTypeEnum.None,
+        },
+        {
+          name: "timestamp_gmt_p_10_field",
+          description: null,
+          origin: "origin",
+          clause: 'clause("field")',
+          type: {
+            type: DataTypeEnum.Timestamp,
+            options: {
+              nullable: false,
+              unit: TimeUnitEnum.Second,
+              timezone: TimeZoneEnum.GMT_p_10,
+            },
+          },
+          aggregation: AggregationTypeEnum.None,
+          order: OrderTypeEnum.None,
+        },
+        {
+          name: "timestamp_gmt_p_11_field",
+          description: null,
+          origin: "origin",
+          clause: 'clause("field")',
+          type: {
+            type: DataTypeEnum.Timestamp,
+            options: {
+              nullable: false,
+              unit: TimeUnitEnum.Second,
+              timezone: TimeZoneEnum.GMT_p_11,
+            },
+          },
+          aggregation: AggregationTypeEnum.None,
+          order: OrderTypeEnum.None,
+        },
+        {
+          name: "timestamp_gmt_p_12_field",
+          description: null,
+          origin: "origin",
+          clause: 'clause("field")',
+          type: {
+            type: DataTypeEnum.Timestamp,
+            options: {
+              nullable: false,
+              unit: TimeUnitEnum.Second,
+              timezone: TimeZoneEnum.GMT_p_12,
+            },
+          },
+          aggregation: AggregationTypeEnum.None,
+          order: OrderTypeEnum.None,
+        },
+        {
+          name: "timestamp_gmt_p_13_field",
+          description: null,
+          origin: "origin",
+          clause: 'clause("field")',
+          type: {
+            type: DataTypeEnum.Timestamp,
+            options: {
+              nullable: false,
+              unit: TimeUnitEnum.Second,
+              timezone: TimeZoneEnum.GMT_p_13,
+            },
+          },
+          aggregation: AggregationTypeEnum.None,
+          order: OrderTypeEnum.None,
+        },
+        {
+          name: "timestamp_gmt_p_14_field",
+          description: null,
+          origin: "origin",
+          clause: 'clause("field")',
+          type: {
+            type: DataTypeEnum.Timestamp,
+            options: {
+              nullable: false,
+              unit: TimeUnitEnum.Second,
+              timezone: TimeZoneEnum.GMT_p_14,
+            },
+          },
+          aggregation: AggregationTypeEnum.None,
+          order: OrderTypeEnum.None,
+        },
       ],
       filter_by: {
         type: FilterOperatorEnum.None,
@@ -916,7 +1968,7 @@ describe("Field functions", () => {
     );
     const sql = getTableFieldSQL(field);
     expect(sql).toBe(
-      'try_cast(clause("field") as time) as "time_field"',
+      'try_cast(clause("field") as time(0)) as "time_field"',
     );
   });
 
@@ -926,7 +1978,7 @@ describe("Field functions", () => {
     const field = <FieldStruct>struct.frames(0)?.fields(11);
     const sql = getFrameFieldSQL(field);
     expect(sql).toBe(
-      'try_cast(clause("field") as time) as "time_field"',
+      'try_cast(clause("field") as time(0)) as "time_field"',
     );
   });
 
@@ -938,7 +1990,8 @@ describe("Field functions", () => {
     );
     const sql = getTableFieldSQL(field);
     expect(sql).toBe(
-      'try_cast(clause("field") as timestamp) as "timestamp_field"',
+      'try_cast(clause("field") as timestamp(0)) at time zone ' +
+        "'UTC' as \"timestamp_field\"",
     );
   });
 
@@ -948,7 +2001,8 @@ describe("Field functions", () => {
     const field = <FieldStruct>struct.frames(0)?.fields(12);
     const sql = getFrameFieldSQL(field);
     expect(sql).toBe(
-      'try_cast(clause("field") as timestamp) as "timestamp_field"',
+      'try_cast(clause("field") as timestamp(0)) at time zone ' +
+        "'UTC' as \"timestamp_field\"",
     );
   });
 
@@ -1154,7 +2208,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `niname_field` table field", () => {
+  it("must stringlify `noname_field` table field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>(
@@ -1164,11 +2218,743 @@ describe("Field functions", () => {
     expect(sql).toBe("");
   });
 
-  it("must stringlify `niname_field` frame field", () => {
+  it("must stringlify `noname_field` frame field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(22);
     const sql = getFrameFieldSQL(field);
     expect(sql).toBe("");
+  });
+
+  it("must stringlify `time_millisecond_field` table field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>(
+      struct.models(0)?.tables(0)?.fields(23)
+    );
+    const sql = getTableFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as time(3)) ' +
+        'as "time_millisecond_field"',
+    );
+  });
+
+  it("must stringlify `time_millisecond_field` frame field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>struct.frames(0)?.fields(23);
+    const sql = getFrameFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as time(3)) ' +
+        'as "time_millisecond_field"',
+    );
+  });
+
+  it("must stringlify `time_microsecond_field` table field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>(
+      struct.models(0)?.tables(0)?.fields(24)
+    );
+    const sql = getTableFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as time(6)) ' +
+        'as "time_microsecond_field"',
+    );
+  });
+
+  it("must stringlify `time_microsecond_field` frame field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>struct.frames(0)?.fields(24);
+    const sql = getFrameFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as time(6)) ' +
+        'as "time_microsecond_field"',
+    );
+  });
+
+  it("must stringlify `time_nanosecond_field` table field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>(
+      struct.models(0)?.tables(0)?.fields(25)
+    );
+    const sql = getTableFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as time(9)) ' +
+        'as "time_nanosecond_field"',
+    );
+  });
+
+  it("must stringlify `time_nanosecond_field` frame field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>struct.frames(0)?.fields(25);
+    const sql = getFrameFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as time(9)) ' +
+        'as "time_nanosecond_field"',
+    );
+  });
+
+  it("must stringlify `timestamp_millisecond_field` table field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>(
+      struct.models(0)?.tables(0)?.fields(26)
+    );
+    const sql = getTableFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as timestamp(3)) at time zone \'UTC\' as "timestamp_millisecond_field"',
+    );
+  });
+
+  it("must stringlify `timestamp_millisecond_field` frame field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>struct.frames(0)?.fields(26);
+    const sql = getFrameFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as timestamp(3)) at time zone \'UTC\' as "timestamp_millisecond_field"',
+    );
+  });
+
+  it("must stringlify `timestamp_microsecond_field` table field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>(
+      struct.models(0)?.tables(0)?.fields(27)
+    );
+    const sql = getTableFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as timestamp(6)) at time zone \'UTC\' as "timestamp_microsecond_field"',
+    );
+  });
+
+  it("must stringlify `timestamp_microsecond_field` frame field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>struct.frames(0)?.fields(27);
+    const sql = getFrameFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as timestamp(6)) at time zone \'UTC\' as "timestamp_microsecond_field"',
+    );
+  });
+
+  it("must stringlify `timestamp_nanosecond_field` table field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>(
+      struct.models(0)?.tables(0)?.fields(28)
+    );
+    const sql = getTableFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as timestamp(9)) at time zone \'UTC\' as "timestamp_nanosecond_field"',
+    );
+  });
+
+  it("must stringlify `timestamp_nanosecond_field` frame field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>struct.frames(0)?.fields(28);
+    const sql = getFrameFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as timestamp(9)) at time zone \'UTC\' as "timestamp_nanosecond_field"',
+    );
+  });
+
+  it("must stringlify `timestamp_gmt_field` table field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>(
+      struct.models(0)?.tables(0)?.fields(29)
+    );
+    const sql = getTableFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as timestamp(0)) at time zone \'GMT\' as "timestamp_gmt_field"',
+    );
+  });
+
+  it("must stringlify `timestamp_gmt_field` frame field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>struct.frames(0)?.fields(29);
+    const sql = getFrameFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as timestamp(0)) at time zone \'GMT\' as "timestamp_gmt_field"',
+    );
+  });
+
+  it("must stringlify `timestamp_gmt_m_01_field` table field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>(
+      struct.models(0)?.tables(0)?.fields(30)
+    );
+    const sql = getTableFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-01\' as "timestamp_gmt_m_01_field"',
+    );
+  });
+
+  it("must stringlify `timestamp_gmt_m_01_field` frame field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>struct.frames(0)?.fields(30);
+    const sql = getFrameFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-01\' as "timestamp_gmt_m_01_field"',
+    );
+  });
+
+  it("must stringlify `timestamp_gmt_m_02_field` table field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>(
+      struct.models(0)?.tables(0)?.fields(31)
+    );
+    const sql = getTableFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-02\' as "timestamp_gmt_m_02_field"',
+    );
+  });
+
+  it("must stringlify `timestamp_gmt_m_02_field` frame field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>struct.frames(0)?.fields(31);
+    const sql = getFrameFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-02\' as "timestamp_gmt_m_02_field"',
+    );
+  });
+
+  it("must stringlify `timestamp_gmt_m_03_field` table field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>(
+      struct.models(0)?.tables(0)?.fields(32)
+    );
+    const sql = getTableFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-03\' as "timestamp_gmt_m_03_field"',
+    );
+  });
+
+  it("must stringlify `timestamp_gmt_m_03_field` frame field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>struct.frames(0)?.fields(32);
+    const sql = getFrameFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-03\' as "timestamp_gmt_m_03_field"',
+    );
+  });
+
+  it("must stringlify `timestamp_gmt_m_04_field` table field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>(
+      struct.models(0)?.tables(0)?.fields(33)
+    );
+    const sql = getTableFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-04\' as "timestamp_gmt_m_04_field"',
+    );
+  });
+
+  it("must stringlify `timestamp_gmt_m_04_field` frame field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>struct.frames(0)?.fields(33);
+    const sql = getFrameFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-04\' as "timestamp_gmt_m_04_field"',
+    );
+  });
+
+  it("must stringlify `timestamp_gmt_m_05_field` table field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>(
+      struct.models(0)?.tables(0)?.fields(34)
+    );
+    const sql = getTableFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-05\' as "timestamp_gmt_m_05_field"',
+    );
+  });
+
+  it("must stringlify `timestamp_gmt_m_05_field` frame field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>struct.frames(0)?.fields(34);
+    const sql = getFrameFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-05\' as "timestamp_gmt_m_05_field"',
+    );
+  });
+
+  it("must stringlify `timestamp_gmt_m_06_field` table field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>(
+      struct.models(0)?.tables(0)?.fields(35)
+    );
+    const sql = getTableFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-06\' as "timestamp_gmt_m_06_field"',
+    );
+  });
+
+  it("must stringlify `timestamp_gmt_m_06_field` frame field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>struct.frames(0)?.fields(35);
+    const sql = getFrameFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-06\' as "timestamp_gmt_m_06_field"',
+    );
+  });
+
+  it("must stringlify `timestamp_gmt_m_07_field` table field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>(
+      struct.models(0)?.tables(0)?.fields(36)
+    );
+    const sql = getTableFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-07\' as "timestamp_gmt_m_07_field"',
+    );
+  });
+
+  it("must stringlify `timestamp_gmt_m_07_field` frame field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>struct.frames(0)?.fields(36);
+    const sql = getFrameFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-07\' as "timestamp_gmt_m_07_field"',
+    );
+  });
+
+  it("must stringlify `timestamp_gmt_m_08_field` table field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>(
+      struct.models(0)?.tables(0)?.fields(37)
+    );
+    const sql = getTableFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-08\' as "timestamp_gmt_m_08_field"',
+    );
+  });
+
+  it("must stringlify `timestamp_gmt_m_08_field` frame field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>struct.frames(0)?.fields(37);
+    const sql = getFrameFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-08\' as "timestamp_gmt_m_08_field"',
+    );
+  });
+
+  it("must stringlify `timestamp_gmt_m_09_field` table field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>(
+      struct.models(0)?.tables(0)?.fields(38)
+    );
+    const sql = getTableFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-09\' as "timestamp_gmt_m_09_field"',
+    );
+  });
+
+  it("must stringlify `timestamp_gmt_m_09_field` frame field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>struct.frames(0)?.fields(38);
+    const sql = getFrameFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-09\' as "timestamp_gmt_m_09_field"',
+    );
+  });
+
+  it("must stringlify `timestamp_gmt_m_10_field` table field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>(
+      struct.models(0)?.tables(0)?.fields(39)
+    );
+    const sql = getTableFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-10\' as "timestamp_gmt_m_10_field"',
+    );
+  });
+
+  it("must stringlify `timestamp_gmt_m_10_field` frame field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>struct.frames(0)?.fields(39);
+    const sql = getFrameFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-10\' as "timestamp_gmt_m_10_field"',
+    );
+  });
+
+  it("must stringlify `timestamp_gmt_m_11_field` table field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>(
+      struct.models(0)?.tables(0)?.fields(40)
+    );
+    const sql = getTableFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-11\' as "timestamp_gmt_m_11_field"',
+    );
+  });
+
+  it("must stringlify `timestamp_gmt_m_11_field` frame field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>struct.frames(0)?.fields(40);
+    const sql = getFrameFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-11\' as "timestamp_gmt_m_11_field"',
+    );
+  });
+
+  it("must stringlify `timestamp_gmt_m_12_field` table field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>(
+      struct.models(0)?.tables(0)?.fields(41)
+    );
+    const sql = getTableFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-12\' as "timestamp_gmt_m_12_field"',
+    );
+  });
+
+  it("must stringlify `timestamp_gmt_m_12_field` frame field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>struct.frames(0)?.fields(41);
+    const sql = getFrameFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-12\' as "timestamp_gmt_m_12_field"',
+    );
+  });
+
+  it("must stringlify `timestamp_gmt_p_01_field` table field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>(
+      struct.models(0)?.tables(0)?.fields(42)
+    );
+    const sql = getTableFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+01\' as "timestamp_gmt_p_01_field"',
+    );
+  });
+
+  it("must stringlify `timestamp_gmt_p_01_field` frame field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>struct.frames(0)?.fields(42);
+    const sql = getFrameFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+01\' as "timestamp_gmt_p_01_field"',
+    );
+  });
+
+  it("must stringlify `timestamp_gmt_p_02_field` table field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>(
+      struct.models(0)?.tables(0)?.fields(43)
+    );
+    const sql = getTableFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+02\' as "timestamp_gmt_p_02_field"',
+    );
+  });
+
+  it("must stringlify `timestamp_gmt_p_02_field` frame field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>struct.frames(0)?.fields(43);
+    const sql = getFrameFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+02\' as "timestamp_gmt_p_02_field"',
+    );
+  });
+
+  it("must stringlify `timestamp_gmt_p_03_field` table field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>(
+      struct.models(0)?.tables(0)?.fields(44)
+    );
+    const sql = getTableFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+03\' as "timestamp_gmt_p_03_field"',
+    );
+  });
+
+  it("must stringlify `timestamp_gmt_p_03_field` frame field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>struct.frames(0)?.fields(44);
+    const sql = getFrameFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+03\' as "timestamp_gmt_p_03_field"',
+    );
+  });
+
+  it("must stringlify `timestamp_gmt_p_04_field` table field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>(
+      struct.models(0)?.tables(0)?.fields(45)
+    );
+    const sql = getTableFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+04\' as "timestamp_gmt_p_04_field"',
+    );
+  });
+
+  it("must stringlify `timestamp_gmt_p_04_field` frame field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>struct.frames(0)?.fields(45);
+    const sql = getFrameFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+04\' as "timestamp_gmt_p_04_field"',
+    );
+  });
+
+  it("must stringlify `timestamp_gmt_p_05_field` table field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>(
+      struct.models(0)?.tables(0)?.fields(46)
+    );
+    const sql = getTableFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+05\' as "timestamp_gmt_p_05_field"',
+    );
+  });
+
+  it("must stringlify `timestamp_gmt_p_05_field` frame field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>struct.frames(0)?.fields(46);
+    const sql = getFrameFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+05\' as "timestamp_gmt_p_05_field"',
+    );
+  });
+
+  it("must stringlify `timestamp_gmt_p_06_field` table field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>(
+      struct.models(0)?.tables(0)?.fields(47)
+    );
+    const sql = getTableFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+06\' as "timestamp_gmt_p_06_field"',
+    );
+  });
+
+  it("must stringlify `timestamp_gmt_p_06_field` frame field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>struct.frames(0)?.fields(47);
+    const sql = getFrameFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+06\' as "timestamp_gmt_p_06_field"',
+    );
+  });
+
+  it("must stringlify `timestamp_gmt_p_07_field` table field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>(
+      struct.models(0)?.tables(0)?.fields(48)
+    );
+    const sql = getTableFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+07\' as "timestamp_gmt_p_07_field"',
+    );
+  });
+
+  it("must stringlify `timestamp_gmt_p_07_field` frame field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>struct.frames(0)?.fields(48);
+    const sql = getFrameFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+07\' as "timestamp_gmt_p_07_field"',
+    );
+  });
+
+  it("must stringlify `timestamp_gmt_p_08_field` table field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>(
+      struct.models(0)?.tables(0)?.fields(49)
+    );
+    const sql = getTableFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+08\' as "timestamp_gmt_p_08_field"',
+    );
+  });
+
+  it("must stringlify `timestamp_gmt_p_08_field` frame field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>struct.frames(0)?.fields(49);
+    const sql = getFrameFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+08\' as "timestamp_gmt_p_08_field"',
+    );
+  });
+
+  it("must stringlify `timestamp_gmt_p_09_field` table field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>(
+      struct.models(0)?.tables(0)?.fields(50)
+    );
+    const sql = getTableFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+09\' as "timestamp_gmt_p_09_field"',
+    );
+  });
+
+  it("must stringlify `timestamp_gmt_p_09_field` frame field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>struct.frames(0)?.fields(50);
+    const sql = getFrameFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+09\' as "timestamp_gmt_p_09_field"',
+    );
+  });
+
+  it("must stringlify `timestamp_gmt_p_10_field` table field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>(
+      struct.models(0)?.tables(0)?.fields(51)
+    );
+    const sql = getTableFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+10\' as "timestamp_gmt_p_10_field"',
+    );
+  });
+
+  it("must stringlify `timestamp_gmt_p_10_field` frame field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>struct.frames(0)?.fields(51);
+    const sql = getFrameFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+10\' as "timestamp_gmt_p_10_field"',
+    );
+  });
+
+  it("must stringlify `timestamp_gmt_p_11_field` table field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>(
+      struct.models(0)?.tables(0)?.fields(52)
+    );
+    const sql = getTableFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+11\' as "timestamp_gmt_p_11_field"',
+    );
+  });
+
+  it("must stringlify `timestamp_gmt_p_11_field` frame field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>struct.frames(0)?.fields(52);
+    const sql = getFrameFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+11\' as "timestamp_gmt_p_11_field"',
+    );
+  });
+
+  it("must stringlify `timestamp_gmt_p_12_field` table field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>(
+      struct.models(0)?.tables(0)?.fields(53)
+    );
+    const sql = getTableFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+12\' as "timestamp_gmt_p_12_field"',
+    );
+  });
+
+  it("must stringlify `timestamp_gmt_p_12_field` frame field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>struct.frames(0)?.fields(53);
+    const sql = getFrameFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+12\' as "timestamp_gmt_p_12_field"',
+    );
+  });
+
+  it("must stringlify `timestamp_gmt_p_13_field` table field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>(
+      struct.models(0)?.tables(0)?.fields(54)
+    );
+    const sql = getTableFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+13\' as "timestamp_gmt_p_13_field"',
+    );
+  });
+
+  it("must stringlify `timestamp_gmt_p_13_field` frame field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>struct.frames(0)?.fields(54);
+    const sql = getFrameFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+13\' as "timestamp_gmt_p_13_field"',
+    );
+  });
+
+  it("must stringlify `timestamp_gmt_p_14_field` table field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>(
+      struct.models(0)?.tables(0)?.fields(55)
+    );
+    const sql = getTableFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+14\' as "timestamp_gmt_p_14_field"',
+    );
+  });
+
+  it("must stringlify `timestamp_gmt_p_14_field` frame field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>struct.frames(0)?.fields(55);
+    const sql = getFrameFieldSQL(field);
+    expect(sql).toBe(
+      'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+14\' as "timestamp_gmt_p_14_field"',
+    );
   });
 });

@@ -10,6 +10,11 @@ import {
   DataTypeEnum,
   AggregationTypeEnum,
   DecimalParametersStruct,
+  DateParametersStruct,
+  TimeParametersStruct,
+  TimestampParametersStruct,
+  TimeUnitEnum,
+  TimeZoneEnum,
 } from "@hdml/schemas";
 
 export function getTableFieldSQL(field: FieldStruct): string {
@@ -114,7 +119,11 @@ export function getCastedClause(
   type: FieldTypeStruct,
 ): string {
   let sql = "";
-  let options: DecimalParametersStruct;
+  let options:
+    | DecimalParametersStruct
+    | DateParametersStruct
+    | TimeParametersStruct
+    | TimestampParametersStruct;
 
   switch (type.type()) {
     case DataTypeEnum.Int8:
@@ -145,13 +154,134 @@ export function getCastedClause(
         `${options.scale()}))`;
       break;
     case DataTypeEnum.Date:
+      options = type.options(
+        new DateParametersStruct(),
+      ) as DateParametersStruct;
       sql = `try_cast(${clause} as date)`;
       break;
     case DataTypeEnum.Time:
-      sql = `try_cast(${clause} as time)`;
+      options = type.options(
+        new TimeParametersStruct(),
+      ) as TimeParametersStruct;
+      switch (options.unit()) {
+        case TimeUnitEnum.Second:
+          sql = `try_cast(${clause} as time(0))`;
+          break;
+        case TimeUnitEnum.Millisecond:
+          sql = `try_cast(${clause} as time(3))`;
+          break;
+        case TimeUnitEnum.Microsecond:
+          sql = `try_cast(${clause} as time(6))`;
+          break;
+        case TimeUnitEnum.Nanosecond:
+          sql = `try_cast(${clause} as time(9))`;
+          break;
+      }
       break;
     case DataTypeEnum.Timestamp:
-      sql = `try_cast(${clause} as timestamp)`;
+      options = type.options(
+        new TimestampParametersStruct(),
+      ) as TimestampParametersStruct;
+      switch (options.unit()) {
+        case TimeUnitEnum.Second:
+          sql = `try_cast(${clause} as timestamp(0))`;
+          break;
+        case TimeUnitEnum.Millisecond:
+          sql = `try_cast(${clause} as timestamp(3))`;
+          break;
+        case TimeUnitEnum.Microsecond:
+          sql = `try_cast(${clause} as timestamp(6))`;
+          break;
+        case TimeUnitEnum.Nanosecond:
+          sql = `try_cast(${clause} as timestamp(9))`;
+          break;
+      }
+      switch ((<TimestampParametersStruct>options).timezone()) {
+        case TimeZoneEnum.UTC:
+          sql = `${sql} at time zone 'UTC'`;
+          break;
+        case TimeZoneEnum.GMT:
+          sql = `${sql} at time zone 'GMT'`;
+          break;
+        case TimeZoneEnum.GMT_m_01:
+          sql = `${sql} at time zone 'GMT-01'`;
+          break;
+        case TimeZoneEnum.GMT_m_02:
+          sql = `${sql} at time zone 'GMT-02'`;
+          break;
+        case TimeZoneEnum.GMT_m_03:
+          sql = `${sql} at time zone 'GMT-03'`;
+          break;
+        case TimeZoneEnum.GMT_m_04:
+          sql = `${sql} at time zone 'GMT-04'`;
+          break;
+        case TimeZoneEnum.GMT_m_05:
+          sql = `${sql} at time zone 'GMT-05'`;
+          break;
+        case TimeZoneEnum.GMT_m_06:
+          sql = `${sql} at time zone 'GMT-06'`;
+          break;
+        case TimeZoneEnum.GMT_m_07:
+          sql = `${sql} at time zone 'GMT-07'`;
+          break;
+        case TimeZoneEnum.GMT_m_08:
+          sql = `${sql} at time zone 'GMT-08'`;
+          break;
+        case TimeZoneEnum.GMT_m_09:
+          sql = `${sql} at time zone 'GMT-09'`;
+          break;
+        case TimeZoneEnum.GMT_m_10:
+          sql = `${sql} at time zone 'GMT-10'`;
+          break;
+        case TimeZoneEnum.GMT_m_11:
+          sql = `${sql} at time zone 'GMT-11'`;
+          break;
+        case TimeZoneEnum.GMT_m_12:
+          sql = `${sql} at time zone 'GMT-12'`;
+          break;
+        case TimeZoneEnum.GMT_p_01:
+          sql = `${sql} at time zone 'GMT+01'`;
+          break;
+        case TimeZoneEnum.GMT_p_02:
+          sql = `${sql} at time zone 'GMT+02'`;
+          break;
+        case TimeZoneEnum.GMT_p_03:
+          sql = `${sql} at time zone 'GMT+03'`;
+          break;
+        case TimeZoneEnum.GMT_p_04:
+          sql = `${sql} at time zone 'GMT+04'`;
+          break;
+        case TimeZoneEnum.GMT_p_05:
+          sql = `${sql} at time zone 'GMT+05'`;
+          break;
+        case TimeZoneEnum.GMT_p_06:
+          sql = `${sql} at time zone 'GMT+06'`;
+          break;
+        case TimeZoneEnum.GMT_p_07:
+          sql = `${sql} at time zone 'GMT+07'`;
+          break;
+        case TimeZoneEnum.GMT_p_08:
+          sql = `${sql} at time zone 'GMT+08'`;
+          break;
+        case TimeZoneEnum.GMT_p_09:
+          sql = `${sql} at time zone 'GMT+09'`;
+          break;
+        case TimeZoneEnum.GMT_p_10:
+          sql = `${sql} at time zone 'GMT+10'`;
+          break;
+        case TimeZoneEnum.GMT_p_11:
+          sql = `${sql} at time zone 'GMT+11'`;
+          break;
+        case TimeZoneEnum.GMT_p_12:
+          sql = `${sql} at time zone 'GMT+12'`;
+          break;
+        case TimeZoneEnum.GMT_p_13:
+          sql = `${sql} at time zone 'GMT+13'`;
+          break;
+        case TimeZoneEnum.GMT_p_14:
+          sql = `${sql} at time zone 'GMT+14'`;
+          break;
+      }
       break;
     case DataTypeEnum.Binary:
       sql = `try_cast(${clause} as varbinary)`;
