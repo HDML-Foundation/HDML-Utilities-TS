@@ -9,9 +9,23 @@ import {
   ModelStruct,
   TableStruct,
   JoinStruct,
+  FilterClauseStruct,
+  FilterStruct,
+  ExpressionParametersStruct,
+  KeysParametersStruct,
+  NamedParametersStruct,
   TableTypeEnum,
   JoinTypeEnum,
+  FilterTypeEnum,
 } from "@hdml/schemas";
+import {
+  Join,
+  FilterClause,
+  Filter,
+  ExpressionParameters,
+  KeysParameters,
+  NamedParameters,
+} from "@hdml/types";
 import { t } from "../constants";
 import { getTableFieldSQL } from "./field";
 
@@ -113,6 +127,87 @@ export function getTableSQL(table: TableStruct, level = 0): string {
   tableSQL = tableSQL + `${prefix}${t}${t}${alias}\n`;
   tableSQL = tableSQL + `${prefix})`;
   return tableSQL;
+}
+
+export function getJoins(model: ModelStruct): Join[] {
+  // Step 1: Objectify Joins
+  const joins: Join[] = [];
+
+  const objectifyFilterOptions = (
+    filter: FilterStruct,
+  ): ExpressionParameters | KeysParameters | NamedParameters => {
+    let opts: unknown;
+    let data: ExpressionParameters | KeysParameters | NamedParameters;
+    switch (filter.type()) {
+      case FilterTypeEnum.Expression:
+        opts = filter.options(new ExpressionParametersStruct());
+        data = {
+          clause: (<ExpressionParametersStruct>opts).clause() || "",
+        };
+        return data;
+      case FilterTypeEnum.Keys:
+        opts = filter.options(new KeysParametersStruct());
+        data = {
+          left: (<KeysParametersStruct>opts).left() || "",
+          right: (<KeysParametersStruct>opts).right() || "",
+        };
+        return data;
+      case FilterTypeEnum.Named:
+        opts = filter.options(new NamedParametersStruct());
+        data = {
+          name: (<NamedParametersStruct>opts).name(),
+          field: (<NamedParametersStruct>opts).field() || "",
+          values: [],
+        };
+        for (
+          let i = 0;
+          i < (<NamedParametersStruct>opts).valuesLength();
+          i++
+        ) {
+          data.values.push((<NamedParametersStruct>opts).values(i));
+        }
+        return data;
+    }
+  };
+
+  const objectifyJoinClause = (
+    clause: FilterClauseStruct,
+  ): FilterClause => {
+    const type = clause.type();
+    const filters: Filter[] = [];
+    const children: FilterClause[] = [];
+    for (let i = 0; i < clause.filtersLength(); i++) {
+      const filter = clause.filters(i);
+      if (filter) {
+        filters.push(<Filter>{
+          type: filter.type(),
+          options: objectifyFilterOptions(filter),
+        });
+      }
+    }
+    for (let i = 0; i < clause.childrenLength(); i++) {
+      const child = clause.children(i)!;
+      children.push(objectifyJoinClause(child));
+    }
+    return {
+      type,
+      filters,
+      children,
+    };
+  };
+
+  for (let i = 0; i < model.joinsLength(); i++) {
+    const js = model.joins(i)!;
+    joins.push({
+      type: js.type(),
+      left: js.left()!,
+      right: js.right()!,
+      clause: objectifyJoinClause(js.clause()!),
+      description: js.description(),
+    });
+  }
+
+  return joins;
 }
 
 export function sortJoins(joins: JoinStruct[]): JoinStruct[] {
