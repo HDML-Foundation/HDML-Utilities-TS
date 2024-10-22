@@ -29,12 +29,10 @@ import {
 import { t } from "../constants";
 import { getTableFieldSQL } from "./field";
 
-type Edge = { left: string; right: string; type: JoinTypeEnum };
-
 export function getModelSQL(model: ModelStruct, level = 0): string {
   const prefix = t.repeat(level);
   let tables: TableStruct[] = [];
-  let joins: JoinStruct[] = [];
+  const joins: Join[] = sortJoins(getJoins(model));
 
   for (let i = 0; i < model.tablesLength(); i++) {
     const t = model.tables(i);
@@ -42,14 +40,6 @@ export function getModelSQL(model: ModelStruct, level = 0): string {
       tables.push(t);
     }
   }
-
-  for (let i = 0; i < model.joinsLength(); i++) {
-    const j = model.joins(i);
-    if (j) {
-      joins.push(j);
-    }
-  }
-  joins = sortJoins(joins);
 
   tables = tables
     .sort((t1, t2) => {
@@ -66,7 +56,7 @@ export function getModelSQL(model: ModelStruct, level = 0): string {
       }
       let res = false;
       joins.forEach((j) => {
-        res = res || t.name() === j.left() || t.name() === j.right();
+        res = res || t.name() === j.left || t.name() === j.right;
       });
       return res;
     });
@@ -130,7 +120,6 @@ export function getTableSQL(table: TableStruct, level = 0): string {
 }
 
 export function getJoins(model: ModelStruct): Join[] {
-  // Step 1: Objectify Joins
   const joins: Join[] = [];
 
   const objectifyFilterOptions = (
@@ -210,23 +199,14 @@ export function getJoins(model: ModelStruct): Join[] {
   return joins;
 }
 
-export function sortJoins(joins: JoinStruct[]): JoinStruct[] {
-  const result: JoinStruct[] = [];
-  const edges: Edge[] = joins.map((join) => {
-    return {
-      left: join.left()!,
-      right: join.right()!,
-      type: join.type(),
-    };
-  });
-
-  const dag: Edge[] = getDAG(edges);
+export function sortJoins(joins: Join[]): Join[] {
+  const result: Join[] = [];
+  const dag = getDag(joins);
   const roots: string[] = findRoots(dag);
 
   if (roots.length > 1) {
     for (let i = 1; i < roots.length; i++) {
-      // this will do nothing until function will be implemented
-      convertToChild(roots[i], dag);
+      invertJoinsPath(dag, roots[i]);
     }
   }
 
@@ -236,26 +216,18 @@ export function sortJoins(joins: JoinStruct[]): JoinStruct[] {
     } else {
       visited.add(root);
       const neighbors: string[] = [];
-      dag.forEach((e) => {
-        if (e.left === root) {
-          neighbors.push(e.right);
-          joins.forEach((j) => {
-            if (
-              (j.left() === e.left ||
-                j.left() === `${e.left}_in` ||
-                j.left() === `${e.left}_out`) &&
-              (j.right() === e.right ||
-                j.right() === `${e.right}_in` ||
-                j.right() === `${e.right}_out`) &&
-              j.type() === e.type
-            ) {
-              result.push(j);
-            }
+      dag.forEach((j) => {
+        if (j.left === root) {
+          neighbors.push(j.right);
+          result.push({
+            ...j,
+            left: j.left.replace("_in", "").replace("_out", ""),
+            right: j.right.replace("_in", "").replace("_out", ""),
           });
         }
       });
-      neighbors.forEach((n) => {
-        dfs(n, visited);
+      neighbors.forEach((neighbor) => {
+        dfs(neighbor, visited);
       });
     }
   };
@@ -264,66 +236,73 @@ export function sortJoins(joins: JoinStruct[]): JoinStruct[] {
   return result;
 }
 
-/**
- * TODO (buntarb): Convert left join to right join in order to support
- * more than one root table in the joins definition.
- */
-export function convertToChild(
-  name: string,
-  edges: Edge[],
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  parents: Edge[] = [],
-): void {
-  return;
-  // const children: string[] = [];
-  // for (const edge of edges) {
-  //   if (edge.left === name && !~parents.indexOf(edge)) {
-  //     parents.push(edge);
-  //     children.push(edge.right);
-  //     let left: string;
-  //     switch (edge.type) {
-  //       case JoinTypeEnum.Cross:
-  //       case JoinTypeEnum.Inner:
-  //       case JoinTypeEnum.Full:
-  //       case JoinTypeEnum.FullOuter:
-  //         left = edge.left;
-  //         edge.left = edge.right;
-  //         edge.right = left;
-  //         break;
-
-  //       case JoinTypeEnum.Left:
-  //         left = edge.left;
-  //         edge.left = edge.right;
-  //         edge.right = left;
-  //         edge.type = JoinTypeEnum.Right;
-  //         break;
-
-  //       case JoinTypeEnum.Right:
-  //         left = edge.left;
-  //         edge.left = edge.right;
-  //         edge.right = left;
-  //         edge.type = JoinTypeEnum.Left;
-  //         break;
-
-  //       case JoinTypeEnum.LeftOuter:
-  //         left = edge.left;
-  //         edge.left = edge.right;
-  //         edge.right = left;
-  //         edge.type = JoinTypeEnum.RightOuter;
-  //         break;
-
-  //       case JoinTypeEnum.RightOuter:
-  //         left = edge.left;
-  //         edge.left = edge.right;
-  //         edge.right = left;
-  //         edge.type = JoinTypeEnum.LeftOuter;
-  //         break;
-  //     }
-  //   }
-  // }
+export function invertJoinsPath(joins: Join[], root: string): void {
+  for (const join of joins) {
+    if (join.left === root) {
+      invertJoin(join);
+      invertJoinsPath(joins, join.right);
+    }
+  }
 }
 
-export function findRoots(graph: Edge[]): string[] {
+export function invertJoin(join: Join): void {
+  const invertClause = (clause: FilterClause) => {
+    clause.filters.forEach((filter) => {
+      if (filter.type === FilterTypeEnum.Keys) {
+        const left = filter.options.left;
+        filter.options.left = filter.options.right;
+        filter.options.right = left;
+      }
+    });
+    clause.children.forEach(invertClause);
+  };
+
+  let left: string;
+  switch (join.type) {
+    case JoinTypeEnum.Cross:
+    case JoinTypeEnum.Inner:
+    case JoinTypeEnum.Full:
+    case JoinTypeEnum.FullOuter:
+      left = join.left;
+      join.left = join.right;
+      join.right = left;
+      break;
+
+    case JoinTypeEnum.Left:
+      left = join.left;
+      join.left = join.right;
+      join.right = left;
+      join.type = JoinTypeEnum.Right;
+      invertClause(join.clause);
+      break;
+
+    case JoinTypeEnum.Right:
+      left = join.left;
+      join.left = join.right;
+      join.right = left;
+      join.type = JoinTypeEnum.Left;
+      invertClause(join.clause);
+      break;
+
+    case JoinTypeEnum.LeftOuter:
+      left = join.left;
+      join.left = join.right;
+      join.right = left;
+      join.type = JoinTypeEnum.RightOuter;
+      invertClause(join.clause);
+      break;
+
+    case JoinTypeEnum.RightOuter:
+      left = join.left;
+      join.left = join.right;
+      join.right = left;
+      join.type = JoinTypeEnum.LeftOuter;
+      invertClause(join.clause);
+      break;
+  }
+}
+
+export function findRoots(graph: Join[]): string[] {
   // Step 1: Build an incoming edge count map for all nodes
   const incomingCount = new Map<string, number>();
 
@@ -377,7 +356,7 @@ export function findRoots(graph: Edge[]): string[] {
   return rootCounts.map(([root]) => root); // Return sorted roots
 }
 
-export function getDAG(graph: Edge[]): Edge[] {
+export function getDag(graph: Join[]): Join[] {
   const incomingEdges = new Map<string, number>();
   const outgoingEdges = new Map<string, number>();
   const visited = new Set<string>();
@@ -448,18 +427,20 @@ export function getDAG(graph: Edge[]): Edge[] {
 
   // Step 3: Build the new graph, splitting only the selected "most
   // left" node.
-  const splitGraph: {
-    left: string;
-    right: string;
-    type: JoinTypeEnum;
-  }[] = [];
+  const splitGraph: Join[] = [];
 
-  graph.forEach(({ left, right, type }) => {
+  graph.forEach(({ left, right, type, clause, description }) => {
     const newLeft = splitNodes.has(left) ? `${left}_out` : left;
     const newRight = splitNodes.has(right) ? `${right}_in` : right;
 
     // Push the modified or original edge.
-    splitGraph.push({ left: newLeft, right: newRight, type });
+    splitGraph.push({
+      left: newLeft,
+      right: newRight,
+      type,
+      clause: { ...clause },
+      description,
+    });
   });
 
   return splitGraph;

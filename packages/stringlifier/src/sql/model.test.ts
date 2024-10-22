@@ -16,14 +16,13 @@ import {
   FilterTypeEnum,
   FilterOperatorEnum,
   TableStruct,
-  JoinStruct,
 } from "@hdml/schemas";
 import { Join } from "@hdml/types";
 import { serialize, deserialize } from "@hdml/buffer";
 import {
   getJoins,
   getTableSQL,
-  getDAG,
+  getDag,
   findRoots,
   sortJoins,
 } from "./model";
@@ -345,7 +344,7 @@ describe("The `getJoins` function", () => {
           tables: [],
           joins: [
             {
-              left: "table1",
+              left: "T1",
               right: "",
               type: JoinTypeEnum.Left,
               description: null,
@@ -2053,263 +2052,1411 @@ describe("The `getJoins` function", () => {
 });
 
 describe("The `sortJoins` function", () => {
-  it("should sort case 3", () => {
-    const hdom: HDOM = {
-      includes: [],
-      connections: [],
-      models: [
-        {
-          name: "model",
-          description: null,
-          tables: [
-            {
-              name: "table1",
-              description: null,
-              type: TableTypeEnum.Table,
-              identifier: "connection.schema.table1",
-              fields: [],
-            },
-            {
-              name: "table2",
-              description: null,
-              type: TableTypeEnum.Table,
-              identifier: "connection.schema.table2",
-              fields: [],
-            },
-            {
-              name: "table3",
-              description: null,
-              type: TableTypeEnum.Table,
-              identifier: "connection.schema.table3",
-              fields: [],
-            },
-          ],
-          joins: [
-            {
-              left: "table1",
-              right: "table2",
-              type: JoinTypeEnum.Cross,
-              description: null,
-              clause: {
-                type: FilterOperatorEnum.None,
-                filters: [
-                  {
-                    type: FilterTypeEnum.Keys,
-                    options: {
-                      left: "left_field",
-                      right: "right_field",
-                    },
-                  },
-                ],
-                children: [],
-              },
-            },
-            {
-              left: "table1",
-              right: "table3",
-              type: JoinTypeEnum.Cross,
-              description: null,
-              clause: {
-                type: FilterOperatorEnum.None,
-                filters: [
-                  {
-                    type: FilterTypeEnum.Keys,
-                    options: {
-                      left: "left_field",
-                      right: "right_field",
-                    },
-                  },
-                ],
-                children: [],
-              },
-            },
-          ],
-        },
-      ],
-      frames: [],
-    };
-    const bytes = serialize(hdom);
-    const struct = deserialize(bytes);
-    let joins: JoinStruct[] = [];
-    for (let i = 0; i < struct.models(0)!.joinsLength(); i++) {
-      joins.push(struct.models(0)!.joins(i)!);
-    }
-    joins = sortJoins(joins);
-    expect(joins[0].left()).toBe("table1");
-    expect(joins[0].right()).toBe("table2");
-    expect(joins[0].type()).toBe(JoinTypeEnum.Cross);
+  it("should sort case 1", () => {
+    const sorted = sortJoins(case1);
+    expect(sorted).toEqual(case1);
+  });
 
-    expect(joins[1].left()).toBe("table1");
-    expect(joins[1].right()).toBe("table3");
-    expect(joins[1].type()).toBe(JoinTypeEnum.Cross);
+  it("should sort case 2", () => {
+    const sorted = sortJoins(case2);
+    expect(sorted).toEqual([
+      {
+        left: "T1",
+        right: "",
+        type: 3,
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "left_field",
+                right: "right_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+      {
+        left: "",
+        right: "T2",
+        type: 4,
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "right_field",
+                right: "left_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+    ]);
+  });
+
+  it("should sort case 3", () => {
+    const sorted = sortJoins(case3);
+    expect(sorted).toEqual(case3);
+  });
+
+  it("should sort case 4", () => {
+    const sorted = sortJoins(case4);
+    expect(sorted).toEqual(case4);
+  });
+
+  it("should sort case 5", () => {
+    const sorted = sortJoins(case5);
+    expect(sorted).toEqual(case5);
+  });
+
+  it("should sort case 6", () => {
+    const sorted = sortJoins(case6);
+    expect(sorted).toEqual([
+      {
+        type: 3,
+        left: "T6",
+        right: "T1",
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "left_field",
+                right: "right_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+      {
+        type: 3,
+        left: "T1",
+        right: "T2",
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "left_field",
+                right: "right_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+      {
+        type: 3,
+        left: "T1",
+        right: "T3",
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "left_field",
+                right: "right_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+      {
+        type: 3,
+        left: "T2",
+        right: "T4",
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "left_field",
+                right: "right_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+      {
+        type: 3,
+        left: "T3",
+        right: "T5",
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "left_field",
+                right: "right_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+    ]);
+  });
+
+  it("should sort case 7", () => {
+    const sorted = sortJoins(case7);
+    expect(sorted).toEqual([
+      {
+        left: "T6",
+        right: "T1",
+        type: 3,
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "left_field",
+                right: "right_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+      {
+        left: "T1",
+        right: "T2",
+        type: 3,
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "left_field",
+                right: "right_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+      {
+        left: "T1",
+        right: "T3",
+        type: 3,
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "left_field",
+                right: "right_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+      {
+        left: "T2",
+        right: "T4",
+        type: 3,
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "left_field",
+                right: "right_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+      {
+        left: "T2",
+        right: "T6",
+        type: 3,
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "left_field",
+                right: "right_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+      {
+        left: "T3",
+        right: "T5",
+        type: 3,
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "left_field",
+                right: "right_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+    ]);
+  });
+
+  it("should sort case 8", () => {
+    const sorted = sortJoins(case8);
+    expect(sorted).toEqual([
+      {
+        left: "T6",
+        right: "T1",
+        type: 3,
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "left_field",
+                right: "right_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+      {
+        left: "T1",
+        right: "T2",
+        type: 3,
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "left_field",
+                right: "right_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+      {
+        left: "T1",
+        right: "T3",
+        type: 3,
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "left_field",
+                right: "right_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+      {
+        left: "T2",
+        right: "T4",
+        type: 3,
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "left_field",
+                right: "right_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+      {
+        left: "T2",
+        right: "T6",
+        type: 3,
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "left_field",
+                right: "right_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+      {
+        left: "T3",
+        right: "T5",
+        type: 3,
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "left_field",
+                right: "right_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+      {
+        left: "T3",
+        right: "T6",
+        type: 3,
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "left_field",
+                right: "right_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+    ]);
+  });
+
+  it("should sort case 9", () => {
+    const sorted = sortJoins(case9);
+    expect(sorted).toEqual([
+      {
+        left: "T6",
+        right: "T1",
+        type: 3,
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "left_field",
+                right: "right_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+      {
+        left: "T1",
+        right: "T2",
+        type: 3,
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "left_field",
+                right: "right_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+      {
+        left: "T1",
+        right: "T3",
+        type: 3,
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "left_field",
+                right: "right_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+      {
+        left: "T2",
+        right: "T4",
+        type: 3,
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "left_field",
+                right: "right_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+      {
+        left: "T2",
+        right: "T6",
+        type: 3,
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "left_field",
+                right: "right_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+      {
+        left: "T2",
+        right: "T7",
+        type: 4,
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "right_field",
+                right: "left_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+      {
+        left: "T3",
+        right: "T5",
+        type: 3,
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "left_field",
+                right: "right_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+    ]);
+  });
+
+  it("should sort case 10", () => {
+    const sorted = sortJoins(case10);
+    expect(sorted).toEqual([
+      {
+        left: "T7",
+        right: "T2",
+        type: 3,
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "left_field",
+                right: "right_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+      {
+        left: "T7",
+        right: "T1",
+        type: 3,
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "left_field",
+                right: "right_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+      {
+        left: "T2",
+        right: "T4",
+        type: 3,
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "left_field",
+                right: "right_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+      {
+        left: "T2",
+        right: "T6",
+        type: 3,
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "left_field",
+                right: "right_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+      {
+        left: "T1",
+        right: "T2",
+        type: 3,
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "left_field",
+                right: "right_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+      {
+        left: "T1",
+        right: "T3",
+        type: 3,
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "left_field",
+                right: "right_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+      {
+        left: "T1",
+        right: "T6",
+        type: 4,
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "right_field",
+                right: "left_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+      {
+        left: "T3",
+        right: "T5",
+        type: 3,
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "left_field",
+                right: "right_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+    ]);
+  });
+
+  it("should sort case 11", () => {
+    const sorted = sortJoins(case11);
+    expect(sorted).toEqual([
+      {
+        left: "T7",
+        right: "T2",
+        type: 3,
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "left_field",
+                right: "right_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+      {
+        left: "T7",
+        right: "T1",
+        type: 3,
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "left_field",
+                right: "right_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+      {
+        left: "T2",
+        right: "T4",
+        type: 3,
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "left_field",
+                right: "right_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+      {
+        left: "T2",
+        right: "T6",
+        type: 3,
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "left_field",
+                right: "right_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+      {
+        left: "T1",
+        right: "T2",
+        type: 3,
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "left_field",
+                right: "right_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+      {
+        left: "T1",
+        right: "T3",
+        type: 3,
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "left_field",
+                right: "right_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+      {
+        left: "T1",
+        right: "T6",
+        type: 4,
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "right_field",
+                right: "left_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+      {
+        left: "T3",
+        right: "T5",
+        type: 3,
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "left_field",
+                right: "right_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+      {
+        left: "T3",
+        right: "T6",
+        type: 3,
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "left_field",
+                right: "right_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+    ]);
+  });
+
+  it("should sort case 12", () => {
+    const sorted = sortJoins(case12);
+    expect(sorted).toEqual([
+      {
+        left: "T5",
+        right: "T7",
+        type: 3,
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "left_field",
+                right: "right_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+      {
+        left: "T7",
+        right: "T2",
+        type: 3,
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "left_field",
+                right: "right_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+      {
+        left: "T7",
+        right: "T1",
+        type: 3,
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "left_field",
+                right: "right_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+      {
+        left: "T2",
+        right: "T4",
+        type: 3,
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "left_field",
+                right: "right_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+      {
+        left: "T2",
+        right: "T6",
+        type: 3,
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "left_field",
+                right: "right_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+      {
+        left: "T1",
+        right: "T2",
+        type: 3,
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "left_field",
+                right: "right_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+      {
+        left: "T1",
+        right: "T3",
+        type: 3,
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "left_field",
+                right: "right_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+      {
+        left: "T1",
+        right: "T6",
+        type: 4,
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "right_field",
+                right: "left_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+      {
+        left: "T3",
+        right: "T5",
+        type: 3,
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "left_field",
+                right: "right_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+      {
+        left: "T3",
+        right: "T6",
+        type: 3,
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "left_field",
+                right: "right_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+    ]);
+  });
+
+  it("should sort case 13", () => {
+    const sorted = sortJoins(case13);
+    expect(sorted).toEqual([
+      {
+        left: "T5",
+        right: "T7",
+        type: 3,
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "left_field",
+                right: "right_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+      {
+        left: "T7",
+        right: "T2",
+        type: 3,
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "left_field",
+                right: "right_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+      {
+        left: "T7",
+        right: "T1",
+        type: 3,
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "left_field",
+                right: "right_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+      {
+        left: "T2",
+        right: "T4",
+        type: 3,
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "left_field",
+                right: "right_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+      {
+        left: "T2",
+        right: "T6",
+        type: 3,
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "left_field",
+                right: "right_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+      {
+        left: "T6",
+        right: "T9",
+        type: 4,
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "right_field",
+                right: "left_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+      {
+        left: "T1",
+        right: "T2",
+        type: 3,
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "left_field",
+                right: "right_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+      {
+        left: "T1",
+        right: "T3",
+        type: 3,
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "left_field",
+                right: "right_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+      {
+        left: "T1",
+        right: "T6",
+        type: 4,
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "right_field",
+                right: "left_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+      {
+        left: "T3",
+        right: "T5",
+        type: 3,
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "left_field",
+                right: "right_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+      {
+        left: "T3",
+        right: "T6",
+        type: 3,
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "left_field",
+                right: "right_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+      {
+        left: "T3",
+        right: "T8",
+        type: 4,
+        clause: {
+          type: 2,
+          filters: [
+            {
+              type: 1,
+              options: {
+                left: "right_field",
+                right: "left_field",
+              },
+            },
+          ],
+          children: [],
+        },
+        description: null,
+      },
+    ]);
   });
 });
 
-describe("The `getDAG` and `findRoots` functions", () => {
-  it("should find `j1` for case 1", () => {
-    const dag = getDAG([
-      { left: "j1", right: "", type: JoinTypeEnum.Full },
-    ]);
+describe("The `findRoots(getDag(join))`  functions", () => {
+  it("should find `T1` for case 1", () => {
+    const dag = getDag(case1);
     const roots = findRoots(dag);
-    expect(roots).toEqual(["j1"]);
+    expect(roots).toEqual(["T1"]);
   });
 
-  it("should find `j1` and `j2` for case 2", () => {
-    const dag = getDAG([
-      { left: "j1", right: "", type: JoinTypeEnum.Full },
-      { left: "j2", right: "", type: JoinTypeEnum.Full },
-    ]);
+  it("should find `T1` and `T2` for case 2", () => {
+    const dag = getDag(case2);
     const roots = findRoots(dag);
-    expect(roots).toEqual(["j1", "j2"]);
+    expect(roots).toEqual(["T1", "T2"]);
   });
 
-  it("should find `j1` for case 3", () => {
-    const dag = getDAG([
-      { left: "j1", right: "j2", type: JoinTypeEnum.Full },
-      { left: "j1", right: "j3", type: JoinTypeEnum.Full },
-    ]);
+  it("should find `T1` for case 3", () => {
+    const dag = getDag(case3);
     const roots = findRoots(dag);
-    expect(roots).toEqual(["j1"]);
+    expect(roots).toEqual(["T1"]);
   });
 
-  it("should find `j1` for case 4", () => {
-    const dag = getDAG([
-      { left: "j1", right: "j2", type: JoinTypeEnum.Full },
-      { left: "j1", right: "j3", type: JoinTypeEnum.Full },
-      { left: "j2", right: "j4", type: JoinTypeEnum.Full },
-    ]);
+  it("should find `T1` for case 4", () => {
+    const dag = getDag(case4);
     const roots = findRoots(dag);
-    expect(roots).toEqual(["j1"]);
+    expect(roots).toEqual(["T1"]);
   });
 
-  it("should find `j1` for case 5", () => {
-    const dag = getDAG([
-      { left: "j1", right: "j2", type: JoinTypeEnum.Full },
-      { left: "j1", right: "j3", type: JoinTypeEnum.Full },
-      { left: "j2", right: "j4", type: JoinTypeEnum.Full },
-      { left: "j3", right: "j5", type: JoinTypeEnum.Full },
-    ]);
+  it("should find `T1` for case 5", () => {
+    const dag = getDag(case5);
     const roots = findRoots(dag);
-    expect(roots).toEqual(["j1"]);
+    expect(roots).toEqual(["T1"]);
   });
 
-  it("should find `j6` for case 6", () => {
-    const dag = getDAG([
-      { left: "j1", right: "j2", type: JoinTypeEnum.Full },
-      { left: "j1", right: "j3", type: JoinTypeEnum.Full },
-      { left: "j2", right: "j4", type: JoinTypeEnum.Full },
-      { left: "j3", right: "j5", type: JoinTypeEnum.Full },
-      { left: "j6", right: "j1", type: JoinTypeEnum.Full },
-    ]);
+  it("should find `T6` for case 6", () => {
+    const dag = getDag(case6);
     const roots = findRoots(dag);
-    expect(roots).toEqual(["j6"]);
+    expect(roots).toEqual(["T6"]);
   });
 
-  it("should find `j6` for case 7", () => {
-    const dag = getDAG([
-      { left: "j1", right: "j2", type: JoinTypeEnum.Full },
-      { left: "j1", right: "j3", type: JoinTypeEnum.Full },
-      { left: "j2", right: "j4", type: JoinTypeEnum.Full },
-      { left: "j3", right: "j5", type: JoinTypeEnum.Full },
-      { left: "j6", right: "j1", type: JoinTypeEnum.Full },
-      { left: "j2", right: "j6", type: JoinTypeEnum.Full },
-    ]);
+  it("should find `T6` for case 7", () => {
+    const dag = getDag(case7);
     const roots = findRoots(dag);
-    expect(roots).toEqual(["j6_out"]);
+    expect(roots).toEqual(["T6_out"]);
   });
 
-  it("should find `j6` for case 8", () => {
-    const dag = getDAG([
-      { left: "j1", right: "j2", type: JoinTypeEnum.Full },
-      { left: "j1", right: "j3", type: JoinTypeEnum.Full },
-      { left: "j2", right: "j4", type: JoinTypeEnum.Full },
-      { left: "j3", right: "j5", type: JoinTypeEnum.Full },
-      { left: "j6", right: "j1", type: JoinTypeEnum.Full },
-      { left: "j2", right: "j6", type: JoinTypeEnum.Full },
-      { left: "j3", right: "j6", type: JoinTypeEnum.Full },
-    ]);
+  it("should find `T6` for case 8", () => {
+    const dag = getDag(case8);
     const roots = findRoots(dag);
-    expect(roots).toEqual(["j6_out"]);
+    expect(roots).toEqual(["T6_out"]);
   });
 
-  it("should find `j6` and `j7` for case 9", () => {
-    const dag = getDAG([
-      { left: "j1", right: "j2", type: JoinTypeEnum.Full },
-      { left: "j1", right: "j3", type: JoinTypeEnum.Full },
-      { left: "j2", right: "j4", type: JoinTypeEnum.Full },
-      { left: "j3", right: "j5", type: JoinTypeEnum.Full },
-      { left: "j6", right: "j1", type: JoinTypeEnum.Full },
-      { left: "j2", right: "j6", type: JoinTypeEnum.Full },
-      { left: "j7", right: "j2", type: JoinTypeEnum.Full },
-    ]);
+  it("should find `T6` and `T7` for case 9", () => {
+    const dag = getDag(case9);
     const roots = findRoots(dag);
-    expect(roots).toEqual(["j6_out", "j7"]);
+    expect(roots).toEqual(["T6_out", "T7"]);
   });
 
-  it("should find `j6` and `j7` for case 10", () => {
-    const dag = getDAG([
-      { left: "j1", right: "j2", type: JoinTypeEnum.Full },
-      { left: "j1", right: "j3", type: JoinTypeEnum.Full },
-      { left: "j2", right: "j4", type: JoinTypeEnum.Full },
-      { left: "j3", right: "j5", type: JoinTypeEnum.Full },
-      { left: "j6", right: "j1", type: JoinTypeEnum.Full },
-      { left: "j2", right: "j6", type: JoinTypeEnum.Full },
-      { left: "j7", right: "j2", type: JoinTypeEnum.Full },
-      { left: "j7", right: "j1", type: JoinTypeEnum.Full },
-    ]);
+  it("should find `T6` and `T7` for case 10", () => {
+    const dag = getDag(case10);
     const roots = findRoots(dag);
-    expect(roots).toEqual(["j7", "j6_out"]);
+    expect(roots).toEqual(["T7", "T6_out"]);
   });
 
-  it("should find `j6` and `j7` for case 11", () => {
-    const dag = getDAG([
-      { left: "j1", right: "j2", type: JoinTypeEnum.Full },
-      { left: "j1", right: "j3", type: JoinTypeEnum.Full },
-      { left: "j2", right: "j4", type: JoinTypeEnum.Full },
-      { left: "j3", right: "j5", type: JoinTypeEnum.Full },
-      { left: "j6", right: "j1", type: JoinTypeEnum.Full },
-      { left: "j2", right: "j6", type: JoinTypeEnum.Full },
-      { left: "j7", right: "j2", type: JoinTypeEnum.Full },
-      { left: "j7", right: "j1", type: JoinTypeEnum.Full },
-      { left: "j3", right: "j6", type: JoinTypeEnum.Full },
-    ]);
+  it("should find `T6` and `T7` for case 11", () => {
+    const dag = getDag(case11);
     const roots = findRoots(dag);
-    expect(roots).toEqual(["j7", "j6_out"]);
+    expect(roots).toEqual(["T7", "T6_out"]);
   });
 
-  it("should find `j6` and `j5` for case 12", () => {
-    const dag = getDAG([
-      { left: "j1", right: "j2", type: JoinTypeEnum.Full },
-      { left: "j1", right: "j3", type: JoinTypeEnum.Full },
-      { left: "j2", right: "j4", type: JoinTypeEnum.Full },
-      { left: "j3", right: "j5", type: JoinTypeEnum.Full },
-      { left: "j6", right: "j1", type: JoinTypeEnum.Full },
-      { left: "j2", right: "j6", type: JoinTypeEnum.Full },
-      { left: "j7", right: "j2", type: JoinTypeEnum.Full },
-      { left: "j7", right: "j1", type: JoinTypeEnum.Full },
-      { left: "j3", right: "j6", type: JoinTypeEnum.Full },
-      { left: "j5", right: "j7", type: JoinTypeEnum.Full },
-    ]);
+  it("should find `T6` and `T5` for case 12", () => {
+    const dag = getDag(case12);
     const roots = findRoots(dag);
-    expect(roots).toEqual(["j5_out", "j6_out"]);
+    expect(roots).toEqual(["T5_out", "T6_out"]);
   });
 
-  it("should find `j6`, `j8`, `j9` and `j5` for case 13", () => {
-    const dag = getDAG([
-      { left: "j1", right: "j2", type: JoinTypeEnum.Full },
-      { left: "j1", right: "j3", type: JoinTypeEnum.Full },
-      { left: "j2", right: "j4", type: JoinTypeEnum.Full },
-      { left: "j3", right: "j5", type: JoinTypeEnum.Full },
-      { left: "j6", right: "j1", type: JoinTypeEnum.Full },
-      { left: "j2", right: "j6", type: JoinTypeEnum.Full },
-      { left: "j7", right: "j2", type: JoinTypeEnum.Full },
-      { left: "j7", right: "j1", type: JoinTypeEnum.Full },
-      { left: "j3", right: "j6", type: JoinTypeEnum.Full },
-      { left: "j5", right: "j7", type: JoinTypeEnum.Full },
-      { left: "j8", right: "j3", type: JoinTypeEnum.Full },
-      { left: "j9", right: "j6", type: JoinTypeEnum.Full },
-    ]);
+  it("should find `T6`, `T8`, `T9` and `T5` for case 13", () => {
+    const dag = getDag(case13);
     const roots = findRoots(dag);
-    expect(roots).toEqual(["j5_out", "j6_out", "j8", "j9"]);
+    expect(roots).toEqual(["T5_out", "T6_out", "T8", "T9"]);
   });
 });
