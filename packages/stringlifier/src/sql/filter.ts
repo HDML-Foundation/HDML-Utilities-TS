@@ -12,6 +12,7 @@ import {
   NamedParametersStruct,
   FilterTypeEnum,
   FilterOperatorEnum,
+  FilterNameEnum,
 } from "@hdml/schemas";
 import {
   FilterClause,
@@ -68,19 +69,116 @@ export function getFilterSQL(
 ): string {
   switch (filter.type) {
     case FilterTypeEnum.Keys:
-      // if (
-      //   !join?.left ||
-      //   !join?.right ||
-      //   !filter.options.left ||
-      //   !filter.options.right
-      // ) {
-      //   return "";
-      // }
-      return getKeysFilterSQL(join, filter);
+      return getKeysFilterSQL(filter, join);
     case FilterTypeEnum.Expression:
       return getExpressionFilterSQL(filter);
     case FilterTypeEnum.Named:
       return getNamedFilterSQL(filter);
+  }
+}
+
+export function getKeysFilterSQL(
+  filter: Filter,
+  join?: { left: string; right: string },
+): string {
+  const opts = <KeysParameters>filter.options;
+  if (!join?.left || !join?.right || !opts.left || !opts.right) {
+    return "false";
+  } else {
+    return (
+      `"${join.left}"."${opts.left}" =` +
+      `"${join.left}"."${opts.right}"`
+    );
+  }
+}
+
+export function getExpressionFilterSQL(filter: Filter): string {
+  const clause = (<ExpressionParameters>filter.options).clause;
+  if (!clause) {
+    return "false";
+  } else {
+    return clause;
+  }
+}
+
+export function getNamedFilterSQL(filter: Filter): string {
+  const strRE = /^(')(.*)(')$/gm;
+  const opts = <NamedParameters>filter.options;
+  let sql = "";
+  let str = "";
+  let re: RegExpExecArray | null = null;
+  switch (opts.name) {
+    case FilterNameEnum.Equals:
+      sql = `${opts.field} = ${opts.values[0]}`;
+      break;
+    case FilterNameEnum.NotEquals:
+      sql = `${opts.field} != ${opts.values[0]}`;
+      break;
+    case FilterNameEnum.Contains:
+      re = strRE.exec(opts.values[0]);
+      if (re) {
+        str = re[2].replaceAll("'", "\\'");
+        sql = `${opts.field} like '%${str}%' escape '\\'`;
+      }
+      break;
+    case FilterNameEnum.NotContains:
+      sql = `${opts.field} not like '%${opts.values[0]}%'`;
+      break;
+    case FilterNameEnum.StartsWith:
+      sql = `${opts.field} like '${opts.values[0]}%'`;
+      break;
+    case FilterNameEnum.EndsWith:
+      sql = `${opts.field} like '%${opts.values[0]}'`;
+      break;
+    case FilterNameEnum.Greater:
+      sql = `${opts.field} > ${opts.values[0]}`;
+      break;
+    case FilterNameEnum.GreaterEqual:
+      sql = `${opts.field} >= ${opts.values[0]}`;
+      break;
+    case FilterNameEnum.Less:
+      sql = `${opts.field} < ${opts.values[0]}`;
+      break;
+    case FilterNameEnum.LessEqual:
+      sql = `${opts.field} <= ${opts.values[0]}`;
+      break;
+    case FilterNameEnum.IsNull:
+      sql = `${opts.field} is null`;
+      break;
+    case FilterNameEnum.IsNotNull:
+      sql = `${opts.field} is not null`;
+      break;
+    case FilterNameEnum.Between:
+      sql =
+        `${opts.field} between ` +
+        `${opts.values[0]} and ${opts.values[1]}`;
+      break;
+  }
+  return sql;
+}
+
+export function sanitizeString(val: string): string {
+  // https://trino.io/docs/current/language/types.html
+
+  // TODO (buntarb): maybe fork sqlstring for sanitizing?
+
+  const nullRE = /^(null|NULL)$/gm;
+  const boolRE = /^(true|false|TRUE|FALSE)$/gm;
+  const intRE = /^(-|\+)?\d+$/gm;
+  const hexRE = /^(-|\+)?0(x|X)(\d|[A-F])+$/gm;
+  const octRE = /^(-|\+)?0(o|O)([0-7])+$/gm;
+  const binRE = /^(-|\+)?0(b|B)([0-1])+$/gm;
+  const fltRE = /^(-|\+)?\d+\.\d+e\d+$/gm;
+  const decRE = /^(-|\+)?\d+\.\d+$/gm;
+  const strRE = /^(')(.*)(')$/gm;
+  const dateRE = /^(date|DATE)\s'\d{4}-\d{2}-\d{2}'$/gm;
+  const timeRE = /^(time|TIME)\s'\d{2}:\d{2}:\d{2}\.\d+'$/gm;
+  const timestampRE =
+    /* eslint-disable-next-line max-len */
+    /^(timestamp|TIMESTAMP)\s'\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}\.\d+'$/gm;
+
+  if (strRE.test(val)) {
+    val = val.replaceAll("'", "''");
   }
 }
 
