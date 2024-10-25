@@ -13,7 +13,7 @@ import {
 import { Join } from "@hdml/types";
 import { t } from "../constants";
 import { getTableFieldSQL } from "./field";
-import { getJoins, sortJoins } from "./join";
+import { getJoins, sortJoins, getJoinSQL } from "./join";
 
 export function getModelSQL(model: ModelStruct, level = 0): string {
   const prefix = t.repeat(level);
@@ -64,12 +64,7 @@ export function getModelSQL(model: ModelStruct, level = 0): string {
         .map((tbl) => `${prefix}${t}${t}"${tbl.name()}"`)
         .join(",\n");
   } else {
-    // const path = getModelJoinsPath(model.joins);
-    // sql =
-    //   sql +
-    //   model.joins
-    //     .map((join, i) => getModelJoinSQL(path, join, i, level))
-    //     .join("");
+    sql = sql + getJoinSQL(joins);
   }
 
   return sql;

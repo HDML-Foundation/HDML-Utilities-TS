@@ -10,7 +10,61 @@ import {
   FilterTypeEnum,
 } from "@hdml/schemas";
 import { Join, FilterClause } from "@hdml/types";
+import { t } from "../constants";
 import { objectifyJoinClause } from "./filter";
+import { getFilterClauseSQL } from "./filter";
+
+export function getJoinSQL(joins: Join[], level = 0): string {
+  const prefix = t.repeat(level);
+  let sql = "";
+  joins
+    .map((join, i) => {
+      let type = "";
+      switch (join.type) {
+        case JoinTypeEnum.Full:
+          type = "full join";
+          break;
+        case JoinTypeEnum.Left:
+          type = "left join";
+          break;
+        case JoinTypeEnum.Right:
+          type = "right join";
+          break;
+        case JoinTypeEnum.FullOuter:
+          type = "full outer join";
+          break;
+        case JoinTypeEnum.LeftOuter:
+          type = "left outer join";
+          break;
+        case JoinTypeEnum.RightOuter:
+          type = "right outer join";
+          break;
+        case JoinTypeEnum.Inner:
+          type = "inner join";
+          break;
+        case JoinTypeEnum.Cross:
+        default:
+          type = "cross join";
+          break;
+      }
+      if (i === 0) {
+        sql = sql + `\n${prefix}${t}from "${join.left}"\n`;
+      }
+      sql = sql + `${prefix}${t}${type} "${join.right}"\n`;
+      // TODO (buntarb): should we check for
+      // `join.type !== JoinType.Cross` here?
+      sql = sql + `${prefix}${t}on (\n`;
+      sql =
+        sql +
+        getFilterClauseSQL(join.clause, level + 2, {
+          left: join.left,
+          right: join.right,
+        });
+      sql = sql + `${prefix}${t})\n`;
+    })
+    .join("");
+  return sql;
+}
 
 export function getJoins(model: ModelStruct): Join[] {
   const joins: Join[] = [];

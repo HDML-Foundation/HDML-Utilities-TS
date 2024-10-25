@@ -87,7 +87,7 @@ export function getKeysFilterSQL(
   } else {
     return (
       `"${join.left}"."${opts.left}" =` +
-      `"${join.left}"."${opts.right}"`
+      `"${join.right}"."${opts.right}"`
     );
   }
 }
@@ -105,7 +105,6 @@ export function getNamedFilterSQL(filter: Filter): string {
   const strRE = /^(')(.*)(')$/gm;
   const opts = <NamedParameters>filter.options;
   let sql = "";
-  let str = "";
   let re: RegExpExecArray | null = null;
   switch (opts.name) {
     case FilterNameEnum.Equals:
@@ -117,18 +116,34 @@ export function getNamedFilterSQL(filter: Filter): string {
     case FilterNameEnum.Contains:
       re = strRE.exec(opts.values[0]);
       if (re) {
-        str = re[2].replaceAll("'", "\\'");
-        sql = `${opts.field} like '%${str}%' escape '\\'`;
+        sql = `${opts.field} like '%${re[2]}%' escape '\\'`;
+      } else {
+        sql = "false";
       }
       break;
     case FilterNameEnum.NotContains:
-      sql = `${opts.field} not like '%${opts.values[0]}%'`;
+      re = strRE.exec(opts.values[0]);
+      if (re) {
+        sql = `${opts.field} not like '%${re[2]}%' escape '\\'`;
+      } else {
+        sql = "false";
+      }
       break;
     case FilterNameEnum.StartsWith:
-      sql = `${opts.field} like '${opts.values[0]}%'`;
+      re = strRE.exec(opts.values[0]);
+      if (re) {
+        sql = `${opts.field} like '${re[2]}%' escape '\\'`;
+      } else {
+        sql = "false";
+      }
       break;
     case FilterNameEnum.EndsWith:
-      sql = `${opts.field} like '%${opts.values[0]}'`;
+      re = strRE.exec(opts.values[0]);
+      if (re) {
+        sql = `${opts.field} like '%${re[2]}' escape '\\'`;
+      } else {
+        sql = "false";
+      }
       break;
     case FilterNameEnum.Greater:
       sql = `${opts.field} > ${opts.values[0]}`;
@@ -157,30 +172,24 @@ export function getNamedFilterSQL(filter: Filter): string {
   return sql;
 }
 
-export function sanitizeString(val: string): string {
-  // https://trino.io/docs/current/language/types.html
-
-  // TODO (buntarb): maybe fork sqlstring for sanitizing?
-
-  const nullRE = /^(null|NULL)$/gm;
-  const boolRE = /^(true|false|TRUE|FALSE)$/gm;
-  const intRE = /^(-|\+)?\d+$/gm;
-  const hexRE = /^(-|\+)?0(x|X)(\d|[A-F])+$/gm;
-  const octRE = /^(-|\+)?0(o|O)([0-7])+$/gm;
-  const binRE = /^(-|\+)?0(b|B)([0-1])+$/gm;
-  const fltRE = /^(-|\+)?\d+\.\d+e\d+$/gm;
-  const decRE = /^(-|\+)?\d+\.\d+$/gm;
-  const strRE = /^(')(.*)(')$/gm;
-  const dateRE = /^(date|DATE)\s'\d{4}-\d{2}-\d{2}'$/gm;
-  const timeRE = /^(time|TIME)\s'\d{2}:\d{2}:\d{2}\.\d+'$/gm;
-  const timestampRE =
-    /* eslint-disable-next-line max-len */
-    /^(timestamp|TIMESTAMP)\s'\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}\.\d+'$/gm;
-
-  if (strRE.test(val)) {
-    val = val.replaceAll("'", "''");
-  }
-}
+// export function sanitizeString(): void {
+//   // https://trino.io/docs/current/language/types.html
+//   // TODO (buntarb): maybe fork sqlstring for sanitizing?
+//   const nullRE = /^(null|NULL)$/gm;
+//   const boolRE = /^(true|false|TRUE|FALSE)$/gm;
+//   const intRE = /^(-|\+)?\d+$/gm;
+//   const hexRE = /^(-|\+)?0(x|X)(\d|[A-F])+$/gm;
+//   const octRE = /^(-|\+)?0(o|O)([0-7])+$/gm;
+//   const binRE = /^(-|\+)?0(b|B)([0-1])+$/gm;
+//   const fltRE = /^(-|\+)?\d+\.\d+e\d+$/gm;
+//   const decRE = /^(-|\+)?\d+\.\d+$/gm;
+//   const strRE = /^(')(.*)(')$/gm;
+//   const dateRE = /^(date|DATE)\s'\d{4}-\d{2}-\d{2}'$/gm;
+//   const timeRE = /^(time|TIME)\s'\d{2}:\d{2}:\d{2}\.\d+'$/gm;
+//   const timestampRE =
+/* eslint-disable-next-line max-len */
+//     /^(timestamp|TIMESTAMP)\s'\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}\.\d+'$/gm;
+// }
 
 export function objectifyJoinClause(
   clause: FilterClauseStruct,

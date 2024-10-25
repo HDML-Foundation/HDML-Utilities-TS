@@ -13,9 +13,12 @@ import {
   AggregationTypeEnum,
   OrderTypeEnum,
   TableStruct,
+  JoinTypeEnum,
+  FilterOperatorEnum,
+  FilterTypeEnum,
 } from "@hdml/schemas";
 import { serialize, deserialize } from "@hdml/buffer";
-import { getTableSQL } from "./model";
+import { getTableSQL, getModelSQL } from "./model";
 
 describe("The `getTableSQL` function", () => {
   const hdom: HDOM = {
@@ -128,15 +131,54 @@ describe("The `getTableSQL` function", () => {
             ],
           },
         ],
-        joins: [],
+        joins: [
+          {
+            type: JoinTypeEnum.Inner,
+            description: null,
+            left: "table",
+            right: "query",
+            clause: {
+              type: FilterOperatorEnum.None,
+              filters: [
+                {
+                  type: FilterTypeEnum.Keys,
+                  options: {
+                    left: "field",
+                    right: "field",
+                  },
+                },
+              ],
+              children: [],
+            },
+          },
+          {
+            type: JoinTypeEnum.Left,
+            description: null,
+            left: "table",
+            right: "sorting",
+            clause: {
+              type: FilterOperatorEnum.None,
+              filters: [
+                {
+                  type: FilterTypeEnum.Keys,
+                  options: {
+                    left: "field",
+                    right: "field_a",
+                  },
+                },
+              ],
+              children: [],
+            },
+          },
+        ],
       },
     ],
     frames: [],
   };
+  const bytes = serialize(hdom);
+  const struct = deserialize(bytes);
 
   it("should stringlify `table`", () => {
-    const bytes = serialize(hdom);
-    const struct = deserialize(bytes);
     const table = <TableStruct>struct.models(0)?.tables(0);
     const sql = getTableSQL(table);
     expect(sql).toBe(
@@ -145,8 +187,6 @@ describe("The `getTableSQL` function", () => {
   });
 
   it("should stringlify `query`", () => {
-    const bytes = serialize(hdom);
-    const struct = deserialize(bytes);
     const table = <TableStruct>struct.models(0)?.tables(1);
     const sql = getTableSQL(table);
     expect(sql).toBe(
@@ -155,12 +195,15 @@ describe("The `getTableSQL` function", () => {
   });
 
   it("should stringlify `sorting`", () => {
-    const bytes = serialize(hdom);
-    const struct = deserialize(bytes);
     const table = <TableStruct>struct.models(0)?.tables(2);
     const sql = getTableSQL(table);
     expect(sql).toBe(
       '"sorting" as (\n  select\n    "field_a" as "field_a",\n    "field_b" as "field_b",\n    "field_c" as "field_c",\n    "field_c" as "field_c"\n  from\n    connection.schema.table\n)',
     );
+  });
+
+  it("should stringlify model", () => {
+    const sql = getModelSQL(struct.models(0)!);
+    console.log(sql);
   });
 });
