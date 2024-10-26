@@ -11,7 +11,7 @@ import {
 } from "@hdml/schemas";
 import { Join, FilterClause } from "@hdml/types";
 import { t } from "../constants";
-import { objectifyJoinClause } from "./filter";
+import { objectifyFilterClause } from "./filter";
 import { getFilterClauseSQL } from "./filter";
 
 export function getJoinSQL(joins: Join[], level = 0): string {
@@ -53,14 +53,16 @@ export function getJoinSQL(joins: Join[], level = 0): string {
       sql = sql + `${prefix}${t}${type} "${join.right}"\n`;
       // TODO (buntarb): should we check for
       // `join.type !== JoinType.Cross` here?
-      sql = sql + `${prefix}${t}on (\n`;
-      sql =
-        sql +
-        getFilterClauseSQL(join.clause, level + 2, {
-          left: join.left,
-          right: join.right,
-        });
-      sql = sql + `${prefix}${t})\n`;
+      if (join.clause.children.length || join.clause.filters.length) {
+        sql = sql + `${prefix}${t}on (\n`;
+        sql =
+          sql +
+          getFilterClauseSQL(join.clause, level + 2, {
+            left: join.left,
+            right: join.right,
+          });
+        sql = sql + `${prefix}${t})\n`;
+      }
     })
     .join("");
   return sql;
@@ -71,13 +73,15 @@ export function getJoins(model: ModelStruct): Join[] {
 
   for (let i = 0; i < model.joinsLength(); i++) {
     const js = model.joins(i)!;
-    joins.push({
-      type: js.type(),
-      left: js.left()!,
-      right: js.right()!,
-      clause: objectifyJoinClause(js.clause()!),
-      description: js.description(),
-    });
+    if (js.left() && js.right()) {
+      joins.push({
+        type: js.type(),
+        left: js.left()!,
+        right: js.right()!,
+        clause: objectifyFilterClause(js.clause()!),
+        description: js.description(),
+      });
+    }
   }
 
   return joins;

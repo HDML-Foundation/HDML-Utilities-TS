@@ -11,11 +11,16 @@ import {
   JoinTypeEnum,
   FilterTypeEnum,
   FilterOperatorEnum,
-  FilterNameEnum,
 } from "@hdml/schemas";
 import { Join } from "@hdml/types";
 import { serialize, deserialize } from "@hdml/buffer";
-import { getJoins, getDag, findRoots, sortJoins } from "./join";
+import {
+  getJoins,
+  getDag,
+  findRoots,
+  sortJoins,
+  getJoinSQL,
+} from "./join";
 
 // Following join structures are described in joins related testd:
 //
@@ -174,6 +179,246 @@ let case11: Join[];
 let case12: Join[];
 let case13: Join[];
 
+describe("The `getJoinSQL` function", () => {
+  it("shoul sequalize empty join", () => {
+    const sql = getJoinSQL([]);
+    expect(sql).toBe("");
+  });
+
+  it("shoul sequalize join without filters", () => {
+    const sql = getJoinSQL([
+      {
+        type: JoinTypeEnum.Cross,
+        description: null,
+        left: "T1",
+        right: "T2",
+        clause: {
+          type: FilterOperatorEnum.None,
+          children: [],
+          filters: [],
+        },
+      },
+    ]);
+    expect(sql).toBe('\n  from "T1"\n  cross join "T2"\n');
+  });
+
+  it("shoul sequalize `Full` join", () => {
+    const sql = getJoinSQL([
+      {
+        type: JoinTypeEnum.Full,
+        description: null,
+        left: "T1",
+        right: "T2",
+        clause: {
+          type: FilterOperatorEnum.None,
+          children: [],
+          filters: [
+            {
+              type: FilterTypeEnum.Keys,
+              options: {
+                left: "F1",
+                right: "F2",
+              },
+            },
+          ],
+        },
+      },
+    ]);
+    expect(sql).toBe(
+      '\n  from "T1"\n  full join "T2"\n  on (\n    "T1"."F1" ="T2"."F2"\n  )\n',
+    );
+  });
+
+  it("shoul sequalize `Left` join", () => {
+    const sql = getJoinSQL([
+      {
+        type: JoinTypeEnum.Left,
+        description: null,
+        left: "T1",
+        right: "T2",
+        clause: {
+          type: FilterOperatorEnum.None,
+          children: [],
+          filters: [
+            {
+              type: FilterTypeEnum.Keys,
+              options: {
+                left: "F1",
+                right: "F2",
+              },
+            },
+          ],
+        },
+      },
+    ]);
+    expect(sql).toBe(
+      '\n  from "T1"\n  left join "T2"\n  on (\n    "T1"."F1" ="T2"."F2"\n  )\n',
+    );
+  });
+
+  it("shoul sequalize `Right` join", () => {
+    const sql = getJoinSQL([
+      {
+        type: JoinTypeEnum.Right,
+        description: null,
+        left: "T1",
+        right: "T2",
+        clause: {
+          type: FilterOperatorEnum.None,
+          children: [],
+          filters: [
+            {
+              type: FilterTypeEnum.Keys,
+              options: {
+                left: "F1",
+                right: "F2",
+              },
+            },
+          ],
+        },
+      },
+    ]);
+    expect(sql).toBe(
+      '\n  from "T1"\n  right join "T2"\n  on (\n    "T1"."F1" ="T2"."F2"\n  )\n',
+    );
+  });
+
+  it("shoul sequalize `FullOuter` join", () => {
+    const sql = getJoinSQL([
+      {
+        type: JoinTypeEnum.FullOuter,
+        description: null,
+        left: "T1",
+        right: "T2",
+        clause: {
+          type: FilterOperatorEnum.None,
+          children: [],
+          filters: [
+            {
+              type: FilterTypeEnum.Keys,
+              options: {
+                left: "F1",
+                right: "F2",
+              },
+            },
+          ],
+        },
+      },
+    ]);
+    expect(sql).toBe(
+      '\n  from "T1"\n  full outer join "T2"\n  on (\n    "T1"."F1" ="T2"."F2"\n  )\n',
+    );
+  });
+
+  it("shoul sequalize `LeftOuter` join", () => {
+    const sql = getJoinSQL([
+      {
+        type: JoinTypeEnum.LeftOuter,
+        description: null,
+        left: "T1",
+        right: "T2",
+        clause: {
+          type: FilterOperatorEnum.None,
+          children: [],
+          filters: [
+            {
+              type: FilterTypeEnum.Keys,
+              options: {
+                left: "F1",
+                right: "F2",
+              },
+            },
+          ],
+        },
+      },
+    ]);
+    expect(sql).toBe(
+      '\n  from "T1"\n  left outer join "T2"\n  on (\n    "T1"."F1" ="T2"."F2"\n  )\n',
+    );
+  });
+
+  it("shoul sequalize `RightOuter` join", () => {
+    const sql = getJoinSQL([
+      {
+        type: JoinTypeEnum.RightOuter,
+        description: null,
+        left: "T1",
+        right: "T2",
+        clause: {
+          type: FilterOperatorEnum.None,
+          children: [],
+          filters: [
+            {
+              type: FilterTypeEnum.Keys,
+              options: {
+                left: "F1",
+                right: "F2",
+              },
+            },
+          ],
+        },
+      },
+    ]);
+    expect(sql).toBe(
+      '\n  from "T1"\n  right outer join "T2"\n  on (\n    "T1"."F1" ="T2"."F2"\n  )\n',
+    );
+  });
+
+  it("shoul sequalize `Inner` join", () => {
+    const sql = getJoinSQL([
+      {
+        type: JoinTypeEnum.Inner,
+        description: null,
+        left: "T1",
+        right: "T2",
+        clause: {
+          type: FilterOperatorEnum.None,
+          children: [],
+          filters: [
+            {
+              type: FilterTypeEnum.Keys,
+              options: {
+                left: "F1",
+                right: "F2",
+              },
+            },
+          ],
+        },
+      },
+    ]);
+    expect(sql).toBe(
+      '\n  from "T1"\n  inner join "T2"\n  on (\n    "T1"."F1" ="T2"."F2"\n  )\n',
+    );
+  });
+
+  it("shoul sequalize `Cross` join", () => {
+    const sql = getJoinSQL([
+      {
+        type: JoinTypeEnum.Cross,
+        description: null,
+        left: "T1",
+        right: "T2",
+        clause: {
+          type: FilterOperatorEnum.None,
+          children: [],
+          filters: [
+            {
+              type: FilterTypeEnum.Keys,
+              options: {
+                left: "F1",
+                right: "F2",
+              },
+            },
+          ],
+        },
+      },
+    ]);
+    expect(sql).toBe(
+      '\n  from "T1"\n  cross join "T2"\n  on (\n    "T1"."F1" ="T2"."F2"\n  )\n',
+    );
+  });
+});
+
 describe("The `getJoins` function", () => {
   it("should objectify case 1", () => {
     const hdom: HDOM = {
@@ -201,28 +446,7 @@ describe("The `getJoins` function", () => {
                     },
                   },
                 ],
-                children: [
-                  {
-                    type: FilterOperatorEnum.None,
-                    filters: [
-                      {
-                        type: FilterTypeEnum.Expression,
-                        options: {
-                          clause: "1 = 1",
-                        },
-                      },
-                      {
-                        type: FilterTypeEnum.Named,
-                        options: {
-                          name: FilterNameEnum.Equals,
-                          field: "field",
-                          values: ["value"],
-                        },
-                      },
-                    ],
-                    children: [],
-                  },
-                ],
+                children: [],
               },
             },
           ],
@@ -233,7 +457,7 @@ describe("The `getJoins` function", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     case1 = getJoins(struct.models(0)!);
-    expect(case1).toEqual(hdom.models[0].joins);
+    expect(case1).toEqual([]);
   });
 
   it("should objectify case 2", () => {
@@ -292,7 +516,7 @@ describe("The `getJoins` function", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     case2 = getJoins(struct.models(0)!);
-    expect(case2).toEqual(hdom.models[0].joins);
+    expect(case2).toEqual([]);
   });
 
   it("should objectify case 3", () => {
@@ -1917,51 +2141,12 @@ describe("The `getJoins` function", () => {
 describe("The `sortJoins` function", () => {
   it("should sort case 1", () => {
     const sorted = sortJoins(case1);
-    expect(sorted).toEqual(case1);
+    expect(sorted).toEqual([]);
   });
 
   it("should sort case 2", () => {
     const sorted = sortJoins(case2);
-    expect(sorted).toEqual([
-      {
-        left: "T1",
-        right: "",
-        type: 3,
-        clause: {
-          type: 2,
-          filters: [
-            {
-              type: 1,
-              options: {
-                left: "left_field",
-                right: "right_field",
-              },
-            },
-          ],
-          children: [],
-        },
-        description: null,
-      },
-      {
-        left: "",
-        right: "T2",
-        type: 4,
-        clause: {
-          type: 2,
-          filters: [
-            {
-              type: 1,
-              options: {
-                left: "right_field",
-                right: "left_field",
-              },
-            },
-          ],
-          children: [],
-        },
-        description: null,
-      },
-    ]);
+    expect(sorted).toEqual([]);
   });
 
   it("should sort case 3", () => {
@@ -3824,13 +4009,13 @@ describe("The `findRoots(getDag(join))`  functions", () => {
   it("should find `T1` for case 1", () => {
     const dag = getDag(case1);
     const roots = findRoots(dag);
-    expect(roots).toEqual(["T1"]);
+    expect(roots).toEqual([]);
   });
 
   it("should find `T1` and `T2` for case 2", () => {
     const dag = getDag(case2);
     const roots = findRoots(dag);
-    expect(roots).toEqual(["T1", "T2"]);
+    expect(roots).toEqual([]);
   });
 
   it("should find `T1` for case 3", () => {

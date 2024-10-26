@@ -191,7 +191,7 @@ export function getNamedFilterSQL(filter: Filter): string {
 //     /^(timestamp|TIMESTAMP)\s'\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}\.\d+'$/gm;
 // }
 
-export function objectifyJoinClause(
+export function objectifyFilterClause(
   clause: FilterClauseStruct,
 ): FilterClause {
   const type = clause.type();
@@ -208,7 +208,7 @@ export function objectifyJoinClause(
   }
   for (let i = 0; i < clause.childrenLength(); i++) {
     const child = clause.children(i)!;
-    children.push(objectifyJoinClause(child));
+    children.push(objectifyFilterClause(child));
   }
   return {
     type,

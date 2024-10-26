@@ -43,15 +43,17 @@ export function getModelSQL(model: ModelStruct, level = 0): string {
     sql +
     tables
       .map((tbl) => {
-        let fields: string = "";
+        const fields: string[] = [];
         for (let i = 0; i < tbl.fieldsLength(); i++) {
-          fields =
-            `${fields}${prefix}${t}${t}` +
-            `"${tbl.name()}"."${tbl.fields(i)!.name()}" as ` +
-            `"${tbl.name()}_${tbl.fields(i)!.name()}"` +
-            `${i + 1 < tbl.fieldsLength() ? ",\n" : ""}`;
+          if (tbl.fields(i)?.name()) {
+            fields.push(
+              `${prefix}${t}${t}` +
+                `"${tbl.name()}"."${tbl.fields(i)!.name()}" as ` +
+                `"${tbl.name()}_${tbl.fields(i)!.name()}"`,
+            );
+          }
         }
-        return fields;
+        return fields.join(",\n");
       })
       .join(",\n");
 
