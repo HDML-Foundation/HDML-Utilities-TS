@@ -86,7 +86,7 @@ export function getKeysFilterSQL(
     return "false";
   } else {
     return (
-      `"${join.left}"."${opts.left}" =` +
+      `"${join.left}"."${opts.left}" = ` +
       `"${join.right}"."${opts.right}"`
     );
   }
@@ -106,68 +106,69 @@ export function getNamedFilterSQL(filter: Filter): string {
   const opts = <NamedParameters>filter.options;
   let sql = "";
   let re: RegExpExecArray | null = null;
-  switch (opts.name) {
-    case FilterNameEnum.Equals:
-      sql = `${opts.field} = ${opts.values[0]}`;
-      break;
-    case FilterNameEnum.NotEquals:
-      sql = `${opts.field} != ${opts.values[0]}`;
-      break;
-    case FilterNameEnum.Contains:
-      re = strRE.exec(opts.values[0]);
-      if (re) {
-        sql = `${opts.field} like '%${re[2]}%' escape '\\'`;
-      } else {
-        sql = "false";
-      }
-      break;
-    case FilterNameEnum.NotContains:
-      re = strRE.exec(opts.values[0]);
-      if (re) {
-        sql = `${opts.field} not like '%${re[2]}%' escape '\\'`;
-      } else {
-        sql = "false";
-      }
-      break;
-    case FilterNameEnum.StartsWith:
-      re = strRE.exec(opts.values[0]);
-      if (re) {
-        sql = `${opts.field} like '${re[2]}%' escape '\\'`;
-      } else {
-        sql = "false";
-      }
-      break;
-    case FilterNameEnum.EndsWith:
-      re = strRE.exec(opts.values[0]);
-      if (re) {
-        sql = `${opts.field} like '%${re[2]}' escape '\\'`;
-      } else {
-        sql = "false";
-      }
-      break;
-    case FilterNameEnum.Greater:
-      sql = `${opts.field} > ${opts.values[0]}`;
-      break;
-    case FilterNameEnum.GreaterEqual:
-      sql = `${opts.field} >= ${opts.values[0]}`;
-      break;
-    case FilterNameEnum.Less:
-      sql = `${opts.field} < ${opts.values[0]}`;
-      break;
-    case FilterNameEnum.LessEqual:
-      sql = `${opts.field} <= ${opts.values[0]}`;
-      break;
-    case FilterNameEnum.IsNull:
-      sql = `${opts.field} is null`;
-      break;
-    case FilterNameEnum.IsNotNull:
-      sql = `${opts.field} is not null`;
-      break;
-    case FilterNameEnum.Between:
-      sql =
-        `${opts.field} between ` +
-        `${opts.values[0]} and ${opts.values[1]}`;
-      break;
+  if (
+    !opts.field ||
+    (!opts.values.length &&
+      opts.name !== FilterNameEnum.IsNull &&
+      opts.name !== FilterNameEnum.IsNotNull)
+  ) {
+    sql = "false";
+  } else {
+    switch (opts.name) {
+      case FilterNameEnum.Equals:
+        sql = `${opts.field} = ${opts.values[0]}`;
+        break;
+      case FilterNameEnum.NotEquals:
+        sql = `${opts.field} != ${opts.values[0]}`;
+        break;
+      case FilterNameEnum.Contains:
+      case FilterNameEnum.NotContains:
+      case FilterNameEnum.StartsWith:
+      case FilterNameEnum.EndsWith:
+        re = strRE.exec(opts.values[0]);
+        if (!re) {
+          sql = "false";
+        } else {
+          switch (opts.name) {
+            case FilterNameEnum.Contains:
+              sql = `${opts.field} like '%${re[2]}%' escape '\\'`;
+              break;
+            case FilterNameEnum.NotContains:
+              sql = `${opts.field} not like '%${re[2]}%' escape '\\'`;
+              break;
+            case FilterNameEnum.StartsWith:
+              sql = `${opts.field} like '${re[2]}%' escape '\\'`;
+              break;
+            case FilterNameEnum.EndsWith:
+              sql = `${opts.field} like '%${re[2]}' escape '\\'`;
+              break;
+          }
+        }
+        break;
+      case FilterNameEnum.Greater:
+        sql = `${opts.field} > ${opts.values[0]}`;
+        break;
+      case FilterNameEnum.GreaterEqual:
+        sql = `${opts.field} >= ${opts.values[0]}`;
+        break;
+      case FilterNameEnum.Less:
+        sql = `${opts.field} < ${opts.values[0]}`;
+        break;
+      case FilterNameEnum.LessEqual:
+        sql = `${opts.field} <= ${opts.values[0]}`;
+        break;
+      case FilterNameEnum.IsNull:
+        sql = `${opts.field} is null`;
+        break;
+      case FilterNameEnum.IsNotNull:
+        sql = `${opts.field} is not null`;
+        break;
+      case FilterNameEnum.Between:
+        sql =
+          `${opts.field} between ` +
+          `${opts.values[0]} and ${opts.values[1]}`;
+        break;
+    }
   }
   return sql;
 }
@@ -226,7 +227,8 @@ export function objectifyFilterOptions(
     case FilterTypeEnum.Expression:
       opts = filter.options(new ExpressionParametersStruct());
       data = {
-        clause: (<ExpressionParametersStruct>opts).clause() || "",
+        clause:
+          (<ExpressionParametersStruct>opts).clause() || "false",
       };
       return data;
     case FilterTypeEnum.Keys:

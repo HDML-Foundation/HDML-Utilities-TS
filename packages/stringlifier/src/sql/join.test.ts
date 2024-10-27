@@ -225,7 +225,7 @@ describe("The `getJoinSQL` function", () => {
       },
     ]);
     expect(sql).toBe(
-      '\n  from "T1"\n  full join "T2"\n  on (\n    "T1"."F1" ="T2"."F2"\n  )\n',
+      '\n  from "T1"\n  full join "T2"\n  on (\n    "T1"."F1" = "T2"."F2"\n  )\n',
     );
   });
 
@@ -252,7 +252,7 @@ describe("The `getJoinSQL` function", () => {
       },
     ]);
     expect(sql).toBe(
-      '\n  from "T1"\n  left join "T2"\n  on (\n    "T1"."F1" ="T2"."F2"\n  )\n',
+      '\n  from "T1"\n  left join "T2"\n  on (\n    "T1"."F1" = "T2"."F2"\n  )\n',
     );
   });
 
@@ -279,7 +279,7 @@ describe("The `getJoinSQL` function", () => {
       },
     ]);
     expect(sql).toBe(
-      '\n  from "T1"\n  right join "T2"\n  on (\n    "T1"."F1" ="T2"."F2"\n  )\n',
+      '\n  from "T1"\n  right join "T2"\n  on (\n    "T1"."F1" = "T2"."F2"\n  )\n',
     );
   });
 
@@ -306,7 +306,7 @@ describe("The `getJoinSQL` function", () => {
       },
     ]);
     expect(sql).toBe(
-      '\n  from "T1"\n  full outer join "T2"\n  on (\n    "T1"."F1" ="T2"."F2"\n  )\n',
+      '\n  from "T1"\n  full outer join "T2"\n  on (\n    "T1"."F1" = "T2"."F2"\n  )\n',
     );
   });
 
@@ -333,7 +333,7 @@ describe("The `getJoinSQL` function", () => {
       },
     ]);
     expect(sql).toBe(
-      '\n  from "T1"\n  left outer join "T2"\n  on (\n    "T1"."F1" ="T2"."F2"\n  )\n',
+      '\n  from "T1"\n  left outer join "T2"\n  on (\n    "T1"."F1" = "T2"."F2"\n  )\n',
     );
   });
 
@@ -360,7 +360,7 @@ describe("The `getJoinSQL` function", () => {
       },
     ]);
     expect(sql).toBe(
-      '\n  from "T1"\n  right outer join "T2"\n  on (\n    "T1"."F1" ="T2"."F2"\n  )\n',
+      '\n  from "T1"\n  right outer join "T2"\n  on (\n    "T1"."F1" = "T2"."F2"\n  )\n',
     );
   });
 
@@ -387,7 +387,7 @@ describe("The `getJoinSQL` function", () => {
       },
     ]);
     expect(sql).toBe(
-      '\n  from "T1"\n  inner join "T2"\n  on (\n    "T1"."F1" ="T2"."F2"\n  )\n',
+      '\n  from "T1"\n  inner join "T2"\n  on (\n    "T1"."F1" = "T2"."F2"\n  )\n',
     );
   });
 
@@ -414,7 +414,7 @@ describe("The `getJoinSQL` function", () => {
       },
     ]);
     expect(sql).toBe(
-      '\n  from "T1"\n  cross join "T2"\n  on (\n    "T1"."F1" ="T2"."F2"\n  )\n',
+      '\n  from "T1"\n  cross join "T2"\n  on (\n    "T1"."F1" = "T2"."F2"\n  )\n',
     );
   });
 });
