@@ -1748,7 +1748,7 @@ const hdom: HDOM = {
 };
 
 describe("Field functions", () => {
-  it("must stringlify `simple_field` table field", () => {
+  it("must stringify `simple_field` table field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.models(0)?.tables(0)?.fields(0);
@@ -1756,7 +1756,7 @@ describe("Field functions", () => {
     expect(sql).toBe('"simple_field" as "simple_field"');
   });
 
-  it("must stringlify `simple_field` frame field", () => {
+  it("must stringify `simple_field` frame field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(0);
@@ -1764,7 +1764,7 @@ describe("Field functions", () => {
     expect(sql).toBe('"simple_field" as "simple_field"');
   });
 
-  it("must stringlify `origin_field` table field", () => {
+  it("must stringify `origin_field` table field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.models(0)?.tables(0)?.fields(1);
@@ -1772,7 +1772,7 @@ describe("Field functions", () => {
     expect(sql).toBe('"origin" as "origin_field"');
   });
 
-  it("must stringlify `origin_field` frame field", () => {
+  it("must stringify `origin_field` frame field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(1);
@@ -1780,7 +1780,7 @@ describe("Field functions", () => {
     expect(sql).toBe('"origin" as "origin_field"');
   });
 
-  it("must stringlify `clause_field` table field", () => {
+  it("must stringify `clause_field` table field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.models(0)?.tables(0)?.fields(2);
@@ -1788,7 +1788,7 @@ describe("Field functions", () => {
     expect(sql).toBe('clause("field") as "clause_field"');
   });
 
-  it("must stringlify `clause_field` frame field", () => {
+  it("must stringify `clause_field` frame field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(2);
@@ -1796,7 +1796,7 @@ describe("Field functions", () => {
     expect(sql).toBe('clause("field") as "clause_field"');
   });
 
-  it("must stringlify `int8_field` table field", () => {
+  it("must stringify `int8_field` table field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.models(0)?.tables(0)?.fields(3);
@@ -1806,7 +1806,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `int8_field` frame field", () => {
+  it("must stringify `int8_field` frame field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(3);
@@ -1816,7 +1816,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `int16_field` table field", () => {
+  it("must stringify `int16_field` table field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.models(0)?.tables(0)?.fields(4);
@@ -1826,7 +1826,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `int16_field` frame field", () => {
+  it("must stringify `int16_field` frame field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(4);
@@ -1836,7 +1836,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `int32_field` table field", () => {
+  it("must stringify `int32_field` table field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.models(0)?.tables(0)?.fields(5);
@@ -1846,7 +1846,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `int32_field` frame field", () => {
+  it("must stringify `int32_field` frame field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(5);
@@ -1856,7 +1856,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `int64_field` table field", () => {
+  it("must stringify `int64_field` table field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.models(0)?.tables(0)?.fields(6);
@@ -1866,7 +1866,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `int64_field` frame field", () => {
+  it("must stringify `int64_field` frame field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(6);
@@ -1876,7 +1876,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `float32_field` table field", () => {
+  it("must stringify `float32_field` table field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.models(0)?.tables(0)?.fields(7);
@@ -1886,7 +1886,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `float32_field` frame field", () => {
+  it("must stringify `float32_field` frame field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(7);
@@ -1896,7 +1896,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `float64_field` table field", () => {
+  it("must stringify `float64_field` table field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.models(0)?.tables(0)?.fields(8);
@@ -1906,7 +1906,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `float64_field` frame field", () => {
+  it("must stringify `float64_field` frame field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(8);
@@ -1916,7 +1916,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `decimal_field` table field", () => {
+  it("must stringify `decimal_field` table field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.models(0)?.tables(0)?.fields(9);
@@ -1927,7 +1927,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `decimal_field` frame field", () => {
+  it("must stringify `decimal_field` frame field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(9);
@@ -1938,7 +1938,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `date_field` table field", () => {
+  it("must stringify `date_field` table field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>(
@@ -1950,7 +1950,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `date_field` frame field", () => {
+  it("must stringify `date_field` frame field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(10);
@@ -1960,7 +1960,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `time_field` table field", () => {
+  it("must stringify `time_field` table field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>(
@@ -1972,7 +1972,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `time_field` frame field", () => {
+  it("must stringify `time_field` frame field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(11);
@@ -1982,7 +1982,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `timestamp_field` table field", () => {
+  it("must stringify `timestamp_field` table field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>(
@@ -1995,7 +1995,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `timestamp_field` frame field", () => {
+  it("must stringify `timestamp_field` frame field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(12);
@@ -2006,7 +2006,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `binary_field` table field", () => {
+  it("must stringify `binary_field` table field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>(
@@ -2018,7 +2018,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `binary_field` frame field", () => {
+  it("must stringify `binary_field` frame field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(13);
@@ -2028,7 +2028,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `utf8_field` table field", () => {
+  it("must stringify `utf8_field` table field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>(
@@ -2040,7 +2040,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `utf8_field` frame field", () => {
+  it("must stringify `utf8_field` frame field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(14);
@@ -2050,7 +2050,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `count_field` table field", () => {
+  it("must stringify `count_field` table field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>(
@@ -2062,7 +2062,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `count_field` frame field", () => {
+  it("must stringify `count_field` frame field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(15);
@@ -2072,7 +2072,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `count_distinct_field` table field", () => {
+  it("must stringify `count_distinct_field` table field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>(
@@ -2085,7 +2085,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `count_distinct_field` frame field", () => {
+  it("must stringify `count_distinct_field` frame field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(16);
@@ -2096,7 +2096,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `approx_distinct_field` table field", () => {
+  it("must stringify `approx_distinct_field` table field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>(
@@ -2109,7 +2109,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `approx_distinct_field` frame field", () => {
+  it("must stringify `approx_distinct_field` frame field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(17);
@@ -2120,7 +2120,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `min_field` table field", () => {
+  it("must stringify `min_field` table field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>(
@@ -2132,7 +2132,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `min_field` frame field", () => {
+  it("must stringify `min_field` frame field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(18);
@@ -2142,7 +2142,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `max_field` table field", () => {
+  it("must stringify `max_field` table field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>(
@@ -2154,7 +2154,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `max_field` frame field", () => {
+  it("must stringify `max_field` frame field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(19);
@@ -2164,7 +2164,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `sum_field` table field", () => {
+  it("must stringify `sum_field` table field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>(
@@ -2176,7 +2176,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `sum_field` frame field", () => {
+  it("must stringify `sum_field` frame field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(20);
@@ -2186,7 +2186,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `avg_field` table field", () => {
+  it("must stringify `avg_field` table field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>(
@@ -2198,7 +2198,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `avg_field` frame field", () => {
+  it("must stringify `avg_field` frame field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(21);
@@ -2208,7 +2208,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `noname_field` table field", () => {
+  it("must stringify `noname_field` table field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>(
@@ -2218,7 +2218,7 @@ describe("Field functions", () => {
     expect(sql).toBe("");
   });
 
-  it("must stringlify `noname_field` frame field", () => {
+  it("must stringify `noname_field` frame field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(22);
@@ -2226,7 +2226,7 @@ describe("Field functions", () => {
     expect(sql).toBe("");
   });
 
-  it("must stringlify `time_millisecond_field` table field", () => {
+  it("must stringify `time_millisecond_field` table field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>(
@@ -2239,7 +2239,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `time_millisecond_field` frame field", () => {
+  it("must stringify `time_millisecond_field` frame field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(23);
@@ -2250,7 +2250,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `time_microsecond_field` table field", () => {
+  it("must stringify `time_microsecond_field` table field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>(
@@ -2263,7 +2263,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `time_microsecond_field` frame field", () => {
+  it("must stringify `time_microsecond_field` frame field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(24);
@@ -2274,7 +2274,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `time_nanosecond_field` table field", () => {
+  it("must stringify `time_nanosecond_field` table field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>(
@@ -2287,7 +2287,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `time_nanosecond_field` frame field", () => {
+  it("must stringify `time_nanosecond_field` frame field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(25);
@@ -2298,7 +2298,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `timestamp_millisecond_field` table field", () => {
+  it("must stringify `timestamp_millisecond_field` table field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>(
@@ -2310,7 +2310,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `timestamp_millisecond_field` frame field", () => {
+  it("must stringify `timestamp_millisecond_field` frame field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(26);
@@ -2320,7 +2320,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `timestamp_microsecond_field` table field", () => {
+  it("must stringify `timestamp_microsecond_field` table field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>(
@@ -2332,7 +2332,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `timestamp_microsecond_field` frame field", () => {
+  it("must stringify `timestamp_microsecond_field` frame field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(27);
@@ -2342,7 +2342,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `timestamp_nanosecond_field` table field", () => {
+  it("must stringify `timestamp_nanosecond_field` table field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>(
@@ -2354,7 +2354,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `timestamp_nanosecond_field` frame field", () => {
+  it("must stringify `timestamp_nanosecond_field` frame field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(28);
@@ -2364,7 +2364,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `timestamp_gmt_field` table field", () => {
+  it("must stringify `timestamp_gmt_field` table field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>(
@@ -2376,7 +2376,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `timestamp_gmt_field` frame field", () => {
+  it("must stringify `timestamp_gmt_field` frame field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(29);
@@ -2386,7 +2386,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `timestamp_gmt_m_01_field` table field", () => {
+  it("must stringify `timestamp_gmt_m_01_field` table field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>(
@@ -2398,7 +2398,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `timestamp_gmt_m_01_field` frame field", () => {
+  it("must stringify `timestamp_gmt_m_01_field` frame field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(30);
@@ -2408,7 +2408,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `timestamp_gmt_m_02_field` table field", () => {
+  it("must stringify `timestamp_gmt_m_02_field` table field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>(
@@ -2420,7 +2420,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `timestamp_gmt_m_02_field` frame field", () => {
+  it("must stringify `timestamp_gmt_m_02_field` frame field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(31);
@@ -2430,7 +2430,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `timestamp_gmt_m_03_field` table field", () => {
+  it("must stringify `timestamp_gmt_m_03_field` table field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>(
@@ -2442,7 +2442,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `timestamp_gmt_m_03_field` frame field", () => {
+  it("must stringify `timestamp_gmt_m_03_field` frame field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(32);
@@ -2452,7 +2452,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `timestamp_gmt_m_04_field` table field", () => {
+  it("must stringify `timestamp_gmt_m_04_field` table field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>(
@@ -2464,7 +2464,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `timestamp_gmt_m_04_field` frame field", () => {
+  it("must stringify `timestamp_gmt_m_04_field` frame field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(33);
@@ -2474,7 +2474,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `timestamp_gmt_m_05_field` table field", () => {
+  it("must stringify `timestamp_gmt_m_05_field` table field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>(
@@ -2486,7 +2486,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `timestamp_gmt_m_05_field` frame field", () => {
+  it("must stringify `timestamp_gmt_m_05_field` frame field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(34);
@@ -2496,7 +2496,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `timestamp_gmt_m_06_field` table field", () => {
+  it("must stringify `timestamp_gmt_m_06_field` table field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>(
@@ -2508,7 +2508,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `timestamp_gmt_m_06_field` frame field", () => {
+  it("must stringify `timestamp_gmt_m_06_field` frame field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(35);
@@ -2518,7 +2518,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `timestamp_gmt_m_07_field` table field", () => {
+  it("must stringify `timestamp_gmt_m_07_field` table field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>(
@@ -2530,7 +2530,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `timestamp_gmt_m_07_field` frame field", () => {
+  it("must stringify `timestamp_gmt_m_07_field` frame field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(36);
@@ -2540,7 +2540,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `timestamp_gmt_m_08_field` table field", () => {
+  it("must stringify `timestamp_gmt_m_08_field` table field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>(
@@ -2552,7 +2552,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `timestamp_gmt_m_08_field` frame field", () => {
+  it("must stringify `timestamp_gmt_m_08_field` frame field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(37);
@@ -2562,7 +2562,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `timestamp_gmt_m_09_field` table field", () => {
+  it("must stringify `timestamp_gmt_m_09_field` table field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>(
@@ -2574,7 +2574,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `timestamp_gmt_m_09_field` frame field", () => {
+  it("must stringify `timestamp_gmt_m_09_field` frame field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(38);
@@ -2584,7 +2584,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `timestamp_gmt_m_10_field` table field", () => {
+  it("must stringify `timestamp_gmt_m_10_field` table field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>(
@@ -2596,7 +2596,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `timestamp_gmt_m_10_field` frame field", () => {
+  it("must stringify `timestamp_gmt_m_10_field` frame field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(39);
@@ -2606,7 +2606,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `timestamp_gmt_m_11_field` table field", () => {
+  it("must stringify `timestamp_gmt_m_11_field` table field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>(
@@ -2618,7 +2618,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `timestamp_gmt_m_11_field` frame field", () => {
+  it("must stringify `timestamp_gmt_m_11_field` frame field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(40);
@@ -2628,7 +2628,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `timestamp_gmt_m_12_field` table field", () => {
+  it("must stringify `timestamp_gmt_m_12_field` table field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>(
@@ -2640,7 +2640,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `timestamp_gmt_m_12_field` frame field", () => {
+  it("must stringify `timestamp_gmt_m_12_field` frame field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(41);
@@ -2650,7 +2650,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `timestamp_gmt_p_01_field` table field", () => {
+  it("must stringify `timestamp_gmt_p_01_field` table field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>(
@@ -2662,7 +2662,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `timestamp_gmt_p_01_field` frame field", () => {
+  it("must stringify `timestamp_gmt_p_01_field` frame field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(42);
@@ -2672,7 +2672,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `timestamp_gmt_p_02_field` table field", () => {
+  it("must stringify `timestamp_gmt_p_02_field` table field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>(
@@ -2684,7 +2684,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `timestamp_gmt_p_02_field` frame field", () => {
+  it("must stringify `timestamp_gmt_p_02_field` frame field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(43);
@@ -2694,7 +2694,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `timestamp_gmt_p_03_field` table field", () => {
+  it("must stringify `timestamp_gmt_p_03_field` table field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>(
@@ -2706,7 +2706,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `timestamp_gmt_p_03_field` frame field", () => {
+  it("must stringify `timestamp_gmt_p_03_field` frame field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(44);
@@ -2716,7 +2716,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `timestamp_gmt_p_04_field` table field", () => {
+  it("must stringify `timestamp_gmt_p_04_field` table field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>(
@@ -2728,7 +2728,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `timestamp_gmt_p_04_field` frame field", () => {
+  it("must stringify `timestamp_gmt_p_04_field` frame field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(45);
@@ -2738,7 +2738,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `timestamp_gmt_p_05_field` table field", () => {
+  it("must stringify `timestamp_gmt_p_05_field` table field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>(
@@ -2750,7 +2750,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `timestamp_gmt_p_05_field` frame field", () => {
+  it("must stringify `timestamp_gmt_p_05_field` frame field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(46);
@@ -2760,7 +2760,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `timestamp_gmt_p_06_field` table field", () => {
+  it("must stringify `timestamp_gmt_p_06_field` table field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>(
@@ -2772,7 +2772,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `timestamp_gmt_p_06_field` frame field", () => {
+  it("must stringify `timestamp_gmt_p_06_field` frame field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(47);
@@ -2782,7 +2782,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `timestamp_gmt_p_07_field` table field", () => {
+  it("must stringify `timestamp_gmt_p_07_field` table field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>(
@@ -2794,7 +2794,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `timestamp_gmt_p_07_field` frame field", () => {
+  it("must stringify `timestamp_gmt_p_07_field` frame field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(48);
@@ -2804,7 +2804,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `timestamp_gmt_p_08_field` table field", () => {
+  it("must stringify `timestamp_gmt_p_08_field` table field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>(
@@ -2816,7 +2816,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `timestamp_gmt_p_08_field` frame field", () => {
+  it("must stringify `timestamp_gmt_p_08_field` frame field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(49);
@@ -2826,7 +2826,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `timestamp_gmt_p_09_field` table field", () => {
+  it("must stringify `timestamp_gmt_p_09_field` table field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>(
@@ -2838,7 +2838,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `timestamp_gmt_p_09_field` frame field", () => {
+  it("must stringify `timestamp_gmt_p_09_field` frame field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(50);
@@ -2848,7 +2848,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `timestamp_gmt_p_10_field` table field", () => {
+  it("must stringify `timestamp_gmt_p_10_field` table field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>(
@@ -2860,7 +2860,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `timestamp_gmt_p_10_field` frame field", () => {
+  it("must stringify `timestamp_gmt_p_10_field` frame field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(51);
@@ -2870,7 +2870,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `timestamp_gmt_p_11_field` table field", () => {
+  it("must stringify `timestamp_gmt_p_11_field` table field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>(
@@ -2882,7 +2882,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `timestamp_gmt_p_11_field` frame field", () => {
+  it("must stringify `timestamp_gmt_p_11_field` frame field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(52);
@@ -2892,7 +2892,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `timestamp_gmt_p_12_field` table field", () => {
+  it("must stringify `timestamp_gmt_p_12_field` table field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>(
@@ -2904,7 +2904,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `timestamp_gmt_p_12_field` frame field", () => {
+  it("must stringify `timestamp_gmt_p_12_field` frame field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(53);
@@ -2914,7 +2914,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `timestamp_gmt_p_13_field` table field", () => {
+  it("must stringify `timestamp_gmt_p_13_field` table field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>(
@@ -2926,7 +2926,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `timestamp_gmt_p_13_field` frame field", () => {
+  it("must stringify `timestamp_gmt_p_13_field` frame field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(54);
@@ -2936,7 +2936,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `timestamp_gmt_p_14_field` table field", () => {
+  it("must stringify `timestamp_gmt_p_14_field` table field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>(
@@ -2948,7 +2948,7 @@ describe("Field functions", () => {
     );
   });
 
-  it("must stringlify `timestamp_gmt_p_14_field` frame field", () => {
+  it("must stringify `timestamp_gmt_p_14_field` frame field", () => {
     const bytes = serialize(hdom);
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(55);

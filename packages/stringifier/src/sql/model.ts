@@ -139,13 +139,25 @@ export function getTables(
       return 0;
     })
     .filter((t) => {
+      if (!t.name()) {
+        return false;
+      }
+
       if (joins.length === 0) {
         return true;
       }
+
       let res = false;
-      joins.forEach((j) => {
-        res = res || t.name() === j.left || t.name() === j.right;
-      });
+      for (let i = 0; i < joins.length; i++) {
+        res =
+          res ||
+          t.name() === joins[i].left ||
+          t.name() === joins[i].right;
+
+        if (res) {
+          break;
+        }
+      }
       return res;
     });
 
