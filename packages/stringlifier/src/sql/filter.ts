@@ -32,6 +32,14 @@ export function getFilterClauseSQL(
 
   let op = "";
   let sql = "";
+  const filters =
+    clause.type === FilterOperatorEnum.None
+      ? clause.filters.length
+        ? [clause.filters[0]]
+        : []
+      : clause.filters;
+  const children =
+    clause.type === FilterOperatorEnum.None ? [] : clause.children;
 
   switch (clause.type) {
     case FilterOperatorEnum.And:
@@ -50,11 +58,9 @@ export function getFilterClauseSQL(
 
   sql =
     sql +
-    clause.filters
-      .map((f) => `${op}${getFilterSQL(f, join)}\n`)
-      .join("");
+    filters.map((f) => `${op}${getFilterSQL(f, join)}\n`).join("");
 
-  clause.children.forEach((child) => {
+  children.forEach((child) => {
     sql = sql + `${op}(\n`;
     sql = sql + getFilterClauseSQL(child, level + 1, join);
     sql = sql + `${prefix})\n`;

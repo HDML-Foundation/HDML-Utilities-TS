@@ -22,6 +22,8 @@ import {
   getNamedFilterSQL,
   getExpressionFilterSQL,
   getKeysFilterSQL,
+  getFilterSQL,
+  getFilterClauseSQL,
 } from "./filter";
 
 describe("The `objectifyFilterOptions` function", () => {
@@ -715,6 +717,74 @@ describe("The `getExpressionFilterSQL` function", () => {
 });
 
 describe("The `getKeysFilterSQL` function", () => {
+  it("should sequalize filter if `left` table is empty", () => {
+    const sql = getKeysFilterSQL(
+      {
+        type: FilterTypeEnum.Keys,
+        options: {
+          left: "F1",
+          right: "F2",
+        },
+      },
+      {
+        left: "",
+        right: "T2",
+      },
+    );
+    expect(sql).toBe("false");
+  });
+
+  it("should sequalize filter if `right` table is empty", () => {
+    const sql = getKeysFilterSQL(
+      {
+        type: FilterTypeEnum.Keys,
+        options: {
+          left: "F1",
+          right: "F2",
+        },
+      },
+      {
+        left: "T1",
+        right: "",
+      },
+    );
+    expect(sql).toBe("false");
+  });
+
+  it("should sequalize filter if `left` field is empty", () => {
+    const sql = getKeysFilterSQL(
+      {
+        type: FilterTypeEnum.Keys,
+        options: {
+          left: "",
+          right: "F2",
+        },
+      },
+      {
+        left: "T1",
+        right: "T2",
+      },
+    );
+    expect(sql).toBe("false");
+  });
+
+  it("should sequalize filter if `right` field is empty", () => {
+    const sql = getKeysFilterSQL(
+      {
+        type: FilterTypeEnum.Keys,
+        options: {
+          left: "F1",
+          right: "",
+        },
+      },
+      {
+        left: "T1",
+        right: "T2",
+      },
+    );
+    expect(sql).toBe("false");
+  });
+
   it("should sequalize filter", () => {
     const sql = getKeysFilterSQL(
       {
@@ -730,5 +800,384 @@ describe("The `getKeysFilterSQL` function", () => {
       },
     );
     expect(sql).toBe('"T1"."F1" = "T2"."F2"');
+  });
+});
+
+describe("The `getFilterSQL` function", () => {
+  it("should sequalize `Keys` filter", () => {
+    const sql = getFilterSQL(
+      {
+        type: FilterTypeEnum.Keys,
+        options: {
+          left: "F1",
+          right: "F2",
+        },
+      },
+      {
+        left: "T1",
+        right: "T2",
+      },
+    );
+    expect(sql).toBe('"T1"."F1" = "T2"."F2"');
+  });
+
+  it("should sequalize `Expression` filter", () => {
+    const sql = getFilterSQL({
+      type: FilterTypeEnum.Expression,
+      options: {
+        clause: "1 = 1",
+      },
+    });
+    expect(sql).toBe("1 = 1");
+  });
+
+  it("should sequalize `Named` filter", () => {
+    const sql = getFilterSQL({
+      type: FilterTypeEnum.Named,
+      options: {
+        name: FilterNameEnum.Equals,
+        field: "1",
+        values: ["1"],
+      },
+    });
+    expect(sql).toBe("1 = 1");
+  });
+});
+
+describe("The `getFilterClauseSQL` function", () => {
+  it("should sequalize empty clause with `and` operator", () => {
+    const sql = getFilterClauseSQL({
+      type: FilterOperatorEnum.And,
+      filters: [],
+      children: [],
+    });
+    expect(sql).toBe("1 = 1\n");
+  });
+
+  it("should sequalize clause with one filter with `and` operator", () => {
+    const sql = getFilterClauseSQL({
+      type: FilterOperatorEnum.And,
+      filters: [
+        {
+          type: FilterTypeEnum.Expression,
+          options: {
+            clause: "2 = 2",
+          },
+        },
+      ],
+      children: [],
+    });
+    expect(sql).toBe("1 = 1\nand 2 = 2\n");
+  });
+
+  it("should sequalize clause with filters only with `and` operator", () => {
+    const sql = getFilterClauseSQL({
+      type: FilterOperatorEnum.And,
+      filters: [
+        {
+          type: FilterTypeEnum.Expression,
+          options: {
+            clause: "2 = 2",
+          },
+        },
+        {
+          type: FilterTypeEnum.Named,
+          options: {
+            name: FilterNameEnum.Equals,
+            field: "3",
+            values: ["3"],
+          },
+        },
+      ],
+      children: [],
+    });
+    expect(sql).toBe("1 = 1\nand 2 = 2\nand 3 = 3\n");
+  });
+
+  it("should sequalize empty clause with `or` operator", () => {
+    const sql = getFilterClauseSQL({
+      type: FilterOperatorEnum.Or,
+      filters: [],
+      children: [],
+    });
+    expect(sql).toBe("1 != 1\n");
+  });
+
+  it("should sequalize clause with one filter with `or` operator", () => {
+    const sql = getFilterClauseSQL({
+      type: FilterOperatorEnum.Or,
+      filters: [
+        {
+          type: FilterTypeEnum.Expression,
+          options: {
+            clause: "2 = 2",
+          },
+        },
+      ],
+      children: [],
+    });
+    expect(sql).toBe("1 != 1\nor 2 = 2\n");
+  });
+
+  it("should sequalize clause with filters only with `or` operator", () => {
+    const sql = getFilterClauseSQL({
+      type: FilterOperatorEnum.Or,
+      filters: [
+        {
+          type: FilterTypeEnum.Expression,
+          options: {
+            clause: "2 = 2",
+          },
+        },
+        {
+          type: FilterTypeEnum.Named,
+          options: {
+            name: FilterNameEnum.Equals,
+            field: "3",
+            values: ["3"],
+          },
+        },
+      ],
+      children: [],
+    });
+    expect(sql).toBe("1 != 1\nor 2 = 2\nor 3 = 3\n");
+  });
+
+  it("should sequalize empty clause with `none` operator", () => {
+    const sql = getFilterClauseSQL({
+      type: FilterOperatorEnum.None,
+      filters: [],
+      children: [],
+    });
+    expect(sql).toBe("");
+  });
+
+  it("should sequalize clause with one filter with `none` operator", () => {
+    const sql = getFilterClauseSQL({
+      type: FilterOperatorEnum.None,
+      filters: [
+        {
+          type: FilterTypeEnum.Expression,
+          options: {
+            clause: "2 = 2",
+          },
+        },
+      ],
+      children: [],
+    });
+    expect(sql).toBe("2 = 2\n");
+  });
+
+  it("should sequalize clause with filters only with `none` operator", () => {
+    const sql = getFilterClauseSQL({
+      type: FilterOperatorEnum.None,
+      filters: [
+        {
+          type: FilterTypeEnum.Expression,
+          options: {
+            clause: "2 = 2",
+          },
+        },
+        {
+          type: FilterTypeEnum.Named,
+          options: {
+            name: FilterNameEnum.Equals,
+            field: "3",
+            values: ["3"],
+          },
+        },
+      ],
+      children: [],
+    });
+    expect(sql).toBe("2 = 2\n");
+  });
+
+  it("should sequalize clause with `and` operator and one empty child with `none` operator", () => {
+    const sql = getFilterClauseSQL({
+      type: FilterOperatorEnum.And,
+      filters: [],
+      children: [
+        {
+          type: FilterOperatorEnum.None,
+          filters: [],
+          children: [],
+        },
+      ],
+    });
+    // TODO (buntarb): this will throw on SQL level. Optimize it?
+    expect(sql).toBe("1 = 1\nand (\n)\n");
+  });
+
+  it("should sequalize clause with `and` operator and one empty child with `and` operator", () => {
+    const sql = getFilterClauseSQL({
+      type: FilterOperatorEnum.And,
+      filters: [],
+      children: [
+        {
+          type: FilterOperatorEnum.And,
+          filters: [],
+          children: [],
+        },
+      ],
+    });
+    expect(sql).toBe("1 = 1\nand (\n  1 = 1\n)\n");
+  });
+
+  it("should sequalize clause with `and` operator and one empty child with `or` operator", () => {
+    const sql = getFilterClauseSQL({
+      type: FilterOperatorEnum.And,
+      filters: [],
+      children: [
+        {
+          type: FilterOperatorEnum.Or,
+          filters: [],
+          children: [],
+        },
+      ],
+    });
+    expect(sql).toBe("1 = 1\nand (\n  1 != 1\n)\n");
+  });
+
+  it("should sequalize clause with `and` operator and two empty child with `and` operator", () => {
+    const sql = getFilterClauseSQL({
+      type: FilterOperatorEnum.And,
+      filters: [],
+      children: [
+        {
+          type: FilterOperatorEnum.And,
+          filters: [],
+          children: [],
+        },
+        {
+          type: FilterOperatorEnum.And,
+          filters: [],
+          children: [],
+        },
+      ],
+    });
+    expect(sql).toBe("1 = 1\nand (\n  1 = 1\n)\nand (\n  1 = 1\n)\n");
+  });
+
+  it("should sequalize 3-level clause with `and` operators", () => {
+    const sql = getFilterClauseSQL({
+      type: FilterOperatorEnum.And,
+      filters: [],
+      children: [
+        {
+          type: FilterOperatorEnum.And,
+          filters: [],
+          children: [
+            {
+              type: FilterOperatorEnum.And,
+              filters: [],
+              children: [],
+            },
+          ],
+        },
+      ],
+    });
+    expect(sql).toBe(
+      "1 = 1\nand (\n  1 = 1\n  and (\n    1 = 1\n  )\n)\n",
+    );
+  });
+
+  it("should sequalize 3-level clause with `and` and `or`", () => {
+    const sql = getFilterClauseSQL({
+      type: FilterOperatorEnum.And,
+      filters: [
+        {
+          type: FilterTypeEnum.Expression,
+          options: {
+            clause: "2 = 2",
+          },
+        },
+      ],
+      children: [
+        {
+          type: FilterOperatorEnum.And,
+          filters: [
+            {
+              type: FilterTypeEnum.Expression,
+              options: {
+                clause: "3 = 3",
+              },
+            },
+          ],
+          children: [
+            {
+              type: FilterOperatorEnum.Or,
+              filters: [
+                {
+                  type: FilterTypeEnum.Expression,
+                  options: {
+                    clause: "4 = 4",
+                  },
+                },
+                {
+                  type: FilterTypeEnum.Expression,
+                  options: {
+                    clause: "5 = 5",
+                  },
+                },
+              ],
+              children: [],
+            },
+          ],
+        },
+      ],
+    });
+    expect(sql).toBe(
+      "1 = 1\nand 2 = 2\nand (\n  1 = 1\n  and 3 = 3\n  and (\n    1 != 1\n    or 4 = 4\n    or 5 = 5\n  )\n)\n",
+    );
+  });
+
+  it("should sequalize 3-level clause with `and` and `none`", () => {
+    const sql = getFilterClauseSQL({
+      type: FilterOperatorEnum.And,
+      filters: [
+        {
+          type: FilterTypeEnum.Expression,
+          options: {
+            clause: "2 = 2",
+          },
+        },
+      ],
+      children: [
+        {
+          type: FilterOperatorEnum.And,
+          filters: [
+            {
+              type: FilterTypeEnum.Expression,
+              options: {
+                clause: "3 = 3",
+              },
+            },
+          ],
+          children: [
+            {
+              type: FilterOperatorEnum.None,
+              filters: [
+                {
+                  type: FilterTypeEnum.Expression,
+                  options: {
+                    clause: "4 = 4",
+                  },
+                },
+                {
+                  type: FilterTypeEnum.Expression,
+                  options: {
+                    clause: "5 = 5",
+                  },
+                },
+              ],
+              children: [],
+            },
+          ],
+        },
+      ],
+    });
+    expect(sql).toBe(
+      "1 = 1\nand 2 = 2\nand (\n  1 = 1\n  and 3 = 3\n  and (\n    4 = 4\n  )\n)\n",
+    );
   });
 });
