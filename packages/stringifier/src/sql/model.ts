@@ -43,6 +43,7 @@ export function getModelSQL(model: ModelStruct, level = 0): string {
     sql +
     tables
       .map((tbl) => {
+        // TODO (buntarb): sort filds?
         const fields: string[] = [];
         for (let i = 0; i < tbl.fieldsLength(); i++) {
           if (tbl.fields(i)?.name()) {
