@@ -15,6 +15,7 @@ import {
   TimestampParametersStruct,
   TimeUnitEnum,
   TimeZoneEnum,
+  OrderTypeEnum,
 } from "@hdml/schemas";
 
 export function getTableFieldSQL(field: FieldStruct): string {
@@ -27,14 +28,17 @@ export function getTableFieldSQL(field: FieldStruct): string {
     return "";
   } else {
     if (!type || type.type() === DataTypeEnum.Unspecified) {
-      return getNamedField(
+      return getNamedFieldSQL(
         name,
-        getPlainClause(name, origin, clause),
+        getPlainClauseSQL(name, origin, clause),
       );
     } else {
-      return getNamedField(
+      return getNamedFieldSQL(
         name,
-        getCastedClause(getPlainClause(name, origin, clause), type),
+        getCastedClauseSQL(
+          getPlainClauseSQL(name, origin, clause),
+          type,
+        ),
       );
     }
   }
@@ -51,18 +55,21 @@ export function getFrameFieldSQL(field: FieldStruct): string {
     return "";
   } else {
     if (!type || type.type() === DataTypeEnum.Unspecified) {
-      return getNamedField(
+      return getNamedFieldSQL(
         name,
-        getGroupedClause(
-          getPlainClause(name, origin, clause),
+        getGroupedClauseSQL(
+          getPlainClauseSQL(name, origin, clause),
           aggregation,
         ),
       );
     } else {
-      return getNamedField(
+      return getNamedFieldSQL(
         name,
-        getGroupedClause(
-          getCastedClause(getPlainClause(name, origin, clause), type),
+        getGroupedClauseSQL(
+          getCastedClauseSQL(
+            getPlainClauseSQL(name, origin, clause),
+            type,
+          ),
           aggregation,
         ),
       );
@@ -70,11 +77,14 @@ export function getFrameFieldSQL(field: FieldStruct): string {
   }
 }
 
-export function getNamedField(name: string, clause: string): string {
+export function getNamedFieldSQL(
+  name: string,
+  clause: string,
+): string {
   return `${clause} as "${name}"`;
 }
 
-export function getPlainClause(
+export function getPlainClauseSQL(
   name: string,
   origin: null | string,
   clause: null | string,
@@ -82,7 +92,7 @@ export function getPlainClause(
   return clause ? clause : `"${origin || name}"`;
 }
 
-export function getGroupedClause(
+export function getGroupedClauseSQL(
   clause: string,
   agg: AggregationTypeEnum,
 ): string {
@@ -114,7 +124,7 @@ export function getGroupedClause(
   return clause;
 }
 
-export function getCastedClause(
+export function getCastedClauseSQL(
   clause: string,
   type: FieldTypeStruct,
 ): string {
@@ -291,4 +301,255 @@ export function getCastedClause(
       break;
   }
   return sql;
+}
+
+export function getFieldHTML(field: FieldStruct): string {
+  if (field.name() === null) {
+    return "";
+  } else {
+    let result = `<hdml-field name="${field.name()}"`;
+
+    if (field.origin() !== null) {
+      result = result + ` origin="${field.origin()}"`;
+    }
+
+    if (field.clause() !== null) {
+      result =
+        result + ` clause="${field.clause()!.replaceAll('"', "`")}"`;
+    }
+
+    if (field.type() !== null) {
+      result = result + getFieldTypeHTML(field.type()!);
+    }
+
+    result = result + getFieldAggregationHTML(field.aggregation());
+    result = result + getFieldOrderHTML(field.order());
+    result = result + "></hdml-field>";
+
+    return result;
+  }
+}
+
+export function getFieldTypeHTML(type: FieldTypeStruct): string {
+  let dt = "";
+  let options:
+    | DecimalParametersStruct
+    | DateParametersStruct
+    | TimeParametersStruct
+    | TimestampParametersStruct;
+
+  // TODO (buntarb): attributes and values must be used from the enums
+  // but first we need to move these enums from `parser` to `types`
+  // package.
+  switch (type.type()) {
+    case DataTypeEnum.Int8:
+      dt = ` type="int-8"`;
+      break;
+
+    case DataTypeEnum.Int16:
+      dt = ` type="int-16"`;
+      break;
+
+    case DataTypeEnum.Int32:
+      dt = ` type="int-32"`;
+      break;
+
+    case DataTypeEnum.Int64:
+      dt = ` type="int-64"`;
+      break;
+
+    case DataTypeEnum.Float32:
+      dt = ` type="float-32"`;
+      break;
+
+    case DataTypeEnum.Float64:
+      dt = ` type="float-64"`;
+      break;
+
+    case DataTypeEnum.Decimal:
+      options = type.options(
+        new DecimalParametersStruct(),
+      ) as DecimalParametersStruct;
+      dt =
+        ` type="decimal"` +
+        ` scale="${options.scale()}"` +
+        ` precision="${options.precision()}"`;
+      break;
+
+    case DataTypeEnum.Date:
+      dt = ` type="date"`;
+      break;
+
+    case DataTypeEnum.Time:
+      options = type.options(
+        new TimeParametersStruct(),
+      ) as TimeParametersStruct;
+      switch (options.unit()) {
+        case TimeUnitEnum.Second:
+          dt = ` type="time" unit="second"`;
+          break;
+        case TimeUnitEnum.Millisecond:
+          dt = ` type="time" unit="millisecond"`;
+          break;
+        case TimeUnitEnum.Microsecond:
+          dt = ` type="time" unit="microsecond"`;
+          break;
+        case TimeUnitEnum.Nanosecond:
+          dt = ` type="time" unit="nanosecond"`;
+          break;
+      }
+      break;
+
+    case DataTypeEnum.Timestamp:
+      options = type.options(
+        new TimestampParametersStruct(),
+      ) as TimestampParametersStruct;
+      switch (options.unit()) {
+        case TimeUnitEnum.Second:
+          dt = ` type="timestamp" unit="second"`;
+          break;
+        case TimeUnitEnum.Millisecond:
+          dt = ` type="timestamp" unit="millisecond"`;
+          break;
+        case TimeUnitEnum.Microsecond:
+          dt = ` type="timestamp" unit="microsecond"`;
+          break;
+        case TimeUnitEnum.Nanosecond:
+          dt = ` type="timestamp" unit="nanosecond"`;
+          break;
+      }
+      switch ((<TimestampParametersStruct>options).timezone()) {
+        case TimeZoneEnum.UTC:
+          dt = `${dt} timezone="UTC"`;
+          break;
+        case TimeZoneEnum.GMT:
+          dt = `${dt} timezone="GMT"`;
+          break;
+        case TimeZoneEnum.GMT_m_01:
+          dt = `${dt} timezone="GMT-01"`;
+          break;
+        case TimeZoneEnum.GMT_m_02:
+          dt = `${dt} timezone="GMT-02"`;
+          break;
+        case TimeZoneEnum.GMT_m_03:
+          dt = `${dt} timezone="GMT-03"`;
+          break;
+        case TimeZoneEnum.GMT_m_04:
+          dt = `${dt} timezone="GMT-04"`;
+          break;
+        case TimeZoneEnum.GMT_m_05:
+          dt = `${dt} timezone="GMT-05"`;
+          break;
+        case TimeZoneEnum.GMT_m_06:
+          dt = `${dt} timezone="GMT-06"`;
+          break;
+        case TimeZoneEnum.GMT_m_07:
+          dt = `${dt} timezone="GMT-07"`;
+          break;
+        case TimeZoneEnum.GMT_m_08:
+          dt = `${dt} timezone="GMT-08"`;
+          break;
+        case TimeZoneEnum.GMT_m_09:
+          dt = `${dt} timezone="GMT-09"`;
+          break;
+        case TimeZoneEnum.GMT_m_10:
+          dt = `${dt} timezone="GMT-10"`;
+          break;
+        case TimeZoneEnum.GMT_m_11:
+          dt = `${dt} timezone="GMT-11"`;
+          break;
+        case TimeZoneEnum.GMT_m_12:
+          dt = `${dt} timezone="GMT-12"`;
+          break;
+        case TimeZoneEnum.GMT_p_01:
+          dt = `${dt} timezone="GMT+01"`;
+          break;
+        case TimeZoneEnum.GMT_p_02:
+          dt = `${dt} timezone="GMT+02"`;
+          break;
+        case TimeZoneEnum.GMT_p_03:
+          dt = `${dt} timezone="GMT+03"`;
+          break;
+        case TimeZoneEnum.GMT_p_04:
+          dt = `${dt} timezone="GMT+04"`;
+          break;
+        case TimeZoneEnum.GMT_p_05:
+          dt = `${dt} timezone="GMT+05"`;
+          break;
+        case TimeZoneEnum.GMT_p_06:
+          dt = `${dt} timezone="GMT+06"`;
+          break;
+        case TimeZoneEnum.GMT_p_07:
+          dt = `${dt} timezone="GMT+07"`;
+          break;
+        case TimeZoneEnum.GMT_p_08:
+          dt = `${dt} timezone="GMT+08"`;
+          break;
+        case TimeZoneEnum.GMT_p_09:
+          dt = `${dt} timezone="GMT+09"`;
+          break;
+        case TimeZoneEnum.GMT_p_10:
+          dt = `${dt} timezone="GMT+10"`;
+          break;
+        case TimeZoneEnum.GMT_p_11:
+          dt = `${dt} timezone="GMT+11"`;
+          break;
+        case TimeZoneEnum.GMT_p_12:
+          dt = `${dt} timezone="GMT+12"`;
+          break;
+        case TimeZoneEnum.GMT_p_13:
+          dt = `${dt} timezone="GMT+13"`;
+          break;
+        case TimeZoneEnum.GMT_p_14:
+          dt = `${dt} timezone="GMT+14"`;
+          break;
+      }
+      break;
+
+    case DataTypeEnum.Binary:
+      dt = ` type="binary"`;
+      break;
+
+    case DataTypeEnum.Utf8:
+      dt = ` type="utf-8"`;
+      break;
+  }
+
+  return dt;
+}
+
+export function getFieldAggregationHTML(
+  agg: AggregationTypeEnum,
+): string {
+  switch (agg) {
+    case AggregationTypeEnum.Count:
+      return ` aggregation="count"`;
+    case AggregationTypeEnum.CountDistinct:
+      return ` aggregation="countDistinct"`;
+    case AggregationTypeEnum.CountDistinctApprox:
+      return ` aggregation="countDistinctApprox"`;
+    case AggregationTypeEnum.Min:
+      return ` aggregation="min"`;
+    case AggregationTypeEnum.Max:
+      return ` aggregation="max"`;
+    case AggregationTypeEnum.Sum:
+      return ` aggregation="sum"`;
+    case AggregationTypeEnum.Avg:
+      return ` aggregation="avg"`;
+    case AggregationTypeEnum.None:
+      return "";
+  }
+}
+
+export function getFieldOrderHTML(sort: OrderTypeEnum): string {
+  switch (sort) {
+    case OrderTypeEnum.Ascending:
+      return ` order="asc"`;
+
+    case OrderTypeEnum.Descending:
+      return ` order="desc"`;
+
+    case OrderTypeEnum.None:
+      return "";
+  }
 }

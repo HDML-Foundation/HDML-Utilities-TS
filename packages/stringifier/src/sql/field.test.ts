@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /**
  * @author Artem Lytvynov
  * @copyright Artem Lytvynov
@@ -20,7 +21,11 @@ import {
 } from "@hdml/schemas";
 import { HDOM } from "@hdml/types";
 import { serialize, deserialize } from "@hdml/buffer";
-import { getTableFieldSQL, getFrameFieldSQL } from "./field";
+import {
+  getTableFieldSQL,
+  getFrameFieldSQL,
+  getFieldHTML,
+} from "./field";
 
 const hdom: HDOM = {
   includes: [],
@@ -878,6 +883,34 @@ const hdom: HDOM = {
               aggregation: AggregationTypeEnum.None,
               order: OrderTypeEnum.None,
             },
+            {
+              name: "asc_field",
+              description: null,
+              origin: "field",
+              clause: null,
+              type: {
+                type: DataTypeEnum.Int8,
+                options: {
+                  nullable: false,
+                },
+              },
+              aggregation: AggregationTypeEnum.None,
+              order: OrderTypeEnum.Ascending,
+            },
+            {
+              name: "desc_field",
+              description: null,
+              origin: "field",
+              clause: null,
+              type: {
+                type: DataTypeEnum.Int8,
+                options: {
+                  nullable: false,
+                },
+              },
+              aggregation: AggregationTypeEnum.None,
+              order: OrderTypeEnum.Descending,
+            },
           ],
         },
       ],
@@ -1734,6 +1767,34 @@ const hdom: HDOM = {
           aggregation: AggregationTypeEnum.None,
           order: OrderTypeEnum.None,
         },
+        {
+          name: "asc_field",
+          description: null,
+          origin: "field",
+          clause: null,
+          type: {
+            type: DataTypeEnum.Int8,
+            options: {
+              nullable: false,
+            },
+          },
+          aggregation: AggregationTypeEnum.None,
+          order: OrderTypeEnum.Ascending,
+        },
+        {
+          name: "desc_field",
+          description: null,
+          origin: "field",
+          clause: null,
+          type: {
+            type: DataTypeEnum.Int8,
+            options: {
+              nullable: false,
+            },
+          },
+          aggregation: AggregationTypeEnum.None,
+          order: OrderTypeEnum.Descending,
+        },
       ],
       filter_by: {
         type: FilterOperatorEnum.None,
@@ -1753,7 +1814,11 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.models(0)?.tables(0)?.fields(0);
     const sql = getTableFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe('"simple_field" as "simple_field"');
+    expect(html).toBe(
+      '<hdml-field name="simple_field"></hdml-field>',
+    );
   });
 
   it("must stringify `simple_field` frame field", () => {
@@ -1761,7 +1826,11 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(0);
     const sql = getFrameFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe('"simple_field" as "simple_field"');
+    expect(html).toBe(
+      '<hdml-field name="simple_field"></hdml-field>',
+    );
   });
 
   it("must stringify `origin_field` table field", () => {
@@ -1769,7 +1838,11 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.models(0)?.tables(0)?.fields(1);
     const sql = getTableFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe('"origin" as "origin_field"');
+    expect(html).toBe(
+      "<hdml-field name=\"origin_field\" origin=\"origin\"></hdml-field>",
+    );
   });
 
   it("must stringify `origin_field` frame field", () => {
@@ -1777,7 +1850,11 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(1);
     const sql = getFrameFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe('"origin" as "origin_field"');
+    expect(html).toBe(
+      "<hdml-field name=\"origin_field\" origin=\"origin\"></hdml-field>",
+    );
   });
 
   it("must stringify `clause_field` table field", () => {
@@ -1785,7 +1862,11 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.models(0)?.tables(0)?.fields(2);
     const sql = getTableFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe('clause("field") as "clause_field"');
+    expect(html).toBe(
+      "<hdml-field name=\"clause_field\" origin=\"origin\" clause=\"clause(`field`)\"></hdml-field>",
+    );
   });
 
   it("must stringify `clause_field` frame field", () => {
@@ -1793,7 +1874,11 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(2);
     const sql = getFrameFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe('clause("field") as "clause_field"');
+    expect(html).toBe(
+      "<hdml-field name=\"clause_field\" origin=\"origin\" clause=\"clause(`field`)\"></hdml-field>",
+    );
   });
 
   it("must stringify `int8_field` table field", () => {
@@ -1801,8 +1886,12 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.models(0)?.tables(0)?.fields(3);
     const sql = getTableFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as tinyint) as "int8_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"int8_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"int-8\"></hdml-field>",
     );
   });
 
@@ -1811,8 +1900,12 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(3);
     const sql = getFrameFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as tinyint) as "int8_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"int8_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"int-8\"></hdml-field>",
     );
   });
 
@@ -1821,8 +1914,12 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.models(0)?.tables(0)?.fields(4);
     const sql = getTableFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as smallint) as "int16_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"int16_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"int-16\"></hdml-field>",
     );
   });
 
@@ -1831,8 +1928,12 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(4);
     const sql = getFrameFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as smallint) as "int16_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"int16_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"int-16\"></hdml-field>",
     );
   });
 
@@ -1841,8 +1942,12 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.models(0)?.tables(0)?.fields(5);
     const sql = getTableFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as integer) as "int32_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"int32_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"int-32\"></hdml-field>",
     );
   });
 
@@ -1851,8 +1956,12 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(5);
     const sql = getFrameFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as integer) as "int32_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"int32_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"int-32\"></hdml-field>",
     );
   });
 
@@ -1861,8 +1970,12 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.models(0)?.tables(0)?.fields(6);
     const sql = getTableFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as bigint) as "int64_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"int64_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"int-64\"></hdml-field>",
     );
   });
 
@@ -1871,8 +1984,12 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(6);
     const sql = getFrameFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as bigint) as "int64_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"int64_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"int-64\"></hdml-field>",
     );
   });
 
@@ -1881,8 +1998,12 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.models(0)?.tables(0)?.fields(7);
     const sql = getTableFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as real) as "float32_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"float32_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"float-32\"></hdml-field>",
     );
   });
 
@@ -1891,8 +2012,12 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(7);
     const sql = getFrameFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as real) as "float32_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"float32_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"float-32\"></hdml-field>",
     );
   });
 
@@ -1901,8 +2026,12 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.models(0)?.tables(0)?.fields(8);
     const sql = getTableFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as double) as "float64_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"float64_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"float-64\"></hdml-field>",
     );
   });
 
@@ -1911,8 +2040,12 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(8);
     const sql = getFrameFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as double) as "float64_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"float64_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"float-64\"></hdml-field>",
     );
   });
 
@@ -1921,9 +2054,13 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.models(0)?.tables(0)?.fields(9);
     const sql = getTableFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as decimal(18, 0))' +
         ' as "decimal_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"decimal_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"decimal\" scale=\"0\" precision=\"18\"></hdml-field>",
     );
   });
 
@@ -1932,9 +2069,13 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(9);
     const sql = getFrameFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as decimal(18, 0))' +
         ' as "decimal_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"decimal_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"decimal\" scale=\"0\" precision=\"18\"></hdml-field>",
     );
   });
 
@@ -1945,8 +2086,12 @@ describe("Field functions", () => {
       struct.models(0)?.tables(0)?.fields(10)
     );
     const sql = getTableFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as date) as "date_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"date_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"date\"></hdml-field>",
     );
   });
 
@@ -1955,8 +2100,12 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(10);
     const sql = getFrameFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as date) as "date_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"date_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"date\"></hdml-field>",
     );
   });
 
@@ -1967,8 +2116,12 @@ describe("Field functions", () => {
       struct.models(0)?.tables(0)?.fields(11)
     );
     const sql = getTableFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as time(0)) as "time_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"time_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"time\" unit=\"second\"></hdml-field>",
     );
   });
 
@@ -1977,8 +2130,12 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(11);
     const sql = getFrameFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as time(0)) as "time_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"time_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"time\" unit=\"second\"></hdml-field>",
     );
   });
 
@@ -1989,9 +2146,13 @@ describe("Field functions", () => {
       struct.models(0)?.tables(0)?.fields(12)
     );
     const sql = getTableFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as timestamp(0)) at time zone ' +
         "'UTC' as \"timestamp_field\"",
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"timestamp_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"UTC\"></hdml-field>",
     );
   });
 
@@ -2000,9 +2161,13 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(12);
     const sql = getFrameFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as timestamp(0)) at time zone ' +
         "'UTC' as \"timestamp_field\"",
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"timestamp_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"UTC\"></hdml-field>",
     );
   });
 
@@ -2013,8 +2178,12 @@ describe("Field functions", () => {
       struct.models(0)?.tables(0)?.fields(13)
     );
     const sql = getTableFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as varbinary) as "binary_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"binary_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"binary\"></hdml-field>",
     );
   });
 
@@ -2023,8 +2192,12 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(13);
     const sql = getFrameFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as varbinary) as "binary_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"binary_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"binary\"></hdml-field>",
     );
   });
 
@@ -2035,8 +2208,12 @@ describe("Field functions", () => {
       struct.models(0)?.tables(0)?.fields(14)
     );
     const sql = getTableFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as varchar) as "utf8_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"utf8_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"utf-8\"></hdml-field>",
     );
   });
 
@@ -2045,8 +2222,12 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(14);
     const sql = getFrameFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as varchar) as "utf8_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"utf8_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"utf-8\"></hdml-field>",
     );
   });
 
@@ -2057,8 +2238,12 @@ describe("Field functions", () => {
       struct.models(0)?.tables(0)?.fields(15)
     );
     const sql = getTableFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as varchar) as "count_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"count_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"utf-8\" aggregation=\"count\"></hdml-field>",
     );
   });
 
@@ -2067,8 +2252,12 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(15);
     const sql = getFrameFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'count(try_cast(clause("field") as varchar)) as "count_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"count_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"utf-8\" aggregation=\"count\"></hdml-field>",
     );
   });
 
@@ -2079,9 +2268,13 @@ describe("Field functions", () => {
       struct.models(0)?.tables(0)?.fields(16)
     );
     const sql = getTableFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as varchar) ' +
         'as "count_distinct_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"count_distinct_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"utf-8\" aggregation=\"countDistinct\"></hdml-field>",
     );
   });
 
@@ -2090,9 +2283,13 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(16);
     const sql = getFrameFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'count(distinct try_cast(clause("field") as varchar)) ' +
         'as "count_distinct_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"count_distinct_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"utf-8\" aggregation=\"countDistinct\"></hdml-field>",
     );
   });
 
@@ -2103,9 +2300,13 @@ describe("Field functions", () => {
       struct.models(0)?.tables(0)?.fields(17)
     );
     const sql = getTableFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as varchar) ' +
         'as "approx_distinct_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"approx_distinct_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"utf-8\" aggregation=\"countDistinctApprox\"></hdml-field>",
     );
   });
 
@@ -2114,9 +2315,13 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(17);
     const sql = getFrameFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'approx_distinct(try_cast(clause("field") as varchar)) ' +
         'as "approx_distinct_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"approx_distinct_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"utf-8\" aggregation=\"countDistinctApprox\"></hdml-field>",
     );
   });
 
@@ -2127,8 +2332,12 @@ describe("Field functions", () => {
       struct.models(0)?.tables(0)?.fields(18)
     );
     const sql = getTableFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as smallint) as "min_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"min_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"int-16\" aggregation=\"min\"></hdml-field>",
     );
   });
 
@@ -2137,8 +2346,12 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(18);
     const sql = getFrameFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'min(try_cast(clause("field") as smallint)) as "min_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"min_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"int-16\" aggregation=\"min\"></hdml-field>",
     );
   });
 
@@ -2149,8 +2362,12 @@ describe("Field functions", () => {
       struct.models(0)?.tables(0)?.fields(19)
     );
     const sql = getTableFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as smallint) as "max_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"max_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"int-16\" aggregation=\"max\"></hdml-field>",
     );
   });
 
@@ -2159,8 +2376,12 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(19);
     const sql = getFrameFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'max(try_cast(clause("field") as smallint)) as "max_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"max_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"int-16\" aggregation=\"max\"></hdml-field>",
     );
   });
 
@@ -2171,8 +2392,12 @@ describe("Field functions", () => {
       struct.models(0)?.tables(0)?.fields(20)
     );
     const sql = getTableFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as smallint) as "sum_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"sum_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"int-16\" aggregation=\"sum\"></hdml-field>",
     );
   });
 
@@ -2181,8 +2406,12 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(20);
     const sql = getFrameFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'sum(try_cast(clause("field") as smallint)) as "sum_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"sum_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"int-16\" aggregation=\"sum\"></hdml-field>",
     );
   });
 
@@ -2193,8 +2422,12 @@ describe("Field functions", () => {
       struct.models(0)?.tables(0)?.fields(21)
     );
     const sql = getTableFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as smallint) as "avg_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"avg_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"int-16\" aggregation=\"avg\"></hdml-field>",
     );
   });
 
@@ -2203,8 +2436,12 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(21);
     const sql = getFrameFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'avg(try_cast(clause("field") as smallint)) as "avg_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"avg_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"int-16\" aggregation=\"avg\"></hdml-field>",
     );
   });
 
@@ -2215,7 +2452,9 @@ describe("Field functions", () => {
       struct.models(0)?.tables(0)?.fields(22)
     );
     const sql = getTableFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe("");
+    expect(html).toBe("");
   });
 
   it("must stringify `noname_field` frame field", () => {
@@ -2223,7 +2462,9 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(22);
     const sql = getFrameFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe("");
+    expect(html).toBe("");
   });
 
   it("must stringify `time_millisecond_field` table field", () => {
@@ -2233,9 +2474,12 @@ describe("Field functions", () => {
       struct.models(0)?.tables(0)?.fields(23)
     );
     const sql = getTableFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
-      'try_cast(clause("field") as time(3)) ' +
-        'as "time_millisecond_field"',
+      'try_cast(clause("field") as time(3)) as "time_millisecond_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"time_millisecond_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"time\" unit=\"millisecond\"></hdml-field>",
     );
   });
 
@@ -2244,9 +2488,12 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(23);
     const sql = getFrameFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
-      'try_cast(clause("field") as time(3)) ' +
-        'as "time_millisecond_field"',
+      'try_cast(clause("field") as time(3)) as "time_millisecond_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"time_millisecond_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"time\" unit=\"millisecond\"></hdml-field>",
     );
   });
 
@@ -2257,9 +2504,12 @@ describe("Field functions", () => {
       struct.models(0)?.tables(0)?.fields(24)
     );
     const sql = getTableFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
-      'try_cast(clause("field") as time(6)) ' +
-        'as "time_microsecond_field"',
+      'try_cast(clause("field") as time(6)) as "time_microsecond_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"time_microsecond_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"time\" unit=\"microsecond\"></hdml-field>",
     );
   });
 
@@ -2268,9 +2518,12 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(24);
     const sql = getFrameFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
-      'try_cast(clause("field") as time(6)) ' +
-        'as "time_microsecond_field"',
+      'try_cast(clause("field") as time(6)) as "time_microsecond_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"time_microsecond_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"time\" unit=\"microsecond\"></hdml-field>",
     );
   });
 
@@ -2281,9 +2534,12 @@ describe("Field functions", () => {
       struct.models(0)?.tables(0)?.fields(25)
     );
     const sql = getTableFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
-      'try_cast(clause("field") as time(9)) ' +
-        'as "time_nanosecond_field"',
+      'try_cast(clause("field") as time(9)) as "time_nanosecond_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"time_nanosecond_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"time\" unit=\"nanosecond\"></hdml-field>",
     );
   });
 
@@ -2292,9 +2548,13 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(25);
     const sql = getFrameFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as time(9)) ' +
         'as "time_nanosecond_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"time_nanosecond_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"time\" unit=\"nanosecond\"></hdml-field>",
     );
   });
 
@@ -2305,8 +2565,12 @@ describe("Field functions", () => {
       struct.models(0)?.tables(0)?.fields(26)
     );
     const sql = getTableFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as timestamp(3)) at time zone \'UTC\' as "timestamp_millisecond_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"timestamp_millisecond_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"millisecond\" timezone=\"UTC\"></hdml-field>",
     );
   });
 
@@ -2315,8 +2579,12 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(26);
     const sql = getFrameFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as timestamp(3)) at time zone \'UTC\' as "timestamp_millisecond_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"timestamp_millisecond_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"millisecond\" timezone=\"UTC\"></hdml-field>",
     );
   });
 
@@ -2327,8 +2595,12 @@ describe("Field functions", () => {
       struct.models(0)?.tables(0)?.fields(27)
     );
     const sql = getTableFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as timestamp(6)) at time zone \'UTC\' as "timestamp_microsecond_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"timestamp_microsecond_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"microsecond\" timezone=\"UTC\"></hdml-field>",
     );
   });
 
@@ -2337,8 +2609,12 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(27);
     const sql = getFrameFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as timestamp(6)) at time zone \'UTC\' as "timestamp_microsecond_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"timestamp_microsecond_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"microsecond\" timezone=\"UTC\"></hdml-field>",
     );
   });
 
@@ -2349,8 +2625,12 @@ describe("Field functions", () => {
       struct.models(0)?.tables(0)?.fields(28)
     );
     const sql = getTableFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as timestamp(9)) at time zone \'UTC\' as "timestamp_nanosecond_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"timestamp_nanosecond_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"nanosecond\" timezone=\"UTC\"></hdml-field>",
     );
   });
 
@@ -2359,8 +2639,12 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(28);
     const sql = getFrameFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as timestamp(9)) at time zone \'UTC\' as "timestamp_nanosecond_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"timestamp_nanosecond_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"nanosecond\" timezone=\"UTC\"></hdml-field>",
     );
   });
 
@@ -2371,8 +2655,12 @@ describe("Field functions", () => {
       struct.models(0)?.tables(0)?.fields(29)
     );
     const sql = getTableFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT\' as "timestamp_gmt_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"timestamp_gmt_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT\"></hdml-field>",
     );
   });
 
@@ -2381,8 +2669,12 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(29);
     const sql = getFrameFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT\' as "timestamp_gmt_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"timestamp_gmt_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT\"></hdml-field>",
     );
   });
 
@@ -2393,8 +2685,12 @@ describe("Field functions", () => {
       struct.models(0)?.tables(0)?.fields(30)
     );
     const sql = getTableFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-01\' as "timestamp_gmt_m_01_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"timestamp_gmt_m_01_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT-01\"></hdml-field>",
     );
   });
 
@@ -2403,8 +2699,12 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(30);
     const sql = getFrameFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-01\' as "timestamp_gmt_m_01_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"timestamp_gmt_m_01_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT-01\"></hdml-field>",
     );
   });
 
@@ -2415,8 +2715,12 @@ describe("Field functions", () => {
       struct.models(0)?.tables(0)?.fields(31)
     );
     const sql = getTableFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-02\' as "timestamp_gmt_m_02_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"timestamp_gmt_m_02_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT-02\"></hdml-field>",
     );
   });
 
@@ -2425,8 +2729,12 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(31);
     const sql = getFrameFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-02\' as "timestamp_gmt_m_02_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"timestamp_gmt_m_02_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT-02\"></hdml-field>",
     );
   });
 
@@ -2437,8 +2745,12 @@ describe("Field functions", () => {
       struct.models(0)?.tables(0)?.fields(32)
     );
     const sql = getTableFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-03\' as "timestamp_gmt_m_03_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"timestamp_gmt_m_03_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT-03\"></hdml-field>",
     );
   });
 
@@ -2447,8 +2759,12 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(32);
     const sql = getFrameFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-03\' as "timestamp_gmt_m_03_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"timestamp_gmt_m_03_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT-03\"></hdml-field>",
     );
   });
 
@@ -2459,8 +2775,12 @@ describe("Field functions", () => {
       struct.models(0)?.tables(0)?.fields(33)
     );
     const sql = getTableFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-04\' as "timestamp_gmt_m_04_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"timestamp_gmt_m_04_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT-04\"></hdml-field>",
     );
   });
 
@@ -2469,8 +2789,12 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(33);
     const sql = getFrameFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-04\' as "timestamp_gmt_m_04_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"timestamp_gmt_m_04_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT-04\"></hdml-field>",
     );
   });
 
@@ -2481,8 +2805,12 @@ describe("Field functions", () => {
       struct.models(0)?.tables(0)?.fields(34)
     );
     const sql = getTableFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-05\' as "timestamp_gmt_m_05_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"timestamp_gmt_m_05_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT-05\"></hdml-field>",
     );
   });
 
@@ -2491,8 +2819,12 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(34);
     const sql = getFrameFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-05\' as "timestamp_gmt_m_05_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"timestamp_gmt_m_05_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT-05\"></hdml-field>",
     );
   });
 
@@ -2503,8 +2835,12 @@ describe("Field functions", () => {
       struct.models(0)?.tables(0)?.fields(35)
     );
     const sql = getTableFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-06\' as "timestamp_gmt_m_06_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"timestamp_gmt_m_06_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT-06\"></hdml-field>",
     );
   });
 
@@ -2513,8 +2849,12 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(35);
     const sql = getFrameFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-06\' as "timestamp_gmt_m_06_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"timestamp_gmt_m_06_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT-06\"></hdml-field>",
     );
   });
 
@@ -2525,8 +2865,12 @@ describe("Field functions", () => {
       struct.models(0)?.tables(0)?.fields(36)
     );
     const sql = getTableFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-07\' as "timestamp_gmt_m_07_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"timestamp_gmt_m_07_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT-07\"></hdml-field>",
     );
   });
 
@@ -2535,8 +2879,12 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(36);
     const sql = getFrameFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-07\' as "timestamp_gmt_m_07_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"timestamp_gmt_m_07_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT-07\"></hdml-field>",
     );
   });
 
@@ -2547,8 +2895,12 @@ describe("Field functions", () => {
       struct.models(0)?.tables(0)?.fields(37)
     );
     const sql = getTableFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-08\' as "timestamp_gmt_m_08_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"timestamp_gmt_m_08_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT-08\"></hdml-field>",
     );
   });
 
@@ -2557,8 +2909,12 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(37);
     const sql = getFrameFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-08\' as "timestamp_gmt_m_08_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"timestamp_gmt_m_08_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT-08\"></hdml-field>",
     );
   });
 
@@ -2569,8 +2925,12 @@ describe("Field functions", () => {
       struct.models(0)?.tables(0)?.fields(38)
     );
     const sql = getTableFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-09\' as "timestamp_gmt_m_09_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"timestamp_gmt_m_09_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT-09\"></hdml-field>",
     );
   });
 
@@ -2579,8 +2939,12 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(38);
     const sql = getFrameFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-09\' as "timestamp_gmt_m_09_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"timestamp_gmt_m_09_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT-09\"></hdml-field>",
     );
   });
 
@@ -2591,8 +2955,12 @@ describe("Field functions", () => {
       struct.models(0)?.tables(0)?.fields(39)
     );
     const sql = getTableFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-10\' as "timestamp_gmt_m_10_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"timestamp_gmt_m_10_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT-10\"></hdml-field>",
     );
   });
 
@@ -2601,8 +2969,12 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(39);
     const sql = getFrameFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-10\' as "timestamp_gmt_m_10_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"timestamp_gmt_m_10_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT-10\"></hdml-field>",
     );
   });
 
@@ -2613,8 +2985,12 @@ describe("Field functions", () => {
       struct.models(0)?.tables(0)?.fields(40)
     );
     const sql = getTableFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-11\' as "timestamp_gmt_m_11_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"timestamp_gmt_m_11_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT-11\"></hdml-field>",
     );
   });
 
@@ -2623,8 +2999,12 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(40);
     const sql = getFrameFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-11\' as "timestamp_gmt_m_11_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"timestamp_gmt_m_11_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT-11\"></hdml-field>",
     );
   });
 
@@ -2635,8 +3015,12 @@ describe("Field functions", () => {
       struct.models(0)?.tables(0)?.fields(41)
     );
     const sql = getTableFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-12\' as "timestamp_gmt_m_12_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"timestamp_gmt_m_12_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT-12\"></hdml-field>",
     );
   });
 
@@ -2645,8 +3029,12 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(41);
     const sql = getFrameFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-12\' as "timestamp_gmt_m_12_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"timestamp_gmt_m_12_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT-12\"></hdml-field>",
     );
   });
 
@@ -2657,8 +3045,12 @@ describe("Field functions", () => {
       struct.models(0)?.tables(0)?.fields(42)
     );
     const sql = getTableFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+01\' as "timestamp_gmt_p_01_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"timestamp_gmt_p_01_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT+01\"></hdml-field>",
     );
   });
 
@@ -2667,8 +3059,12 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(42);
     const sql = getFrameFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+01\' as "timestamp_gmt_p_01_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"timestamp_gmt_p_01_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT+01\"></hdml-field>",
     );
   });
 
@@ -2679,8 +3075,12 @@ describe("Field functions", () => {
       struct.models(0)?.tables(0)?.fields(43)
     );
     const sql = getTableFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+02\' as "timestamp_gmt_p_02_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"timestamp_gmt_p_02_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT+02\"></hdml-field>",
     );
   });
 
@@ -2689,8 +3089,12 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(43);
     const sql = getFrameFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+02\' as "timestamp_gmt_p_02_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"timestamp_gmt_p_02_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT+02\"></hdml-field>",
     );
   });
 
@@ -2701,8 +3105,12 @@ describe("Field functions", () => {
       struct.models(0)?.tables(0)?.fields(44)
     );
     const sql = getTableFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+03\' as "timestamp_gmt_p_03_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"timestamp_gmt_p_03_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT+03\"></hdml-field>",
     );
   });
 
@@ -2711,8 +3119,12 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(44);
     const sql = getFrameFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+03\' as "timestamp_gmt_p_03_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"timestamp_gmt_p_03_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT+03\"></hdml-field>",
     );
   });
 
@@ -2723,8 +3135,12 @@ describe("Field functions", () => {
       struct.models(0)?.tables(0)?.fields(45)
     );
     const sql = getTableFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+04\' as "timestamp_gmt_p_04_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"timestamp_gmt_p_04_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT+04\"></hdml-field>",
     );
   });
 
@@ -2733,8 +3149,12 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(45);
     const sql = getFrameFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+04\' as "timestamp_gmt_p_04_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"timestamp_gmt_p_04_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT+04\"></hdml-field>",
     );
   });
 
@@ -2745,8 +3165,12 @@ describe("Field functions", () => {
       struct.models(0)?.tables(0)?.fields(46)
     );
     const sql = getTableFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+05\' as "timestamp_gmt_p_05_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"timestamp_gmt_p_05_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT+05\"></hdml-field>",
     );
   });
 
@@ -2755,8 +3179,12 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(46);
     const sql = getFrameFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+05\' as "timestamp_gmt_p_05_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"timestamp_gmt_p_05_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT+05\"></hdml-field>",
     );
   });
 
@@ -2767,8 +3195,12 @@ describe("Field functions", () => {
       struct.models(0)?.tables(0)?.fields(47)
     );
     const sql = getTableFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+06\' as "timestamp_gmt_p_06_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"timestamp_gmt_p_06_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT+06\"></hdml-field>",
     );
   });
 
@@ -2777,8 +3209,12 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(47);
     const sql = getFrameFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+06\' as "timestamp_gmt_p_06_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"timestamp_gmt_p_06_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT+06\"></hdml-field>",
     );
   });
 
@@ -2789,8 +3225,12 @@ describe("Field functions", () => {
       struct.models(0)?.tables(0)?.fields(48)
     );
     const sql = getTableFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+07\' as "timestamp_gmt_p_07_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"timestamp_gmt_p_07_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT+07\"></hdml-field>",
     );
   });
 
@@ -2799,8 +3239,12 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(48);
     const sql = getFrameFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+07\' as "timestamp_gmt_p_07_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"timestamp_gmt_p_07_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT+07\"></hdml-field>",
     );
   });
 
@@ -2811,8 +3255,12 @@ describe("Field functions", () => {
       struct.models(0)?.tables(0)?.fields(49)
     );
     const sql = getTableFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+08\' as "timestamp_gmt_p_08_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"timestamp_gmt_p_08_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT+08\"></hdml-field>",
     );
   });
 
@@ -2821,8 +3269,12 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(49);
     const sql = getFrameFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+08\' as "timestamp_gmt_p_08_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"timestamp_gmt_p_08_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT+08\"></hdml-field>",
     );
   });
 
@@ -2833,8 +3285,12 @@ describe("Field functions", () => {
       struct.models(0)?.tables(0)?.fields(50)
     );
     const sql = getTableFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+09\' as "timestamp_gmt_p_09_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"timestamp_gmt_p_09_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT+09\"></hdml-field>",
     );
   });
 
@@ -2843,8 +3299,12 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(50);
     const sql = getFrameFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+09\' as "timestamp_gmt_p_09_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"timestamp_gmt_p_09_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT+09\"></hdml-field>",
     );
   });
 
@@ -2855,8 +3315,12 @@ describe("Field functions", () => {
       struct.models(0)?.tables(0)?.fields(51)
     );
     const sql = getTableFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+10\' as "timestamp_gmt_p_10_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"timestamp_gmt_p_10_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT+10\"></hdml-field>",
     );
   });
 
@@ -2865,8 +3329,12 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(51);
     const sql = getFrameFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+10\' as "timestamp_gmt_p_10_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"timestamp_gmt_p_10_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT+10\"></hdml-field>",
     );
   });
 
@@ -2877,8 +3345,12 @@ describe("Field functions", () => {
       struct.models(0)?.tables(0)?.fields(52)
     );
     const sql = getTableFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+11\' as "timestamp_gmt_p_11_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"timestamp_gmt_p_11_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT+11\"></hdml-field>",
     );
   });
 
@@ -2887,8 +3359,12 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(52);
     const sql = getFrameFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+11\' as "timestamp_gmt_p_11_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"timestamp_gmt_p_11_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT+11\"></hdml-field>",
     );
   });
 
@@ -2899,8 +3375,12 @@ describe("Field functions", () => {
       struct.models(0)?.tables(0)?.fields(53)
     );
     const sql = getTableFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+12\' as "timestamp_gmt_p_12_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"timestamp_gmt_p_12_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT+12\"></hdml-field>",
     );
   });
 
@@ -2909,8 +3389,12 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(53);
     const sql = getFrameFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+12\' as "timestamp_gmt_p_12_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"timestamp_gmt_p_12_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT+12\"></hdml-field>",
     );
   });
 
@@ -2921,8 +3405,12 @@ describe("Field functions", () => {
       struct.models(0)?.tables(0)?.fields(54)
     );
     const sql = getTableFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+13\' as "timestamp_gmt_p_13_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"timestamp_gmt_p_13_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT+13\"></hdml-field>",
     );
   });
 
@@ -2931,8 +3419,12 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(54);
     const sql = getFrameFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+13\' as "timestamp_gmt_p_13_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"timestamp_gmt_p_13_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT+13\"></hdml-field>",
     );
   });
 
@@ -2943,8 +3435,12 @@ describe("Field functions", () => {
       struct.models(0)?.tables(0)?.fields(55)
     );
     const sql = getTableFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+14\' as "timestamp_gmt_p_14_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"timestamp_gmt_p_14_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT+14\"></hdml-field>",
     );
   });
 
@@ -2953,8 +3449,56 @@ describe("Field functions", () => {
     const struct = deserialize(bytes);
     const field = <FieldStruct>struct.frames(0)?.fields(55);
     const sql = getFrameFieldSQL(field);
+    const html = getFieldHTML(field);
     expect(sql).toBe(
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+14\' as "timestamp_gmt_p_14_field"',
+    );
+    expect(html).toBe(
+      "<hdml-field name=\"timestamp_gmt_p_14_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT+14\"></hdml-field>",
+    );
+  });
+
+  it("must stringify `asc_field` table field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>(
+      struct.models(0)?.tables(0)?.fields(56)
+    );
+    const html = getFieldHTML(field);
+    expect(html).toBe(
+      "<hdml-field name=\"asc_field\" origin=\"field\" type=\"int-8\" order=\"asc\"></hdml-field>",
+    );
+  });
+
+  it("must stringify `asc_field` frame field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>struct.frames(0)?.fields(56);
+    const html = getFieldHTML(field);
+    expect(html).toBe(
+      "<hdml-field name=\"asc_field\" origin=\"field\" type=\"int-8\" order=\"asc\"></hdml-field>",
+    );
+  });
+
+  it("must stringify `desc_field` table field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>(
+      struct.models(0)?.tables(0)?.fields(57)
+    );
+    const html = getFieldHTML(field);
+    expect(html).toBe(
+      "<hdml-field name=\"desc_field\" origin=\"field\" type=\"int-8\" order=\"desc\"></hdml-field>",
+    );
+  });
+
+  it("must stringify `desc_field` frame field", () => {
+    const bytes = serialize(hdom);
+    const struct = deserialize(bytes);
+    const field = <FieldStruct>struct.frames(0)?.fields(57);
+    const html = getFieldHTML(field);
+    expect(html).toBe(
+      "<hdml-field name=\"desc_field\" origin=\"field\" type=\"int-8\" order=\"desc\"></hdml-field>",
     );
   });
 });
