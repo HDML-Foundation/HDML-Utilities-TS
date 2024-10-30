@@ -1,11 +1,10 @@
-/* eslint-disable prettier/prettier */
+/* eslint-disable max-len */
+
 /**
  * @author Artem Lytvynov
  * @copyright Artem Lytvynov
  * @license Apache-2.0
  */
-
-/* eslint-disable max-len */
 
 import {
   FieldStruct,
@@ -1841,7 +1840,7 @@ describe("Field functions", () => {
     const html = getFieldHTML(field);
     expect(sql).toBe('"origin" as "origin_field"');
     expect(html).toBe(
-      "<hdml-field name=\"origin_field\" origin=\"origin\"></hdml-field>",
+      '<hdml-field name="origin_field" origin="origin"></hdml-field>',
     );
   });
 
@@ -1853,7 +1852,7 @@ describe("Field functions", () => {
     const html = getFieldHTML(field);
     expect(sql).toBe('"origin" as "origin_field"');
     expect(html).toBe(
-      "<hdml-field name=\"origin_field\" origin=\"origin\"></hdml-field>",
+      '<hdml-field name="origin_field" origin="origin"></hdml-field>',
     );
   });
 
@@ -1865,7 +1864,7 @@ describe("Field functions", () => {
     const html = getFieldHTML(field);
     expect(sql).toBe('clause("field") as "clause_field"');
     expect(html).toBe(
-      "<hdml-field name=\"clause_field\" origin=\"origin\" clause=\"clause(`field`)\"></hdml-field>",
+      '<hdml-field name="clause_field" origin="origin" clause="clause(`field`)"></hdml-field>',
     );
   });
 
@@ -1877,7 +1876,7 @@ describe("Field functions", () => {
     const html = getFieldHTML(field);
     expect(sql).toBe('clause("field") as "clause_field"');
     expect(html).toBe(
-      "<hdml-field name=\"clause_field\" origin=\"origin\" clause=\"clause(`field`)\"></hdml-field>",
+      '<hdml-field name="clause_field" origin="origin" clause="clause(`field`)"></hdml-field>',
     );
   });
 
@@ -1891,7 +1890,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as tinyint) as "int8_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"int8_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"int-8\"></hdml-field>",
+      '<hdml-field name="int8_field" origin="origin" clause="clause(`field`)" type="int-8"></hdml-field>',
     );
   });
 
@@ -1905,7 +1904,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as tinyint) as "int8_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"int8_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"int-8\"></hdml-field>",
+      '<hdml-field name="int8_field" origin="origin" clause="clause(`field`)" type="int-8"></hdml-field>',
     );
   });
 
@@ -1919,7 +1918,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as smallint) as "int16_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"int16_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"int-16\"></hdml-field>",
+      '<hdml-field name="int16_field" origin="origin" clause="clause(`field`)" type="int-16"></hdml-field>',
     );
   });
 
@@ -1933,7 +1932,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as smallint) as "int16_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"int16_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"int-16\"></hdml-field>",
+      '<hdml-field name="int16_field" origin="origin" clause="clause(`field`)" type="int-16"></hdml-field>',
     );
   });
 
@@ -1947,7 +1946,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as integer) as "int32_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"int32_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"int-32\"></hdml-field>",
+      '<hdml-field name="int32_field" origin="origin" clause="clause(`field`)" type="int-32"></hdml-field>',
     );
   });
 
@@ -1961,7 +1960,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as integer) as "int32_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"int32_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"int-32\"></hdml-field>",
+      '<hdml-field name="int32_field" origin="origin" clause="clause(`field`)" type="int-32"></hdml-field>',
     );
   });
 
@@ -1975,7 +1974,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as bigint) as "int64_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"int64_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"int-64\"></hdml-field>",
+      '<hdml-field name="int64_field" origin="origin" clause="clause(`field`)" type="int-64"></hdml-field>',
     );
   });
 
@@ -1989,7 +1988,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as bigint) as "int64_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"int64_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"int-64\"></hdml-field>",
+      '<hdml-field name="int64_field" origin="origin" clause="clause(`field`)" type="int-64"></hdml-field>',
     );
   });
 
@@ -2003,7 +2002,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as real) as "float32_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"float32_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"float-32\"></hdml-field>",
+      '<hdml-field name="float32_field" origin="origin" clause="clause(`field`)" type="float-32"></hdml-field>',
     );
   });
 
@@ -2017,7 +2016,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as real) as "float32_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"float32_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"float-32\"></hdml-field>",
+      '<hdml-field name="float32_field" origin="origin" clause="clause(`field`)" type="float-32"></hdml-field>',
     );
   });
 
@@ -2031,7 +2030,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as double) as "float64_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"float64_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"float-64\"></hdml-field>",
+      '<hdml-field name="float64_field" origin="origin" clause="clause(`field`)" type="float-64"></hdml-field>',
     );
   });
 
@@ -2045,7 +2044,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as double) as "float64_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"float64_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"float-64\"></hdml-field>",
+      '<hdml-field name="float64_field" origin="origin" clause="clause(`field`)" type="float-64"></hdml-field>',
     );
   });
 
@@ -2060,7 +2059,7 @@ describe("Field functions", () => {
         ' as "decimal_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"decimal_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"decimal\" scale=\"0\" precision=\"18\"></hdml-field>",
+      '<hdml-field name="decimal_field" origin="origin" clause="clause(`field`)" type="decimal" scale="0" precision="18"></hdml-field>',
     );
   });
 
@@ -2075,7 +2074,7 @@ describe("Field functions", () => {
         ' as "decimal_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"decimal_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"decimal\" scale=\"0\" precision=\"18\"></hdml-field>",
+      '<hdml-field name="decimal_field" origin="origin" clause="clause(`field`)" type="decimal" scale="0" precision="18"></hdml-field>',
     );
   });
 
@@ -2091,7 +2090,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as date) as "date_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"date_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"date\"></hdml-field>",
+      '<hdml-field name="date_field" origin="origin" clause="clause(`field`)" type="date"></hdml-field>',
     );
   });
 
@@ -2105,7 +2104,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as date) as "date_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"date_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"date\"></hdml-field>",
+      '<hdml-field name="date_field" origin="origin" clause="clause(`field`)" type="date"></hdml-field>',
     );
   });
 
@@ -2121,7 +2120,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as time(0)) as "time_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"time_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"time\" unit=\"second\"></hdml-field>",
+      '<hdml-field name="time_field" origin="origin" clause="clause(`field`)" type="time" unit="second"></hdml-field>',
     );
   });
 
@@ -2135,7 +2134,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as time(0)) as "time_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"time_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"time\" unit=\"second\"></hdml-field>",
+      '<hdml-field name="time_field" origin="origin" clause="clause(`field`)" type="time" unit="second"></hdml-field>',
     );
   });
 
@@ -2152,7 +2151,7 @@ describe("Field functions", () => {
         "'UTC' as \"timestamp_field\"",
     );
     expect(html).toBe(
-      "<hdml-field name=\"timestamp_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"UTC\"></hdml-field>",
+      '<hdml-field name="timestamp_field" origin="origin" clause="clause(`field`)" type="timestamp" unit="second" timezone="UTC"></hdml-field>',
     );
   });
 
@@ -2167,7 +2166,7 @@ describe("Field functions", () => {
         "'UTC' as \"timestamp_field\"",
     );
     expect(html).toBe(
-      "<hdml-field name=\"timestamp_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"UTC\"></hdml-field>",
+      '<hdml-field name="timestamp_field" origin="origin" clause="clause(`field`)" type="timestamp" unit="second" timezone="UTC"></hdml-field>',
     );
   });
 
@@ -2183,7 +2182,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as varbinary) as "binary_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"binary_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"binary\"></hdml-field>",
+      '<hdml-field name="binary_field" origin="origin" clause="clause(`field`)" type="binary"></hdml-field>',
     );
   });
 
@@ -2197,7 +2196,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as varbinary) as "binary_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"binary_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"binary\"></hdml-field>",
+      '<hdml-field name="binary_field" origin="origin" clause="clause(`field`)" type="binary"></hdml-field>',
     );
   });
 
@@ -2213,7 +2212,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as varchar) as "utf8_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"utf8_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"utf-8\"></hdml-field>",
+      '<hdml-field name="utf8_field" origin="origin" clause="clause(`field`)" type="utf-8"></hdml-field>',
     );
   });
 
@@ -2227,7 +2226,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as varchar) as "utf8_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"utf8_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"utf-8\"></hdml-field>",
+      '<hdml-field name="utf8_field" origin="origin" clause="clause(`field`)" type="utf-8"></hdml-field>',
     );
   });
 
@@ -2243,7 +2242,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as varchar) as "count_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"count_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"utf-8\" aggregation=\"count\"></hdml-field>",
+      '<hdml-field name="count_field" origin="origin" clause="clause(`field`)" type="utf-8" aggregation="count"></hdml-field>',
     );
   });
 
@@ -2257,7 +2256,7 @@ describe("Field functions", () => {
       'count(try_cast(clause("field") as varchar)) as "count_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"count_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"utf-8\" aggregation=\"count\"></hdml-field>",
+      '<hdml-field name="count_field" origin="origin" clause="clause(`field`)" type="utf-8" aggregation="count"></hdml-field>',
     );
   });
 
@@ -2274,7 +2273,7 @@ describe("Field functions", () => {
         'as "count_distinct_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"count_distinct_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"utf-8\" aggregation=\"countDistinct\"></hdml-field>",
+      '<hdml-field name="count_distinct_field" origin="origin" clause="clause(`field`)" type="utf-8" aggregation="countDistinct"></hdml-field>',
     );
   });
 
@@ -2289,7 +2288,7 @@ describe("Field functions", () => {
         'as "count_distinct_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"count_distinct_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"utf-8\" aggregation=\"countDistinct\"></hdml-field>",
+      '<hdml-field name="count_distinct_field" origin="origin" clause="clause(`field`)" type="utf-8" aggregation="countDistinct"></hdml-field>',
     );
   });
 
@@ -2306,7 +2305,7 @@ describe("Field functions", () => {
         'as "approx_distinct_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"approx_distinct_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"utf-8\" aggregation=\"countDistinctApprox\"></hdml-field>",
+      '<hdml-field name="approx_distinct_field" origin="origin" clause="clause(`field`)" type="utf-8" aggregation="countDistinctApprox"></hdml-field>',
     );
   });
 
@@ -2321,7 +2320,7 @@ describe("Field functions", () => {
         'as "approx_distinct_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"approx_distinct_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"utf-8\" aggregation=\"countDistinctApprox\"></hdml-field>",
+      '<hdml-field name="approx_distinct_field" origin="origin" clause="clause(`field`)" type="utf-8" aggregation="countDistinctApprox"></hdml-field>',
     );
   });
 
@@ -2337,7 +2336,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as smallint) as "min_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"min_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"int-16\" aggregation=\"min\"></hdml-field>",
+      '<hdml-field name="min_field" origin="origin" clause="clause(`field`)" type="int-16" aggregation="min"></hdml-field>',
     );
   });
 
@@ -2351,7 +2350,7 @@ describe("Field functions", () => {
       'min(try_cast(clause("field") as smallint)) as "min_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"min_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"int-16\" aggregation=\"min\"></hdml-field>",
+      '<hdml-field name="min_field" origin="origin" clause="clause(`field`)" type="int-16" aggregation="min"></hdml-field>',
     );
   });
 
@@ -2367,7 +2366,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as smallint) as "max_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"max_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"int-16\" aggregation=\"max\"></hdml-field>",
+      '<hdml-field name="max_field" origin="origin" clause="clause(`field`)" type="int-16" aggregation="max"></hdml-field>',
     );
   });
 
@@ -2381,7 +2380,7 @@ describe("Field functions", () => {
       'max(try_cast(clause("field") as smallint)) as "max_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"max_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"int-16\" aggregation=\"max\"></hdml-field>",
+      '<hdml-field name="max_field" origin="origin" clause="clause(`field`)" type="int-16" aggregation="max"></hdml-field>',
     );
   });
 
@@ -2397,7 +2396,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as smallint) as "sum_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"sum_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"int-16\" aggregation=\"sum\"></hdml-field>",
+      '<hdml-field name="sum_field" origin="origin" clause="clause(`field`)" type="int-16" aggregation="sum"></hdml-field>',
     );
   });
 
@@ -2411,7 +2410,7 @@ describe("Field functions", () => {
       'sum(try_cast(clause("field") as smallint)) as "sum_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"sum_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"int-16\" aggregation=\"sum\"></hdml-field>",
+      '<hdml-field name="sum_field" origin="origin" clause="clause(`field`)" type="int-16" aggregation="sum"></hdml-field>',
     );
   });
 
@@ -2427,7 +2426,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as smallint) as "avg_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"avg_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"int-16\" aggregation=\"avg\"></hdml-field>",
+      '<hdml-field name="avg_field" origin="origin" clause="clause(`field`)" type="int-16" aggregation="avg"></hdml-field>',
     );
   });
 
@@ -2441,7 +2440,7 @@ describe("Field functions", () => {
       'avg(try_cast(clause("field") as smallint)) as "avg_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"avg_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"int-16\" aggregation=\"avg\"></hdml-field>",
+      '<hdml-field name="avg_field" origin="origin" clause="clause(`field`)" type="int-16" aggregation="avg"></hdml-field>',
     );
   });
 
@@ -2479,7 +2478,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as time(3)) as "time_millisecond_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"time_millisecond_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"time\" unit=\"millisecond\"></hdml-field>",
+      '<hdml-field name="time_millisecond_field" origin="origin" clause="clause(`field`)" type="time" unit="millisecond"></hdml-field>',
     );
   });
 
@@ -2493,7 +2492,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as time(3)) as "time_millisecond_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"time_millisecond_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"time\" unit=\"millisecond\"></hdml-field>",
+      '<hdml-field name="time_millisecond_field" origin="origin" clause="clause(`field`)" type="time" unit="millisecond"></hdml-field>',
     );
   });
 
@@ -2509,7 +2508,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as time(6)) as "time_microsecond_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"time_microsecond_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"time\" unit=\"microsecond\"></hdml-field>",
+      '<hdml-field name="time_microsecond_field" origin="origin" clause="clause(`field`)" type="time" unit="microsecond"></hdml-field>',
     );
   });
 
@@ -2523,7 +2522,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as time(6)) as "time_microsecond_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"time_microsecond_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"time\" unit=\"microsecond\"></hdml-field>",
+      '<hdml-field name="time_microsecond_field" origin="origin" clause="clause(`field`)" type="time" unit="microsecond"></hdml-field>',
     );
   });
 
@@ -2539,7 +2538,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as time(9)) as "time_nanosecond_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"time_nanosecond_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"time\" unit=\"nanosecond\"></hdml-field>",
+      '<hdml-field name="time_nanosecond_field" origin="origin" clause="clause(`field`)" type="time" unit="nanosecond"></hdml-field>',
     );
   });
 
@@ -2554,7 +2553,7 @@ describe("Field functions", () => {
         'as "time_nanosecond_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"time_nanosecond_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"time\" unit=\"nanosecond\"></hdml-field>",
+      '<hdml-field name="time_nanosecond_field" origin="origin" clause="clause(`field`)" type="time" unit="nanosecond"></hdml-field>',
     );
   });
 
@@ -2570,7 +2569,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as timestamp(3)) at time zone \'UTC\' as "timestamp_millisecond_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"timestamp_millisecond_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"millisecond\" timezone=\"UTC\"></hdml-field>",
+      '<hdml-field name="timestamp_millisecond_field" origin="origin" clause="clause(`field`)" type="timestamp" unit="millisecond" timezone="UTC"></hdml-field>',
     );
   });
 
@@ -2584,7 +2583,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as timestamp(3)) at time zone \'UTC\' as "timestamp_millisecond_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"timestamp_millisecond_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"millisecond\" timezone=\"UTC\"></hdml-field>",
+      '<hdml-field name="timestamp_millisecond_field" origin="origin" clause="clause(`field`)" type="timestamp" unit="millisecond" timezone="UTC"></hdml-field>',
     );
   });
 
@@ -2600,7 +2599,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as timestamp(6)) at time zone \'UTC\' as "timestamp_microsecond_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"timestamp_microsecond_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"microsecond\" timezone=\"UTC\"></hdml-field>",
+      '<hdml-field name="timestamp_microsecond_field" origin="origin" clause="clause(`field`)" type="timestamp" unit="microsecond" timezone="UTC"></hdml-field>',
     );
   });
 
@@ -2614,7 +2613,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as timestamp(6)) at time zone \'UTC\' as "timestamp_microsecond_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"timestamp_microsecond_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"microsecond\" timezone=\"UTC\"></hdml-field>",
+      '<hdml-field name="timestamp_microsecond_field" origin="origin" clause="clause(`field`)" type="timestamp" unit="microsecond" timezone="UTC"></hdml-field>',
     );
   });
 
@@ -2630,7 +2629,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as timestamp(9)) at time zone \'UTC\' as "timestamp_nanosecond_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"timestamp_nanosecond_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"nanosecond\" timezone=\"UTC\"></hdml-field>",
+      '<hdml-field name="timestamp_nanosecond_field" origin="origin" clause="clause(`field`)" type="timestamp" unit="nanosecond" timezone="UTC"></hdml-field>',
     );
   });
 
@@ -2644,7 +2643,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as timestamp(9)) at time zone \'UTC\' as "timestamp_nanosecond_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"timestamp_nanosecond_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"nanosecond\" timezone=\"UTC\"></hdml-field>",
+      '<hdml-field name="timestamp_nanosecond_field" origin="origin" clause="clause(`field`)" type="timestamp" unit="nanosecond" timezone="UTC"></hdml-field>',
     );
   });
 
@@ -2660,7 +2659,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT\' as "timestamp_gmt_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"timestamp_gmt_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT\"></hdml-field>",
+      '<hdml-field name="timestamp_gmt_field" origin="origin" clause="clause(`field`)" type="timestamp" unit="second" timezone="GMT"></hdml-field>',
     );
   });
 
@@ -2674,7 +2673,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT\' as "timestamp_gmt_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"timestamp_gmt_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT\"></hdml-field>",
+      '<hdml-field name="timestamp_gmt_field" origin="origin" clause="clause(`field`)" type="timestamp" unit="second" timezone="GMT"></hdml-field>',
     );
   });
 
@@ -2690,7 +2689,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-01\' as "timestamp_gmt_m_01_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"timestamp_gmt_m_01_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT-01\"></hdml-field>",
+      '<hdml-field name="timestamp_gmt_m_01_field" origin="origin" clause="clause(`field`)" type="timestamp" unit="second" timezone="GMT-01"></hdml-field>',
     );
   });
 
@@ -2704,7 +2703,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-01\' as "timestamp_gmt_m_01_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"timestamp_gmt_m_01_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT-01\"></hdml-field>",
+      '<hdml-field name="timestamp_gmt_m_01_field" origin="origin" clause="clause(`field`)" type="timestamp" unit="second" timezone="GMT-01"></hdml-field>',
     );
   });
 
@@ -2720,7 +2719,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-02\' as "timestamp_gmt_m_02_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"timestamp_gmt_m_02_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT-02\"></hdml-field>",
+      '<hdml-field name="timestamp_gmt_m_02_field" origin="origin" clause="clause(`field`)" type="timestamp" unit="second" timezone="GMT-02"></hdml-field>',
     );
   });
 
@@ -2734,7 +2733,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-02\' as "timestamp_gmt_m_02_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"timestamp_gmt_m_02_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT-02\"></hdml-field>",
+      '<hdml-field name="timestamp_gmt_m_02_field" origin="origin" clause="clause(`field`)" type="timestamp" unit="second" timezone="GMT-02"></hdml-field>',
     );
   });
 
@@ -2750,7 +2749,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-03\' as "timestamp_gmt_m_03_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"timestamp_gmt_m_03_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT-03\"></hdml-field>",
+      '<hdml-field name="timestamp_gmt_m_03_field" origin="origin" clause="clause(`field`)" type="timestamp" unit="second" timezone="GMT-03"></hdml-field>',
     );
   });
 
@@ -2764,7 +2763,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-03\' as "timestamp_gmt_m_03_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"timestamp_gmt_m_03_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT-03\"></hdml-field>",
+      '<hdml-field name="timestamp_gmt_m_03_field" origin="origin" clause="clause(`field`)" type="timestamp" unit="second" timezone="GMT-03"></hdml-field>',
     );
   });
 
@@ -2780,7 +2779,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-04\' as "timestamp_gmt_m_04_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"timestamp_gmt_m_04_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT-04\"></hdml-field>",
+      '<hdml-field name="timestamp_gmt_m_04_field" origin="origin" clause="clause(`field`)" type="timestamp" unit="second" timezone="GMT-04"></hdml-field>',
     );
   });
 
@@ -2794,7 +2793,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-04\' as "timestamp_gmt_m_04_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"timestamp_gmt_m_04_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT-04\"></hdml-field>",
+      '<hdml-field name="timestamp_gmt_m_04_field" origin="origin" clause="clause(`field`)" type="timestamp" unit="second" timezone="GMT-04"></hdml-field>',
     );
   });
 
@@ -2810,7 +2809,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-05\' as "timestamp_gmt_m_05_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"timestamp_gmt_m_05_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT-05\"></hdml-field>",
+      '<hdml-field name="timestamp_gmt_m_05_field" origin="origin" clause="clause(`field`)" type="timestamp" unit="second" timezone="GMT-05"></hdml-field>',
     );
   });
 
@@ -2824,7 +2823,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-05\' as "timestamp_gmt_m_05_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"timestamp_gmt_m_05_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT-05\"></hdml-field>",
+      '<hdml-field name="timestamp_gmt_m_05_field" origin="origin" clause="clause(`field`)" type="timestamp" unit="second" timezone="GMT-05"></hdml-field>',
     );
   });
 
@@ -2840,7 +2839,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-06\' as "timestamp_gmt_m_06_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"timestamp_gmt_m_06_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT-06\"></hdml-field>",
+      '<hdml-field name="timestamp_gmt_m_06_field" origin="origin" clause="clause(`field`)" type="timestamp" unit="second" timezone="GMT-06"></hdml-field>',
     );
   });
 
@@ -2854,7 +2853,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-06\' as "timestamp_gmt_m_06_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"timestamp_gmt_m_06_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT-06\"></hdml-field>",
+      '<hdml-field name="timestamp_gmt_m_06_field" origin="origin" clause="clause(`field`)" type="timestamp" unit="second" timezone="GMT-06"></hdml-field>',
     );
   });
 
@@ -2870,7 +2869,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-07\' as "timestamp_gmt_m_07_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"timestamp_gmt_m_07_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT-07\"></hdml-field>",
+      '<hdml-field name="timestamp_gmt_m_07_field" origin="origin" clause="clause(`field`)" type="timestamp" unit="second" timezone="GMT-07"></hdml-field>',
     );
   });
 
@@ -2884,7 +2883,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-07\' as "timestamp_gmt_m_07_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"timestamp_gmt_m_07_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT-07\"></hdml-field>",
+      '<hdml-field name="timestamp_gmt_m_07_field" origin="origin" clause="clause(`field`)" type="timestamp" unit="second" timezone="GMT-07"></hdml-field>',
     );
   });
 
@@ -2900,7 +2899,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-08\' as "timestamp_gmt_m_08_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"timestamp_gmt_m_08_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT-08\"></hdml-field>",
+      '<hdml-field name="timestamp_gmt_m_08_field" origin="origin" clause="clause(`field`)" type="timestamp" unit="second" timezone="GMT-08"></hdml-field>',
     );
   });
 
@@ -2914,7 +2913,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-08\' as "timestamp_gmt_m_08_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"timestamp_gmt_m_08_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT-08\"></hdml-field>",
+      '<hdml-field name="timestamp_gmt_m_08_field" origin="origin" clause="clause(`field`)" type="timestamp" unit="second" timezone="GMT-08"></hdml-field>',
     );
   });
 
@@ -2930,7 +2929,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-09\' as "timestamp_gmt_m_09_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"timestamp_gmt_m_09_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT-09\"></hdml-field>",
+      '<hdml-field name="timestamp_gmt_m_09_field" origin="origin" clause="clause(`field`)" type="timestamp" unit="second" timezone="GMT-09"></hdml-field>',
     );
   });
 
@@ -2944,7 +2943,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-09\' as "timestamp_gmt_m_09_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"timestamp_gmt_m_09_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT-09\"></hdml-field>",
+      '<hdml-field name="timestamp_gmt_m_09_field" origin="origin" clause="clause(`field`)" type="timestamp" unit="second" timezone="GMT-09"></hdml-field>',
     );
   });
 
@@ -2960,7 +2959,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-10\' as "timestamp_gmt_m_10_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"timestamp_gmt_m_10_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT-10\"></hdml-field>",
+      '<hdml-field name="timestamp_gmt_m_10_field" origin="origin" clause="clause(`field`)" type="timestamp" unit="second" timezone="GMT-10"></hdml-field>',
     );
   });
 
@@ -2974,7 +2973,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-10\' as "timestamp_gmt_m_10_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"timestamp_gmt_m_10_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT-10\"></hdml-field>",
+      '<hdml-field name="timestamp_gmt_m_10_field" origin="origin" clause="clause(`field`)" type="timestamp" unit="second" timezone="GMT-10"></hdml-field>',
     );
   });
 
@@ -2990,7 +2989,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-11\' as "timestamp_gmt_m_11_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"timestamp_gmt_m_11_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT-11\"></hdml-field>",
+      '<hdml-field name="timestamp_gmt_m_11_field" origin="origin" clause="clause(`field`)" type="timestamp" unit="second" timezone="GMT-11"></hdml-field>',
     );
   });
 
@@ -3004,7 +3003,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-11\' as "timestamp_gmt_m_11_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"timestamp_gmt_m_11_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT-11\"></hdml-field>",
+      '<hdml-field name="timestamp_gmt_m_11_field" origin="origin" clause="clause(`field`)" type="timestamp" unit="second" timezone="GMT-11"></hdml-field>',
     );
   });
 
@@ -3020,7 +3019,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-12\' as "timestamp_gmt_m_12_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"timestamp_gmt_m_12_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT-12\"></hdml-field>",
+      '<hdml-field name="timestamp_gmt_m_12_field" origin="origin" clause="clause(`field`)" type="timestamp" unit="second" timezone="GMT-12"></hdml-field>',
     );
   });
 
@@ -3034,7 +3033,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT-12\' as "timestamp_gmt_m_12_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"timestamp_gmt_m_12_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT-12\"></hdml-field>",
+      '<hdml-field name="timestamp_gmt_m_12_field" origin="origin" clause="clause(`field`)" type="timestamp" unit="second" timezone="GMT-12"></hdml-field>',
     );
   });
 
@@ -3050,7 +3049,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+01\' as "timestamp_gmt_p_01_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"timestamp_gmt_p_01_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT+01\"></hdml-field>",
+      '<hdml-field name="timestamp_gmt_p_01_field" origin="origin" clause="clause(`field`)" type="timestamp" unit="second" timezone="GMT+01"></hdml-field>',
     );
   });
 
@@ -3064,7 +3063,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+01\' as "timestamp_gmt_p_01_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"timestamp_gmt_p_01_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT+01\"></hdml-field>",
+      '<hdml-field name="timestamp_gmt_p_01_field" origin="origin" clause="clause(`field`)" type="timestamp" unit="second" timezone="GMT+01"></hdml-field>',
     );
   });
 
@@ -3080,7 +3079,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+02\' as "timestamp_gmt_p_02_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"timestamp_gmt_p_02_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT+02\"></hdml-field>",
+      '<hdml-field name="timestamp_gmt_p_02_field" origin="origin" clause="clause(`field`)" type="timestamp" unit="second" timezone="GMT+02"></hdml-field>',
     );
   });
 
@@ -3094,7 +3093,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+02\' as "timestamp_gmt_p_02_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"timestamp_gmt_p_02_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT+02\"></hdml-field>",
+      '<hdml-field name="timestamp_gmt_p_02_field" origin="origin" clause="clause(`field`)" type="timestamp" unit="second" timezone="GMT+02"></hdml-field>',
     );
   });
 
@@ -3110,7 +3109,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+03\' as "timestamp_gmt_p_03_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"timestamp_gmt_p_03_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT+03\"></hdml-field>",
+      '<hdml-field name="timestamp_gmt_p_03_field" origin="origin" clause="clause(`field`)" type="timestamp" unit="second" timezone="GMT+03"></hdml-field>',
     );
   });
 
@@ -3124,7 +3123,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+03\' as "timestamp_gmt_p_03_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"timestamp_gmt_p_03_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT+03\"></hdml-field>",
+      '<hdml-field name="timestamp_gmt_p_03_field" origin="origin" clause="clause(`field`)" type="timestamp" unit="second" timezone="GMT+03"></hdml-field>',
     );
   });
 
@@ -3140,7 +3139,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+04\' as "timestamp_gmt_p_04_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"timestamp_gmt_p_04_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT+04\"></hdml-field>",
+      '<hdml-field name="timestamp_gmt_p_04_field" origin="origin" clause="clause(`field`)" type="timestamp" unit="second" timezone="GMT+04"></hdml-field>',
     );
   });
 
@@ -3154,7 +3153,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+04\' as "timestamp_gmt_p_04_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"timestamp_gmt_p_04_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT+04\"></hdml-field>",
+      '<hdml-field name="timestamp_gmt_p_04_field" origin="origin" clause="clause(`field`)" type="timestamp" unit="second" timezone="GMT+04"></hdml-field>',
     );
   });
 
@@ -3170,7 +3169,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+05\' as "timestamp_gmt_p_05_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"timestamp_gmt_p_05_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT+05\"></hdml-field>",
+      '<hdml-field name="timestamp_gmt_p_05_field" origin="origin" clause="clause(`field`)" type="timestamp" unit="second" timezone="GMT+05"></hdml-field>',
     );
   });
 
@@ -3184,7 +3183,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+05\' as "timestamp_gmt_p_05_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"timestamp_gmt_p_05_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT+05\"></hdml-field>",
+      '<hdml-field name="timestamp_gmt_p_05_field" origin="origin" clause="clause(`field`)" type="timestamp" unit="second" timezone="GMT+05"></hdml-field>',
     );
   });
 
@@ -3200,7 +3199,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+06\' as "timestamp_gmt_p_06_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"timestamp_gmt_p_06_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT+06\"></hdml-field>",
+      '<hdml-field name="timestamp_gmt_p_06_field" origin="origin" clause="clause(`field`)" type="timestamp" unit="second" timezone="GMT+06"></hdml-field>',
     );
   });
 
@@ -3214,7 +3213,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+06\' as "timestamp_gmt_p_06_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"timestamp_gmt_p_06_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT+06\"></hdml-field>",
+      '<hdml-field name="timestamp_gmt_p_06_field" origin="origin" clause="clause(`field`)" type="timestamp" unit="second" timezone="GMT+06"></hdml-field>',
     );
   });
 
@@ -3230,7 +3229,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+07\' as "timestamp_gmt_p_07_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"timestamp_gmt_p_07_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT+07\"></hdml-field>",
+      '<hdml-field name="timestamp_gmt_p_07_field" origin="origin" clause="clause(`field`)" type="timestamp" unit="second" timezone="GMT+07"></hdml-field>',
     );
   });
 
@@ -3244,7 +3243,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+07\' as "timestamp_gmt_p_07_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"timestamp_gmt_p_07_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT+07\"></hdml-field>",
+      '<hdml-field name="timestamp_gmt_p_07_field" origin="origin" clause="clause(`field`)" type="timestamp" unit="second" timezone="GMT+07"></hdml-field>',
     );
   });
 
@@ -3260,7 +3259,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+08\' as "timestamp_gmt_p_08_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"timestamp_gmt_p_08_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT+08\"></hdml-field>",
+      '<hdml-field name="timestamp_gmt_p_08_field" origin="origin" clause="clause(`field`)" type="timestamp" unit="second" timezone="GMT+08"></hdml-field>',
     );
   });
 
@@ -3274,7 +3273,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+08\' as "timestamp_gmt_p_08_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"timestamp_gmt_p_08_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT+08\"></hdml-field>",
+      '<hdml-field name="timestamp_gmt_p_08_field" origin="origin" clause="clause(`field`)" type="timestamp" unit="second" timezone="GMT+08"></hdml-field>',
     );
   });
 
@@ -3290,7 +3289,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+09\' as "timestamp_gmt_p_09_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"timestamp_gmt_p_09_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT+09\"></hdml-field>",
+      '<hdml-field name="timestamp_gmt_p_09_field" origin="origin" clause="clause(`field`)" type="timestamp" unit="second" timezone="GMT+09"></hdml-field>',
     );
   });
 
@@ -3304,7 +3303,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+09\' as "timestamp_gmt_p_09_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"timestamp_gmt_p_09_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT+09\"></hdml-field>",
+      '<hdml-field name="timestamp_gmt_p_09_field" origin="origin" clause="clause(`field`)" type="timestamp" unit="second" timezone="GMT+09"></hdml-field>',
     );
   });
 
@@ -3320,7 +3319,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+10\' as "timestamp_gmt_p_10_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"timestamp_gmt_p_10_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT+10\"></hdml-field>",
+      '<hdml-field name="timestamp_gmt_p_10_field" origin="origin" clause="clause(`field`)" type="timestamp" unit="second" timezone="GMT+10"></hdml-field>',
     );
   });
 
@@ -3334,7 +3333,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+10\' as "timestamp_gmt_p_10_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"timestamp_gmt_p_10_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT+10\"></hdml-field>",
+      '<hdml-field name="timestamp_gmt_p_10_field" origin="origin" clause="clause(`field`)" type="timestamp" unit="second" timezone="GMT+10"></hdml-field>',
     );
   });
 
@@ -3350,7 +3349,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+11\' as "timestamp_gmt_p_11_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"timestamp_gmt_p_11_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT+11\"></hdml-field>",
+      '<hdml-field name="timestamp_gmt_p_11_field" origin="origin" clause="clause(`field`)" type="timestamp" unit="second" timezone="GMT+11"></hdml-field>',
     );
   });
 
@@ -3364,7 +3363,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+11\' as "timestamp_gmt_p_11_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"timestamp_gmt_p_11_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT+11\"></hdml-field>",
+      '<hdml-field name="timestamp_gmt_p_11_field" origin="origin" clause="clause(`field`)" type="timestamp" unit="second" timezone="GMT+11"></hdml-field>',
     );
   });
 
@@ -3380,7 +3379,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+12\' as "timestamp_gmt_p_12_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"timestamp_gmt_p_12_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT+12\"></hdml-field>",
+      '<hdml-field name="timestamp_gmt_p_12_field" origin="origin" clause="clause(`field`)" type="timestamp" unit="second" timezone="GMT+12"></hdml-field>',
     );
   });
 
@@ -3394,7 +3393,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+12\' as "timestamp_gmt_p_12_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"timestamp_gmt_p_12_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT+12\"></hdml-field>",
+      '<hdml-field name="timestamp_gmt_p_12_field" origin="origin" clause="clause(`field`)" type="timestamp" unit="second" timezone="GMT+12"></hdml-field>',
     );
   });
 
@@ -3410,7 +3409,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+13\' as "timestamp_gmt_p_13_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"timestamp_gmt_p_13_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT+13\"></hdml-field>",
+      '<hdml-field name="timestamp_gmt_p_13_field" origin="origin" clause="clause(`field`)" type="timestamp" unit="second" timezone="GMT+13"></hdml-field>',
     );
   });
 
@@ -3424,7 +3423,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+13\' as "timestamp_gmt_p_13_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"timestamp_gmt_p_13_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT+13\"></hdml-field>",
+      '<hdml-field name="timestamp_gmt_p_13_field" origin="origin" clause="clause(`field`)" type="timestamp" unit="second" timezone="GMT+13"></hdml-field>',
     );
   });
 
@@ -3440,7 +3439,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+14\' as "timestamp_gmt_p_14_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"timestamp_gmt_p_14_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT+14\"></hdml-field>",
+      '<hdml-field name="timestamp_gmt_p_14_field" origin="origin" clause="clause(`field`)" type="timestamp" unit="second" timezone="GMT+14"></hdml-field>',
     );
   });
 
@@ -3454,7 +3453,7 @@ describe("Field functions", () => {
       'try_cast(clause("field") as timestamp(0)) at time zone \'GMT+14\' as "timestamp_gmt_p_14_field"',
     );
     expect(html).toBe(
-      "<hdml-field name=\"timestamp_gmt_p_14_field\" origin=\"origin\" clause=\"clause(`field`)\" type=\"timestamp\" unit=\"second\" timezone=\"GMT+14\"></hdml-field>",
+      '<hdml-field name="timestamp_gmt_p_14_field" origin="origin" clause="clause(`field`)" type="timestamp" unit="second" timezone="GMT+14"></hdml-field>',
     );
   });
 
@@ -3466,7 +3465,7 @@ describe("Field functions", () => {
     );
     const html = getFieldHTML(field);
     expect(html).toBe(
-      "<hdml-field name=\"asc_field\" origin=\"field\" type=\"int-8\" order=\"asc\"></hdml-field>",
+      '<hdml-field name="asc_field" origin="field" type="int-8" order="asc"></hdml-field>',
     );
   });
 
@@ -3476,7 +3475,7 @@ describe("Field functions", () => {
     const field = <FieldStruct>struct.frames(0)?.fields(56);
     const html = getFieldHTML(field);
     expect(html).toBe(
-      "<hdml-field name=\"asc_field\" origin=\"field\" type=\"int-8\" order=\"asc\"></hdml-field>",
+      '<hdml-field name="asc_field" origin="field" type="int-8" order="asc"></hdml-field>',
     );
   });
 
@@ -3488,7 +3487,7 @@ describe("Field functions", () => {
     );
     const html = getFieldHTML(field);
     expect(html).toBe(
-      "<hdml-field name=\"desc_field\" origin=\"field\" type=\"int-8\" order=\"desc\"></hdml-field>",
+      '<hdml-field name="desc_field" origin="field" type="int-8" order="desc"></hdml-field>',
     );
   });
 
@@ -3498,7 +3497,7 @@ describe("Field functions", () => {
     const field = <FieldStruct>struct.frames(0)?.fields(57);
     const html = getFieldHTML(field);
     expect(html).toBe(
-      "<hdml-field name=\"desc_field\" origin=\"field\" type=\"int-8\" order=\"desc\"></hdml-field>",
+      '<hdml-field name="desc_field" origin="field" type="int-8" order="desc"></hdml-field>',
     );
   });
 });
