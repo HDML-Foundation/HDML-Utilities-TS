@@ -179,6 +179,199 @@ export function getNamedFilterSQL(filter: Filter): string {
   return sql;
 }
 
+export function getFilterClauseHTML(
+  clause: FilterClause,
+  level = 0,
+  join?: { left: string; right: string },
+): string {
+  const prefix = t.repeat(level);
+
+  let open = "";
+  let close = "";
+  let html = "";
+
+  switch (clause.type) {
+    case FilterOperatorEnum.And:
+      open = `${prefix}<hdml-connective operator="and">\n`;
+      close = `${prefix}</hdml-connective>\n`;
+      break;
+
+    case FilterOperatorEnum.Or:
+      open = `${prefix}<hdml-connective operator="or">\n`;
+      close = `${prefix}</hdml-connective>\n`;
+      break;
+
+    case FilterOperatorEnum.None:
+      open = `${prefix}<hdml-connective operator="none">\n`;
+      close = `${prefix}</hdml-connective>\n`;
+      break;
+  }
+
+  html =
+    html +
+    open +
+    clause.filters
+      .map((f) => `${prefix}${t}${getFilterHTML(f)}\n`)
+      .join("");
+
+  clause.children.forEach((child) => {
+    html = html + getFilterClauseHTML(child, level + 1, join);
+  });
+
+  html = html + `${close}`;
+  return html;
+}
+
+export function getFilterHTML(filter: Filter): string {
+  switch (filter.type) {
+    case FilterTypeEnum.Keys:
+      return getKeysFilterHTML(filter.options);
+
+    case FilterTypeEnum.Expression:
+      return getExpressionFilterHTML(filter.options);
+
+    case FilterTypeEnum.Named:
+      return getNamedFilterHTML(filter.options);
+  }
+}
+
+export function getKeysFilterHTML(opts: KeysParameters): string {
+  if (!opts.left || !opts.right) {
+    return "<!-- incorrect filter options -->";
+  }
+  return (
+    `<hdml-filter type="keys" left="${opts.left}" ` +
+    `right="${opts.right}"></hdml-filter>`
+  );
+}
+
+export function getExpressionFilterHTML(
+  opts: ExpressionParameters,
+): string {
+  if (!opts.clause) {
+    return "<!-- incorrect filter options -->";
+  }
+  return `<hdml-filter type="expr" clause="${opts.clause.replaceAll(
+    '"',
+    "`",
+  )}"></hdml-filter>`;
+}
+
+export function getNamedFilterHTML(opts: NamedParameters): string {
+  if (
+    !opts.field ||
+    (!opts.values.length &&
+      opts.name !== FilterNameEnum.IsNull &&
+      opts.name !== FilterNameEnum.IsNotNull)
+  ) {
+    return "<!-- incorrect filter options -->";
+  }
+  switch (opts.name) {
+    case FilterNameEnum.Equals:
+      return (
+        `<hdml-filter type="named" name="equals" ` +
+        `field="${opts.field.replaceAll('"', "`")}" ` +
+        `values="${opts.values[0].replaceAll('"', "`")}"` +
+        `></hdml-filter>`
+      );
+
+    case FilterNameEnum.NotEquals:
+      return (
+        `<hdml-filter type="named" name="not-equals" ` +
+        `field="${opts.field.replaceAll('"', "`")}" ` +
+        `values="${opts.values[0].replaceAll('"', "`")}"` +
+        `></hdml-filter>`
+      );
+
+    case FilterNameEnum.Contains:
+      return (
+        `<hdml-filter type="named" name="contains" ` +
+        `field="${opts.field.replaceAll('"', "`")}" ` +
+        `values="${opts.values[0].replaceAll('"', "`")}"` +
+        `></hdml-filter>`
+      );
+
+    case FilterNameEnum.NotContains:
+      return (
+        `<hdml-filter type="named" name="not-contains" ` +
+        `field="${opts.field.replaceAll('"', "`")}" ` +
+        `values="${opts.values[0].replaceAll('"', "`")}"` +
+        `></hdml-filter>`
+      );
+
+    case FilterNameEnum.StartsWith:
+      return (
+        `<hdml-filter type="named" name="starts-with" ` +
+        `field="${opts.field.replaceAll('"', "`")}" ` +
+        `values="${opts.values[0].replaceAll('"', "`")}"` +
+        `></hdml-filter>`
+      );
+
+    case FilterNameEnum.EndsWith:
+      return (
+        `<hdml-filter type="named" name="ends-with" ` +
+        `field="${opts.field.replaceAll('"', "`")}" ` +
+        `values="${opts.values[0].replaceAll('"', "`")}"` +
+        `></hdml-filter>`
+      );
+
+    case FilterNameEnum.Greater:
+      return (
+        `<hdml-filter type="named" name="greater" ` +
+        `field="${opts.field.replaceAll('"', "`")}" ` +
+        `values="${opts.values[0].replaceAll('"', "`")}"` +
+        `></hdml-filter>`
+      );
+
+    case FilterNameEnum.GreaterEqual:
+      return (
+        `<hdml-filter type="named" name="greater-equal" ` +
+        `field="${opts.field.replaceAll('"', "`")}" ` +
+        `values="${opts.values[0].replaceAll('"', "`")}"` +
+        `></hdml-filter>`
+      );
+
+    case FilterNameEnum.Less:
+      return (
+        `<hdml-filter type="named" name="less" ` +
+        `field="${opts.field.replaceAll('"', "`")}" ` +
+        `values="${opts.values[0].replaceAll('"', "`")}"` +
+        `></hdml-filter>`
+      );
+
+    case FilterNameEnum.LessEqual:
+      return (
+        `<hdml-filter type="named" name="less-equal" ` +
+        `field="${opts.field.replaceAll('"', "`")}" ` +
+        `values="${opts.values[0].replaceAll('"', "`")}"` +
+        `></hdml-filter>`
+      );
+
+    case FilterNameEnum.IsNull:
+      return (
+        `<hdml-filter type="named" name="is-null" ` +
+        `field="${opts.field.replaceAll('"', "`")}"` +
+        `></hdml-filter>`
+      );
+
+    case FilterNameEnum.IsNotNull:
+      return (
+        `<hdml-filter type="named" name="is-not-null" ` +
+        `field="${opts.field.replaceAll('"', "`")}"` +
+        `></hdml-filter>`
+      );
+
+    case FilterNameEnum.Between:
+      return (
+        `<hdml-filter type="named" name="between" ` +
+        `field="${opts.field.replaceAll('"', "`")}" ` +
+        `values="${opts.values
+          .map((v) => v.replaceAll('"', "`"))
+          .join(",")}"></hdml-filter>`
+      );
+  }
+}
+
 // export function sanitizeString(): void {
 //   // https://trino.io/docs/current/language/types.html
 //   // TODO (buntarb): maybe fork sqlstring for sanitizing?
