@@ -16,13 +16,13 @@ import {
   FilterNameEnum,
 } from "@hdml/schemas";
 import { serialize, deserialize } from "@hdml/buffer";
-import { getFrameSQL } from "./frame";
+import { getFrameSQL, getFrameHTML } from "./frame";
 
 let lvl1: string = "";
 let lvl2: string = "";
 let lvl3: string = "";
 
-describe("The `getFrameSQL` function", () => {
+describe("The `getFrameSQL` and `getFrameHTML` functions", () => {
   it("should stringify frame with cached source", () => {
     const hdom: HDOM = {
       includes: [],
@@ -64,8 +64,12 @@ describe("The `getFrameSQL` function", () => {
     const struct = deserialize(bytes);
     const frame = struct.frames(0)!;
     lvl3 = getFrameSQL(frame, { name: "cash", sql: "" }, 2);
+    const html = getFrameHTML(frame, 2);
     expect(lvl3).toBe(
       '    select\n      "F1" as "F1"\n    from\n      "cash"\n    offset 0\n    limit 100\n',
+    );
+    expect(html).toBe(
+      '    <hdml-frame name="frame" source="source" offset="0" limit="100">\n      <hdml-field name="F1"></hdml-field>\n      <hdml-filter-by>\n        <hdml-connective operator="none">\n        </hdml-connective>\n      </hdml-filter-by>\n    </hdml-frame>\n',
     );
   });
 
@@ -110,8 +114,12 @@ describe("The `getFrameSQL` function", () => {
     const struct = deserialize(bytes);
     const frame = struct.frames(0)!;
     lvl2 = getFrameSQL(frame, { name: "sub", sql: lvl3 }, 1);
+    const html = getFrameHTML(frame, 1);
     expect(lvl2).toBe(
       '  with "sub" as (\n    select\n      "F1" as "F1"\n    from\n      "cash"\n    offset 0\n    limit 100\n  )\n  select\n    "F1" as "F1"\n  from\n    "sub"\n  offset 0\n  limit 100\n',
+    );
+    expect(html).toBe(
+      '  <hdml-frame name="frame" source="source" offset="0" limit="100">\n    <hdml-field name="F1"></hdml-field>\n    <hdml-filter-by>\n      <hdml-connective operator="none">\n      </hdml-connective>\n    </hdml-filter-by>\n  </hdml-frame>\n',
     );
   });
 
@@ -156,8 +164,12 @@ describe("The `getFrameSQL` function", () => {
     const struct = deserialize(bytes);
     const frame = struct.frames(0)!;
     lvl1 = getFrameSQL(frame, { name: "mid", sql: lvl2 }, 0);
+    const html = getFrameHTML(frame, 0);
     expect(lvl1).toBe(
       'with "mid" as (\n  with "sub" as (\n    select\n      "F1" as "F1"\n    from\n      "cash"\n    offset 0\n    limit 100\n  )\n  select\n    "F1" as "F1"\n  from\n    "sub"\n  offset 0\n  limit 100\n)\nselect\n  "F1" as "F1"\nfrom\n  "mid"\noffset 0\nlimit 100\n',
+    );
+    expect(html).toBe(
+      '<hdml-frame name="frame" source="source" offset="0" limit="100">\n  <hdml-field name="F1"></hdml-field>\n  <hdml-filter-by>\n    <hdml-connective operator="none">\n    </hdml-connective>\n  </hdml-filter-by>\n</hdml-frame>\n',
     );
   });
 
@@ -235,8 +247,12 @@ describe("The `getFrameSQL` function", () => {
     const struct = deserialize(bytes);
     const frame = struct.frames(0)!;
     const sql = getFrameSQL(frame, { name: "cash", sql: "" });
+    const html = getFrameHTML(frame);
     expect(sql).toBe(
       'select\n  "F1" as "F1",\n  "F2" as "F2",\n  "F2" as "F2",\n  "F3" as "F3"\nfrom\n  "cash"\noffset 0\nlimit 100\n',
+    );
+    expect(html).toBe(
+      '<hdml-frame name="frame" source="source" offset="0" limit="100">\n  <hdml-field name="F1"></hdml-field>\n  <hdml-field name="F2"></hdml-field>\n  <hdml-field name="F2"></hdml-field>\n  <hdml-field name="F3"></hdml-field>\n  <hdml-filter-by>\n    <hdml-connective operator="none">\n    </hdml-connective>\n  </hdml-filter-by>\n</hdml-frame>\n',
     );
   });
 
@@ -323,8 +339,12 @@ describe("The `getFrameSQL` function", () => {
     const struct = deserialize(bytes);
     const frame = struct.frames(0)!;
     const sql = getFrameSQL(frame, { name: "base", sql: "" });
+    const html = getFrameHTML(frame);
     expect(sql).toBe(
       'select\n  "F1" as "F1",\n  "F2" as "F2",\n  "F3" as "F3",\n  "F4" as "F4"\nfrom\n  "base"\nwhere\n  1 = 1\n  and "F1" = 1\noffset 0\nlimit 100\n',
+    );
+    expect(html).toBe(
+      '<hdml-frame name="frame" source="source" offset="0" limit="100">\n  <hdml-field name="F1"></hdml-field>\n  <hdml-field name="F2"></hdml-field>\n  <hdml-field name="F3"></hdml-field>\n  <hdml-field name="F4"></hdml-field>\n  <hdml-filter-by>\n    <hdml-connective operator="and">\n      <hdml-filter type="named" name="equals" field="`F1`" values="1"></hdml-filter>\n    </hdml-connective>\n  </hdml-filter-by>\n</hdml-frame>\n',
     );
   });
 
@@ -425,8 +445,12 @@ describe("The `getFrameSQL` function", () => {
     const struct = deserialize(bytes);
     const frame = struct.frames(0)!;
     const sql = getFrameSQL(frame, { name: "base", sql: "" });
+    const html = getFrameHTML(frame);
     expect(sql).toBe(
       'select\n  "F1" as "F1",\n  "F2" as "F2",\n  "F3" as "F3",\n  "F4" as "F4"\nfrom\n  "base"\ngroup by\n  2, 3\noffset 0\nlimit 100\n',
+    );
+    expect(html).toBe(
+      '<hdml-frame name="frame" source="source" offset="0" limit="100">\n  <hdml-field name="F1"></hdml-field>\n  <hdml-field name="F2"></hdml-field>\n  <hdml-field name="F3"></hdml-field>\n  <hdml-field name="F4"></hdml-field>\n  <hdml-filter-by>\n    <hdml-connective operator="none">\n    </hdml-connective>\n  </hdml-filter-by>\n  <hdml-group-by>\n    <hdml-field name="F2"></hdml-field>\n    <hdml-field name="F3"></hdml-field>\n  </hdml-group-by>\n</hdml-frame>\n',
     );
   });
 
@@ -527,8 +551,12 @@ describe("The `getFrameSQL` function", () => {
     const struct = deserialize(bytes);
     const frame = struct.frames(0)!;
     const sql = getFrameSQL(frame, { name: "base", sql: "" });
+    const html = getFrameHTML(frame);
     expect(sql).toBe(
       'select\n  "F1" as "F1",\n  "F2" as "F2",\n  "F3" as "F3",\n  "F4" as "F4"\nfrom\n  "base"\norder by\n  1, 4\noffset 0\nlimit 100\n',
+    );
+    expect(html).toBe(
+      '<hdml-frame name="frame" source="source" offset="0" limit="100">\n  <hdml-field name="F1"></hdml-field>\n  <hdml-field name="F2"></hdml-field>\n  <hdml-field name="F3"></hdml-field>\n  <hdml-field name="F4"></hdml-field>\n  <hdml-filter-by>\n    <hdml-connective operator="none">\n    </hdml-connective>\n  </hdml-filter-by>\n  <hdml-sort-by>\n    <hdml-field name="F1"></hdml-field>\n    <hdml-field name="F4"></hdml-field>\n  </hdml-sort-by>\n</hdml-frame>\n',
     );
   });
 });

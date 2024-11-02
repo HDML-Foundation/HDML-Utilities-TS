@@ -6,8 +6,12 @@
 
 import { FieldStruct, FrameStruct } from "@hdml/schemas";
 import { t } from "../constants";
-import { getFrameFieldSQL } from "./field";
-import { objectifyFilterClause, getFilterClauseSQL } from "./filter";
+import { getFrameFieldSQL, getFieldHTML } from "./field";
+import {
+  objectifyFilterClause,
+  getFilterClauseSQL,
+  getFilterClauseHTML,
+} from "./filter";
 
 export function getFrameSQL(
   frame: FrameStruct,
@@ -95,4 +99,67 @@ export function getFrameSQL(
   sql = sql + `${prefix}limit ${frame.limit()}\n`;
 
   return sql;
+}
+
+export function getFrameHTML(frame: FrameStruct, level = 0): string {
+  const prefix = t.repeat(level);
+  const fields: FieldStruct[] = [];
+  for (let i = 0; i < frame.fieldsLength(); i++) {
+    if (frame.fields(i)?.name()) {
+      fields.push(frame.fields(i)!);
+    }
+  }
+
+  // frame + fields
+  let html =
+    `${prefix}<hdml-frame ` +
+    `name="${frame.name()}" ` +
+    `source="${frame.source()}" ` +
+    `offset="${frame.offset()}" ` +
+    `limit="${frame.limit()}">\n` +
+    fields
+      .sort((a, b) =>
+        a.name()! < b.name()! ? -1 : a.name()! > b.name()! ? 1 : 0,
+      )
+      .map((field) => `${prefix}${t}${getFieldHTML(field)}`)
+      .join("\n") +
+    "\n";
+
+  // filters
+  const filtersHTML = getFilterClauseHTML(
+    objectifyFilterClause(frame.filterBy()!),
+    level + 2,
+  );
+
+  if (filtersHTML) {
+    html =
+      html +
+      `${prefix}${t}<hdml-filter-by>\n` +
+      filtersHTML +
+      `${prefix}${t}</hdml-filter-by>\n`;
+  }
+
+  // group by
+  if (frame.groupByLength() > 0) {
+    html = html + `${prefix}${t}<hdml-group-by>\n`;
+    for (let i = 0; i < frame.groupByLength(); i++) {
+      html =
+        html +
+        `${prefix}${t}${t}${getFieldHTML(frame.groupBy(i)!)}\n`;
+    }
+    html = html + `${prefix}${t}</hdml-group-by>\n`;
+  }
+
+  // sort by
+  if (frame.sortByLength() > 0) {
+    html = html + `${prefix}${t}<hdml-sort-by>\n`;
+    for (let i = 0; i < frame.sortByLength(); i++) {
+      html =
+        html + `${prefix}${t}${t}${getFieldHTML(frame.sortBy(i)!)}\n`;
+    }
+    html = html + `${prefix}${t}</hdml-sort-by>\n`;
+  }
+
+  html = html + `${prefix}</hdml-frame>\n`;
+  return html;
 }
