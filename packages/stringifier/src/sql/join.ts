@@ -12,7 +12,7 @@ import {
 import { Join, FilterClause } from "@hdml/types";
 import { t } from "../constants";
 import { objectifyFilterClause } from "./filter";
-import { getFilterClauseSQL } from "./filter";
+import { getFilterClauseSQL, getFilterClauseHTML } from "./filter";
 
 export function getJoinSQL(joins: Join[], level = 0): string {
   const prefix = t.repeat(level);
@@ -66,6 +66,63 @@ export function getJoinSQL(joins: Join[], level = 0): string {
     })
     .join("");
   return sql;
+}
+
+export function getJoinHTML(joins: Join[], level = 0): string {
+  const prefix = t.repeat(level);
+
+  let html = "";
+  joins.map((join) => {
+    let type = "";
+
+    switch (join.type) {
+      case JoinTypeEnum.Full:
+        type = "full";
+        break;
+
+      case JoinTypeEnum.Left:
+        type = "left";
+        break;
+
+      case JoinTypeEnum.Right:
+        type = "right";
+        break;
+
+      case JoinTypeEnum.FullOuter:
+        type = "full-outer";
+        break;
+
+      case JoinTypeEnum.LeftOuter:
+        type = "left-outer";
+        break;
+
+      case JoinTypeEnum.RightOuter:
+        type = "right-outer";
+        break;
+
+      case JoinTypeEnum.Inner:
+        type = "inner";
+        break;
+
+      case JoinTypeEnum.Cross:
+        type = "cross";
+        break;
+    }
+
+    html =
+      html +
+      `${prefix}<hdml-join` +
+      ` type="${type}"` +
+      ` left="${join.left}"` +
+      ` right="${join.right}">\n`;
+
+    // TODO (buntarb): should we check for
+    // `join.type !== JoinType.Cross` here?
+    html = html + getFilterClauseHTML(join.clause, level + 1, join);
+    html = html + `${prefix}</hdml-join>\n`;
+  });
+
+  return html;
 }
 
 export function getJoins(model: ModelStruct): Join[] {

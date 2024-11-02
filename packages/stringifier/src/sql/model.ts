@@ -12,8 +12,8 @@ import {
 } from "@hdml/schemas";
 import { Join } from "@hdml/types";
 import { t } from "../constants";
-import { getTableFieldSQL } from "./field";
-import { getJoins, sortJoins, getJoinSQL } from "./join";
+import { getTableFieldSQL, getFieldHTML } from "./field";
+import { getJoins, sortJoins, getJoinSQL, getJoinHTML } from "./join";
 
 export function getModelSQL(model: ModelStruct, level = 0): string {
   const prefix = t.repeat(level);
@@ -116,6 +116,73 @@ export function getTableSQL(table: TableStruct, level = 0): string {
   tableSQL = tableSQL + `${prefix}${t}${t}${alias}\n`;
   tableSQL = tableSQL + `${prefix})`;
   return tableSQL;
+}
+
+export function getModelHTML(model: ModelStruct, level = 0): string {
+  const prefix = t.repeat(level);
+  const joins = sortJoins(getJoins(model));
+  const tables = getTables(model, joins);
+
+  const tablesHTML = tables
+    .map((table) => {
+      switch (table.type()) {
+        case TableTypeEnum.Table:
+        case TableTypeEnum.Query:
+          return getTableHTML(table, level + 1);
+      }
+    })
+    .join("\n");
+
+  let html =
+    `${prefix}<hdml-model ` +
+    `name="${model.name()}">\n${tablesHTML}\n`;
+  if (joins.length > 0) {
+    html = html + getJoinHTML(joins, level + 1);
+  }
+  html = html + `${prefix}</hdml-model>\n`;
+
+  return html;
+}
+
+export function getTableHTML(table: TableStruct, level = 0): string {
+  const prefix = t.repeat(level);
+  const fields: FieldStruct[] = [];
+
+  for (let i = 0; i < table.fieldsLength(); i++) {
+    const field = table.fields(i);
+    if (field) {
+      fields.push(field);
+    }
+  }
+
+  const fieldsHTML = fields
+    .filter((f) => f.name())
+    .sort((f1, f2) => {
+      const n1 = <string>f1.name();
+      const n2 = <string>f2.name();
+      return n1 < n2 ? -1 : n1 > n2 ? 1 : 0;
+    })
+    .map((field) => `${prefix}${t}${getFieldHTML(field)}`)
+    .join("\n");
+
+  let type = "";
+  switch (table.type()) {
+    case TableTypeEnum.Table:
+      type = "table";
+      break;
+
+    case TableTypeEnum.Query:
+      type = "query";
+      break;
+  }
+
+  let html =
+    `${prefix}<hdml-table name="${table.name()}" ` +
+    `type="${type}" ` +
+    `identifier="${table.identifier()?.replaceAll('"', "`")}">\n`;
+  html = html + `${fieldsHTML}\n`;
+  html = html + `${prefix}</hdml-table>`;
+  return html;
 }
 
 export function getTables(

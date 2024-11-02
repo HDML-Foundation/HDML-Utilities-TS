@@ -20,6 +20,7 @@ import {
   findRoots,
   sortJoins,
   getJoinSQL,
+  getJoinHTML,
 } from "./join";
 
 // Following join structures are described in joins related testd:
@@ -179,13 +180,15 @@ let case11: Join[];
 let case12: Join[];
 let case13: Join[];
 
-describe("The `getJoinSQL` function", () => {
-  it("shoul sequalize empty join", () => {
+describe("The `getJoinSQL` and `getJoinHTML` functions", () => {
+  it("should stringify empty join", () => {
     const sql = getJoinSQL([]);
+    const html = getJoinHTML([]);
     expect(sql).toBe("");
+    expect(html).toBe("");
   });
 
-  it("shoul sequalize join without filters", () => {
+  it("should stringify join without filters", () => {
     const sql = getJoinSQL([
       {
         type: JoinTypeEnum.Cross,
@@ -199,11 +202,48 @@ describe("The `getJoinSQL` function", () => {
         },
       },
     ]);
+    const html = getJoinHTML([
+      {
+        type: JoinTypeEnum.Cross,
+        description: null,
+        left: "T1",
+        right: "T2",
+        clause: {
+          type: FilterOperatorEnum.None,
+          children: [],
+          filters: [],
+        },
+      },
+    ]);
     expect(sql).toBe('\n  from "T1"\n  cross join "T2"\n');
+    expect(html).toBe(
+      '<hdml-join type="cross" left="T1" right="T2">\n  <hdml-connective operator="none">\n  </hdml-connective>\n</hdml-join>\n',
+    );
   });
 
-  it("shoul sequalize `Full` join", () => {
+  it("should stringify `Full` join", () => {
     const sql = getJoinSQL([
+      {
+        type: JoinTypeEnum.Full,
+        description: null,
+        left: "T1",
+        right: "T2",
+        clause: {
+          type: FilterOperatorEnum.None,
+          children: [],
+          filters: [
+            {
+              type: FilterTypeEnum.Keys,
+              options: {
+                left: "F1",
+                right: "F2",
+              },
+            },
+          ],
+        },
+      },
+    ]);
+    const html = getJoinHTML([
       {
         type: JoinTypeEnum.Full,
         description: null,
@@ -227,10 +267,34 @@ describe("The `getJoinSQL` function", () => {
     expect(sql).toBe(
       '\n  from "T1"\n  full join "T2"\n  on (\n    "T1"."F1" = "T2"."F2"\n  )\n',
     );
+    expect(html).toBe(
+      '<hdml-join type="full" left="T1" right="T2">\n  <hdml-connective operator="none">\n    <hdml-filter type="keys" left="F1" right="F2"></hdml-filter>\n  </hdml-connective>\n</hdml-join>\n',
+    );
   });
 
-  it("shoul sequalize `Left` join", () => {
+  it("should stringify `Left` join", () => {
     const sql = getJoinSQL([
+      {
+        type: JoinTypeEnum.Left,
+        description: null,
+        left: "T1",
+        right: "T2",
+        clause: {
+          type: FilterOperatorEnum.None,
+          children: [],
+          filters: [
+            {
+              type: FilterTypeEnum.Keys,
+              options: {
+                left: "F1",
+                right: "F2",
+              },
+            },
+          ],
+        },
+      },
+    ]);
+    const html = getJoinHTML([
       {
         type: JoinTypeEnum.Left,
         description: null,
@@ -254,10 +318,34 @@ describe("The `getJoinSQL` function", () => {
     expect(sql).toBe(
       '\n  from "T1"\n  left join "T2"\n  on (\n    "T1"."F1" = "T2"."F2"\n  )\n',
     );
+    expect(html).toBe(
+      '<hdml-join type="left" left="T1" right="T2">\n  <hdml-connective operator="none">\n    <hdml-filter type="keys" left="F1" right="F2"></hdml-filter>\n  </hdml-connective>\n</hdml-join>\n',
+    );
   });
 
-  it("shoul sequalize `Right` join", () => {
+  it("should stringify `Right` join", () => {
     const sql = getJoinSQL([
+      {
+        type: JoinTypeEnum.Right,
+        description: null,
+        left: "T1",
+        right: "T2",
+        clause: {
+          type: FilterOperatorEnum.None,
+          children: [],
+          filters: [
+            {
+              type: FilterTypeEnum.Keys,
+              options: {
+                left: "F1",
+                right: "F2",
+              },
+            },
+          ],
+        },
+      },
+    ]);
+    const html = getJoinHTML([
       {
         type: JoinTypeEnum.Right,
         description: null,
@@ -281,10 +369,34 @@ describe("The `getJoinSQL` function", () => {
     expect(sql).toBe(
       '\n  from "T1"\n  right join "T2"\n  on (\n    "T1"."F1" = "T2"."F2"\n  )\n',
     );
+    expect(html).toBe(
+      '<hdml-join type="right" left="T1" right="T2">\n  <hdml-connective operator="none">\n    <hdml-filter type="keys" left="F1" right="F2"></hdml-filter>\n  </hdml-connective>\n</hdml-join>\n',
+    );
   });
 
-  it("shoul sequalize `FullOuter` join", () => {
+  it("should stringify `FullOuter` join", () => {
     const sql = getJoinSQL([
+      {
+        type: JoinTypeEnum.FullOuter,
+        description: null,
+        left: "T1",
+        right: "T2",
+        clause: {
+          type: FilterOperatorEnum.None,
+          children: [],
+          filters: [
+            {
+              type: FilterTypeEnum.Keys,
+              options: {
+                left: "F1",
+                right: "F2",
+              },
+            },
+          ],
+        },
+      },
+    ]);
+    const html = getJoinHTML([
       {
         type: JoinTypeEnum.FullOuter,
         description: null,
@@ -308,10 +420,34 @@ describe("The `getJoinSQL` function", () => {
     expect(sql).toBe(
       '\n  from "T1"\n  full outer join "T2"\n  on (\n    "T1"."F1" = "T2"."F2"\n  )\n',
     );
+    expect(html).toBe(
+      '<hdml-join type="full-outer" left="T1" right="T2">\n  <hdml-connective operator="none">\n    <hdml-filter type="keys" left="F1" right="F2"></hdml-filter>\n  </hdml-connective>\n</hdml-join>\n',
+    );
   });
 
-  it("shoul sequalize `LeftOuter` join", () => {
+  it("should stringify `LeftOuter` join", () => {
     const sql = getJoinSQL([
+      {
+        type: JoinTypeEnum.LeftOuter,
+        description: null,
+        left: "T1",
+        right: "T2",
+        clause: {
+          type: FilterOperatorEnum.None,
+          children: [],
+          filters: [
+            {
+              type: FilterTypeEnum.Keys,
+              options: {
+                left: "F1",
+                right: "F2",
+              },
+            },
+          ],
+        },
+      },
+    ]);
+    const html = getJoinHTML([
       {
         type: JoinTypeEnum.LeftOuter,
         description: null,
@@ -335,10 +471,34 @@ describe("The `getJoinSQL` function", () => {
     expect(sql).toBe(
       '\n  from "T1"\n  left outer join "T2"\n  on (\n    "T1"."F1" = "T2"."F2"\n  )\n',
     );
+    expect(html).toBe(
+      '<hdml-join type="left-outer" left="T1" right="T2">\n  <hdml-connective operator="none">\n    <hdml-filter type="keys" left="F1" right="F2"></hdml-filter>\n  </hdml-connective>\n</hdml-join>\n',
+    );
   });
 
-  it("shoul sequalize `RightOuter` join", () => {
+  it("should stringify `RightOuter` join", () => {
     const sql = getJoinSQL([
+      {
+        type: JoinTypeEnum.RightOuter,
+        description: null,
+        left: "T1",
+        right: "T2",
+        clause: {
+          type: FilterOperatorEnum.None,
+          children: [],
+          filters: [
+            {
+              type: FilterTypeEnum.Keys,
+              options: {
+                left: "F1",
+                right: "F2",
+              },
+            },
+          ],
+        },
+      },
+    ]);
+    const html = getJoinHTML([
       {
         type: JoinTypeEnum.RightOuter,
         description: null,
@@ -362,10 +522,34 @@ describe("The `getJoinSQL` function", () => {
     expect(sql).toBe(
       '\n  from "T1"\n  right outer join "T2"\n  on (\n    "T1"."F1" = "T2"."F2"\n  )\n',
     );
+    expect(html).toBe(
+      '<hdml-join type="right-outer" left="T1" right="T2">\n  <hdml-connective operator="none">\n    <hdml-filter type="keys" left="F1" right="F2"></hdml-filter>\n  </hdml-connective>\n</hdml-join>\n',
+    );
   });
 
-  it("shoul sequalize `Inner` join", () => {
+  it("should stringify `Inner` join", () => {
     const sql = getJoinSQL([
+      {
+        type: JoinTypeEnum.Inner,
+        description: null,
+        left: "T1",
+        right: "T2",
+        clause: {
+          type: FilterOperatorEnum.None,
+          children: [],
+          filters: [
+            {
+              type: FilterTypeEnum.Keys,
+              options: {
+                left: "F1",
+                right: "F2",
+              },
+            },
+          ],
+        },
+      },
+    ]);
+    const html = getJoinHTML([
       {
         type: JoinTypeEnum.Inner,
         description: null,
@@ -389,10 +573,34 @@ describe("The `getJoinSQL` function", () => {
     expect(sql).toBe(
       '\n  from "T1"\n  inner join "T2"\n  on (\n    "T1"."F1" = "T2"."F2"\n  )\n',
     );
+    expect(html).toBe(
+      '<hdml-join type="inner" left="T1" right="T2">\n  <hdml-connective operator="none">\n    <hdml-filter type="keys" left="F1" right="F2"></hdml-filter>\n  </hdml-connective>\n</hdml-join>\n',
+    );
   });
 
-  it("shoul sequalize `Cross` join", () => {
+  it("should stringify `Cross` join", () => {
     const sql = getJoinSQL([
+      {
+        type: JoinTypeEnum.Cross,
+        description: null,
+        left: "T1",
+        right: "T2",
+        clause: {
+          type: FilterOperatorEnum.None,
+          children: [],
+          filters: [
+            {
+              type: FilterTypeEnum.Keys,
+              options: {
+                left: "F1",
+                right: "F2",
+              },
+            },
+          ],
+        },
+      },
+    ]);
+    const html = getJoinHTML([
       {
         type: JoinTypeEnum.Cross,
         description: null,
@@ -415,6 +623,9 @@ describe("The `getJoinSQL` function", () => {
     ]);
     expect(sql).toBe(
       '\n  from "T1"\n  cross join "T2"\n  on (\n    "T1"."F1" = "T2"."F2"\n  )\n',
+    );
+    expect(html).toBe(
+      '<hdml-join type="cross" left="T1" right="T2">\n  <hdml-connective operator="none">\n    <hdml-filter type="keys" left="F1" right="F2"></hdml-filter>\n  </hdml-connective>\n</hdml-join>\n',
     );
   });
 });

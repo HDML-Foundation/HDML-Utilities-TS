@@ -18,7 +18,13 @@ import {
   FilterTypeEnum,
 } from "@hdml/schemas";
 import { serialize, deserialize } from "@hdml/buffer";
-import { getTables, getTableSQL, getModelSQL } from "./model";
+import {
+  getTables,
+  getTableSQL,
+  getModelSQL,
+  getTableHTML,
+  getModelHTML,
+} from "./model";
 
 describe("The `getTables` function", () => {
   it("should objectify empty model", () => {
@@ -470,7 +476,7 @@ describe("The `getTables` function", () => {
   });
 });
 
-describe("The `getTableSQL` function", () => {
+describe("The `getTableSQL` and `getTableHTML` functions", () => {
   const hdom: HDOM = {
     includes: [],
     connections: [],
@@ -483,7 +489,7 @@ describe("The `getTableSQL` function", () => {
             name: "table",
             description: null,
             type: TableTypeEnum.Table,
-            identifier: "connection.schema.table",
+            identifier: '"connection"."schema"."table"',
             fields: [
               {
                 name: "field",
@@ -502,7 +508,7 @@ describe("The `getTableSQL` function", () => {
             name: "query",
             description: null,
             type: TableTypeEnum.Query,
-            identifier: "select\n\t*\nfrom\n\tsubtable",
+            identifier: 'select\n\t*\nfrom\n\t"subtable"',
             fields: [
               {
                 name: "field",
@@ -521,7 +527,7 @@ describe("The `getTableSQL` function", () => {
             name: "sorting",
             description: null,
             type: TableTypeEnum.Table,
-            identifier: "connection.schema.table",
+            identifier: '"connection"."schema"."table"',
             fields: [
               {
                 name: "field_b",
@@ -631,29 +637,41 @@ describe("The `getTableSQL` function", () => {
   it("should stringify `table`", () => {
     const table = <TableStruct>struct.models(0)?.tables(0);
     const sql = getTableSQL(table);
+    const html = getTableHTML(table);
     expect(sql).toBe(
-      '"table" as (\n  select\n    "field" as "field"\n  from\n    connection.schema.table\n)',
+      '"table" as (\n  select\n    "field" as "field"\n  from\n    "connection"."schema"."table"\n)',
+    );
+    expect(html).toBe(
+      '<hdml-table name="table" type="table" identifier="`connection`.`schema`.`table`">\n  <hdml-field name="field"></hdml-field>\n</hdml-table>',
     );
   });
 
   it("should stringify `query`", () => {
     const table = <TableStruct>struct.models(0)?.tables(1);
     const sql = getTableSQL(table);
+    const html = getTableHTML(table);
     expect(sql).toBe(
-      '"query" as (\n  with _query as (\n    select\n    \t*\n    from\n    \tsubtable\n  )\n  select\n    "field" as "field"\n  from\n    _query\n)',
+      '"query" as (\n  with _query as (\n    select\n    \t*\n    from\n    \t"subtable"\n  )\n  select\n    "field" as "field"\n  from\n    _query\n)',
+    );
+    expect(html).toBe(
+      '<hdml-table name="query" type="query" identifier="select\n\t*\nfrom\n\t`subtable`">\n  <hdml-field name="field"></hdml-field>\n</hdml-table>',
     );
   });
 
   it("should stringify `sorting`", () => {
     const table = <TableStruct>struct.models(0)?.tables(2);
     const sql = getTableSQL(table);
+    const html = getTableHTML(table);
     expect(sql).toBe(
-      '"sorting" as (\n  select\n    "field_a" as "field_a",\n    "field_b" as "field_b",\n    "field_c" as "field_c",\n    "field_c" as "field_c"\n  from\n    connection.schema.table\n)',
+      '"sorting" as (\n  select\n    "field_a" as "field_a",\n    "field_b" as "field_b",\n    "field_c" as "field_c",\n    "field_c" as "field_c"\n  from\n    "connection"."schema"."table"\n)',
+    );
+    expect(html).toBe(
+      '<hdml-table name="sorting" type="table" identifier="`connection`.`schema`.`table`">\n  <hdml-field name="field_a"></hdml-field>\n  <hdml-field name="field_b"></hdml-field>\n  <hdml-field name="field_c"></hdml-field>\n  <hdml-field name="field_c"></hdml-field>\n</hdml-table>',
     );
   });
 });
 
-describe("The `getModelSQL` function", () => {
+describe("The `getModelSQL` and `getModelHTML` function", () => {
   it("should stringify model without joins", () => {
     const hdom: HDOM = {
       includes: [],
@@ -667,7 +685,7 @@ describe("The `getModelSQL` function", () => {
               name: "T1",
               description: null,
               type: TableTypeEnum.Table,
-              identifier: "connection.schema.table",
+              identifier: '"connection"."schema"."table"',
               fields: [
                 {
                   name: "F1",
@@ -686,7 +704,7 @@ describe("The `getModelSQL` function", () => {
               name: "T2",
               description: null,
               type: TableTypeEnum.Query,
-              identifier: "select\n\t*\nfrom\n\tsubtable",
+              identifier: 'select\n\t*\nfrom\n\t"subtable"',
               fields: [
                 {
                   name: "F1",
@@ -705,7 +723,7 @@ describe("The `getModelSQL` function", () => {
               name: "T3",
               description: null,
               type: TableTypeEnum.Table,
-              identifier: "connection.schema.table",
+              identifier: '"connection"."schema"."table"',
               fields: [
                 {
                   name: "F1",
@@ -731,8 +749,12 @@ describe("The `getModelSQL` function", () => {
     const struct = deserialize(bytes);
     const model = struct.models(0)!;
     const sql = getModelSQL(model);
+    const html = getModelHTML(model);
     expect(sql).toEqual(
-      '  with\n    "T1" as (\n      select\n        "F1" as "F1"\n      from\n        connection.schema.table\n    ),\n    "T2" as (\n      with _T2 as (\n        select\n        \t*\n        from\n        \tsubtable\n      )\n      select\n        "F1" as "F1"\n      from\n        _T2\n    ),\n    "T3" as (\n      select\n        "F1" as "F1"\n      from\n        connection.schema.table\n    )\n  select\n    "T1"."F1" as "T1_F1",\n    "T2"."F1" as "T2_F1",\n    "T3"."F1" as "T3_F1"\n  from\n    "T1",\n    "T2",\n    "T3"',
+      '  with\n    "T1" as (\n      select\n        "F1" as "F1"\n      from\n        "connection"."schema"."table"\n    ),\n    "T2" as (\n      with _T2 as (\n        select\n        \t*\n        from\n        \t"subtable"\n      )\n      select\n        "F1" as "F1"\n      from\n        _T2\n    ),\n    "T3" as (\n      select\n        "F1" as "F1"\n      from\n        "connection"."schema"."table"\n    )\n  select\n    "T1"."F1" as "T1_F1",\n    "T2"."F1" as "T2_F1",\n    "T3"."F1" as "T3_F1"\n  from\n    "T1",\n    "T2",\n    "T3"',
+    );
+    expect(html).toBe(
+      '<hdml-model name="model">\n  <hdml-table name="T1" type="table" identifier="`connection`.`schema`.`table`">\n    <hdml-field name="F1"></hdml-field>\n  </hdml-table>\n  <hdml-table name="T2" type="query" identifier="select\n\t*\nfrom\n\t`subtable`">\n    <hdml-field name="F1"></hdml-field>\n  </hdml-table>\n  <hdml-table name="T3" type="table" identifier="`connection`.`schema`.`table`">\n    <hdml-field name="F1"></hdml-field>\n  </hdml-table>\n</hdml-model>\n',
     );
   });
 
@@ -749,7 +771,7 @@ describe("The `getModelSQL` function", () => {
               name: "T1",
               description: null,
               type: TableTypeEnum.Table,
-              identifier: "connection.schema.table",
+              identifier: `"connection"."schema"."table"`,
               fields: [
                 {
                   name: "F1",
@@ -768,7 +790,7 @@ describe("The `getModelSQL` function", () => {
               name: "T2",
               description: null,
               type: TableTypeEnum.Query,
-              identifier: "select\n\t*\nfrom\n\tsubtable",
+              identifier: 'select\n\t*\nfrom\n\t"subtable"',
               fields: [
                 {
                   name: "F1",
@@ -787,7 +809,7 @@ describe("The `getModelSQL` function", () => {
               name: "T3",
               description: null,
               type: TableTypeEnum.Table,
-              identifier: "connection.schema.table",
+              identifier: '"connection"."schema"."table"',
               fields: [
                 {
                   name: "F1",
@@ -833,8 +855,12 @@ describe("The `getModelSQL` function", () => {
     const struct = deserialize(bytes);
     const model = struct.models(0)!;
     const sql = getModelSQL(model);
-    expect(sql).toEqual(
-      '  with\n    "T1" as (\n      select\n        "F1" as "F1"\n      from\n        connection.schema.table\n    ),\n    "T2" as (\n      with _T2 as (\n        select\n        \t*\n        from\n        \tsubtable\n      )\n      select\n        "F1" as "F1"\n      from\n        _T2\n    )\n  select\n    "T1"."F1" as "T1_F1",\n    "T2"."F1" as "T2_F1"\n  from "T1"\n  inner join "T2"\n  on (\n    "T1"."F1" = "T2"."F1"\n  )\n',
+    const html = getModelHTML(model);
+    expect(sql).toBe(
+      '  with\n    "T1" as (\n      select\n        "F1" as "F1"\n      from\n        "connection"."schema"."table"\n    ),\n    "T2" as (\n      with _T2 as (\n        select\n        \t*\n        from\n        \t"subtable"\n      )\n      select\n        "F1" as "F1"\n      from\n        _T2\n    )\n  select\n    "T1"."F1" as "T1_F1",\n    "T2"."F1" as "T2_F1"\n  from "T1"\n  inner join "T2"\n  on (\n    "T1"."F1" = "T2"."F1"\n  )\n',
+    );
+    expect(html).toBe(
+      '<hdml-model name="model">\n  <hdml-table name="T1" type="table" identifier="`connection`.`schema`.`table`">\n    <hdml-field name="F1"></hdml-field>\n  </hdml-table>\n  <hdml-table name="T2" type="query" identifier="select\n\t*\nfrom\n\t`subtable`">\n    <hdml-field name="F1"></hdml-field>\n  </hdml-table>\n  <hdml-join type="inner" left="T1" right="T2">\n    <hdml-connective operator="none">\n      <hdml-filter type="keys" left="F1" right="F1"></hdml-filter>\n    </hdml-connective>\n  </hdml-join>\n</hdml-model>\n',
     );
   });
 });
