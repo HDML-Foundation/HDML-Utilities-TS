@@ -1,0 +1,10 @@
+{
+  "extends": "../../../tsconfig/dts.json",
+  "include": ["../src/**/*.ts", "../lib/**/*.ts"],
+  "compilerOptions": {
+    "rootDir": "../src",
+    "baseUrl": "../src",
+    "outDir": "../dts",
+    "declarationDir": "../dts"
+  }
+}

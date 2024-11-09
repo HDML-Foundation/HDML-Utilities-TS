@@ -2,4 +2,6 @@
 /docs
 /src
 /tsconfig
+/tst
 .npmignore
+index.html
