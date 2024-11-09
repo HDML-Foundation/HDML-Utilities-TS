@@ -4,6 +4,7 @@
     "packages/buffer",
     "packages/hash",
     "packages/parser",
+    "packages/stringifier",
     "packages/types"
   ],
   "private": true,
