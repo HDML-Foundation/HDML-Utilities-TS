@@ -11,7 +11,7 @@ import {
   TableTypeEnum,
 } from "@hdml/schemas";
 import { Join } from "@hdml/types";
-import { t } from "../constants";
+import { t } from "./constants";
 import { getTableFieldSQL, getFieldHTML } from "./field";
 import { getJoins, sortJoins, getJoinSQL, getJoinHTML } from "./join";
 

@@ -15,7 +15,7 @@ import {
   MongoDBParametersStruct,
   SnowflakeParametersStruct,
 } from "@hdml/schemas";
-import { t } from "../constants";
+import { t } from "./constants";
 
 export function getConnectionSQLs(conn: ConnectionStruct): string[] {
   if (!conn.name()) {

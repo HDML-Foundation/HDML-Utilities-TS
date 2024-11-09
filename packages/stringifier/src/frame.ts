@@ -5,7 +5,7 @@
  */
 
 import { FieldStruct, FrameStruct } from "@hdml/schemas";
-import { t } from "../constants";
+import { t } from "./constants";
 import { getFrameFieldSQL, getFieldHTML } from "./field";
 import {
   objectifyFilterClause,

@@ -21,7 +21,7 @@ import {
   KeysParameters,
   NamedParameters,
 } from "@hdml/types";
-import { t } from "../constants";
+import { t } from "./constants";
 
 export function getFilterClauseSQL(
   clause: FilterClause,

@@ -10,7 +10,7 @@ import {
   FilterTypeEnum,
 } from "@hdml/schemas";
 import { Join, FilterClause } from "@hdml/types";
-import { t } from "../constants";
+import { t } from "./constants";
 import { objectifyFilterClause } from "./filter";
 import { getFilterClauseSQL, getFilterClauseHTML } from "./filter";
 
