@@ -8,6 +8,7 @@ import { Builder } from "flatbuffers";
 import {
   ConnectorTypesEnum,
   ConnectionStruct,
+  ConnectionOptionsStruct,
   JDBCParametersStruct,
   BigQueryParametersStruct,
   GoogleSheetsParametersStruct,
@@ -101,6 +102,7 @@ function bufferifyConnectionOptions(
   builder: Builder,
   options: ConnectionOptions,
 ): number {
+  let params: number;
   switch (options.connector) {
     case ConnectorTypesEnum.Postgres:
     case ConnectorTypesEnum.MySQL:
@@ -111,25 +113,150 @@ function bufferifyConnectionOptions(
     case ConnectorTypesEnum.Ignite:
     case ConnectorTypesEnum.Redshift:
     case ConnectorTypesEnum.MariaDB:
-      return bufferifyJDBCParameters(builder, options.parameters);
+      params = bufferifyJDBCParameters(builder, options.parameters);
+      ConnectionOptionsStruct.startConnectionOptionsStruct(builder);
+      switch (options.connector) {
+        case ConnectorTypesEnum.Postgres:
+          ConnectionOptionsStruct.addConnector(
+            builder,
+            ConnectorTypesEnum.Postgres,
+          );
+          break;
+
+        case ConnectorTypesEnum.MySQL:
+          ConnectionOptionsStruct.addConnector(
+            builder,
+            ConnectorTypesEnum.MySQL,
+          );
+          break;
+
+        case ConnectorTypesEnum.MsSQL:
+          ConnectionOptionsStruct.addConnector(
+            builder,
+            ConnectorTypesEnum.MsSQL,
+          );
+          break;
+
+        case ConnectorTypesEnum.Oracle:
+          ConnectionOptionsStruct.addConnector(
+            builder,
+            ConnectorTypesEnum.Oracle,
+          );
+          break;
+
+        case ConnectorTypesEnum.Clickhouse:
+          ConnectionOptionsStruct.addConnector(
+            builder,
+            ConnectorTypesEnum.Clickhouse,
+          );
+          break;
+
+        case ConnectorTypesEnum.Druid:
+          ConnectionOptionsStruct.addConnector(
+            builder,
+            ConnectorTypesEnum.Druid,
+          );
+          break;
+
+        case ConnectorTypesEnum.Ignite:
+          ConnectionOptionsStruct.addConnector(
+            builder,
+            ConnectorTypesEnum.Ignite,
+          );
+          break;
+
+        case ConnectorTypesEnum.Redshift:
+          ConnectionOptionsStruct.addConnector(
+            builder,
+            ConnectorTypesEnum.Redshift,
+          );
+          break;
+
+        case ConnectorTypesEnum.MariaDB:
+          ConnectionOptionsStruct.addConnector(
+            builder,
+            ConnectorTypesEnum.MariaDB,
+          );
+          break;
+      }
+      ConnectionOptionsStruct.addParameters(builder, params);
+      return ConnectionOptionsStruct.endConnectionOptionsStruct(
+        builder,
+      );
+
     case ConnectorTypesEnum.BigQuery:
-      return bufferifyBigQueryParameters(builder, options.parameters);
+      params = bufferifyBigQueryParameters(
+        builder,
+        options.parameters,
+      );
+      ConnectionOptionsStruct.startConnectionOptionsStruct(builder);
+      ConnectionOptionsStruct.addConnector(
+        builder,
+        ConnectorTypesEnum.BigQuery,
+      );
+      ConnectionOptionsStruct.addParameters(builder, params);
+      return ConnectionOptionsStruct.endConnectionOptionsStruct(
+        builder,
+      );
+
     case ConnectorTypesEnum.GoogleSheets:
-      return bufferifyGoogleSheetsParameters(
+      params = bufferifyGoogleSheetsParameters(
         builder,
         options.parameters,
       );
+      ConnectionOptionsStruct.startConnectionOptionsStruct(builder);
+      ConnectionOptionsStruct.addConnector(
+        builder,
+        ConnectorTypesEnum.GoogleSheets,
+      );
+      ConnectionOptionsStruct.addParameters(builder, params);
+      return ConnectionOptionsStruct.endConnectionOptionsStruct(
+        builder,
+      );
+
     case ConnectorTypesEnum.ElasticSearch:
-      return bufferifyElasticsearchParameters(
+      params = bufferifyElasticsearchParameters(
         builder,
         options.parameters,
       );
+      ConnectionOptionsStruct.startConnectionOptionsStruct(builder);
+      ConnectionOptionsStruct.addConnector(
+        builder,
+        ConnectorTypesEnum.ElasticSearch,
+      );
+      ConnectionOptionsStruct.addParameters(builder, params);
+      return ConnectionOptionsStruct.endConnectionOptionsStruct(
+        builder,
+      );
+
     case ConnectorTypesEnum.MongoDB:
-      return bufferifyMongoDBParameters(builder, options.parameters);
-    case ConnectorTypesEnum.Snowflake:
-      return bufferifySnowflakeParameters(
+      params = bufferifyMongoDBParameters(
         builder,
         options.parameters,
+      );
+      ConnectionOptionsStruct.startConnectionOptionsStruct(builder);
+      ConnectionOptionsStruct.addConnector(
+        builder,
+        ConnectorTypesEnum.MongoDB,
+      );
+      ConnectionOptionsStruct.addParameters(builder, params);
+      return ConnectionOptionsStruct.endConnectionOptionsStruct(
+        builder,
+      );
+
+    case ConnectorTypesEnum.Snowflake:
+      params = bufferifySnowflakeParameters(
+        builder,
+        options.parameters,
+      );
+      ConnectionOptionsStruct.startConnectionOptionsStruct(builder);
+      ConnectionOptionsStruct.addConnector(
+        builder,
+        ConnectorTypesEnum.Snowflake,
+      );
+      ConnectionOptionsStruct.addParameters(builder, params);
+      return ConnectionOptionsStruct.endConnectionOptionsStruct(
+        builder,
       );
   }
 }

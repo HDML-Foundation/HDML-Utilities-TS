@@ -18,16 +18,15 @@ import {
 import { t } from "../constants";
 
 export function getConnectionSQLs(conn: ConnectionStruct): string[] {
-  const name = conn.name();
-  const opts = conn.options();
-  const sqls = [
-    `show catalogs like '${name}'`,
-    `drop catalog ${name}`,
-  ];
-
-  if (!name || !opts) {
+  if (!conn.name()) {
     return [];
   } else {
+    const name = conn.name()!;
+    const opts = conn.options()!;
+    const sqls = [
+      `show catalogs like '${name}'`,
+      `drop catalog ${name}`,
+    ];
     switch (opts.connector()) {
       case ConnectorTypesEnum.Postgres:
       case ConnectorTypesEnum.MySQL:
@@ -61,9 +60,8 @@ export function getConnectionSQLs(conn: ConnectionStruct): string[] {
         sqls.push(getSnowflakeSQL(name, opts));
         break;
     }
+    return sqls;
   }
-
-  return sqls;
 }
 
 export function getJdbcSQL(
@@ -117,7 +115,6 @@ export function getJdbcSQL(
       sql = sql + "mariadb\nwith (\n";
       break;
   }
-
   sql =
     sql +
     `${t}"connection-url" = '${host}${ssl ? "?ssl=true" : ""}'\n` +
@@ -175,16 +172,15 @@ export function getElasticSearchSQL(
   ) as ElasticsearchParametersStruct;
 
   const host = params.host() || "";
-  const port = params.port() || "";
+  const port = params.port();
   const user = params.user() || "";
   const password = params.password() || "";
   const region = params.region() || "";
   const accessKey = params.accessKey() || "";
   const secretKey = params.secretKey() || "";
-
   const sql =
     `create catalog ${name} using elasticsearch\nwith (\n` +
-    `${t}"gelasticsearch.host" = '${host}'\n` +
+    `${t}"elasticsearch.host" = '${host}'\n` +
     `${t}"elasticsearch.port" = '${port}'\n` +
     `${t}"elasticsearch.auth.user" = '${user}'\n` +
     `${t}"elasticsearch.auth.password" = '${password}'\n` +
@@ -205,13 +201,12 @@ export function getMongoSQL(
   ) as MongoDBParametersStruct;
 
   const host = params.host() || "";
-  const port = params.port() || "";
+  const port = params.port();
   const user = params.user() || "";
   const password = params.password() || "";
   const schema = params.schema() || "";
   const ssl = params.ssl() || "";
   const url = `mongodb://${user}:${password}@${host}:${port}/`;
-
   const sql =
     `create catalog ${name} using mongodb\nwith (\n` +
     `${t}"mongodb.connection-url" = '${url}'\n` +
@@ -249,4 +244,228 @@ export function getSnowflakeSQL(
     `)\n`;
 
   return sql;
+}
+
+export function getConnectionHTML(conn: ConnectionStruct): string {
+  if (!conn.name()) {
+    return "";
+  } else {
+    const name = conn.name()!;
+    const opts = conn.options()!;
+    switch (opts.connector()) {
+      case ConnectorTypesEnum.Postgres:
+      case ConnectorTypesEnum.MySQL:
+      case ConnectorTypesEnum.MsSQL:
+      case ConnectorTypesEnum.Oracle:
+      case ConnectorTypesEnum.Clickhouse:
+      case ConnectorTypesEnum.Druid:
+      case ConnectorTypesEnum.Ignite:
+      case ConnectorTypesEnum.Redshift:
+      case ConnectorTypesEnum.MariaDB:
+        return getJdbcHTML(name, opts);
+
+      case ConnectorTypesEnum.BigQuery:
+        return getBigQueryHTML(name, opts);
+
+      case ConnectorTypesEnum.GoogleSheets:
+        return getGoogleSheetsHTML(name, opts);
+
+      case ConnectorTypesEnum.ElasticSearch:
+        return getElasticSearchHTML(name, opts);
+
+      case ConnectorTypesEnum.MongoDB:
+        return getMongoHTML(name, opts);
+
+      case ConnectorTypesEnum.Snowflake:
+        return getSnowflakeHTML(name, opts);
+    }
+  }
+}
+
+export function getJdbcHTML(
+  name: string,
+  opts: ConnectionOptionsStruct,
+): string {
+  const params = opts.parameters(
+    new JDBCParametersStruct(),
+  ) as JDBCParametersStruct;
+
+  const host = params.host() || "";
+  const user = params.user() || "";
+  const pass = params.password() || "";
+  const ssl = params.ssl();
+
+  let html = `<hdml-connection\n${t}name="${name}"\n`;
+  switch (opts.connector()) {
+    case ConnectorTypesEnum.Postgres:
+      html = html + `${t}type="postgresql"\n`;
+      break;
+
+    case ConnectorTypesEnum.MySQL:
+      html = html + `${t}type="mysql"\n`;
+      break;
+
+    case ConnectorTypesEnum.MsSQL:
+      html = html + `${t}type="mssql"\n`;
+      break;
+
+    case ConnectorTypesEnum.Oracle:
+      html = html + `${t}type="oracle"\n`;
+      break;
+
+    case ConnectorTypesEnum.Clickhouse:
+      html = html + `${t}type="clickhouse"\n`;
+      break;
+
+    case ConnectorTypesEnum.Druid:
+      html = html + `${t}type="druid"\n`;
+      break;
+
+    case ConnectorTypesEnum.Ignite:
+      html = html + `${t}type="ignite"\n`;
+      break;
+
+    case ConnectorTypesEnum.Redshift:
+      html = html + `${t}type="redshift"\n`;
+      break;
+
+    case ConnectorTypesEnum.MariaDB:
+      html = html + `${t}type="mariadb"\n`;
+      break;
+  }
+  html =
+    html +
+    `${t}host="${host}"\n` +
+    `${t}ssl="${ssl ? "true" : "false"}"\n` +
+    `${t}user="${user}"\n` +
+    `${t}password="${pass}"\n` +
+    `</hdml-connection>\n`;
+
+  return html;
+}
+
+export function getBigQueryHTML(
+  name: string,
+  opts: ConnectionOptionsStruct,
+): string {
+  const params = opts.parameters(
+    new BigQueryParametersStruct(),
+  ) as BigQueryParametersStruct;
+
+  const projectId = params.projectId() || "";
+  const credentialsKey = params.credentialsKey() || "";
+  const html =
+    `<hdml-connection\n${t}name="${name}"\n` +
+    `${t}type="bigquery"\n` +
+    `${t}project-id="${projectId}"\n` +
+    `${t}credentials-key="${credentialsKey}"\n` +
+    `</hdml-connection>\n`;
+
+  return html;
+}
+
+export function getGoogleSheetsHTML(
+  name: string,
+  opts: ConnectionOptionsStruct,
+): string {
+  const params = opts.parameters(
+    new GoogleSheetsParametersStruct(),
+  ) as GoogleSheetsParametersStruct;
+
+  const sheetId = params.sheetId() || "";
+  const credentialsKey = params.credentialsKey() || "";
+  const html =
+    `<hdml-connection\n${t}name="${name}"\n` +
+    `${t}type="googlesheets"\n` +
+    `${t}sheet-id="${sheetId}"\n` +
+    `${t}credentials-key="${credentialsKey}"\n` +
+    `</hdml-connection>\n`;
+
+  return html;
+}
+
+export function getElasticSearchHTML(
+  name: string,
+  opts: ConnectionOptionsStruct,
+): string {
+  const params = opts.parameters(
+    new ElasticsearchParametersStruct(),
+  ) as ElasticsearchParametersStruct;
+
+  const host = params.host() || "";
+  const port = params.port();
+  const user = params.user() || "";
+  const password = params.password() || "";
+  const region = params.region() || "";
+  const accessKey = params.accessKey() || "";
+  const secretKey = params.secretKey() || "";
+  const html =
+    `<hdml-connection\n${t}name="${name}"\n` +
+    `${t}type="elasticsearch"\n` +
+    `${t}host="${host}"\n` +
+    `${t}port="${port}"\n` +
+    `${t}user="${user}"\n` +
+    `${t}password="${password}"\n` +
+    `${t}region="${region}"\n` +
+    `${t}access-key="${accessKey}"\n` +
+    `${t}secret-key="${secretKey}"\n` +
+    `</hdml-connection>\n`;
+
+  return html;
+}
+
+export function getMongoHTML(
+  name: string,
+  opts: ConnectionOptionsStruct,
+): string {
+  const params = opts.parameters(
+    new MongoDBParametersStruct(),
+  ) as MongoDBParametersStruct;
+
+  const host = params.host() || "";
+  const port = params.port();
+  const user = params.user() || "";
+  const password = params.password() || "";
+  const schema = params.schema() || "";
+  const ssl = params.ssl() || "";
+  const html =
+    `<hdml-connection\n${t}name="${name}"\n` +
+    `${t}type="mongodb"\n` +
+    `${t}host="${host}"\n` +
+    `${t}port="${port}"\n` +
+    `${t}user="${user}"\n` +
+    `${t}password="${password}"\n` +
+    `${t}schema="${schema}"\n` +
+    `${t}ssl="${ssl ? "true" : "false"}"\n` +
+    `</hdml-connection>\n`;
+
+  return html;
+}
+
+export function getSnowflakeHTML(
+  name: string,
+  opts: ConnectionOptionsStruct,
+): string {
+  const params = opts.parameters(
+    new SnowflakeParametersStruct(),
+  ) as SnowflakeParametersStruct;
+
+  const account = params.account() || "";
+  const warehouse = params.warehouse() || "";
+  const database = params.database() || "";
+  const user = params.user() || "";
+  const password = params.password() || "";
+  const role = params.role() || "";
+  const html =
+    `<hdml-connection\n${t}name="${name}"\n` +
+    `${t}type="snowflake"\n` +
+    `${t}account="${account}"\n` +
+    `${t}warehouse="${warehouse}"\n` +
+    `${t}database="${database}"\n` +
+    `${t}user="${user}"\n` +
+    `${t}password="${password}"\n` +
+    `${t}role="${role}"\n` +
+    `</hdml-connection>\n`;
+
+  return html;
 }
