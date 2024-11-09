@@ -1,0 +1,3 @@
+[submodule "HDML-Schemas"]
+	path = HDML-Schemas
+	url = git@github.com:HDML-Foundation/HDML-Schemas.git
