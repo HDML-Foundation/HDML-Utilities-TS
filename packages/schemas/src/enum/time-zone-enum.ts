@@ -33,5 +33,5 @@ export enum TimeZoneEnum {
   GMT_p_11 = 24,
   GMT_p_12 = 25,
   GMT_p_13 = 26,
-  GMT_p_14 = 27,
+  GMT_p_14 = 27
 }

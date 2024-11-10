@@ -7,5 +7,5 @@
  */
 export enum DecimalBitWidthEnum {
   _128 = 0,
-  _256 = 1,
+  _256 = 1
 }

@@ -2,88 +2,63 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-import * as flatbuffers from "flatbuffers";
+import * as flatbuffers from 'flatbuffers';
 
-import { TimeUnitEnum } from "../enum/time-unit-enum.js";
+import { TimeUnitEnum } from '../enum/time-unit-enum.js';
+
 
 /**
  * Time data type parameters structure.
  */
 export class TimeParametersStruct {
-  bb: flatbuffers.ByteBuffer | null = null;
+  bb: flatbuffers.ByteBuffer|null = null;
   bb_pos = 0;
-  __init(
-    i: number,
-    bb: flatbuffers.ByteBuffer,
-  ): TimeParametersStruct {
-    this.bb_pos = i;
-    this.bb = bb;
-    return this;
-  }
+  __init(i:number, bb:flatbuffers.ByteBuffer):TimeParametersStruct {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+}
 
-  static getRootAsTimeParametersStruct(
-    bb: flatbuffers.ByteBuffer,
-    obj?: TimeParametersStruct,
-  ): TimeParametersStruct {
-    return (obj || new TimeParametersStruct()).__init(
-      bb.readInt32(bb.position()) + bb.position(),
-      bb,
-    );
-  }
+static getRootAsTimeParametersStruct(bb:flatbuffers.ByteBuffer, obj?:TimeParametersStruct):TimeParametersStruct {
+  return (obj || new TimeParametersStruct()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+}
 
-  static getSizePrefixedRootAsTimeParametersStruct(
-    bb: flatbuffers.ByteBuffer,
-    obj?: TimeParametersStruct,
-  ): TimeParametersStruct {
-    bb.setPosition(bb.position() + flatbuffers.SIZE_PREFIX_LENGTH);
-    return (obj || new TimeParametersStruct()).__init(
-      bb.readInt32(bb.position()) + bb.position(),
-      bb,
-    );
-  }
+static getSizePrefixedRootAsTimeParametersStruct(bb:flatbuffers.ByteBuffer, obj?:TimeParametersStruct):TimeParametersStruct {
+  bb.setPosition(bb.position() + flatbuffers.SIZE_PREFIX_LENGTH);
+  return (obj || new TimeParametersStruct()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+}
 
-  nullable(): boolean {
-    const offset = this.bb!.__offset(this.bb_pos, 4);
-    return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
-  }
+nullable():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 4);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
 
-  unit(): TimeUnitEnum {
-    const offset = this.bb!.__offset(this.bb_pos, 6);
-    return offset
-      ? this.bb!.readInt8(this.bb_pos + offset)
-      : TimeUnitEnum.Second;
-  }
+unit():TimeUnitEnum {
+  const offset = this.bb!.__offset(this.bb_pos, 6);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : TimeUnitEnum.Second;
+}
 
-  static startTimeParametersStruct(builder: flatbuffers.Builder) {
-    builder.startObject(2);
-  }
+static startTimeParametersStruct(builder:flatbuffers.Builder) {
+  builder.startObject(2);
+}
 
-  static addNullable(
-    builder: flatbuffers.Builder,
-    nullable: boolean,
-  ) {
-    builder.addFieldInt8(0, +nullable, +false);
-  }
+static addNullable(builder:flatbuffers.Builder, nullable:boolean) {
+  builder.addFieldInt8(0, +nullable, +false);
+}
 
-  static addUnit(builder: flatbuffers.Builder, unit: TimeUnitEnum) {
-    builder.addFieldInt8(1, unit, TimeUnitEnum.Second);
-  }
+static addUnit(builder:flatbuffers.Builder, unit:TimeUnitEnum) {
+  builder.addFieldInt8(1, unit, TimeUnitEnum.Second);
+}
 
-  static endTimeParametersStruct(
-    builder: flatbuffers.Builder,
-  ): flatbuffers.Offset {
-    const offset = builder.endObject();
-    return offset;
-  }
+static endTimeParametersStruct(builder:flatbuffers.Builder):flatbuffers.Offset {
+  const offset = builder.endObject();
+  return offset;
+}
 
-  static createTimeParametersStruct(
-    builder: flatbuffers.Builder,
-    nullable: boolean,
-    unit: TimeUnitEnum,
-  ): flatbuffers.Offset {
-    TimeParametersStruct.startTimeParametersStruct(builder);
-    TimeParametersStruct.addNullable(builder, nullable);
-    TimeParametersStruct.addUnit(builder, unit);
-    return TimeParametersStruct.endTimeParametersStruct(builder);
-  }
+static createTimeParametersStruct(builder:flatbuffers.Builder, nullable:boolean, unit:TimeUnitEnum):flatbuffers.Offset {
+  TimeParametersStruct.startTimeParametersStruct(builder);
+  TimeParametersStruct.addNullable(builder, nullable);
+  TimeParametersStruct.addUnit(builder, unit);
+  return TimeParametersStruct.endTimeParametersStruct(builder);
+}
 }

@@ -18,5 +18,5 @@ export enum DataTypeEnum {
   Time = 9,
   Timestamp = 10,
   Binary = 11,
-  Utf8 = 12,
+  Utf8 = 12
 }

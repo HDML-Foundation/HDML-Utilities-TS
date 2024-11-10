@@ -2,12 +2,13 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-import { CommonParametersStruct } from "../document/common-parameters-struct.js";
-import { DateParametersStruct } from "../document/date-parameters-struct.js";
-import { DecimalParametersStruct } from "../document/decimal-parameters-struct.js";
-import { TimeParametersStruct } from "../document/time-parameters-struct.js";
-import { TimestampParametersStruct } from "../document/timestamp-parameters-struct.js";
-import { UnspecifiedParametersStruct } from "../document/unspecified-parameters-struct.js";
+import { CommonParametersStruct } from '../document/common-parameters-struct.js';
+import { DateParametersStruct } from '../document/date-parameters-struct.js';
+import { DecimalParametersStruct } from '../document/decimal-parameters-struct.js';
+import { TimeParametersStruct } from '../document/time-parameters-struct.js';
+import { TimestampParametersStruct } from '../document/timestamp-parameters-struct.js';
+import { UnspecifiedParametersStruct } from '../document/unspecified-parameters-struct.js';
+
 
 /**
  * Data type options.
@@ -19,129 +20,38 @@ export enum DataTypeOptionsStruct {
   DecimalParametersStruct = 3,
   DateParametersStruct = 4,
   TimeParametersStruct = 5,
-  TimestampParametersStruct = 6,
+  TimestampParametersStruct = 6
 }
 
 export function unionToDataTypeOptionsStruct(
   type: DataTypeOptionsStruct,
-  accessor: (
-    obj:
-      | CommonParametersStruct
-      | DateParametersStruct
-      | DecimalParametersStruct
-      | TimeParametersStruct
-      | TimestampParametersStruct
-      | UnspecifiedParametersStruct,
-  ) =>
-    | CommonParametersStruct
-    | DateParametersStruct
-    | DecimalParametersStruct
-    | TimeParametersStruct
-    | TimestampParametersStruct
-    | UnspecifiedParametersStruct
-    | null,
-):
-  | CommonParametersStruct
-  | DateParametersStruct
-  | DecimalParametersStruct
-  | TimeParametersStruct
-  | TimestampParametersStruct
-  | UnspecifiedParametersStruct
-  | null {
-  switch (DataTypeOptionsStruct[type]) {
-    case "NONE":
-      return null;
-    case "UnspecifiedParametersStruct":
-      return accessor(
-        new UnspecifiedParametersStruct(),
-      )! as UnspecifiedParametersStruct;
-    case "CommonParametersStruct":
-      return accessor(
-        new CommonParametersStruct(),
-      )! as CommonParametersStruct;
-    case "DecimalParametersStruct":
-      return accessor(
-        new DecimalParametersStruct(),
-      )! as DecimalParametersStruct;
-    case "DateParametersStruct":
-      return accessor(
-        new DateParametersStruct(),
-      )! as DateParametersStruct;
-    case "TimeParametersStruct":
-      return accessor(
-        new TimeParametersStruct(),
-      )! as TimeParametersStruct;
-    case "TimestampParametersStruct":
-      return accessor(
-        new TimestampParametersStruct(),
-      )! as TimestampParametersStruct;
-    default:
-      return null;
+  accessor: (obj:CommonParametersStruct|DateParametersStruct|DecimalParametersStruct|TimeParametersStruct|TimestampParametersStruct|UnspecifiedParametersStruct) => CommonParametersStruct|DateParametersStruct|DecimalParametersStruct|TimeParametersStruct|TimestampParametersStruct|UnspecifiedParametersStruct|null
+): CommonParametersStruct|DateParametersStruct|DecimalParametersStruct|TimeParametersStruct|TimestampParametersStruct|UnspecifiedParametersStruct|null {
+  switch(DataTypeOptionsStruct[type]) {
+    case 'NONE': return null; 
+    case 'UnspecifiedParametersStruct': return accessor(new UnspecifiedParametersStruct())! as UnspecifiedParametersStruct;
+    case 'CommonParametersStruct': return accessor(new CommonParametersStruct())! as CommonParametersStruct;
+    case 'DecimalParametersStruct': return accessor(new DecimalParametersStruct())! as DecimalParametersStruct;
+    case 'DateParametersStruct': return accessor(new DateParametersStruct())! as DateParametersStruct;
+    case 'TimeParametersStruct': return accessor(new TimeParametersStruct())! as TimeParametersStruct;
+    case 'TimestampParametersStruct': return accessor(new TimestampParametersStruct())! as TimestampParametersStruct;
+    default: return null;
   }
 }
 
 export function unionListToDataTypeOptionsStruct(
-  type: DataTypeOptionsStruct,
-  accessor: (
-    index: number,
-    obj:
-      | CommonParametersStruct
-      | DateParametersStruct
-      | DecimalParametersStruct
-      | TimeParametersStruct
-      | TimestampParametersStruct
-      | UnspecifiedParametersStruct,
-  ) =>
-    | CommonParametersStruct
-    | DateParametersStruct
-    | DecimalParametersStruct
-    | TimeParametersStruct
-    | TimestampParametersStruct
-    | UnspecifiedParametersStruct
-    | null,
-  index: number,
-):
-  | CommonParametersStruct
-  | DateParametersStruct
-  | DecimalParametersStruct
-  | TimeParametersStruct
-  | TimestampParametersStruct
-  | UnspecifiedParametersStruct
-  | null {
-  switch (DataTypeOptionsStruct[type]) {
-    case "NONE":
-      return null;
-    case "UnspecifiedParametersStruct":
-      return accessor(
-        index,
-        new UnspecifiedParametersStruct(),
-      )! as UnspecifiedParametersStruct;
-    case "CommonParametersStruct":
-      return accessor(
-        index,
-        new CommonParametersStruct(),
-      )! as CommonParametersStruct;
-    case "DecimalParametersStruct":
-      return accessor(
-        index,
-        new DecimalParametersStruct(),
-      )! as DecimalParametersStruct;
-    case "DateParametersStruct":
-      return accessor(
-        index,
-        new DateParametersStruct(),
-      )! as DateParametersStruct;
-    case "TimeParametersStruct":
-      return accessor(
-        index,
-        new TimeParametersStruct(),
-      )! as TimeParametersStruct;
-    case "TimestampParametersStruct":
-      return accessor(
-        index,
-        new TimestampParametersStruct(),
-      )! as TimestampParametersStruct;
-    default:
-      return null;
+  type: DataTypeOptionsStruct, 
+  accessor: (index: number, obj:CommonParametersStruct|DateParametersStruct|DecimalParametersStruct|TimeParametersStruct|TimestampParametersStruct|UnspecifiedParametersStruct) => CommonParametersStruct|DateParametersStruct|DecimalParametersStruct|TimeParametersStruct|TimestampParametersStruct|UnspecifiedParametersStruct|null, 
+  index: number
+): CommonParametersStruct|DateParametersStruct|DecimalParametersStruct|TimeParametersStruct|TimestampParametersStruct|UnspecifiedParametersStruct|null {
+  switch(DataTypeOptionsStruct[type]) {
+    case 'NONE': return null; 
+    case 'UnspecifiedParametersStruct': return accessor(index, new UnspecifiedParametersStruct())! as UnspecifiedParametersStruct;
+    case 'CommonParametersStruct': return accessor(index, new CommonParametersStruct())! as CommonParametersStruct;
+    case 'DecimalParametersStruct': return accessor(index, new DecimalParametersStruct())! as DecimalParametersStruct;
+    case 'DateParametersStruct': return accessor(index, new DateParametersStruct())! as DateParametersStruct;
+    case 'TimeParametersStruct': return accessor(index, new TimeParametersStruct())! as TimeParametersStruct;
+    case 'TimestampParametersStruct': return accessor(index, new TimestampParametersStruct())! as TimestampParametersStruct;
+    default: return null;
   }
 }

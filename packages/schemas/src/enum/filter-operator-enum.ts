@@ -8,5 +8,5 @@
 export enum FilterOperatorEnum {
   Or = 0,
   And = 1,
-  None = 2,
+  None = 2
 }

@@ -2,104 +2,64 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-import * as flatbuffers from "flatbuffers";
+import * as flatbuffers from 'flatbuffers';
 
 /**
  * Parameters to connect to the BigQuery.
  */
 export class BigQueryParametersStruct {
-  bb: flatbuffers.ByteBuffer | null = null;
+  bb: flatbuffers.ByteBuffer|null = null;
   bb_pos = 0;
-  __init(
-    i: number,
-    bb: flatbuffers.ByteBuffer,
-  ): BigQueryParametersStruct {
-    this.bb_pos = i;
-    this.bb = bb;
-    return this;
-  }
+  __init(i:number, bb:flatbuffers.ByteBuffer):BigQueryParametersStruct {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+}
 
-  static getRootAsBigQueryParametersStruct(
-    bb: flatbuffers.ByteBuffer,
-    obj?: BigQueryParametersStruct,
-  ): BigQueryParametersStruct {
-    return (obj || new BigQueryParametersStruct()).__init(
-      bb.readInt32(bb.position()) + bb.position(),
-      bb,
-    );
-  }
+static getRootAsBigQueryParametersStruct(bb:flatbuffers.ByteBuffer, obj?:BigQueryParametersStruct):BigQueryParametersStruct {
+  return (obj || new BigQueryParametersStruct()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+}
 
-  static getSizePrefixedRootAsBigQueryParametersStruct(
-    bb: flatbuffers.ByteBuffer,
-    obj?: BigQueryParametersStruct,
-  ): BigQueryParametersStruct {
-    bb.setPosition(bb.position() + flatbuffers.SIZE_PREFIX_LENGTH);
-    return (obj || new BigQueryParametersStruct()).__init(
-      bb.readInt32(bb.position()) + bb.position(),
-      bb,
-    );
-  }
+static getSizePrefixedRootAsBigQueryParametersStruct(bb:flatbuffers.ByteBuffer, obj?:BigQueryParametersStruct):BigQueryParametersStruct {
+  bb.setPosition(bb.position() + flatbuffers.SIZE_PREFIX_LENGTH);
+  return (obj || new BigQueryParametersStruct()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+}
 
-  projectId(): string | null;
-  projectId(
-    optionalEncoding: flatbuffers.Encoding,
-  ): string | Uint8Array | null;
-  projectId(optionalEncoding?: any): string | Uint8Array | null {
-    const offset = this.bb!.__offset(this.bb_pos, 4);
-    return offset
-      ? this.bb!.__string(this.bb_pos + offset, optionalEncoding)
-      : null;
-  }
+projectId():string|null
+projectId(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+projectId(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 4);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
 
-  credentialsKey(): string | null;
-  credentialsKey(
-    optionalEncoding: flatbuffers.Encoding,
-  ): string | Uint8Array | null;
-  credentialsKey(optionalEncoding?: any): string | Uint8Array | null {
-    const offset = this.bb!.__offset(this.bb_pos, 6);
-    return offset
-      ? this.bb!.__string(this.bb_pos + offset, optionalEncoding)
-      : null;
-  }
+credentialsKey():string|null
+credentialsKey(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+credentialsKey(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 6);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
 
-  static startBigQueryParametersStruct(builder: flatbuffers.Builder) {
-    builder.startObject(2);
-  }
+static startBigQueryParametersStruct(builder:flatbuffers.Builder) {
+  builder.startObject(2);
+}
 
-  static addProjectId(
-    builder: flatbuffers.Builder,
-    projectIdOffset: flatbuffers.Offset,
-  ) {
-    builder.addFieldOffset(0, projectIdOffset, 0);
-  }
+static addProjectId(builder:flatbuffers.Builder, projectIdOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(0, projectIdOffset, 0);
+}
 
-  static addCredentialsKey(
-    builder: flatbuffers.Builder,
-    credentialsKeyOffset: flatbuffers.Offset,
-  ) {
-    builder.addFieldOffset(1, credentialsKeyOffset, 0);
-  }
+static addCredentialsKey(builder:flatbuffers.Builder, credentialsKeyOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(1, credentialsKeyOffset, 0);
+}
 
-  static endBigQueryParametersStruct(
-    builder: flatbuffers.Builder,
-  ): flatbuffers.Offset {
-    const offset = builder.endObject();
-    return offset;
-  }
+static endBigQueryParametersStruct(builder:flatbuffers.Builder):flatbuffers.Offset {
+  const offset = builder.endObject();
+  return offset;
+}
 
-  static createBigQueryParametersStruct(
-    builder: flatbuffers.Builder,
-    projectIdOffset: flatbuffers.Offset,
-    credentialsKeyOffset: flatbuffers.Offset,
-  ): flatbuffers.Offset {
-    BigQueryParametersStruct.startBigQueryParametersStruct(builder);
-    BigQueryParametersStruct.addProjectId(builder, projectIdOffset);
-    BigQueryParametersStruct.addCredentialsKey(
-      builder,
-      credentialsKeyOffset,
-    );
-    return BigQueryParametersStruct.endBigQueryParametersStruct(
-      builder,
-    );
-  }
+static createBigQueryParametersStruct(builder:flatbuffers.Builder, projectIdOffset:flatbuffers.Offset, credentialsKeyOffset:flatbuffers.Offset):flatbuffers.Offset {
+  BigQueryParametersStruct.startBigQueryParametersStruct(builder);
+  BigQueryParametersStruct.addProjectId(builder, projectIdOffset);
+  BigQueryParametersStruct.addCredentialsKey(builder, credentialsKeyOffset);
+  return BigQueryParametersStruct.endBigQueryParametersStruct(builder);
+}
 }

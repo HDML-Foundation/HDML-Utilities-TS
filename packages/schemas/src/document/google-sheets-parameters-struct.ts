@@ -2,108 +2,64 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-import * as flatbuffers from "flatbuffers";
+import * as flatbuffers from 'flatbuffers';
 
 /**
  * Parameters to connect to the Google Sheets.
  */
 export class GoogleSheetsParametersStruct {
-  bb: flatbuffers.ByteBuffer | null = null;
+  bb: flatbuffers.ByteBuffer|null = null;
   bb_pos = 0;
-  __init(
-    i: number,
-    bb: flatbuffers.ByteBuffer,
-  ): GoogleSheetsParametersStruct {
-    this.bb_pos = i;
-    this.bb = bb;
-    return this;
-  }
+  __init(i:number, bb:flatbuffers.ByteBuffer):GoogleSheetsParametersStruct {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+}
 
-  static getRootAsGoogleSheetsParametersStruct(
-    bb: flatbuffers.ByteBuffer,
-    obj?: GoogleSheetsParametersStruct,
-  ): GoogleSheetsParametersStruct {
-    return (obj || new GoogleSheetsParametersStruct()).__init(
-      bb.readInt32(bb.position()) + bb.position(),
-      bb,
-    );
-  }
+static getRootAsGoogleSheetsParametersStruct(bb:flatbuffers.ByteBuffer, obj?:GoogleSheetsParametersStruct):GoogleSheetsParametersStruct {
+  return (obj || new GoogleSheetsParametersStruct()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+}
 
-  static getSizePrefixedRootAsGoogleSheetsParametersStruct(
-    bb: flatbuffers.ByteBuffer,
-    obj?: GoogleSheetsParametersStruct,
-  ): GoogleSheetsParametersStruct {
-    bb.setPosition(bb.position() + flatbuffers.SIZE_PREFIX_LENGTH);
-    return (obj || new GoogleSheetsParametersStruct()).__init(
-      bb.readInt32(bb.position()) + bb.position(),
-      bb,
-    );
-  }
+static getSizePrefixedRootAsGoogleSheetsParametersStruct(bb:flatbuffers.ByteBuffer, obj?:GoogleSheetsParametersStruct):GoogleSheetsParametersStruct {
+  bb.setPosition(bb.position() + flatbuffers.SIZE_PREFIX_LENGTH);
+  return (obj || new GoogleSheetsParametersStruct()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+}
 
-  sheetId(): string | null;
-  sheetId(
-    optionalEncoding: flatbuffers.Encoding,
-  ): string | Uint8Array | null;
-  sheetId(optionalEncoding?: any): string | Uint8Array | null {
-    const offset = this.bb!.__offset(this.bb_pos, 4);
-    return offset
-      ? this.bb!.__string(this.bb_pos + offset, optionalEncoding)
-      : null;
-  }
+sheetId():string|null
+sheetId(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+sheetId(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 4);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
 
-  credentialsKey(): string | null;
-  credentialsKey(
-    optionalEncoding: flatbuffers.Encoding,
-  ): string | Uint8Array | null;
-  credentialsKey(optionalEncoding?: any): string | Uint8Array | null {
-    const offset = this.bb!.__offset(this.bb_pos, 6);
-    return offset
-      ? this.bb!.__string(this.bb_pos + offset, optionalEncoding)
-      : null;
-  }
+credentialsKey():string|null
+credentialsKey(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+credentialsKey(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 6);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
 
-  static startGoogleSheetsParametersStruct(
-    builder: flatbuffers.Builder,
-  ) {
-    builder.startObject(2);
-  }
+static startGoogleSheetsParametersStruct(builder:flatbuffers.Builder) {
+  builder.startObject(2);
+}
 
-  static addSheetId(
-    builder: flatbuffers.Builder,
-    sheetIdOffset: flatbuffers.Offset,
-  ) {
-    builder.addFieldOffset(0, sheetIdOffset, 0);
-  }
+static addSheetId(builder:flatbuffers.Builder, sheetIdOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(0, sheetIdOffset, 0);
+}
 
-  static addCredentialsKey(
-    builder: flatbuffers.Builder,
-    credentialsKeyOffset: flatbuffers.Offset,
-  ) {
-    builder.addFieldOffset(1, credentialsKeyOffset, 0);
-  }
+static addCredentialsKey(builder:flatbuffers.Builder, credentialsKeyOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(1, credentialsKeyOffset, 0);
+}
 
-  static endGoogleSheetsParametersStruct(
-    builder: flatbuffers.Builder,
-  ): flatbuffers.Offset {
-    const offset = builder.endObject();
-    return offset;
-  }
+static endGoogleSheetsParametersStruct(builder:flatbuffers.Builder):flatbuffers.Offset {
+  const offset = builder.endObject();
+  return offset;
+}
 
-  static createGoogleSheetsParametersStruct(
-    builder: flatbuffers.Builder,
-    sheetIdOffset: flatbuffers.Offset,
-    credentialsKeyOffset: flatbuffers.Offset,
-  ): flatbuffers.Offset {
-    GoogleSheetsParametersStruct.startGoogleSheetsParametersStruct(
-      builder,
-    );
-    GoogleSheetsParametersStruct.addSheetId(builder, sheetIdOffset);
-    GoogleSheetsParametersStruct.addCredentialsKey(
-      builder,
-      credentialsKeyOffset,
-    );
-    return GoogleSheetsParametersStruct.endGoogleSheetsParametersStruct(
-      builder,
-    );
-  }
+static createGoogleSheetsParametersStruct(builder:flatbuffers.Builder, sheetIdOffset:flatbuffers.Offset, credentialsKeyOffset:flatbuffers.Offset):flatbuffers.Offset {
+  GoogleSheetsParametersStruct.startGoogleSheetsParametersStruct(builder);
+  GoogleSheetsParametersStruct.addSheetId(builder, sheetIdOffset);
+  GoogleSheetsParametersStruct.addCredentialsKey(builder, credentialsKeyOffset);
+  return GoogleSheetsParametersStruct.endGoogleSheetsParametersStruct(builder);
+}
 }

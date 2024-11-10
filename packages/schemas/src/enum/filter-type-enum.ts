@@ -8,5 +8,5 @@
 export enum FilterTypeEnum {
   Expression = 0,
   Keys = 1,
-  Named = 2,
+  Named = 2
 }

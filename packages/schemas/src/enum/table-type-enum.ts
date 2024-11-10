@@ -7,5 +7,5 @@
  */
 export enum TableTypeEnum {
   Table = 0,
-  Query = 1,
+  Query = 1
 }

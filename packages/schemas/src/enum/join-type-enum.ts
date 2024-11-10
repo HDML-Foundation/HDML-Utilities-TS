@@ -13,5 +13,5 @@ export enum JoinTypeEnum {
   Right = 4,
   FullOuter = 5,
   LeftOuter = 6,
-  RightOuter = 7,
+  RightOuter = 7
 }

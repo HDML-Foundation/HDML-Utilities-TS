@@ -2,118 +2,83 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-import * as flatbuffers from "flatbuffers";
+import * as flatbuffers from 'flatbuffers';
 
-import { DecimalBitWidthEnum } from "../enum/decimal-bit-width-enum.js";
+import { DecimalBitWidthEnum } from '../enum/decimal-bit-width-enum.js';
+
 
 /**
  * Decimal data type parameters structure.
  */
 export class DecimalParametersStruct {
-  bb: flatbuffers.ByteBuffer | null = null;
+  bb: flatbuffers.ByteBuffer|null = null;
   bb_pos = 0;
-  __init(
-    i: number,
-    bb: flatbuffers.ByteBuffer,
-  ): DecimalParametersStruct {
-    this.bb_pos = i;
-    this.bb = bb;
-    return this;
-  }
+  __init(i:number, bb:flatbuffers.ByteBuffer):DecimalParametersStruct {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+}
 
-  static getRootAsDecimalParametersStruct(
-    bb: flatbuffers.ByteBuffer,
-    obj?: DecimalParametersStruct,
-  ): DecimalParametersStruct {
-    return (obj || new DecimalParametersStruct()).__init(
-      bb.readInt32(bb.position()) + bb.position(),
-      bb,
-    );
-  }
+static getRootAsDecimalParametersStruct(bb:flatbuffers.ByteBuffer, obj?:DecimalParametersStruct):DecimalParametersStruct {
+  return (obj || new DecimalParametersStruct()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+}
 
-  static getSizePrefixedRootAsDecimalParametersStruct(
-    bb: flatbuffers.ByteBuffer,
-    obj?: DecimalParametersStruct,
-  ): DecimalParametersStruct {
-    bb.setPosition(bb.position() + flatbuffers.SIZE_PREFIX_LENGTH);
-    return (obj || new DecimalParametersStruct()).__init(
-      bb.readInt32(bb.position()) + bb.position(),
-      bb,
-    );
-  }
+static getSizePrefixedRootAsDecimalParametersStruct(bb:flatbuffers.ByteBuffer, obj?:DecimalParametersStruct):DecimalParametersStruct {
+  bb.setPosition(bb.position() + flatbuffers.SIZE_PREFIX_LENGTH);
+  return (obj || new DecimalParametersStruct()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+}
 
-  nullable(): boolean {
-    const offset = this.bb!.__offset(this.bb_pos, 4);
-    return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
-  }
+nullable():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 4);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
 
-  scale(): number {
-    const offset = this.bb!.__offset(this.bb_pos, 6);
-    return offset ? this.bb!.readUint16(this.bb_pos + offset) : 0;
-  }
+scale():number {
+  const offset = this.bb!.__offset(this.bb_pos, 6);
+  return offset ? this.bb!.readUint16(this.bb_pos + offset) : 0;
+}
 
-  precision(): number {
-    const offset = this.bb!.__offset(this.bb_pos, 8);
-    return offset ? this.bb!.readUint16(this.bb_pos + offset) : 0;
-  }
+precision():number {
+  const offset = this.bb!.__offset(this.bb_pos, 8);
+  return offset ? this.bb!.readUint16(this.bb_pos + offset) : 0;
+}
 
-  bitWidth(): DecimalBitWidthEnum {
-    const offset = this.bb!.__offset(this.bb_pos, 10);
-    return offset
-      ? this.bb!.readInt8(this.bb_pos + offset)
-      : DecimalBitWidthEnum._128;
-  }
+bitWidth():DecimalBitWidthEnum {
+  const offset = this.bb!.__offset(this.bb_pos, 10);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : DecimalBitWidthEnum._128;
+}
 
-  static startDecimalParametersStruct(builder: flatbuffers.Builder) {
-    builder.startObject(4);
-  }
+static startDecimalParametersStruct(builder:flatbuffers.Builder) {
+  builder.startObject(4);
+}
 
-  static addNullable(
-    builder: flatbuffers.Builder,
-    nullable: boolean,
-  ) {
-    builder.addFieldInt8(0, +nullable, +false);
-  }
+static addNullable(builder:flatbuffers.Builder, nullable:boolean) {
+  builder.addFieldInt8(0, +nullable, +false);
+}
 
-  static addScale(builder: flatbuffers.Builder, scale: number) {
-    builder.addFieldInt16(1, scale, 0);
-  }
+static addScale(builder:flatbuffers.Builder, scale:number) {
+  builder.addFieldInt16(1, scale, 0);
+}
 
-  static addPrecision(
-    builder: flatbuffers.Builder,
-    precision: number,
-  ) {
-    builder.addFieldInt16(2, precision, 0);
-  }
+static addPrecision(builder:flatbuffers.Builder, precision:number) {
+  builder.addFieldInt16(2, precision, 0);
+}
 
-  static addBitWidth(
-    builder: flatbuffers.Builder,
-    bitWidth: DecimalBitWidthEnum,
-  ) {
-    builder.addFieldInt8(3, bitWidth, DecimalBitWidthEnum._128);
-  }
+static addBitWidth(builder:flatbuffers.Builder, bitWidth:DecimalBitWidthEnum) {
+  builder.addFieldInt8(3, bitWidth, DecimalBitWidthEnum._128);
+}
 
-  static endDecimalParametersStruct(
-    builder: flatbuffers.Builder,
-  ): flatbuffers.Offset {
-    const offset = builder.endObject();
-    return offset;
-  }
+static endDecimalParametersStruct(builder:flatbuffers.Builder):flatbuffers.Offset {
+  const offset = builder.endObject();
+  return offset;
+}
 
-  static createDecimalParametersStruct(
-    builder: flatbuffers.Builder,
-    nullable: boolean,
-    scale: number,
-    precision: number,
-    bitWidth: DecimalBitWidthEnum,
-  ): flatbuffers.Offset {
-    DecimalParametersStruct.startDecimalParametersStruct(builder);
-    DecimalParametersStruct.addNullable(builder, nullable);
-    DecimalParametersStruct.addScale(builder, scale);
-    DecimalParametersStruct.addPrecision(builder, precision);
-    DecimalParametersStruct.addBitWidth(builder, bitWidth);
-    return DecimalParametersStruct.endDecimalParametersStruct(
-      builder,
-    );
-  }
+static createDecimalParametersStruct(builder:flatbuffers.Builder, nullable:boolean, scale:number, precision:number, bitWidth:DecimalBitWidthEnum):flatbuffers.Offset {
+  DecimalParametersStruct.startDecimalParametersStruct(builder);
+  DecimalParametersStruct.addNullable(builder, nullable);
+  DecimalParametersStruct.addScale(builder, scale);
+  DecimalParametersStruct.addPrecision(builder, precision);
+  DecimalParametersStruct.addBitWidth(builder, bitWidth);
+  return DecimalParametersStruct.endDecimalParametersStruct(builder);
+}
 }

@@ -9,5 +9,5 @@ export enum TimeUnitEnum {
   Second = 0,
   Millisecond = 1,
   Microsecond = 2,
-  Nanosecond = 3,
+  Nanosecond = 3
 }

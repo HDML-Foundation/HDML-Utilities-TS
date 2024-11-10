@@ -18,5 +18,5 @@ export enum FilterNameEnum {
   LessEqual = 9,
   IsNull = 10,
   IsNotNull = 11,
-  Between = 12,
+  Between = 12
 }

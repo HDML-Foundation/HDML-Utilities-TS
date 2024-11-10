@@ -19,5 +19,5 @@ export enum ConnectorTypesEnum {
   GoogleSheets = 10,
   ElasticSearch = 11,
   MongoDB = 12,
-  Snowflake = 13,
+  Snowflake = 13
 }

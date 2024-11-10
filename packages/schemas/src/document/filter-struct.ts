@@ -2,108 +2,74 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-import * as flatbuffers from "flatbuffers";
+import * as flatbuffers from 'flatbuffers';
 
-import {
-  FilterOptionsStruct,
-  unionToFilterOptionsStruct,
-  unionListToFilterOptionsStruct,
-} from "../document/filter-options-struct.js";
-import { FilterTypeEnum } from "../enum/filter-type-enum.js";
+import { FilterOptionsStruct, unionToFilterOptionsStruct, unionListToFilterOptionsStruct } from '../document/filter-options-struct.js';
+import { FilterTypeEnum } from '../enum/filter-type-enum.js';
+
 
 /**
  * Single filter structure.
  */
 export class FilterStruct {
-  bb: flatbuffers.ByteBuffer | null = null;
+  bb: flatbuffers.ByteBuffer|null = null;
   bb_pos = 0;
-  __init(i: number, bb: flatbuffers.ByteBuffer): FilterStruct {
-    this.bb_pos = i;
-    this.bb = bb;
-    return this;
-  }
+  __init(i:number, bb:flatbuffers.ByteBuffer):FilterStruct {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+}
 
-  static getRootAsFilterStruct(
-    bb: flatbuffers.ByteBuffer,
-    obj?: FilterStruct,
-  ): FilterStruct {
-    return (obj || new FilterStruct()).__init(
-      bb.readInt32(bb.position()) + bb.position(),
-      bb,
-    );
-  }
+static getRootAsFilterStruct(bb:flatbuffers.ByteBuffer, obj?:FilterStruct):FilterStruct {
+  return (obj || new FilterStruct()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+}
 
-  static getSizePrefixedRootAsFilterStruct(
-    bb: flatbuffers.ByteBuffer,
-    obj?: FilterStruct,
-  ): FilterStruct {
-    bb.setPosition(bb.position() + flatbuffers.SIZE_PREFIX_LENGTH);
-    return (obj || new FilterStruct()).__init(
-      bb.readInt32(bb.position()) + bb.position(),
-      bb,
-    );
-  }
+static getSizePrefixedRootAsFilterStruct(bb:flatbuffers.ByteBuffer, obj?:FilterStruct):FilterStruct {
+  bb.setPosition(bb.position() + flatbuffers.SIZE_PREFIX_LENGTH);
+  return (obj || new FilterStruct()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+}
 
-  type(): FilterTypeEnum {
-    const offset = this.bb!.__offset(this.bb_pos, 4);
-    return offset
-      ? this.bb!.readInt8(this.bb_pos + offset)
-      : FilterTypeEnum.Expression;
-  }
+type():FilterTypeEnum {
+  const offset = this.bb!.__offset(this.bb_pos, 4);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : FilterTypeEnum.Expression;
+}
 
-  optionsType(): FilterOptionsStruct {
-    const offset = this.bb!.__offset(this.bb_pos, 6);
-    return offset
-      ? this.bb!.readUint8(this.bb_pos + offset)
-      : FilterOptionsStruct.NONE;
-  }
+optionsType():FilterOptionsStruct {
+  const offset = this.bb!.__offset(this.bb_pos, 6);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : FilterOptionsStruct.NONE;
+}
 
-  options<T extends flatbuffers.Table>(obj: any): any | null {
-    const offset = this.bb!.__offset(this.bb_pos, 8);
-    return offset
-      ? this.bb!.__union(obj, this.bb_pos + offset)
-      : null;
-  }
+options<T extends flatbuffers.Table>(obj:any):any|null {
+  const offset = this.bb!.__offset(this.bb_pos, 8);
+  return offset ? this.bb!.__union(obj, this.bb_pos + offset) : null;
+}
 
-  static startFilterStruct(builder: flatbuffers.Builder) {
-    builder.startObject(3);
-  }
+static startFilterStruct(builder:flatbuffers.Builder) {
+  builder.startObject(3);
+}
 
-  static addType(builder: flatbuffers.Builder, type: FilterTypeEnum) {
-    builder.addFieldInt8(0, type, FilterTypeEnum.Expression);
-  }
+static addType(builder:flatbuffers.Builder, type:FilterTypeEnum) {
+  builder.addFieldInt8(0, type, FilterTypeEnum.Expression);
+}
 
-  static addOptionsType(
-    builder: flatbuffers.Builder,
-    optionsType: FilterOptionsStruct,
-  ) {
-    builder.addFieldInt8(1, optionsType, FilterOptionsStruct.NONE);
-  }
+static addOptionsType(builder:flatbuffers.Builder, optionsType:FilterOptionsStruct) {
+  builder.addFieldInt8(1, optionsType, FilterOptionsStruct.NONE);
+}
 
-  static addOptions(
-    builder: flatbuffers.Builder,
-    optionsOffset: flatbuffers.Offset,
-  ) {
-    builder.addFieldOffset(2, optionsOffset, 0);
-  }
+static addOptions(builder:flatbuffers.Builder, optionsOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(2, optionsOffset, 0);
+}
 
-  static endFilterStruct(
-    builder: flatbuffers.Builder,
-  ): flatbuffers.Offset {
-    const offset = builder.endObject();
-    return offset;
-  }
+static endFilterStruct(builder:flatbuffers.Builder):flatbuffers.Offset {
+  const offset = builder.endObject();
+  return offset;
+}
 
-  static createFilterStruct(
-    builder: flatbuffers.Builder,
-    type: FilterTypeEnum,
-    optionsType: FilterOptionsStruct,
-    optionsOffset: flatbuffers.Offset,
-  ): flatbuffers.Offset {
-    FilterStruct.startFilterStruct(builder);
-    FilterStruct.addType(builder, type);
-    FilterStruct.addOptionsType(builder, optionsType);
-    FilterStruct.addOptions(builder, optionsOffset);
-    return FilterStruct.endFilterStruct(builder);
-  }
+static createFilterStruct(builder:flatbuffers.Builder, type:FilterTypeEnum, optionsType:FilterOptionsStruct, optionsOffset:flatbuffers.Offset):flatbuffers.Offset {
+  FilterStruct.startFilterStruct(builder);
+  FilterStruct.addType(builder, type);
+  FilterStruct.addOptionsType(builder, optionsType);
+  FilterStruct.addOptions(builder, optionsOffset);
+  return FilterStruct.endFilterStruct(builder);
+}
 }

@@ -13,5 +13,5 @@ export enum AggregationTypeEnum {
   Sum = 4,
   Avg = 5,
   Min = 6,
-  Max = 7,
+  Max = 7
 }

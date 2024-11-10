@@ -2,85 +2,52 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-import * as flatbuffers from "flatbuffers";
+import * as flatbuffers from 'flatbuffers';
 
 /**
  * Expression filter parameters.
  */
 export class ExpressionParametersStruct {
-  bb: flatbuffers.ByteBuffer | null = null;
+  bb: flatbuffers.ByteBuffer|null = null;
   bb_pos = 0;
-  __init(
-    i: number,
-    bb: flatbuffers.ByteBuffer,
-  ): ExpressionParametersStruct {
-    this.bb_pos = i;
-    this.bb = bb;
-    return this;
-  }
+  __init(i:number, bb:flatbuffers.ByteBuffer):ExpressionParametersStruct {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+}
 
-  static getRootAsExpressionParametersStruct(
-    bb: flatbuffers.ByteBuffer,
-    obj?: ExpressionParametersStruct,
-  ): ExpressionParametersStruct {
-    return (obj || new ExpressionParametersStruct()).__init(
-      bb.readInt32(bb.position()) + bb.position(),
-      bb,
-    );
-  }
+static getRootAsExpressionParametersStruct(bb:flatbuffers.ByteBuffer, obj?:ExpressionParametersStruct):ExpressionParametersStruct {
+  return (obj || new ExpressionParametersStruct()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+}
 
-  static getSizePrefixedRootAsExpressionParametersStruct(
-    bb: flatbuffers.ByteBuffer,
-    obj?: ExpressionParametersStruct,
-  ): ExpressionParametersStruct {
-    bb.setPosition(bb.position() + flatbuffers.SIZE_PREFIX_LENGTH);
-    return (obj || new ExpressionParametersStruct()).__init(
-      bb.readInt32(bb.position()) + bb.position(),
-      bb,
-    );
-  }
+static getSizePrefixedRootAsExpressionParametersStruct(bb:flatbuffers.ByteBuffer, obj?:ExpressionParametersStruct):ExpressionParametersStruct {
+  bb.setPosition(bb.position() + flatbuffers.SIZE_PREFIX_LENGTH);
+  return (obj || new ExpressionParametersStruct()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+}
 
-  clause(): string | null;
-  clause(
-    optionalEncoding: flatbuffers.Encoding,
-  ): string | Uint8Array | null;
-  clause(optionalEncoding?: any): string | Uint8Array | null {
-    const offset = this.bb!.__offset(this.bb_pos, 4);
-    return offset
-      ? this.bb!.__string(this.bb_pos + offset, optionalEncoding)
-      : null;
-  }
+clause():string|null
+clause(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+clause(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 4);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
 
-  static startExpressionParametersStruct(
-    builder: flatbuffers.Builder,
-  ) {
-    builder.startObject(1);
-  }
+static startExpressionParametersStruct(builder:flatbuffers.Builder) {
+  builder.startObject(1);
+}
 
-  static addClause(
-    builder: flatbuffers.Builder,
-    clauseOffset: flatbuffers.Offset,
-  ) {
-    builder.addFieldOffset(0, clauseOffset, 0);
-  }
+static addClause(builder:flatbuffers.Builder, clauseOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(0, clauseOffset, 0);
+}
 
-  static endExpressionParametersStruct(
-    builder: flatbuffers.Builder,
-  ): flatbuffers.Offset {
-    const offset = builder.endObject();
-    return offset;
-  }
+static endExpressionParametersStruct(builder:flatbuffers.Builder):flatbuffers.Offset {
+  const offset = builder.endObject();
+  return offset;
+}
 
-  static createExpressionParametersStruct(
-    builder: flatbuffers.Builder,
-    clauseOffset: flatbuffers.Offset,
-  ): flatbuffers.Offset {
-    ExpressionParametersStruct.startExpressionParametersStruct(
-      builder,
-    );
-    ExpressionParametersStruct.addClause(builder, clauseOffset);
-    return ExpressionParametersStruct.endExpressionParametersStruct(
-      builder,
-    );
-  }
+static createExpressionParametersStruct(builder:flatbuffers.Builder, clauseOffset:flatbuffers.Offset):flatbuffers.Offset {
+  ExpressionParametersStruct.startExpressionParametersStruct(builder);
+  ExpressionParametersStruct.addClause(builder, clauseOffset);
+  return ExpressionParametersStruct.endExpressionParametersStruct(builder);
+}
 }

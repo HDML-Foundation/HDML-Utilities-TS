@@ -7,5 +7,5 @@
  */
 export enum DateUnitEnum {
   Second = 0,
-  Millisecond = 1,
+  Millisecond = 1
 }
