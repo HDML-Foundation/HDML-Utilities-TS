@@ -1,3 +1,5 @@
+/packages/schemas/src/document
+/packages/schemas/src/enum
 /packages/**/coverage
 /packages/**/docs
 /packages/**/bin
@@ -8,8 +10,6 @@
 /packages/**/tsconfig/*.tsbuildinfo
 /packages/**/node_modules
 /packages/**/npm-debug.log
-/packages/schemas/src/document
-/packages/schemas/src/enum
 /.vscode
 /node_modules
 npm-debug.log
