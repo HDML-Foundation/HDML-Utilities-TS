@@ -1,5 +1,5 @@
 {
-  "name": "HDML Utilities Environment",
+  "name": "HDML Utilities Environment (TS)",
   "build": {
     "dockerfile": "Dockerfile",
     "context": ".."
