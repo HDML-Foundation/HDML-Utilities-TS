@@ -1,12 +1,12 @@
 {
   "name": "@hdml/utilities",
   "workspaces": [
+    "packages/schemas",
+    "packages/types",
     "packages/buffer",
     "packages/hash",
     "packages/parser",
-    "packages/schemas",
-    "packages/stringifier",
-    "packages/types"
+    "packages/stringifier"
   ],
   "private": true,
   "devDependencies": {
