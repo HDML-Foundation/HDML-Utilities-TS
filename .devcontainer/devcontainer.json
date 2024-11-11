@@ -1,5 +1,5 @@
 {
-  "name": "HDML Schema Environment",
+  "name": "HDML Utilities Environment (TS)",
   "build": {
     "dockerfile": "Dockerfile",
     "context": ".."
@@ -7,7 +7,7 @@
   "mounts": [
     "source=${localEnv:HOME}/.ssh,target=/home/.ssh,type=bind,consistency=cached,readonly"
   ],
-  "postAttachCommand": "sh /workspaces/HDML-Utilities/scripts/init",
+  "postAttachCommand": "sh /workspaces/HDML-Utilities-TS/scripts/init",
   "customizations": {
     "vscode": {
       "settings": {},
