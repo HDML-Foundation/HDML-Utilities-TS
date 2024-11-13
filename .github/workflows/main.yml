@@ -7,34 +7,32 @@ name: Main Branch
 on:
   push:
     paths:
-      - '.devcontainer/Dockerfile'
+      - '.devcontainer/**'
       - '.github/workflows/main.yml'
       - '.github/workflows/release.yml'
+      - '.eslintrc.js'
       - '.gitignore'
-      - 'src/**'
-      - 'lib/ts/src/**'
-      - 'lib/ts/tsconfig/**'
-      - 'lib/ts/.eslintrc.js'
-      - 'lib/ts/.jestrc.js'
-      - 'lib/ts/package-lock.json'
-      - 'lib/ts/package.json'
+      - '.jestrc.js'
+      - 'package-lock.json'
+      - 'package.json'
       - 'README.md'
+      - 'packages/**'
+      - 'tsconfig/**'
     branches:
       - 'main'
   pull_request:
     paths:
-      - '.devcontainer/Dockerfile'
+      - '.devcontainer/**'
       - '.github/workflows/main.yml'
       - '.github/workflows/release.yml'
+      - '.eslintrc.js'
       - '.gitignore'
-      - 'src/**'
-      - 'lib/ts/src/**'
-      - 'lib/ts/tsconfig/**'
-      - 'lib/ts/.eslintrc.js'
-      - 'lib/ts/.jestrc.js'
-      - 'lib/ts/package-lock.json'
-      - 'lib/ts/package.json'
+      - '.jestrc.js'
+      - 'package-lock.json'
+      - 'package.json'
       - 'README.md'
+      - 'packages/**'
+      - 'tsconfig/**'
 
 jobs:
   build_devcontainer:
