@@ -7,8 +7,8 @@ name: Release Version
 on:
   push:
     tags:
-      - 'v*.*.*'
-      - 'v*.*.*-*'
+      - '*.*.*'
+      - '*.*.*-*'
 
 jobs:
   release_ts_library:
@@ -17,6 +17,8 @@ jobs:
     steps:
       - name: Checkout Project
         uses: actions/checkout@v4
+        with:
+          submodules: 'true'
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
@@ -40,7 +42,6 @@ jobs:
           push: never
           cacheFrom: hdio/hdml-schemas-dev
           runCmd: |
-            cd lib/ts
             npm ci
-            npm run build
-            npm publish
+            npm run build --workspaces
+            npm publish --workspaces
