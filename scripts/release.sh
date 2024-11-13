@@ -22,7 +22,7 @@ for d in packages/*/ ; do
   fi
 
   # updating package.json version:
-  sed -E "s/\"version\": \"[^\"]+\"/\"version\": \"$RELEASE\"/" $p
+  sed -i.bak -E "s/\"version\": \"[^\"]+\"/\"version\": \"$RELEASE\"/" $p
   if [ $? -eq 0 ]; then
     echo "Version updated to $RELEASE in $p"
   else
@@ -45,7 +45,7 @@ if [[ "$BRANCH" != "main" ]]; then
 fi
 
 # Commiting changes and adding new tag:
-git commit -a -m "v$RELEASE"
+git commit -a -m "$RELEASE"
 git push origin main
-git tag -a v$RELEASE -m "v$RELEASE"
-git push origin v$RELEASE
+git tag -a $RELEASE -m "$RELEASE"
+git push origin $RELEASE
