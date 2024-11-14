@@ -13,6 +13,9 @@ fi
 
 # For every package:
 for d in packages/*/ ; do
+  # building package name:
+  n=${d#*packages/}
+  n=${n%/}
 
   # checking package.json:
   p=$d"package.json"
@@ -28,7 +31,28 @@ for d in packages/*/ ; do
   else
     echo "Failed to update version in $p"
   fi
+
+  # recursively update current package version in all dependent packages: 
+  for sub_d in packages/*/ ; do
+    # checking package.json:
+    sub_p=$sub_d"package.json"
+    if [ ! -f $sub_p ]; then
+      echo "Error: $sub_p not found"
+      exit 1
+    fi
+
+    # updating package.json version:
+    sed -i.bak -E "s/\"@hdml\/$n\": \"[^\"]+\"/\"@hdml\/$n\": \"$RELEASE\"/" $sub_p
+    if [ $? -eq 0 ]; then
+      echo "@hdml/$n version updated to $RELEASE in $sub_p"
+    else
+      echo "Failed to update @hdml/$n version in $sub_p"
+    fi
+  done
 done
+
+# removing .bak files
+rm -rf packages/**/package.json.bak
 
 # Checking and applying GH token:
 if [ ! -f /home/.ssh/gh_token ]; then
