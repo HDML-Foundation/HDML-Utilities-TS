@@ -4,7 +4,8 @@
  * @license Apache-2.0
  */
 
-import { v1, v5 } from "uuid";
+import { uuid } from "@hdml/common";
+const { v1, v5 } = uuid;
 
 /**
  * Generates a random session-specific UUID-like string.
