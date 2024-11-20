@@ -8,9 +8,11 @@
 
 import { FilterTypeEnum, FilterNameEnum } from "@hdml/schemas";
 import { getFilterData } from "./getFilterData";
-import { FILTER_ATTRS_LIST } from "../enums/FILTER_ATTRS_LIST";
-import { FILTER_TYPE_VALUES } from "../enums/FILTER_TYPE_VALUES";
-import { FILTER_NAME_VALUES } from "../enums/FILTER_NAME_VALUES";
+import {
+  FILTER_ATTRS_LIST,
+  FILTER_TYPE_VALUES,
+  FILTER_NAME_VALUES,
+} from "@hdml/types";
 
 describe("The `getFilterData` function", () => {
   it("shoud return `null` if empty attributes passed", () => {

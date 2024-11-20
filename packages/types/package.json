@@ -16,12 +16,14 @@
     "lint": "node ../../node_modules/.bin/eslint -c ../../.eslintrc.js --fix --parser-options=tsconfigRootDir:'./tsconfig' 'src/**/*.ts'",
     "test": "",
     "build": "npm run clear && npm run lint && npm run test -- --coverage && npm run compile_all && npm run docs",
-    "compile_cjs": "",
-    "compile_esm": "",
+    "compile_cjs": "tsc -b ./tsconfig/cjs.json",
+    "compile_esm": "tsc -b ./tsconfig/esm.json",
     "compile_dts": "tsc -b ./tsconfig/dts.json",
-    "compile_bin": "",
-    "compile_tst": "",
+    "compile_bin": "../../node_modules/.bin/esbuild ./esm/index.js --bundle --minify --format=iife --sourcemap --outfile=./bin/index.min.js",
+    "compile_tst": "tsc -b ./tsconfig/tst.json",
     "compile_all": "npm run compile_cjs && npm run compile_esm && npm run compile_dts && npm run compile_bin"
   },
-  "types": "dts/index.d.ts"
+  "types": "dts/index.d.ts",
+  "module": "esm/index.js",
+  "main": "cjs/index.js"
 }

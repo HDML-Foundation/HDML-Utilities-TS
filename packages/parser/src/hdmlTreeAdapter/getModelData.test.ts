@@ -6,9 +6,8 @@
 
 /* eslint-disable max-len */
 
-import { Model } from "@hdml/types";
+import { Model, MODEL_ATTRS_LIST } from "@hdml/types";
 import { getModelData } from "./getModelData";
-import { MODEL_ATTRS_LIST } from "../enums/MODEL_ATTRS_LIST";
 
 describe("The `getModelData` function", () => {
   it("shoud return `null` if empty attributes passed", () => {

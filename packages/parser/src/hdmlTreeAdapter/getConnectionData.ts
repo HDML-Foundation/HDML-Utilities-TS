@@ -5,10 +5,12 @@
  */
 
 import { ConnectorTypesEnum } from "@hdml/schemas";
-import { Connection } from "@hdml/types";
+import {
+  Connection,
+  CONN_ATTRS_LIST,
+  CONN_TYPE_VALUES,
+} from "@hdml/types";
 import { Token } from "parse5";
-import { CONN_ATTRS_LIST } from "../enums/CONN_ATTRS_LIST";
-import { CONN_TYPE_VALUES } from "../enums/CONN_TYPE_VALUES";
 
 export function getConnectionData(
   attrs: Token.Attribute[],

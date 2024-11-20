@@ -7,9 +7,8 @@
 /* eslint-disable max-len */
 
 import { TableTypeEnum } from "@hdml/schemas";
-import { Table } from "@hdml/types";
+import { Table, TABLE_ATTRS_LIST } from "@hdml/types";
 import { getTableData } from "./getTableData";
-import { TABLE_ATTRS_LIST } from "../enums/TABLE_ATTRS_LIST";
 
 describe("The `getTableData` function", () => {
   it("shoud return `null` if empty attributes passed", () => {

@@ -15,15 +15,17 @@ import {
   TimeUnitEnum,
   TimeZoneEnum,
 } from "@hdml/schemas";
-import { Field } from "@hdml/types";
+import {
+  Field,
+  FIELD_ATTRS_LIST,
+  AGGREGATION_VALUES,
+  ORDER_VALUES,
+  FIELD_TYPE_VALUES,
+  BITWIDTH_VALUES,
+  DT_UNIT_VALUES,
+  TIMEZONE_VALUES,
+} from "@hdml/types";
 import { getFieldData } from "./getFieldData";
-import { FIELD_ATTRS_LIST } from "../enums/FIELD_ATTRS_LIST";
-import { AGGREGATION_VALUES } from "../enums/AGGREGATION_VALUES";
-import { ORDER_VALUES } from "../enums/ORDER_VALUES";
-import { FIELD_TYPE_VALUES } from "../enums/FIELD_TYPE_VALUES";
-import { BITWIDTH_VALUES } from "../enums/BITWIDTH_VALUES";
-import { DT_UNIT_VALUES } from "../enums/DT_UNIT_VALUES";
-import { TIMEZONE_VALUES } from "../enums/TIMEZONE_VALUES";
 
 describe("The `getFieldData` function", () => {
   it("shoud return `null` if empty attributes passed", () => {

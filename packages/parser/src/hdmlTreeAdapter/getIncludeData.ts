@@ -4,9 +4,8 @@
  * @license Apache-2.0
  */
 
-import { Include } from "@hdml/types";
+import { Include, INCLUDE_ATTRS_LIST } from "@hdml/types";
 import { Token } from "parse5";
-import { INCLUDE_ATTRS_LIST } from "../enums/INCLUDE_ATTRS_LIST";
 
 export function getIncludeData(
   attrs: Token.Attribute[],

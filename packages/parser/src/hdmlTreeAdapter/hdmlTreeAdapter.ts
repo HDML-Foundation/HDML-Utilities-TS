@@ -14,6 +14,7 @@ import {
   Table,
   FilterClause,
   Filter,
+  HDML_TAG_NAMES,
 } from "@hdml/types";
 import { html, Token } from "parse5";
 import {
@@ -27,7 +28,6 @@ import {
   Node,
 } from "../types/HDMLTreeAdapterMap";
 import { HDMLTreeAdapter } from "../types/HDMLTreeAdapter";
-import { HDML_TAG_NAMES } from "../enums/HDML_TAG_NAMES";
 import { HDDMData } from "../types/HDDMData";
 import { getIncludeData } from "./getIncludeData";
 import { getConnectionData } from "./getConnectionData";

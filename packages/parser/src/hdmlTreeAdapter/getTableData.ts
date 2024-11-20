@@ -5,10 +5,12 @@
  */
 
 import { TableTypeEnum } from "@hdml/schemas";
-import { Table } from "@hdml/types";
+import {
+  Table,
+  TABLE_ATTRS_LIST,
+  TABLE_TYPE_VALUES,
+} from "@hdml/types";
 import { Token } from "parse5";
-import { TABLE_ATTRS_LIST } from "../enums/TABLE_ATTRS_LIST";
-import { TABLE_TYPE_VALUES } from "../enums/TABLE_TYPE_VALUES";
 
 export function getTableData(attrs: Token.Attribute[]): null | Table {
   let data: null | Table = null;

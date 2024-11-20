@@ -8,8 +8,10 @@
 
 import { FilterOperatorEnum } from "@hdml/schemas";
 import { getConnectiveData } from "./getConnectiveData";
-import { CONNECTIVE_ATTRS_LIST } from "../enums/CONNECTIVE_ATTRS_LIST";
-import { CONNECTIVE_OP_VALUES } from "../enums/CONNECTIVE_OP_VALUES";
+import {
+  CONNECTIVE_ATTRS_LIST,
+  CONNECTIVE_OP_VALUES,
+} from "@hdml/types";
 
 describe("The `getConnectiveData` function", () => {
   it("shoud return `IFilterClause` object if empty attributes are passed", () => {

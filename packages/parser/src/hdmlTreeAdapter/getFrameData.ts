@@ -5,9 +5,8 @@
  */
 
 import { FilterOperatorEnum } from "@hdml/schemas";
-import { Frame } from "@hdml/types";
+import { Frame, FRAME_ATTRS_LIST } from "@hdml/types";
 import { Token } from "parse5";
-import { FRAME_ATTRS_LIST } from "../enums/FRAME_ATTRS_LIST";
 
 export function getFrameData(attrs: Token.Attribute[]): null | Frame {
   let frame: null | Frame = null;

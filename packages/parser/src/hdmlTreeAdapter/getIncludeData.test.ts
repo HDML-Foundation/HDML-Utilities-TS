@@ -8,7 +8,7 @@
 
 import { Include } from "@hdml/types";
 import { getIncludeData } from "./getIncludeData";
-import { INCLUDE_ATTRS_LIST } from "../enums/INCLUDE_ATTRS_LIST";
+import { INCLUDE_ATTRS_LIST } from "@hdml/types";
 
 describe("The `getIncludeData` function", () => {
   it("shoud return `null` if empty attributes passed", () => {

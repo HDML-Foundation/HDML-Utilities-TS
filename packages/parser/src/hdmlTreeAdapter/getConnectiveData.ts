@@ -5,11 +5,12 @@
  */
 
 import { FilterOperatorEnum } from "@hdml/schemas";
-import { FilterClause } from "@hdml/types";
+import {
+  FilterClause,
+  CONNECTIVE_ATTRS_LIST,
+  CONNECTIVE_OP_VALUES,
+} from "@hdml/types";
 import { Token } from "parse5";
-/* eslint-disable-next-line max-len */
-import { CONNECTIVE_ATTRS_LIST } from "../enums/CONNECTIVE_ATTRS_LIST";
-import { CONNECTIVE_OP_VALUES } from "../enums/CONNECTIVE_OP_VALUES";
 
 export function getConnectiveData(
   attrs: Token.Attribute[],

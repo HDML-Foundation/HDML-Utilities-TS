@@ -8,7 +8,7 @@
 
 import { FilterOperatorEnum } from "@hdml/schemas";
 import { getFrameData } from "./getFrameData";
-import { FRAME_ATTRS_LIST } from "../enums/FRAME_ATTRS_LIST";
+import { FRAME_ATTRS_LIST } from "@hdml/types";
 
 describe("The `getFrameData` function", () => {
   it("shoud return `null` if empty attributes passed", () => {

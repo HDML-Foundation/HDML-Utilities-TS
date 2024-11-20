@@ -7,9 +7,8 @@
 /* eslint-disable max-len */
 
 import { JoinTypeEnum, FilterOperatorEnum } from "@hdml/schemas";
+import { JOIN_ATTRS_LIST, JOIN_TYPE_VALUES } from "@hdml/types";
 import { getJoinData } from "./getJoinData";
-import { JOIN_ATTRS_LIST } from "../enums/JOIN_ATTRS_LIST";
-import { JOIN_TYPE_VALUES } from "../enums/JOIN_TYPE_VALUES";
 
 describe("The `getJoinData` function", () => {
   it("shoud return `null` if empty attributes passed", () => {

@@ -5,11 +5,13 @@
  */
 
 import { FilterTypeEnum, FilterNameEnum } from "@hdml/schemas";
-import { Filter } from "@hdml/types";
+import {
+  Filter,
+  FILTER_ATTRS_LIST,
+  FILTER_TYPE_VALUES,
+  FILTER_NAME_VALUES,
+} from "@hdml/types";
 import { Token } from "parse5";
-import { FILTER_ATTRS_LIST } from "../enums/FILTER_ATTRS_LIST";
-import { FILTER_TYPE_VALUES } from "../enums/FILTER_TYPE_VALUES";
-import { FILTER_NAME_VALUES } from "../enums/FILTER_NAME_VALUES";
 
 export function getFilterData(
   attrs: Token.Attribute[],

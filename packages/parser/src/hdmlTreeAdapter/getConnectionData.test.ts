@@ -15,9 +15,9 @@ import {
   ElasticsearchParameters,
   MongoDBParameters,
   SnowflakeParameters,
+  CONN_ATTRS_LIST,
 } from "@hdml/types";
 import { getConnectionData } from "./getConnectionData";
-import { CONN_ATTRS_LIST } from "../enums/CONN_ATTRS_LIST";
 
 describe("The `getConnectionData` function", () => {
   // Common

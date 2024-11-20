@@ -6,9 +6,9 @@
 
 /* eslint-disable max-len */
 
+import { HDML_TAG_NAMES } from "@hdml/types";
 import { html } from "parse5";
 import { hdmlTreeAdapter } from "./hdmlTreeAdapter";
-import { HDML_TAG_NAMES } from "../enums/HDML_TAG_NAMES";
 
 describe("The `hdmlTreeAdapter` object", () => {
   it("`getHdmlParentTag` method should return `null` if `element` is equal to null", () => {
