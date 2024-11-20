@@ -18,7 +18,7 @@ export enum CONN_ATTRS_LIST {
   SHEET_ID = "sheet-id",
   REGION = "region",
   ACCESS_KEY = "access-key",
-  SECRET_KEY = "secret-key	",
+  SECRET_KEY = "secret-key",
   SCHEMA = "schema",
   ACCOUNT = "account",
   DATABASE = "database",

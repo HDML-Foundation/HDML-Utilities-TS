@@ -305,47 +305,74 @@ export function getJdbcHTML(
     `${CONN_ATTRS_LIST.NAME}="${name}"\n`;
   switch (opts.connector()) {
     case ConnectorTypesEnum.Postgres:
-      html = html + `${t}type="postgresql"\n`;
+      html =
+        html +
+        `${t}${CONN_ATTRS_LIST.TYPE}=` +
+        `"${CONN_TYPE_VALUES.POSTGRES}"\n`;
       break;
 
     case ConnectorTypesEnum.MySQL:
-      html = html + `${t}type="mysql"\n`;
+      html =
+        html +
+        `${t}${CONN_ATTRS_LIST.TYPE}=` +
+        `"${CONN_TYPE_VALUES.MYSQL}"\n`;
       break;
 
     case ConnectorTypesEnum.MsSQL:
-      html = html + `${t}type="mssql"\n`;
+      html =
+        html +
+        `${t}${CONN_ATTRS_LIST.TYPE}=` +
+        `"${CONN_TYPE_VALUES.MSSQL}"\n`;
       break;
 
     case ConnectorTypesEnum.Oracle:
-      html = html + `${t}type="oracle"\n`;
+      html =
+        html +
+        `${t}${CONN_ATTRS_LIST.TYPE}=` +
+        `"${CONN_TYPE_VALUES.ORACLE}"\n`;
       break;
 
     case ConnectorTypesEnum.Clickhouse:
-      html = html + `${t}type="clickhouse"\n`;
+      html =
+        html +
+        `${t}${CONN_ATTRS_LIST.TYPE}=` +
+        `"${CONN_TYPE_VALUES.CLICKHOUSE}"\n`;
       break;
 
     case ConnectorTypesEnum.Druid:
-      html = html + `${t}type="druid"\n`;
+      html =
+        html +
+        `${t}${CONN_ATTRS_LIST.TYPE}=` +
+        `"${CONN_TYPE_VALUES.DRUID}"\n`;
       break;
 
     case ConnectorTypesEnum.Ignite:
-      html = html + `${t}type="ignite"\n`;
+      html =
+        html +
+        `${t}${CONN_ATTRS_LIST.TYPE}=` +
+        `"${CONN_TYPE_VALUES.IGNITE}"\n`;
       break;
 
     case ConnectorTypesEnum.Redshift:
-      html = html + `${t}type="redshift"\n`;
+      html =
+        html +
+        `${t}${CONN_ATTRS_LIST.TYPE}=` +
+        `"${CONN_TYPE_VALUES.REDSHIFT}"\n`;
       break;
 
     case ConnectorTypesEnum.MariaDB:
-      html = html + `${t}type="mariadb"\n`;
+      html =
+        html +
+        `${t}${CONN_ATTRS_LIST.TYPE}=` +
+        `"${CONN_TYPE_VALUES.MARIADB}"\n`;
       break;
   }
   html =
     html +
-    `${t}host="${host}"\n` +
-    `${t}ssl="${ssl ? "true" : "false"}"\n` +
-    `${t}user="${user}"\n` +
-    `${t}password="${pass}"\n` +
+    `${t}${CONN_ATTRS_LIST.HOST}="${host}"\n` +
+    `${t}${CONN_ATTRS_LIST.SSL}="${ssl ? "true" : "false"}"\n` +
+    `${t}${CONN_ATTRS_LIST.USER}="${user}"\n` +
+    `${t}${CONN_ATTRS_LIST.PASSWORD}="${pass}"\n` +
     `</${HDML_TAG_NAMES.CONNECTION}>\n`;
 
   return html;
@@ -364,9 +391,9 @@ export function getBigQueryHTML(
   const html =
     `<${HDML_TAG_NAMES.CONNECTION}\n${t}` +
     `${CONN_ATTRS_LIST.NAME}="${name}"\n` +
-    `${t}type="bigquery"\n` +
-    `${t}project-id="${projectId}"\n` +
-    `${t}credentials-key="${credentialsKey}"\n` +
+    `${t}${CONN_ATTRS_LIST.TYPE}="${CONN_TYPE_VALUES.BIGQUERY}"\n` +
+    `${t}${CONN_ATTRS_LIST.PROJECT_ID}="${projectId}"\n` +
+    `${t}${CONN_ATTRS_LIST.CREDENTIALS_KEY}="${credentialsKey}"\n` +
     `</${HDML_TAG_NAMES.CONNECTION}>\n`;
 
   return html;
@@ -385,9 +412,10 @@ export function getGoogleSheetsHTML(
   const html =
     `<${HDML_TAG_NAMES.CONNECTION}\n${t}` +
     `${CONN_ATTRS_LIST.NAME}="${name}"\n` +
-    `${t}type="googlesheets"\n` +
-    `${t}sheet-id="${sheetId}"\n` +
-    `${t}credentials-key="${credentialsKey}"\n` +
+    `${t}${CONN_ATTRS_LIST.TYPE}=` +
+    `"${CONN_TYPE_VALUES.GOOGLESHEETS}"\n` +
+    `${t}${CONN_ATTRS_LIST.SHEET_ID}="${sheetId}"\n` +
+    `${t}${CONN_ATTRS_LIST.CREDENTIALS_KEY}="${credentialsKey}"\n` +
     `</${HDML_TAG_NAMES.CONNECTION}>\n`;
 
   return html;
@@ -411,14 +439,15 @@ export function getElasticSearchHTML(
   const html =
     `<${HDML_TAG_NAMES.CONNECTION}\n${t}` +
     `${CONN_ATTRS_LIST.NAME}="${name}"\n` +
-    `${t}type="elasticsearch"\n` +
-    `${t}host="${host}"\n` +
-    `${t}port="${port}"\n` +
-    `${t}user="${user}"\n` +
-    `${t}password="${password}"\n` +
-    `${t}region="${region}"\n` +
-    `${t}access-key="${accessKey}"\n` +
-    `${t}secret-key="${secretKey}"\n` +
+    `${t}${CONN_ATTRS_LIST.TYPE}=` +
+    `"${CONN_TYPE_VALUES.ELASTICSEARCH}"\n` +
+    `${t}${CONN_ATTRS_LIST.HOST}="${host}"\n` +
+    `${t}${CONN_ATTRS_LIST.PORT}="${port}"\n` +
+    `${t}${CONN_ATTRS_LIST.USER}="${user}"\n` +
+    `${t}${CONN_ATTRS_LIST.PASSWORD}="${password}"\n` +
+    `${t}${CONN_ATTRS_LIST.REGION}="${region}"\n` +
+    `${t}${CONN_ATTRS_LIST.ACCESS_KEY}="${accessKey}"\n` +
+    `${t}${CONN_ATTRS_LIST.SECRET_KEY}="${secretKey}"\n` +
     `</${HDML_TAG_NAMES.CONNECTION}>\n`;
 
   return html;
@@ -441,13 +470,13 @@ export function getMongoHTML(
   const html =
     `<${HDML_TAG_NAMES.CONNECTION}\n${t}` +
     `${CONN_ATTRS_LIST.NAME}="${name}"\n` +
-    `${t}type="mongodb"\n` +
-    `${t}host="${host}"\n` +
-    `${t}port="${port}"\n` +
-    `${t}user="${user}"\n` +
-    `${t}password="${password}"\n` +
-    `${t}schema="${schema}"\n` +
-    `${t}ssl="${ssl ? "true" : "false"}"\n` +
+    `${t}${CONN_ATTRS_LIST.TYPE}="${CONN_TYPE_VALUES.MONGODB}"\n` +
+    `${t}${CONN_ATTRS_LIST.HOST}="${host}"\n` +
+    `${t}${CONN_ATTRS_LIST.PORT}="${port}"\n` +
+    `${t}${CONN_ATTRS_LIST.USER}="${user}"\n` +
+    `${t}${CONN_ATTRS_LIST.PASSWORD}="${password}"\n` +
+    `${t}${CONN_ATTRS_LIST.SCHEMA}="${schema}"\n` +
+    `${t}${CONN_ATTRS_LIST.SSL}="${ssl ? "true" : "false"}"\n` +
     `</${HDML_TAG_NAMES.CONNECTION}>\n`;
 
   return html;
@@ -470,13 +499,13 @@ export function getSnowflakeHTML(
   const html =
     `<${HDML_TAG_NAMES.CONNECTION}\n${t}` +
     `${CONN_ATTRS_LIST.NAME}="${name}"\n` +
-    `${t}type="snowflake"\n` +
-    `${t}account="${account}"\n` +
-    `${t}warehouse="${warehouse}"\n` +
-    `${t}database="${database}"\n` +
-    `${t}user="${user}"\n` +
-    `${t}password="${password}"\n` +
-    `${t}role="${role}"\n` +
+    `${t}${CONN_ATTRS_LIST.TYPE}="${CONN_TYPE_VALUES.SNOWFLAKE}"\n` +
+    `${t}${CONN_ATTRS_LIST.ACCOUNT}="${account}"\n` +
+    `${t}${CONN_ATTRS_LIST.WAREHOUSE}="${warehouse}"\n` +
+    `${t}${CONN_ATTRS_LIST.DATABASE}="${database}"\n` +
+    `${t}${CONN_ATTRS_LIST.USER}="${user}"\n` +
+    `${t}${CONN_ATTRS_LIST.PASSWORD}="${password}"\n` +
+    `${t}${CONN_ATTRS_LIST.ROLE}="${role}"\n` +
     `</${HDML_TAG_NAMES.CONNECTION}>\n`;
 
   return html;
