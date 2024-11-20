@@ -4,9 +4,9 @@
  * @license Apache-2.0
  */
 
+import { HDML_TAG_NAMES } from "@hdml/types";
 import { html, Token } from "parse5";
 import { HDMLTreeAdapterMap, ChildNode } from "./HDMLTreeAdapterMap";
-import { HDML_TAG_NAMES } from "../enums/HDML_TAG_NAMES";
 
 type DOCUMENT_MODE = html.DOCUMENT_MODE;
 type NS = html.NS;

@@ -35,7 +35,7 @@ const hdml = `
   <div>
     <hdml-connection
       name="db1"
-      type="postgres"
+      type="postgresql"
       host="example.com"
       user="user"
       password="pass">

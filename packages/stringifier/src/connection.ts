@@ -15,6 +15,11 @@ import {
   MongoDBParametersStruct,
   SnowflakeParametersStruct,
 } from "@hdml/schemas";
+import {
+  HDML_TAG_NAMES,
+  CONN_ATTRS_LIST,
+  CONN_TYPE_VALUES,
+} from "@hdml/types";
 import { t } from "./constants";
 
 export function getConnectionSQLs(conn: ConnectionStruct): string[] {
@@ -295,7 +300,9 @@ export function getJdbcHTML(
   const pass = params.password() || "";
   const ssl = params.ssl();
 
-  let html = `<hdml-connection\n${t}name="${name}"\n`;
+  let html =
+    `<${HDML_TAG_NAMES.CONNECTION}\n${t}` +
+    `${CONN_ATTRS_LIST.NAME}="${name}"\n`;
   switch (opts.connector()) {
     case ConnectorTypesEnum.Postgres:
       html = html + `${t}type="postgresql"\n`;
@@ -339,7 +346,7 @@ export function getJdbcHTML(
     `${t}ssl="${ssl ? "true" : "false"}"\n` +
     `${t}user="${user}"\n` +
     `${t}password="${pass}"\n` +
-    `</hdml-connection>\n`;
+    `</${HDML_TAG_NAMES.CONNECTION}>\n`;
 
   return html;
 }
@@ -355,11 +362,12 @@ export function getBigQueryHTML(
   const projectId = params.projectId() || "";
   const credentialsKey = params.credentialsKey() || "";
   const html =
-    `<hdml-connection\n${t}name="${name}"\n` +
+    `<${HDML_TAG_NAMES.CONNECTION}\n${t}` +
+    `${CONN_ATTRS_LIST.NAME}="${name}"\n` +
     `${t}type="bigquery"\n` +
     `${t}project-id="${projectId}"\n` +
     `${t}credentials-key="${credentialsKey}"\n` +
-    `</hdml-connection>\n`;
+    `</${HDML_TAG_NAMES.CONNECTION}>\n`;
 
   return html;
 }
@@ -375,11 +383,12 @@ export function getGoogleSheetsHTML(
   const sheetId = params.sheetId() || "";
   const credentialsKey = params.credentialsKey() || "";
   const html =
-    `<hdml-connection\n${t}name="${name}"\n` +
+    `<${HDML_TAG_NAMES.CONNECTION}\n${t}` +
+    `${CONN_ATTRS_LIST.NAME}="${name}"\n` +
     `${t}type="googlesheets"\n` +
     `${t}sheet-id="${sheetId}"\n` +
     `${t}credentials-key="${credentialsKey}"\n` +
-    `</hdml-connection>\n`;
+    `</${HDML_TAG_NAMES.CONNECTION}>\n`;
 
   return html;
 }
@@ -400,7 +409,8 @@ export function getElasticSearchHTML(
   const accessKey = params.accessKey() || "";
   const secretKey = params.secretKey() || "";
   const html =
-    `<hdml-connection\n${t}name="${name}"\n` +
+    `<${HDML_TAG_NAMES.CONNECTION}\n${t}` +
+    `${CONN_ATTRS_LIST.NAME}="${name}"\n` +
     `${t}type="elasticsearch"\n` +
     `${t}host="${host}"\n` +
     `${t}port="${port}"\n` +
@@ -409,7 +419,7 @@ export function getElasticSearchHTML(
     `${t}region="${region}"\n` +
     `${t}access-key="${accessKey}"\n` +
     `${t}secret-key="${secretKey}"\n` +
-    `</hdml-connection>\n`;
+    `</${HDML_TAG_NAMES.CONNECTION}>\n`;
 
   return html;
 }
@@ -429,7 +439,8 @@ export function getMongoHTML(
   const schema = params.schema() || "";
   const ssl = params.ssl() || "";
   const html =
-    `<hdml-connection\n${t}name="${name}"\n` +
+    `<${HDML_TAG_NAMES.CONNECTION}\n${t}` +
+    `${CONN_ATTRS_LIST.NAME}="${name}"\n` +
     `${t}type="mongodb"\n` +
     `${t}host="${host}"\n` +
     `${t}port="${port}"\n` +
@@ -437,7 +448,7 @@ export function getMongoHTML(
     `${t}password="${password}"\n` +
     `${t}schema="${schema}"\n` +
     `${t}ssl="${ssl ? "true" : "false"}"\n` +
-    `</hdml-connection>\n`;
+    `</${HDML_TAG_NAMES.CONNECTION}>\n`;
 
   return html;
 }
@@ -457,7 +468,8 @@ export function getSnowflakeHTML(
   const password = params.password() || "";
   const role = params.role() || "";
   const html =
-    `<hdml-connection\n${t}name="${name}"\n` +
+    `<${HDML_TAG_NAMES.CONNECTION}\n${t}` +
+    `${CONN_ATTRS_LIST.NAME}="${name}"\n` +
     `${t}type="snowflake"\n` +
     `${t}account="${account}"\n` +
     `${t}warehouse="${warehouse}"\n` +
@@ -465,7 +477,7 @@ export function getSnowflakeHTML(
     `${t}user="${user}"\n` +
     `${t}password="${password}"\n` +
     `${t}role="${role}"\n` +
-    `</hdml-connection>\n`;
+    `</${HDML_TAG_NAMES.CONNECTION}>\n`;
 
   return html;
 }

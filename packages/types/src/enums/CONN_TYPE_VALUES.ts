@@ -5,7 +5,7 @@
  */
 
 export enum CONN_TYPE_VALUES {
-  POSTGRES = "postgres",
+  POSTGRES = "postgresql",
   MYSQL = "mysql",
   MSSQL = "mssql",
   MARIADB = "mariadb",
