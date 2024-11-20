@@ -1,6 +1,6 @@
 # @hdml/types
 
-This module is part of the **HDML-Utilities** monorepo and provides type definitions for working with **HDML** (HyperData Markup Language). It includes a comprehensive set of TypeScript interfaces and type definitions that are essential for representing the structure and data of HDML documents, models, and their associated components.HDML
+This module is part of the **HDML-Utilities** monorepo and provides type definitions for working with **HDML** (HyperData Markup Language). It includes a comprehensive set of TypeScript interfaces and type definitions that are essential for representing the structure and data of HDML documents, models, and their associated components.
 
 ## Overview
 
