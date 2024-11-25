@@ -1,14 +1,14 @@
 {
   "name": "@hdml/parser",
-  "version": "0.0.2-alpha.3",
+  "version": "0.0.2-alpha.4",
   "license": "Apache-2.0",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
     "access": "public"
   },
   "dependencies": {
-    "@hdml/schemas": "0.0.2-alpha.3",
-    "@hdml/types": "0.0.2-alpha.3",
+    "@hdml/schemas": "0.0.2-alpha.4",
+    "@hdml/types": "0.0.2-alpha.4",
     "node-html-parser": "^6.1.13",
     "parse5": "^7.1.2"
   },
