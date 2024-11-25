@@ -10,7 +10,13 @@ import {
   TableStruct,
   TableTypeEnum,
 } from "@hdml/schemas";
-import { Join } from "@hdml/types";
+import {
+  Join,
+  HDML_TAG_NAMES,
+  MODEL_ATTRS_LIST,
+  TABLE_ATTRS_LIST,
+  TABLE_TYPE_VALUES,
+} from "@hdml/types";
 import { t } from "./constants";
 import { getTableFieldSQL, getFieldHTML } from "./field";
 import { getJoins, sortJoins, getJoinSQL, getJoinHTML } from "./join";
@@ -134,12 +140,12 @@ export function getModelHTML(model: ModelStruct, level = 0): string {
     .join("\n");
 
   let html =
-    `${prefix}<hdml-model ` +
-    `name="${model.name()}">\n${tablesHTML}\n`;
+    `${prefix}<${HDML_TAG_NAMES.MODEL} ` +
+    `${MODEL_ATTRS_LIST.NAME}="${model.name()}">\n${tablesHTML}\n`;
   if (joins.length > 0) {
     html = html + getJoinHTML(joins, level + 1);
   }
-  html = html + `${prefix}</hdml-model>\n`;
+  html = html + `${prefix}</${HDML_TAG_NAMES.MODEL}>\n`;
 
   return html;
 }
@@ -168,20 +174,22 @@ export function getTableHTML(table: TableStruct, level = 0): string {
   let type = "";
   switch (table.type()) {
     case TableTypeEnum.Table:
-      type = "table";
+      type = TABLE_TYPE_VALUES.TABLE;
       break;
 
     case TableTypeEnum.Query:
-      type = "query";
+      type = TABLE_TYPE_VALUES.QUERY;
       break;
   }
 
   let html =
-    `${prefix}<hdml-table name="${table.name()}" ` +
-    `type="${type}" ` +
-    `identifier="${table.identifier()?.replaceAll('"', "`")}">\n`;
+    `${prefix}<${HDML_TAG_NAMES.TABLE} ` +
+    `${TABLE_ATTRS_LIST.NAME}="${table.name()}" ` +
+    `${TABLE_ATTRS_LIST.TYPE}="${type}" ` +
+    `${TABLE_ATTRS_LIST.IDENTIFIER}=` +
+    `"${table.identifier()?.replaceAll('"', "`")}">\n`;
   html = html + `${fieldsHTML}\n`;
-  html = html + `${prefix}</hdml-table>`;
+  html = html + `${prefix}</${HDML_TAG_NAMES.TABLE}>`;
   return html;
 }
 
