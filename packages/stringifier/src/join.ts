@@ -9,7 +9,13 @@ import {
   JoinTypeEnum,
   FilterTypeEnum,
 } from "@hdml/schemas";
-import { Join, FilterClause } from "@hdml/types";
+import {
+  Join,
+  FilterClause,
+  HDML_TAG_NAMES,
+  JOIN_ATTRS_LIST,
+  JOIN_TYPE_VALUES,
+} from "@hdml/types";
 import { t } from "./constants";
 import { objectifyFilterClause } from "./filter";
 import { getFilterClauseSQL, getFilterClauseHTML } from "./filter";
@@ -77,49 +83,49 @@ export function getJoinHTML(joins: Join[], level = 0): string {
 
     switch (join.type) {
       case JoinTypeEnum.Full:
-        type = "full";
+        type = JOIN_TYPE_VALUES.FULL;
         break;
 
       case JoinTypeEnum.Left:
-        type = "left";
+        type = JOIN_TYPE_VALUES.LEFT;
         break;
 
       case JoinTypeEnum.Right:
-        type = "right";
+        type = JOIN_TYPE_VALUES.RIGHT;
         break;
 
       case JoinTypeEnum.FullOuter:
-        type = "full-outer";
+        type = JOIN_TYPE_VALUES.FULL_OUTER;
         break;
 
       case JoinTypeEnum.LeftOuter:
-        type = "left-outer";
+        type = JOIN_TYPE_VALUES.LEFT_OUTER;
         break;
 
       case JoinTypeEnum.RightOuter:
-        type = "right-outer";
+        type = JOIN_TYPE_VALUES.RIGHT_OUTER;
         break;
 
       case JoinTypeEnum.Inner:
-        type = "inner";
+        type = JOIN_TYPE_VALUES.INNER;
         break;
 
       case JoinTypeEnum.Cross:
-        type = "cross";
+        type = JOIN_TYPE_VALUES.CROSS;
         break;
     }
 
     html =
       html +
-      `${prefix}<hdml-join` +
-      ` type="${type}"` +
-      ` left="${join.left}"` +
-      ` right="${join.right}">\n`;
+      `${prefix}<${HDML_TAG_NAMES.JOIN}` +
+      ` ${JOIN_ATTRS_LIST.TYPE}="${type}"` +
+      ` ${JOIN_ATTRS_LIST.LEFT}="${join.left}"` +
+      ` ${JOIN_ATTRS_LIST.RIGHT}="${join.right}">\n`;
 
     // TODO (buntarb): should we check for
     // `join.type !== JoinType.Cross` here?
     html = html + getFilterClauseHTML(join.clause, level + 1, join);
-    html = html + `${prefix}</hdml-join>\n`;
+    html = html + `${prefix}</${HDML_TAG_NAMES.JOIN}>\n`;
   });
 
   return html;
