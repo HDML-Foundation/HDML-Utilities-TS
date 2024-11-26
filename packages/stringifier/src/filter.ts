@@ -20,6 +20,9 @@ import {
   ExpressionParameters,
   KeysParameters,
   NamedParameters,
+  HDML_TAG_NAMES,
+  CONNECTIVE_ATTRS_LIST,
+  CONNECTIVE_OP_VALUES,
 } from "@hdml/types";
 import { t } from "./constants";
 
@@ -192,18 +195,27 @@ export function getFilterClauseHTML(
 
   switch (clause.type) {
     case FilterOperatorEnum.And:
-      open = `${prefix}<hdml-connective operator="and">\n`;
-      close = `${prefix}</hdml-connective>\n`;
+      open =
+        `${prefix}<${HDML_TAG_NAMES.CONNECTIVE} ` +
+        `${CONNECTIVE_ATTRS_LIST.OPERATOR}=` +
+        `"${CONNECTIVE_OP_VALUES.AND}">\n`;
+      close = `${prefix}</${HDML_TAG_NAMES.CONNECTIVE}>\n`;
       break;
 
     case FilterOperatorEnum.Or:
-      open = `${prefix}<hdml-connective operator="or">\n`;
-      close = `${prefix}</hdml-connective>\n`;
+      open =
+        `${prefix}<${HDML_TAG_NAMES.CONNECTIVE} ` +
+        `${CONNECTIVE_ATTRS_LIST.OPERATOR}=` +
+        `"${CONNECTIVE_OP_VALUES.OR}">\n`;
+      close = `${prefix}</${HDML_TAG_NAMES.CONNECTIVE}>\n`;
       break;
 
     case FilterOperatorEnum.None:
-      open = `${prefix}<hdml-connective operator="none">\n`;
-      close = `${prefix}</hdml-connective>\n`;
+      open =
+        `${prefix}<${HDML_TAG_NAMES.CONNECTIVE} ` +
+        `${CONNECTIVE_ATTRS_LIST.OPERATOR}=` +
+        `"${CONNECTIVE_OP_VALUES.NONE}">\n`;
+      close = `${prefix}</${HDML_TAG_NAMES.CONNECTIVE}>\n`;
       break;
   }
 
