@@ -23,6 +23,9 @@ import {
   HDML_TAG_NAMES,
   CONNECTIVE_ATTRS_LIST,
   CONNECTIVE_OP_VALUES,
+  FILTER_ATTRS_LIST,
+  FILTER_TYPE_VALUES,
+  FILTER_NAME_VALUES,
 } from "@hdml/types";
 import { t } from "./constants";
 
@@ -252,8 +255,11 @@ export function getKeysFilterHTML(opts: KeysParameters): string {
     return "<!-- incorrect filter options -->";
   }
   return (
-    `<hdml-filter type="keys" left="${opts.left}" ` +
-    `right="${opts.right}"></hdml-filter>`
+    `<${HDML_TAG_NAMES.FILTER} ` +
+    `${FILTER_ATTRS_LIST.TYPE}="${FILTER_TYPE_VALUES.KEYS}" ` +
+    `${FILTER_ATTRS_LIST.LEFT}="${opts.left}" ` +
+    `${FILTER_ATTRS_LIST.RIGHT}="${opts.right}">` +
+    `</${HDML_TAG_NAMES.FILTER}>`
   );
 }
 
@@ -263,10 +269,14 @@ export function getExpressionFilterHTML(
   if (!opts.clause) {
     return "<!-- incorrect filter options -->";
   }
-  return `<hdml-filter type="expr" clause="${opts.clause.replaceAll(
-    '"',
-    "`",
-  )}"></hdml-filter>`;
+  return (
+    `<${HDML_TAG_NAMES.FILTER} ` +
+    `${FILTER_ATTRS_LIST.TYPE}="${FILTER_TYPE_VALUES.EXPR}" ` +
+    `${FILTER_ATTRS_LIST.CLAUSE}="${opts.clause.replaceAll(
+      '"',
+      "`",
+    )}"></${HDML_TAG_NAMES.FILTER}>`
+  );
 }
 
 export function getNamedFilterHTML(opts: NamedParameters): string {
@@ -281,105 +291,208 @@ export function getNamedFilterHTML(opts: NamedParameters): string {
   switch (opts.name) {
     case FilterNameEnum.Equals:
       return (
-        `<hdml-filter type="named" name="equals" ` +
-        `field="${opts.field.replaceAll('"', "`")}" ` +
-        `values="${opts.values[0].replaceAll('"', "`")}"` +
-        `></hdml-filter>`
+        `<${HDML_TAG_NAMES.FILTER} ` +
+        `${FILTER_ATTRS_LIST.TYPE}="${FILTER_TYPE_VALUES.NAMED}" ` +
+        `${FILTER_ATTRS_LIST.NAME}="${FILTER_NAME_VALUES.EQUALS}" ` +
+        `${FILTER_ATTRS_LIST.FIELD}="${opts.field.replaceAll(
+          '"',
+          "`",
+        )}" ` +
+        `${FILTER_ATTRS_LIST.VALUES}="${opts.values[0].replaceAll(
+          '"',
+          "`",
+        )}"` +
+        `></${HDML_TAG_NAMES.FILTER}>`
       );
 
     case FilterNameEnum.NotEquals:
       return (
-        `<hdml-filter type="named" name="not-equals" ` +
-        `field="${opts.field.replaceAll('"', "`")}" ` +
-        `values="${opts.values[0].replaceAll('"', "`")}"` +
-        `></hdml-filter>`
+        `<${HDML_TAG_NAMES.FILTER} ` +
+        `${FILTER_ATTRS_LIST.TYPE}="${FILTER_TYPE_VALUES.NAMED}" ` +
+        `${FILTER_ATTRS_LIST.NAME}=` +
+        `"${FILTER_NAME_VALUES.NOT_EQUALS}" ` +
+        `${FILTER_ATTRS_LIST.FIELD}="${opts.field.replaceAll(
+          '"',
+          "`",
+        )}" ` +
+        `${FILTER_ATTRS_LIST.VALUES}="${opts.values[0].replaceAll(
+          '"',
+          "`",
+        )}"` +
+        `></${HDML_TAG_NAMES.FILTER}>`
       );
 
     case FilterNameEnum.Contains:
       return (
-        `<hdml-filter type="named" name="contains" ` +
-        `field="${opts.field.replaceAll('"', "`")}" ` +
-        `values="${opts.values[0].replaceAll('"', "`")}"` +
-        `></hdml-filter>`
+        `<${HDML_TAG_NAMES.FILTER} ` +
+        `${FILTER_ATTRS_LIST.TYPE}="${FILTER_TYPE_VALUES.NAMED}" ` +
+        `${FILTER_ATTRS_LIST.NAME}=` +
+        `"${FILTER_NAME_VALUES.CONTAINS}" ` +
+        `${FILTER_ATTRS_LIST.FIELD}="${opts.field.replaceAll(
+          '"',
+          "`",
+        )}" ` +
+        `${FILTER_ATTRS_LIST.VALUES}="${opts.values[0].replaceAll(
+          '"',
+          "`",
+        )}"` +
+        `></${HDML_TAG_NAMES.FILTER}>`
       );
 
     case FilterNameEnum.NotContains:
       return (
-        `<hdml-filter type="named" name="not-contains" ` +
-        `field="${opts.field.replaceAll('"', "`")}" ` +
-        `values="${opts.values[0].replaceAll('"', "`")}"` +
-        `></hdml-filter>`
+        `<${HDML_TAG_NAMES.FILTER} ` +
+        `${FILTER_ATTRS_LIST.TYPE}="${FILTER_TYPE_VALUES.NAMED}" ` +
+        `${FILTER_ATTRS_LIST.NAME}=` +
+        `"${FILTER_NAME_VALUES.NOT_CONTAINS}" ` +
+        `${FILTER_ATTRS_LIST.FIELD}="${opts.field.replaceAll(
+          '"',
+          "`",
+        )}" ` +
+        `${FILTER_ATTRS_LIST.VALUES}="${opts.values[0].replaceAll(
+          '"',
+          "`",
+        )}"` +
+        `></${HDML_TAG_NAMES.FILTER}>`
       );
 
     case FilterNameEnum.StartsWith:
       return (
-        `<hdml-filter type="named" name="starts-with" ` +
-        `field="${opts.field.replaceAll('"', "`")}" ` +
-        `values="${opts.values[0].replaceAll('"', "`")}"` +
-        `></hdml-filter>`
+        `<${HDML_TAG_NAMES.FILTER} ` +
+        `${FILTER_ATTRS_LIST.TYPE}="${FILTER_TYPE_VALUES.NAMED}" ` +
+        `${FILTER_ATTRS_LIST.NAME}=` +
+        `"${FILTER_NAME_VALUES.STARTS_WITH}" ` +
+        `${FILTER_ATTRS_LIST.FIELD}="${opts.field.replaceAll(
+          '"',
+          "`",
+        )}" ` +
+        `${FILTER_ATTRS_LIST.VALUES}="${opts.values[0].replaceAll(
+          '"',
+          "`",
+        )}"` +
+        `></${HDML_TAG_NAMES.FILTER}>`
       );
 
     case FilterNameEnum.EndsWith:
       return (
-        `<hdml-filter type="named" name="ends-with" ` +
-        `field="${opts.field.replaceAll('"', "`")}" ` +
-        `values="${opts.values[0].replaceAll('"', "`")}"` +
-        `></hdml-filter>`
+        `<${HDML_TAG_NAMES.FILTER} ` +
+        `${FILTER_ATTRS_LIST.TYPE}="${FILTER_TYPE_VALUES.NAMED}" ` +
+        `${FILTER_ATTRS_LIST.NAME}=` +
+        `"${FILTER_NAME_VALUES.ENDS_WITH}" ` +
+        `${FILTER_ATTRS_LIST.FIELD}="${opts.field.replaceAll(
+          '"',
+          "`",
+        )}" ` +
+        `${FILTER_ATTRS_LIST.VALUES}="${opts.values[0].replaceAll(
+          '"',
+          "`",
+        )}"` +
+        `></${HDML_TAG_NAMES.FILTER}>`
       );
 
     case FilterNameEnum.Greater:
       return (
-        `<hdml-filter type="named" name="greater" ` +
-        `field="${opts.field.replaceAll('"', "`")}" ` +
-        `values="${opts.values[0].replaceAll('"', "`")}"` +
-        `></hdml-filter>`
+        `<${HDML_TAG_NAMES.FILTER} ` +
+        `${FILTER_ATTRS_LIST.TYPE}="${FILTER_TYPE_VALUES.NAMED}" ` +
+        `${FILTER_ATTRS_LIST.NAME}="${FILTER_NAME_VALUES.GREATER}" ` +
+        `${FILTER_ATTRS_LIST.FIELD}="${opts.field.replaceAll(
+          '"',
+          "`",
+        )}" ` +
+        `${FILTER_ATTRS_LIST.VALUES}="${opts.values[0].replaceAll(
+          '"',
+          "`",
+        )}"` +
+        `></${HDML_TAG_NAMES.FILTER}>`
       );
 
     case FilterNameEnum.GreaterEqual:
       return (
-        `<hdml-filter type="named" name="greater-equal" ` +
-        `field="${opts.field.replaceAll('"', "`")}" ` +
-        `values="${opts.values[0].replaceAll('"', "`")}"` +
-        `></hdml-filter>`
+        `<${HDML_TAG_NAMES.FILTER} ` +
+        `${FILTER_ATTRS_LIST.TYPE}="${FILTER_TYPE_VALUES.NAMED}" ` +
+        `${FILTER_ATTRS_LIST.NAME}=` +
+        `"${FILTER_NAME_VALUES.GREATER_EQUAL}" ` +
+        `${FILTER_ATTRS_LIST.FIELD}="${opts.field.replaceAll(
+          '"',
+          "`",
+        )}" ` +
+        `${FILTER_ATTRS_LIST.VALUES}="${opts.values[0].replaceAll(
+          '"',
+          "`",
+        )}"` +
+        `></${HDML_TAG_NAMES.FILTER}>`
       );
 
     case FilterNameEnum.Less:
       return (
-        `<hdml-filter type="named" name="less" ` +
-        `field="${opts.field.replaceAll('"', "`")}" ` +
-        `values="${opts.values[0].replaceAll('"', "`")}"` +
-        `></hdml-filter>`
+        `<${HDML_TAG_NAMES.FILTER} ` +
+        `${FILTER_ATTRS_LIST.TYPE}="${FILTER_TYPE_VALUES.NAMED}" ` +
+        `${FILTER_ATTRS_LIST.NAME}="${FILTER_NAME_VALUES.LESS}" ` +
+        `${FILTER_ATTRS_LIST.FIELD}="${opts.field.replaceAll(
+          '"',
+          "`",
+        )}" ` +
+        `${FILTER_ATTRS_LIST.VALUES}="${opts.values[0].replaceAll(
+          '"',
+          "`",
+        )}"` +
+        `></${HDML_TAG_NAMES.FILTER}>`
       );
 
     case FilterNameEnum.LessEqual:
       return (
-        `<hdml-filter type="named" name="less-equal" ` +
-        `field="${opts.field.replaceAll('"', "`")}" ` +
-        `values="${opts.values[0].replaceAll('"', "`")}"` +
-        `></hdml-filter>`
+        `<${HDML_TAG_NAMES.FILTER} ` +
+        `${FILTER_ATTRS_LIST.TYPE}="${FILTER_TYPE_VALUES.NAMED}" ` +
+        `${FILTER_ATTRS_LIST.NAME}=` +
+        `"${FILTER_NAME_VALUES.LESS_EQUAL}" ` +
+        `${FILTER_ATTRS_LIST.FIELD}="${opts.field.replaceAll(
+          '"',
+          "`",
+        )}" ` +
+        `${FILTER_ATTRS_LIST.VALUES}="${opts.values[0].replaceAll(
+          '"',
+          "`",
+        )}"` +
+        `></${HDML_TAG_NAMES.FILTER}>`
       );
 
     case FilterNameEnum.IsNull:
       return (
-        `<hdml-filter type="named" name="is-null" ` +
-        `field="${opts.field.replaceAll('"', "`")}"` +
-        `></hdml-filter>`
+        `<${HDML_TAG_NAMES.FILTER} ` +
+        `${FILTER_ATTRS_LIST.TYPE}="${FILTER_TYPE_VALUES.NAMED}" ` +
+        `${FILTER_ATTRS_LIST.NAME}="${FILTER_NAME_VALUES.IS_NULL}" ` +
+        `${FILTER_ATTRS_LIST.FIELD}="${opts.field.replaceAll(
+          '"',
+          "`",
+        )}"` +
+        `></${HDML_TAG_NAMES.FILTER}>`
       );
 
     case FilterNameEnum.IsNotNull:
       return (
-        `<hdml-filter type="named" name="is-not-null" ` +
-        `field="${opts.field.replaceAll('"', "`")}"` +
-        `></hdml-filter>`
+        `<${HDML_TAG_NAMES.FILTER} ` +
+        `${FILTER_ATTRS_LIST.TYPE}="${FILTER_TYPE_VALUES.NAMED}" ` +
+        `${FILTER_ATTRS_LIST.NAME}=` +
+        `"${FILTER_NAME_VALUES.IS_NOT_NULL}" ` +
+        `${FILTER_ATTRS_LIST.FIELD}="${opts.field.replaceAll(
+          '"',
+          "`",
+        )}"` +
+        `></${HDML_TAG_NAMES.FILTER}>`
       );
 
     case FilterNameEnum.Between:
       return (
-        `<hdml-filter type="named" name="between" ` +
-        `field="${opts.field.replaceAll('"', "`")}" ` +
-        `values="${opts.values
+        `<${HDML_TAG_NAMES.FILTER} ` +
+        `${FILTER_ATTRS_LIST.TYPE}="${FILTER_TYPE_VALUES.NAMED}" ` +
+        `${FILTER_ATTRS_LIST.NAME}="${FILTER_NAME_VALUES.BETWEEN}" ` +
+        `${FILTER_ATTRS_LIST.FIELD}="${opts.field.replaceAll(
+          '"',
+          "`",
+        )}" ` +
+        `${FILTER_ATTRS_LIST.VALUES}="${opts.values
           .map((v) => v.replaceAll('"', "`"))
-          .join(",")}"></hdml-filter>`
+          .join(",")}"></${HDML_TAG_NAMES.FILTER}>`
       );
   }
 }
