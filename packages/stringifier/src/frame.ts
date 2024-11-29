@@ -5,6 +5,7 @@
  */
 
 import { FieldStruct, FrameStruct } from "@hdml/schemas";
+import { HDML_TAG_NAMES, FRAME_ATTRS_LIST } from "@hdml/types";
 import { t } from "./constants";
 import { getFrameFieldSQL, getFieldHTML } from "./field";
 import {
@@ -112,11 +113,11 @@ export function getFrameHTML(frame: FrameStruct, level = 0): string {
 
   // frame + fields
   let html =
-    `${prefix}<hdml-frame ` +
-    `name="${frame.name()}" ` +
-    `source="${frame.source()}" ` +
-    `offset="${frame.offset()}" ` +
-    `limit="${frame.limit()}">\n` +
+    `${prefix}<${HDML_TAG_NAMES.FRAME} ` +
+    `${FRAME_ATTRS_LIST.NAME}="${frame.name()}" ` +
+    `${FRAME_ATTRS_LIST.SOURCE}="${frame.source()}" ` +
+    `${FRAME_ATTRS_LIST.OFFSET}="${frame.offset()}" ` +
+    `${FRAME_ATTRS_LIST.LIMIT}="${frame.limit()}">\n` +
     fields
       .sort((a, b) =>
         a.name()! < b.name()! ? -1 : a.name()! > b.name()! ? 1 : 0,
@@ -134,32 +135,32 @@ export function getFrameHTML(frame: FrameStruct, level = 0): string {
   if (filtersHTML) {
     html =
       html +
-      `${prefix}${t}<hdml-filter-by>\n` +
+      `${prefix}${t}<${HDML_TAG_NAMES.FILTER_BY}>\n` +
       filtersHTML +
-      `${prefix}${t}</hdml-filter-by>\n`;
+      `${prefix}${t}</${HDML_TAG_NAMES.FILTER_BY}>\n`;
   }
 
   // group by
   if (frame.groupByLength() > 0) {
-    html = html + `${prefix}${t}<hdml-group-by>\n`;
+    html = html + `${prefix}${t}<${HDML_TAG_NAMES.GROUP_BY}>\n`;
     for (let i = 0; i < frame.groupByLength(); i++) {
       html =
         html +
         `${prefix}${t}${t}${getFieldHTML(frame.groupBy(i)!)}\n`;
     }
-    html = html + `${prefix}${t}</hdml-group-by>\n`;
+    html = html + `${prefix}${t}</${HDML_TAG_NAMES.GROUP_BY}>\n`;
   }
 
   // sort by
   if (frame.sortByLength() > 0) {
-    html = html + `${prefix}${t}<hdml-sort-by>\n`;
+    html = html + `${prefix}${t}<${HDML_TAG_NAMES.SORT_BY}>\n`;
     for (let i = 0; i < frame.sortByLength(); i++) {
       html =
         html + `${prefix}${t}${t}${getFieldHTML(frame.sortBy(i)!)}\n`;
     }
-    html = html + `${prefix}${t}</hdml-sort-by>\n`;
+    html = html + `${prefix}${t}</${HDML_TAG_NAMES.SORT_BY}>\n`;
   }
 
-  html = html + `${prefix}</hdml-frame>\n`;
+  html = html + `${prefix}</${HDML_TAG_NAMES.FRAME}>\n`;
   return html;
 }
