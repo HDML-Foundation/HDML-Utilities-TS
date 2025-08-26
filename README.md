@@ -43,6 +43,23 @@ const hdom: HDOM = parseHDML(hdmlString);
 console.log(hdom);
 ```
 
+## Development
+
+### Setup
+
+```bash
+git clone git@github.com:HDML-Foundation/HDML-Utilities-TS.git
+cd HDML-Utilities-TS
+git submodule update --init --recursive
+npm install
+```
+
+### Build
+
+```bash
+npm run build
+```
+
 ## License
 
 This project is licensed under the Apache License 2.0.
