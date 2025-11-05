@@ -7,7 +7,7 @@
 import { parseHTML, HTMLElement } from "@hdml/parser";
 import { readJson } from "../io/readJson";
 import { writeString } from "../io/writeString";
-import { onDocumentSave } from "./hook";
+import { onDocumentSave } from "./onDocumentSave";
 
 (() => {
   const { ctx, html } = readJson<{ ctx: unknown; html: string }>();
