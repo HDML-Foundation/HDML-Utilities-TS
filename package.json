@@ -6,6 +6,7 @@
     "packages/types",
     "packages/buffer",
     "packages/hash",
+    "packages/hooks",
     "packages/parser",
     "packages/stringifier"
   ],
