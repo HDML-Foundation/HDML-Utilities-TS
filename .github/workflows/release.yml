@@ -13,7 +13,7 @@ on:
 jobs:
   release_ts_library:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 30
     steps:
       - name: Checkout Project
         uses: actions/checkout@v4
@@ -40,7 +40,7 @@ jobs:
         uses: devcontainers/ci@v0.3
         with:
           push: never
-          cacheFrom: hdio/hdml-schemas-dev
+          cacheFrom: hdio/hdml-utilities-dev
           runCmd: |
             npm ci
             npm run build --workspaces

@@ -10,7 +10,7 @@ on:
 jobs:
   build_devcontainer:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 30
     outputs:
       output1: ${{ steps.filter.outputs.devcontainer }}
     steps:
@@ -33,5 +33,5 @@ jobs:
         uses: devcontainers/ci@v0.3
         with:
           push: always
-          imageName: hdio/hdml-schemas-dev
-          cacheFrom: hdio/hdml-schemas-dev
+          imageName: hdio/hdml-utilities-dev
+          cacheFrom: hdio/hdml-utilities-dev
