@@ -8,6 +8,7 @@ import { parseHDML } from "./parseHDML";
 import { parseHTML } from "./parseHTML";
 export { parseHDML } from "./parseHDML";
 export { parseHTML } from "./parseHTML";
+export { HTMLElement } from "node-html-parser";
 
 const _export = globalThis as unknown as {
   "@hdml/parser": {
