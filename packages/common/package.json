@@ -1,6 +1,6 @@
 {
   "name": "@hdml/common",
-  "version": "0.0.2-alpha.5",
+  "version": "0.0.2-alpha.6",
   "license": "Apache-2.0",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",

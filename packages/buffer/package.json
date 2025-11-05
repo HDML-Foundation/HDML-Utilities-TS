@@ -1,14 +1,14 @@
 {
   "name": "@hdml/buffer",
-  "version": "0.0.2-alpha.5",
+  "version": "0.0.2-alpha.6",
   "license": "Apache-2.0",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
     "access": "public"
   },
   "dependencies": {
-    "@hdml/schemas": "0.0.2-alpha.5",
-    "@hdml/types": "0.0.2-alpha.5",
+    "@hdml/schemas": "0.0.2-alpha.6",
+    "@hdml/types": "0.0.2-alpha.6",
     "flatbuffers": "24.3.25"
   },
   "scripts": {
