@@ -32,6 +32,11 @@ import {
 import { objectifyConnection } from "./objectify/objectifyConnection";
 import { objectifyModel } from "./objectify/objectifyModel";
 import { objectifyFrame } from "./objectify/objectifyFrame";
+import { bufferifyConnection } from "./bufferify/bufferifyConnection";
+import { bufferifyModel } from "./bufferify/bufferifyModel";
+import { bufferifyFrame } from "./bufferify/bufferifyFrame";
+import { Connection, Model, Frame } from "@hdml/types";
+import { Builder } from "flatbuffers";
 
 describe("The `serialize` function", () => {
   it("should serialize an HDOM object to Uin8Array", () => {
@@ -364,6 +369,133 @@ describe("The `structurize` function", () => {
     expect(struct.connectionsLength()).toBe(0);
     expect(struct.modelsLength()).toBe(0);
     expect(struct.framesLength()).toBe(0);
+  });
+
+  it("should structurize a Connection buffer into ConnectionStruct", () => {
+    const connection: Connection = {
+      name: "JDBCConnection",
+      description: "JDBC metadata",
+      options: {
+        connector: ConnectorTypesEnum.Postgres,
+        parameters: {
+          host: "localhost",
+          user: "root",
+          password: "password",
+          ssl: true,
+        },
+      },
+    };
+
+    const builder = new Builder(1024);
+    const offset = bufferifyConnection(builder, connection);
+    builder.finish(offset);
+    const buffer = builder.asUint8Array();
+
+    const struct = structurize(
+      buffer,
+      StructType.ConnectionStruct,
+    ) as ConnectionStruct;
+
+    expect(struct).toBeDefined();
+    expect(struct.name()).toBe("JDBCConnection");
+    expect(struct.description()).toBe("JDBC metadata");
+    const objectified = objectifyConnection(struct);
+    expect(objectified).toEqual(connection);
+  });
+
+  it("should structurize a Model buffer into ModelStruct", () => {
+    const model: Model = {
+      name: "TestModel",
+      description: null,
+      tables: [
+        {
+          name: "Table1",
+          description: null,
+          type: TableTypeEnum.Table,
+          identifier: "database.schema.table1",
+          fields: [
+            {
+              name: "field1",
+              description: null,
+              origin: null,
+              clause: null,
+              type: {
+                type: DataTypeEnum.Unspecified,
+              },
+              aggregation: AggregationTypeEnum.None,
+              order: OrderTypeEnum.None,
+            },
+          ],
+        },
+      ],
+      joins: [],
+    };
+
+    const builder = new Builder(1024);
+    const offset = bufferifyModel(builder, model);
+    builder.finish(offset);
+    const buffer = builder.asUint8Array();
+
+    const struct = structurize(
+      buffer,
+      StructType.ModelStruct,
+    ) as ModelStruct;
+
+    expect(struct).toBeDefined();
+    expect(struct.name()).toBe("TestModel");
+    expect(struct.tablesLength()).toBe(1);
+    const objectified = objectifyModel(struct);
+    expect(objectified).toEqual(model);
+  });
+
+  it("should structurize a Frame buffer into FrameStruct", () => {
+    const frame: Frame = {
+      name: "test_frame",
+      description: null,
+      source: "test_model",
+      offset: 0,
+      limit: 100,
+      fields: [
+        {
+          name: "field1",
+          description: null,
+          origin: null,
+          clause: null,
+          type: {
+            type: DataTypeEnum.Unspecified,
+          },
+          aggregation: AggregationTypeEnum.None,
+          order: OrderTypeEnum.None,
+        },
+      ],
+      filter_by: {
+        type: FilterOperatorEnum.None,
+        filters: [],
+        children: [],
+      },
+      group_by: [],
+      split_by: [],
+      sort_by: [],
+    };
+
+    const builder = new Builder(1024);
+    const offset = bufferifyFrame(builder, frame);
+    builder.finish(offset);
+    const buffer = builder.asUint8Array();
+
+    const struct = structurize(
+      buffer,
+      StructType.FrameStruct,
+    ) as FrameStruct;
+
+    expect(struct).toBeDefined();
+    expect(struct.name()).toBe("test_frame");
+    expect(struct.source()).toBe("test_model");
+    expect(struct.offset().toString()).toBe("0");
+    expect(struct.limit().toString()).toBe("100");
+    expect(struct.fieldsLength()).toBe(1);
+    const objectified = objectifyFrame(struct);
+    expect(objectified).toEqual(frame);
   });
 });
 
