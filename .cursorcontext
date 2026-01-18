@@ -80,9 +80,12 @@ The root structure representing an HDML document:
 - **Dependencies**: @hdml/types, @hdml/schemas
 
 ### @hdml/buffer
-- **Purpose**: Serialize/structurize HDML using FlatBuffers
-- **Key Functions**: `serialize()`, `structurize()`
-- **Bufferify Functions**: Convert TypeScript interfaces to FlatBuffers structures
+- **Purpose**: Serialize and deserialize HDML using FlatBuffers
+- **Key Functions**: `serialize()`, `deserialize()`, `structurize()`
+- **Bufferify Functions** (in `bufferify/` directory): Convert TypeScript interfaces to FlatBuffers structures
+  - `bufferifyHDOM()`, `bufferifyConnection()`, `bufferifyModel()`, `bufferifyFrame()`, `bufferifyField()`, `bufferifyFilterClause()`
+- **Objectify Functions** (in `objectify/` directory): Convert FlatBuffers structures back to TypeScript interfaces
+  - `objectifyHDOM()`, `objectifyConnection()`, `objectifyModel()`, `objectifyFrame()`, `objectifyField()`, `objectifyFilterClause()`
 - **Dependencies**: @hdml/types, @hdml/schemas, flatbuffers
 
 ### @hdml/hash
@@ -218,7 +221,8 @@ The root structure representing an HDML document:
 2. HDOM interface → bufferify*() → FlatBuffers struct
 3. FlatBuffers struct → serialize() → Uint8Array
 4. Uint8Array → structurize() → FlatBuffers struct
-5. FlatBuffers struct → TypeScript interface (manual conversion)
+5. FlatBuffers struct → objectify*() → TypeScript interface
+6. Uint8Array → deserialize() → HDOM interface (complete round-trip)
 
 ### Stringification Flow
 1. HDOM/Model/Frame → get*SQL() → SQL string
@@ -250,6 +254,8 @@ The root structure representing an HDML document:
 2. Regenerate schemas
 3. Add TypeScript interface in `@hdml/types`
 4. Add parser support in `@hdml/parser/hdmlTreeAdapter/`
-5. Add bufferify function in `@hdml/buffer`
-6. Add stringifier functions in `@hdml/stringifier`
-7. Add enum values if needed
+5. Add bufferify function in `@hdml/buffer/src/bufferify/`
+6. Add objectify function in `@hdml/buffer/src/objectify/`
+7. Add stringifier functions in `@hdml/stringifier`
+8. Add enum values if needed
+9. Add tests for both bufferify and objectify functions

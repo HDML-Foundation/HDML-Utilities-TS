@@ -87,8 +87,9 @@ HDML-Utilities-TS/
 
 1. **Parsing**: HDML string → `parseHDML()` → HDOM interface
 2. **Serialization**: HDOM interface → `bufferify*()` → FlatBuffers struct → `serialize()` → Uint8Array
-3. **Structurization**: Uint8Array → `structurize()` → FlatBuffers struct → TypeScript interface
-4. **Stringification**: HDOM/Model/Frame → `get*SQL()` / `get*HTML()` → SQL/HTML string
+3. **Deserialization**: Uint8Array → `deserialize()` → HDOM interface (complete round-trip)
+4. **Structurization**: Uint8Array → `structurize()` → FlatBuffers struct → `objectify*()` → TypeScript interface
+5. **Stringification**: HDOM/Model/Frame → `get*SQL()` / `get*HTML()` → SQL/HTML string
 
 ---
 
@@ -216,30 +217,44 @@ interface Frame {
 
 ### @hdml/buffer
 
-**Purpose**: Serialize and structurize HDML data structures using FlatBuffers.
+**Purpose**: Serialize and deserialize HDML data structures using FlatBuffers.
 
 **Key Functions**:
-- `serialize(hdom: HDOMStruct): Uint8Array` - Serialize HDOM to binary
-- `structurize(buffer: Uint8Array): HDOMStruct` - Structurize binary to HDOM
+- `serialize(hdom: HDOM): Uint8Array` - Serialize HDOM to binary
+- `deserialize(bytes: Uint8Array): HDOM` - Deserialize binary to HDOM
+- `structurize(bytes: Uint8Array): HDOMStruct` - Convert binary to FlatBuffers struct
 
-**Bufferify Functions** (TypeScript → FlatBuffers):
-- `bufferifyHDOM(hdom: HDOM): HDOMStruct`
-- `bufferifyConnection(connection: Connection): ConnectionStruct`
-- `bufferifyModel(model: Model): ModelStruct`
-- `bufferifyFrame(frame: Frame): FrameStruct`
-- `bufferifyField(field: Field): FieldStruct`
-- `bufferifyFilterClause(clause: FilterClause): FilterClauseStruct`
+**Bufferify Functions** (in `bufferify/` directory) - TypeScript → FlatBuffers:
+- `bufferifyHDOM(hdom: HDOM): number` - Returns FlatBuffers offset
+- `bufferifyConnection(connection: Connection): number`
+- `bufferifyModel(model: Model): number`
+- `bufferifyFrame(frame: Frame): number`
+- `bufferifyField(field: Field): number`
+- `bufferifyFilterClause(clause: FilterClause): number`
+
+**Objectify Functions** (in `objectify/` directory) - FlatBuffers → TypeScript:
+- `objectifyHDOM(hdomStruct: HDOMStruct): HDOM`
+- `objectifyConnection(connectionStruct: ConnectionStruct): Connection`
+- `objectifyModel(modelStruct: ModelStruct): Model`
+- `objectifyFrame(frameStruct: FrameStruct): Frame`
+- `objectifyField(fieldStruct: FieldStruct): Field`
+- `objectifyFilterClause(clauseStruct: FilterClauseStruct): FilterClause`
 
 **Usage**:
 ```typescript
-import { serialize, structurize } from "@hdml/buffer";
-import { bufferifyHDOM } from "@hdml/buffer";
+import { serialize, deserialize, structurize } from "@hdml/buffer";
+import { objectifyHDOM } from "@hdml/buffer/src/objectify/objectifyHDOM";
 
 const hdom: HDOM = { /* ... */ };
-const struct = bufferifyHDOM(hdom);
-const binary = serialize(struct);
-// ... transmit or store binary
-const restored = structurize(binary);
+
+// High-level round-trip serialization
+const bytes = serialize(hdom);
+const restored = deserialize(bytes);
+// restored is deeply equal to hdom
+
+// Working with FlatBuffers structs
+const struct = structurize(bytes);
+const hdomFromStruct = objectifyHDOM(struct);
 ```
 
 **Dependencies**: `@hdml/types`, `@hdml/schemas`, `flatbuffers`
@@ -551,8 +566,10 @@ Tests are compiled to JavaScript before running:
    - Update tree adapter map
 
 5. **Add Buffer Support**:
-   - Create `bufferify*()` function in `packages/buffer/src/`
+   - Create `bufferify*()` function in `packages/buffer/src/bufferify/`
+   - Create `objectify*()` function in `packages/buffer/src/objectify/`
    - Handle serialization/deserialization
+   - Add tests for round-trip conversion
 
 6. **Add Stringifier Support**:
    - Create `get*SQL()` and `get*HTML()` functions
