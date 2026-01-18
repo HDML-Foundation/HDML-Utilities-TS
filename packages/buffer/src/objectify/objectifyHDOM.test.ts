@@ -6,6 +6,7 @@
 
 import * as flatbuffers from "flatbuffers";
 import {
+  HDOMStruct,
   ConnectorTypesEnum,
   TableTypeEnum,
   FilterOperatorEnum,
@@ -16,6 +17,7 @@ import {
 import { HDOM } from "@hdml/types";
 import { bufferifyHDOM } from "../bufferify/bufferifyHDOM";
 import { structurize } from "../structurize";
+import { StructType } from "../StructType";
 import { objectifyHDOM } from "./objectifyHDOM";
 
 describe("objectifyHDOM", () => {
@@ -102,7 +104,10 @@ describe("objectifyHDOM", () => {
     const offset = bufferifyHDOM(builder, hdom);
     builder.finish(offset);
     const buffer = builder.asUint8Array();
-    const hdomStruct = structurize(buffer);
+    const hdomStruct = structurize(
+      buffer,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const objectified = objectifyHDOM(hdomStruct);
 
     expect(objectified.includes).toEqual(hdom.includes);
@@ -124,7 +129,10 @@ describe("objectifyHDOM", () => {
     const offset = bufferifyHDOM(builder, hdom);
     builder.finish(offset);
     const buffer = builder.asUint8Array();
-    const hdomStruct = structurize(buffer);
+    const hdomStruct = structurize(
+      buffer,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const objectified = objectifyHDOM(hdomStruct);
 
     expect(objectified.includes).toEqual(hdom.includes);

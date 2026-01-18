@@ -17,11 +17,18 @@ import {
 import { HDOM } from "@hdml/types";
 import * as flatbuffers from "flatbuffers";
 import {
+  HDOMStruct,
   ConnectionStruct,
   ModelStruct,
   FrameStruct,
 } from "@hdml/schemas";
-import { serialize, deserialize, structurize, fileifize } from ".";
+import {
+  serialize,
+  deserialize,
+  structurize,
+  fileifize,
+  StructType,
+} from ".";
 import { objectifyConnection } from "./objectify/objectifyConnection";
 import { objectifyModel } from "./objectify/objectifyModel";
 import { objectifyFrame } from "./objectify/objectifyFrame";
@@ -106,7 +113,10 @@ describe("The `serialize` function", () => {
     };
 
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
 
     // includes
     expect(struct.includesLength()).toBe(1);
@@ -130,7 +140,10 @@ describe("The `serialize` function", () => {
       frames: [],
     };
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
 
     expect(struct.includesLength()).toBe(0);
     expect(struct.connectionsLength()).toBe(0);
@@ -319,7 +332,10 @@ describe("The `structurize` function", () => {
     };
 
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
 
     expect(struct).toBeDefined();
     expect(struct.includesLength()).toBe(1);
@@ -338,7 +354,10 @@ describe("The `structurize` function", () => {
     };
 
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
 
     expect(struct).toBeDefined();
     expect(struct.includesLength()).toBe(0);

@@ -5,29 +5,65 @@
  */
 
 import * as flatbuffers from "flatbuffers";
-import { HDOMStruct } from "@hdml/schemas";
+import {
+  HDOMStruct,
+  ConnectionStruct,
+  ModelStruct,
+  FrameStruct,
+} from "@hdml/schemas";
+import { StructType } from "./StructType";
 
 /**
- * Structurizes a FlatBuffers binary into an `HDOMStruct` object.
+ * Structurizes a FlatBuffers binary into a FlatBuffers struct object.
  *
  * This function takes a `Uint8Array` of FlatBuffers binary data and
- * converts it into an `HDOMStruct` object structure.
+ * converts it into the appropriate FlatBuffers struct object based on
+ * the specified type parameter.
  *
  * @param bytes A `Uint8Array` containing the FlatBuffers binary
- * data to be structurized. This should be a binary representation of
- * an `HDOMStruct`.
+ * data to be structurized.
  *
- * @returns The structurized `HDOMStruct` object, which represents
- * the hierarchical structure of the HDML document.
+ * @param type Optional enum value specifying which struct type to
+ * structurize. Defaults to `StructType.HDOMStruct`.
+ *
+ * @returns The structurized FlatBuffers struct object. The type
+ * depends on the `type` parameter:
+ * - `HDOMStruct` for `StructType.HDOMStruct`
+ * - `ConnectionStruct` for `StructType.ConnectionStruct`
+ * - `ModelStruct` for `StructType.ModelStruct`
+ * - `FrameStruct` for `StructType.FrameStruct`
  *
  * @example
  * ```ts
  * const uint8: Uint8Array = ...;  // Your binary FlatBuffers data
  * const hdomStruct = structurize(uint8);
- * // Now you can work with the `HDOMStruct` object
+ * // Or specify a different type:
+ * const connStruct = structurize(
+ *   connBytes,
+ *   StructType.ConnectionStruct,
+ * );
  * ```
  */
-export function structurize(bytes: Uint8Array): HDOMStruct {
+export function structurize(
+  bytes: Uint8Array,
+  type: StructType = StructType.HDOMStruct,
+): HDOMStruct | ConnectionStruct | ModelStruct | FrameStruct {
   const byteBuffer = new flatbuffers.ByteBuffer(bytes);
-  return HDOMStruct.getRootAsHDOMStruct(byteBuffer);
+
+  switch (type) {
+    case StructType.HDOMStruct:
+      return HDOMStruct.getRootAsHDOMStruct(byteBuffer);
+    case StructType.ConnectionStruct:
+      return ConnectionStruct.getRootAsConnectionStruct(byteBuffer);
+    case StructType.ModelStruct:
+      return ModelStruct.getRootAsModelStruct(byteBuffer);
+    case StructType.FrameStruct:
+      return FrameStruct.getRootAsFrameStruct(byteBuffer);
+    default: {
+      const _exhaustive: never = type;
+      throw new Error(
+        `Unsupported struct type: ${String(_exhaustive)}`,
+      );
+    }
+  }
 }

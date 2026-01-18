@@ -5,7 +5,9 @@
  */
 
 import { HDOM } from "@hdml/types";
+import { HDOMStruct } from "@hdml/schemas";
 import { structurize } from "./structurize";
+import { StructType } from "./StructType";
 import { objectifyHDOM } from "./objectify/objectifyHDOM";
 
 /**
@@ -33,6 +35,9 @@ import { objectifyHDOM } from "./objectify/objectifyHDOM";
  * ```
  */
 export function deserialize(bytes: Uint8Array): HDOM {
-  const hdomStruct = structurize(bytes);
+  const hdomStruct = structurize(
+    bytes,
+    StructType.HDOMStruct,
+  ) as HDOMStruct;
   return objectifyHDOM(hdomStruct);
 }
