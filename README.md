@@ -1,6 +1,6 @@
 # HDML-Utilities Monorepo
 
-The **HDML-Utilities** monorepo is a collection of utility packages designed to simplify the management, parsing, and manipulation of **HDML** (HyperData Markup Language) documents. It provides a set of tools to work with hierarchical data models, enabling seamless integration with web and database systems.
+The **HDML-Utilities** TS monorepo is a collection of utility packages designed to simplify the management, parsing, and manipulation of **HDML** (HyperData Markup Language) documents. It provides a set of tools to work with hierarchical data models, enabling seamless integration with web and database systems.
 
 This monorepo contains several independently versioned packages, each focused on a different aspect of working with HDML and associated data structures.
 
