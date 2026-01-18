@@ -13,7 +13,8 @@ import {
   FilterOperatorEnum,
 } from "@hdml/schemas";
 import { Join } from "@hdml/types";
-import { serialize, structurize } from "@hdml/buffer";
+import { serialize, structurize, StructType } from "@hdml/buffer";
+import { HDOMStruct } from "@hdml/schemas";
 import {
   getJoins,
   getDag,
@@ -666,7 +667,10 @@ describe("The `getJoins` function", () => {
       frames: [],
     };
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     case1 = getJoins(struct.models(0)!);
     expect(case1).toEqual([]);
   });
@@ -725,7 +729,10 @@ describe("The `getJoins` function", () => {
       frames: [],
     };
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     case2 = getJoins(struct.models(0)!);
     expect(case2).toEqual([]);
   });
@@ -784,7 +791,10 @@ describe("The `getJoins` function", () => {
       frames: [],
     };
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     case3 = getJoins(struct.models(0)!);
     expect(case3).toEqual(hdom.models[0].joins);
   });
@@ -862,7 +872,10 @@ describe("The `getJoins` function", () => {
       frames: [],
     };
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     case4 = getJoins(struct.models(0)!);
     expect(case4).toEqual(hdom.models[0].joins);
   });
@@ -959,7 +972,10 @@ describe("The `getJoins` function", () => {
       frames: [],
     };
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     case5 = getJoins(struct.models(0)!);
     expect(case5).toEqual(hdom.models[0].joins);
   });
@@ -1075,7 +1091,10 @@ describe("The `getJoins` function", () => {
       frames: [],
     };
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     case6 = getJoins(struct.models(0)!);
     expect(case6).toEqual(hdom.models[0].joins);
   });
@@ -1210,7 +1229,10 @@ describe("The `getJoins` function", () => {
       frames: [],
     };
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     case7 = getJoins(struct.models(0)!);
     expect(case7).toEqual(hdom.models[0].joins);
   });
@@ -1364,7 +1386,10 @@ describe("The `getJoins` function", () => {
       frames: [],
     };
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     case8 = getJoins(struct.models(0)!);
     expect(case8).toEqual(hdom.models[0].joins);
   });
@@ -1518,7 +1543,10 @@ describe("The `getJoins` function", () => {
       frames: [],
     };
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     case9 = getJoins(struct.models(0)!);
     expect(case9).toEqual(hdom.models[0].joins);
   });
@@ -1691,7 +1719,10 @@ describe("The `getJoins` function", () => {
       frames: [],
     };
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     case10 = getJoins(struct.models(0)!);
     expect(case10).toEqual(hdom.models[0].joins);
   });
@@ -1883,7 +1914,10 @@ describe("The `getJoins` function", () => {
       frames: [],
     };
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     case11 = getJoins(struct.models(0)!);
     expect(case11).toEqual(hdom.models[0].joins);
   });
@@ -2094,7 +2128,10 @@ describe("The `getJoins` function", () => {
       frames: [],
     };
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     case12 = getJoins(struct.models(0)!);
     expect(case12).toEqual(hdom.models[0].joins);
   });
@@ -2343,7 +2380,10 @@ describe("The `getJoins` function", () => {
       frames: [],
     };
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     case13 = getJoins(struct.models(0)!);
     expect(case13).toEqual(hdom.models[0].joins);
   });

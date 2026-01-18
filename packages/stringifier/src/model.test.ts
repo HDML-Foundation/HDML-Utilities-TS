@@ -17,7 +17,8 @@ import {
   FilterOperatorEnum,
   FilterTypeEnum,
 } from "@hdml/schemas";
-import { serialize, structurize } from "@hdml/buffer";
+import { serialize, structurize, StructType } from "@hdml/buffer";
+import { HDOMStruct } from "@hdml/schemas";
 import {
   getTables,
   getTableSQL,
@@ -43,7 +44,10 @@ describe("The `getTables` function", () => {
     };
 
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const model = struct.models(0)!;
     const tables = getTables(model, []);
     expect(tables).toEqual([]);
@@ -123,7 +127,10 @@ describe("The `getTables` function", () => {
     };
 
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const model = struct.models(0)!;
     const tables = getTables(model, []);
     expect(tables).toEqual([]);
@@ -203,7 +210,10 @@ describe("The `getTables` function", () => {
     };
 
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const model = struct.models(0)!;
     const tables = getTables(model, []);
     expect(tables[0].fields(0)?.name()).toEqual("F1");
@@ -285,7 +295,10 @@ describe("The `getTables` function", () => {
     };
 
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const model = struct.models(0)!;
     const tables = getTables(model, []);
     expect(tables[0].name()).toEqual("T1");
@@ -367,7 +380,10 @@ describe("The `getTables` function", () => {
     };
 
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const model = struct.models(0)!;
     const tables = getTables(model, []);
     expect(tables.length).toBe(3);
@@ -447,7 +463,10 @@ describe("The `getTables` function", () => {
     };
 
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const model = struct.models(0)!;
     const tables = getTables(model, [
       {
@@ -632,7 +651,10 @@ describe("The `getTableSQL` and `getTableHTML` functions", () => {
     frames: [],
   };
   const bytes = serialize(hdom);
-  const struct = structurize(bytes);
+  const struct = structurize(
+    bytes,
+    StructType.HDOMStruct,
+  ) as HDOMStruct;
 
   it("should stringify `table`", () => {
     const table = <TableStruct>struct.models(0)?.tables(0);
@@ -746,7 +768,10 @@ describe("The `getModelSQL` and `getModelHTML` function", () => {
     };
 
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const model = struct.models(0)!;
     const sql = getModelSQL(model);
     const html = getModelHTML(model);
@@ -852,7 +877,10 @@ describe("The `getModelSQL` and `getModelHTML` function", () => {
     };
 
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const model = struct.models(0)!;
     const sql = getModelSQL(model);
     const html = getModelHTML(model);

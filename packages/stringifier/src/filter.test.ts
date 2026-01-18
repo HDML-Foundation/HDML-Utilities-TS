@@ -15,7 +15,8 @@ import {
   FilterNameEnum,
   FilterClauseStruct,
 } from "@hdml/schemas";
-import { serialize, structurize } from "@hdml/buffer";
+import { serialize, structurize, StructType } from "@hdml/buffer";
+import { HDOMStruct } from "@hdml/schemas";
 import {
   objectifyFilterOptions,
   objectifyFilterClause,
@@ -66,7 +67,10 @@ describe("The `objectifyFilterOptions` function", () => {
       frames: [],
     };
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const filter = <FilterStruct>(
       struct.models(0)?.joins(0)?.clause()?.filters(0)
     );
@@ -111,7 +115,10 @@ describe("The `objectifyFilterOptions` function", () => {
       frames: [],
     };
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const filter = <FilterStruct>(
       struct.models(0)?.joins(0)?.clause()?.filters(0)
     );
@@ -156,7 +163,10 @@ describe("The `objectifyFilterOptions` function", () => {
       frames: [],
     };
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const filter = <FilterStruct>(
       struct.models(0)?.joins(0)?.clause()?.filters(0)
     );
@@ -201,7 +211,10 @@ describe("The `objectifyFilterOptions` function", () => {
       frames: [],
     };
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const filter = <FilterStruct>(
       struct.models(0)?.joins(0)?.clause()?.filters(0)
     );
@@ -247,7 +260,10 @@ describe("The `objectifyFilterOptions` function", () => {
       frames: [],
     };
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const filter = <FilterStruct>(
       struct.models(0)?.joins(0)?.clause()?.filters(0)
     );
@@ -293,7 +309,10 @@ describe("The `objectifyFilterOptions` function", () => {
       frames: [],
     };
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const filter = <FilterStruct>(
       struct.models(0)?.joins(0)?.clause()?.filters(0)
     );
@@ -332,7 +351,10 @@ describe("The `objectifyFilterClause` function", () => {
       frames: [],
     };
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const clause = <FilterClauseStruct>(
       struct.models(0)?.joins(0)?.clause()
     );
@@ -375,7 +397,10 @@ describe("The `objectifyFilterClause` function", () => {
       frames: [],
     };
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const clause = <FilterClauseStruct>(
       struct.models(0)?.joins(0)?.clause()
     );
@@ -424,7 +449,10 @@ describe("The `objectifyFilterClause` function", () => {
       frames: [],
     };
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const clause = <FilterClauseStruct>(
       struct.models(0)?.joins(0)?.clause()
     );
@@ -482,7 +510,10 @@ describe("The `objectifyFilterClause` function", () => {
       frames: [],
     };
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const clause = <FilterClauseStruct>(
       struct.models(0)?.joins(0)?.clause()
     );

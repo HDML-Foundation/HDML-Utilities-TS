@@ -19,7 +19,8 @@ import {
   TimeZoneEnum,
 } from "@hdml/schemas";
 import { HDOM } from "@hdml/types";
-import { serialize, structurize } from "@hdml/buffer";
+import { serialize, structurize, StructType } from "@hdml/buffer";
+import { HDOMStruct } from "@hdml/schemas";
 import {
   getTableFieldSQL,
   getFrameFieldSQL,
@@ -1810,7 +1811,10 @@ const hdom: HDOM = {
 describe("Field functions", () => {
   it("must stringify `simple_field` table field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.models(0)?.tables(0)?.fields(0);
     const sql = getTableFieldSQL(field);
     const html = getFieldHTML(field);
@@ -1822,7 +1826,10 @@ describe("Field functions", () => {
 
   it("must stringify `simple_field` frame field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.frames(0)?.fields(0);
     const sql = getFrameFieldSQL(field);
     const html = getFieldHTML(field);
@@ -1834,7 +1841,10 @@ describe("Field functions", () => {
 
   it("must stringify `origin_field` table field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.models(0)?.tables(0)?.fields(1);
     const sql = getTableFieldSQL(field);
     const html = getFieldHTML(field);
@@ -1846,7 +1856,10 @@ describe("Field functions", () => {
 
   it("must stringify `origin_field` frame field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.frames(0)?.fields(1);
     const sql = getFrameFieldSQL(field);
     const html = getFieldHTML(field);
@@ -1858,7 +1871,10 @@ describe("Field functions", () => {
 
   it("must stringify `clause_field` table field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.models(0)?.tables(0)?.fields(2);
     const sql = getTableFieldSQL(field);
     const html = getFieldHTML(field);
@@ -1870,7 +1886,10 @@ describe("Field functions", () => {
 
   it("must stringify `clause_field` frame field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.frames(0)?.fields(2);
     const sql = getFrameFieldSQL(field);
     const html = getFieldHTML(field);
@@ -1882,7 +1901,10 @@ describe("Field functions", () => {
 
   it("must stringify `int8_field` table field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.models(0)?.tables(0)?.fields(3);
     const sql = getTableFieldSQL(field);
     const html = getFieldHTML(field);
@@ -1896,7 +1918,10 @@ describe("Field functions", () => {
 
   it("must stringify `int8_field` frame field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.frames(0)?.fields(3);
     const sql = getFrameFieldSQL(field);
     const html = getFieldHTML(field);
@@ -1910,7 +1935,10 @@ describe("Field functions", () => {
 
   it("must stringify `int16_field` table field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.models(0)?.tables(0)?.fields(4);
     const sql = getTableFieldSQL(field);
     const html = getFieldHTML(field);
@@ -1924,7 +1952,10 @@ describe("Field functions", () => {
 
   it("must stringify `int16_field` frame field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.frames(0)?.fields(4);
     const sql = getFrameFieldSQL(field);
     const html = getFieldHTML(field);
@@ -1938,7 +1969,10 @@ describe("Field functions", () => {
 
   it("must stringify `int32_field` table field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.models(0)?.tables(0)?.fields(5);
     const sql = getTableFieldSQL(field);
     const html = getFieldHTML(field);
@@ -1952,7 +1986,10 @@ describe("Field functions", () => {
 
   it("must stringify `int32_field` frame field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.frames(0)?.fields(5);
     const sql = getFrameFieldSQL(field);
     const html = getFieldHTML(field);
@@ -1966,7 +2003,10 @@ describe("Field functions", () => {
 
   it("must stringify `int64_field` table field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.models(0)?.tables(0)?.fields(6);
     const sql = getTableFieldSQL(field);
     const html = getFieldHTML(field);
@@ -1980,7 +2020,10 @@ describe("Field functions", () => {
 
   it("must stringify `int64_field` frame field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.frames(0)?.fields(6);
     const sql = getFrameFieldSQL(field);
     const html = getFieldHTML(field);
@@ -1994,7 +2037,10 @@ describe("Field functions", () => {
 
   it("must stringify `float32_field` table field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.models(0)?.tables(0)?.fields(7);
     const sql = getTableFieldSQL(field);
     const html = getFieldHTML(field);
@@ -2008,7 +2054,10 @@ describe("Field functions", () => {
 
   it("must stringify `float32_field` frame field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.frames(0)?.fields(7);
     const sql = getFrameFieldSQL(field);
     const html = getFieldHTML(field);
@@ -2022,7 +2071,10 @@ describe("Field functions", () => {
 
   it("must stringify `float64_field` table field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.models(0)?.tables(0)?.fields(8);
     const sql = getTableFieldSQL(field);
     const html = getFieldHTML(field);
@@ -2036,7 +2088,10 @@ describe("Field functions", () => {
 
   it("must stringify `float64_field` frame field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.frames(0)?.fields(8);
     const sql = getFrameFieldSQL(field);
     const html = getFieldHTML(field);
@@ -2050,7 +2105,10 @@ describe("Field functions", () => {
 
   it("must stringify `decimal_field` table field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.models(0)?.tables(0)?.fields(9);
     const sql = getTableFieldSQL(field);
     const html = getFieldHTML(field);
@@ -2065,7 +2123,10 @@ describe("Field functions", () => {
 
   it("must stringify `decimal_field` frame field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.frames(0)?.fields(9);
     const sql = getFrameFieldSQL(field);
     const html = getFieldHTML(field);
@@ -2080,7 +2141,10 @@ describe("Field functions", () => {
 
   it("must stringify `date_field` table field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>(
       struct.models(0)?.tables(0)?.fields(10)
     );
@@ -2096,7 +2160,10 @@ describe("Field functions", () => {
 
   it("must stringify `date_field` frame field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.frames(0)?.fields(10);
     const sql = getFrameFieldSQL(field);
     const html = getFieldHTML(field);
@@ -2110,7 +2177,10 @@ describe("Field functions", () => {
 
   it("must stringify `time_field` table field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>(
       struct.models(0)?.tables(0)?.fields(11)
     );
@@ -2126,7 +2196,10 @@ describe("Field functions", () => {
 
   it("must stringify `time_field` frame field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.frames(0)?.fields(11);
     const sql = getFrameFieldSQL(field);
     const html = getFieldHTML(field);
@@ -2140,7 +2213,10 @@ describe("Field functions", () => {
 
   it("must stringify `timestamp_field` table field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>(
       struct.models(0)?.tables(0)?.fields(12)
     );
@@ -2157,7 +2233,10 @@ describe("Field functions", () => {
 
   it("must stringify `timestamp_field` frame field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.frames(0)?.fields(12);
     const sql = getFrameFieldSQL(field);
     const html = getFieldHTML(field);
@@ -2172,7 +2251,10 @@ describe("Field functions", () => {
 
   it("must stringify `binary_field` table field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>(
       struct.models(0)?.tables(0)?.fields(13)
     );
@@ -2188,7 +2270,10 @@ describe("Field functions", () => {
 
   it("must stringify `binary_field` frame field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.frames(0)?.fields(13);
     const sql = getFrameFieldSQL(field);
     const html = getFieldHTML(field);
@@ -2202,7 +2287,10 @@ describe("Field functions", () => {
 
   it("must stringify `utf8_field` table field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>(
       struct.models(0)?.tables(0)?.fields(14)
     );
@@ -2218,7 +2306,10 @@ describe("Field functions", () => {
 
   it("must stringify `utf8_field` frame field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.frames(0)?.fields(14);
     const sql = getFrameFieldSQL(field);
     const html = getFieldHTML(field);
@@ -2232,7 +2323,10 @@ describe("Field functions", () => {
 
   it("must stringify `count_field` table field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>(
       struct.models(0)?.tables(0)?.fields(15)
     );
@@ -2248,7 +2342,10 @@ describe("Field functions", () => {
 
   it("must stringify `count_field` frame field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.frames(0)?.fields(15);
     const sql = getFrameFieldSQL(field);
     const html = getFieldHTML(field);
@@ -2262,7 +2359,10 @@ describe("Field functions", () => {
 
   it("must stringify `count_distinct_field` table field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>(
       struct.models(0)?.tables(0)?.fields(16)
     );
@@ -2279,7 +2379,10 @@ describe("Field functions", () => {
 
   it("must stringify `count_distinct_field` frame field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.frames(0)?.fields(16);
     const sql = getFrameFieldSQL(field);
     const html = getFieldHTML(field);
@@ -2294,7 +2397,10 @@ describe("Field functions", () => {
 
   it("must stringify `approx_distinct_field` table field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>(
       struct.models(0)?.tables(0)?.fields(17)
     );
@@ -2311,7 +2417,10 @@ describe("Field functions", () => {
 
   it("must stringify `approx_distinct_field` frame field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.frames(0)?.fields(17);
     const sql = getFrameFieldSQL(field);
     const html = getFieldHTML(field);
@@ -2326,7 +2435,10 @@ describe("Field functions", () => {
 
   it("must stringify `min_field` table field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>(
       struct.models(0)?.tables(0)?.fields(18)
     );
@@ -2342,7 +2454,10 @@ describe("Field functions", () => {
 
   it("must stringify `min_field` frame field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.frames(0)?.fields(18);
     const sql = getFrameFieldSQL(field);
     const html = getFieldHTML(field);
@@ -2356,7 +2471,10 @@ describe("Field functions", () => {
 
   it("must stringify `max_field` table field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>(
       struct.models(0)?.tables(0)?.fields(19)
     );
@@ -2372,7 +2490,10 @@ describe("Field functions", () => {
 
   it("must stringify `max_field` frame field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.frames(0)?.fields(19);
     const sql = getFrameFieldSQL(field);
     const html = getFieldHTML(field);
@@ -2386,7 +2507,10 @@ describe("Field functions", () => {
 
   it("must stringify `sum_field` table field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>(
       struct.models(0)?.tables(0)?.fields(20)
     );
@@ -2402,7 +2526,10 @@ describe("Field functions", () => {
 
   it("must stringify `sum_field` frame field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.frames(0)?.fields(20);
     const sql = getFrameFieldSQL(field);
     const html = getFieldHTML(field);
@@ -2416,7 +2543,10 @@ describe("Field functions", () => {
 
   it("must stringify `avg_field` table field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>(
       struct.models(0)?.tables(0)?.fields(21)
     );
@@ -2432,7 +2562,10 @@ describe("Field functions", () => {
 
   it("must stringify `avg_field` frame field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.frames(0)?.fields(21);
     const sql = getFrameFieldSQL(field);
     const html = getFieldHTML(field);
@@ -2446,7 +2579,10 @@ describe("Field functions", () => {
 
   it("must stringify `noname_field` table field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>(
       struct.models(0)?.tables(0)?.fields(22)
     );
@@ -2458,7 +2594,10 @@ describe("Field functions", () => {
 
   it("must stringify `noname_field` frame field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.frames(0)?.fields(22);
     const sql = getFrameFieldSQL(field);
     const html = getFieldHTML(field);
@@ -2468,7 +2607,10 @@ describe("Field functions", () => {
 
   it("must stringify `time_millisecond_field` table field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>(
       struct.models(0)?.tables(0)?.fields(23)
     );
@@ -2484,7 +2626,10 @@ describe("Field functions", () => {
 
   it("must stringify `time_millisecond_field` frame field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.frames(0)?.fields(23);
     const sql = getFrameFieldSQL(field);
     const html = getFieldHTML(field);
@@ -2498,7 +2643,10 @@ describe("Field functions", () => {
 
   it("must stringify `time_microsecond_field` table field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>(
       struct.models(0)?.tables(0)?.fields(24)
     );
@@ -2514,7 +2662,10 @@ describe("Field functions", () => {
 
   it("must stringify `time_microsecond_field` frame field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.frames(0)?.fields(24);
     const sql = getFrameFieldSQL(field);
     const html = getFieldHTML(field);
@@ -2528,7 +2679,10 @@ describe("Field functions", () => {
 
   it("must stringify `time_nanosecond_field` table field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>(
       struct.models(0)?.tables(0)?.fields(25)
     );
@@ -2544,7 +2698,10 @@ describe("Field functions", () => {
 
   it("must stringify `time_nanosecond_field` frame field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.frames(0)?.fields(25);
     const sql = getFrameFieldSQL(field);
     const html = getFieldHTML(field);
@@ -2559,7 +2716,10 @@ describe("Field functions", () => {
 
   it("must stringify `timestamp_millisecond_field` table field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>(
       struct.models(0)?.tables(0)?.fields(26)
     );
@@ -2575,7 +2735,10 @@ describe("Field functions", () => {
 
   it("must stringify `timestamp_millisecond_field` frame field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.frames(0)?.fields(26);
     const sql = getFrameFieldSQL(field);
     const html = getFieldHTML(field);
@@ -2589,7 +2752,10 @@ describe("Field functions", () => {
 
   it("must stringify `timestamp_microsecond_field` table field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>(
       struct.models(0)?.tables(0)?.fields(27)
     );
@@ -2605,7 +2771,10 @@ describe("Field functions", () => {
 
   it("must stringify `timestamp_microsecond_field` frame field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.frames(0)?.fields(27);
     const sql = getFrameFieldSQL(field);
     const html = getFieldHTML(field);
@@ -2619,7 +2788,10 @@ describe("Field functions", () => {
 
   it("must stringify `timestamp_nanosecond_field` table field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>(
       struct.models(0)?.tables(0)?.fields(28)
     );
@@ -2635,7 +2807,10 @@ describe("Field functions", () => {
 
   it("must stringify `timestamp_nanosecond_field` frame field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.frames(0)?.fields(28);
     const sql = getFrameFieldSQL(field);
     const html = getFieldHTML(field);
@@ -2649,7 +2824,10 @@ describe("Field functions", () => {
 
   it("must stringify `timestamp_gmt_field` table field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>(
       struct.models(0)?.tables(0)?.fields(29)
     );
@@ -2665,7 +2843,10 @@ describe("Field functions", () => {
 
   it("must stringify `timestamp_gmt_field` frame field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.frames(0)?.fields(29);
     const sql = getFrameFieldSQL(field);
     const html = getFieldHTML(field);
@@ -2679,7 +2860,10 @@ describe("Field functions", () => {
 
   it("must stringify `timestamp_gmt_m_01_field` table field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>(
       struct.models(0)?.tables(0)?.fields(30)
     );
@@ -2695,7 +2879,10 @@ describe("Field functions", () => {
 
   it("must stringify `timestamp_gmt_m_01_field` frame field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.frames(0)?.fields(30);
     const sql = getFrameFieldSQL(field);
     const html = getFieldHTML(field);
@@ -2709,7 +2896,10 @@ describe("Field functions", () => {
 
   it("must stringify `timestamp_gmt_m_02_field` table field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>(
       struct.models(0)?.tables(0)?.fields(31)
     );
@@ -2725,7 +2915,10 @@ describe("Field functions", () => {
 
   it("must stringify `timestamp_gmt_m_02_field` frame field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.frames(0)?.fields(31);
     const sql = getFrameFieldSQL(field);
     const html = getFieldHTML(field);
@@ -2739,7 +2932,10 @@ describe("Field functions", () => {
 
   it("must stringify `timestamp_gmt_m_03_field` table field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>(
       struct.models(0)?.tables(0)?.fields(32)
     );
@@ -2755,7 +2951,10 @@ describe("Field functions", () => {
 
   it("must stringify `timestamp_gmt_m_03_field` frame field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.frames(0)?.fields(32);
     const sql = getFrameFieldSQL(field);
     const html = getFieldHTML(field);
@@ -2769,7 +2968,10 @@ describe("Field functions", () => {
 
   it("must stringify `timestamp_gmt_m_04_field` table field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>(
       struct.models(0)?.tables(0)?.fields(33)
     );
@@ -2785,7 +2987,10 @@ describe("Field functions", () => {
 
   it("must stringify `timestamp_gmt_m_04_field` frame field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.frames(0)?.fields(33);
     const sql = getFrameFieldSQL(field);
     const html = getFieldHTML(field);
@@ -2799,7 +3004,10 @@ describe("Field functions", () => {
 
   it("must stringify `timestamp_gmt_m_05_field` table field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>(
       struct.models(0)?.tables(0)?.fields(34)
     );
@@ -2815,7 +3023,10 @@ describe("Field functions", () => {
 
   it("must stringify `timestamp_gmt_m_05_field` frame field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.frames(0)?.fields(34);
     const sql = getFrameFieldSQL(field);
     const html = getFieldHTML(field);
@@ -2829,7 +3040,10 @@ describe("Field functions", () => {
 
   it("must stringify `timestamp_gmt_m_06_field` table field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>(
       struct.models(0)?.tables(0)?.fields(35)
     );
@@ -2845,7 +3059,10 @@ describe("Field functions", () => {
 
   it("must stringify `timestamp_gmt_m_06_field` frame field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.frames(0)?.fields(35);
     const sql = getFrameFieldSQL(field);
     const html = getFieldHTML(field);
@@ -2859,7 +3076,10 @@ describe("Field functions", () => {
 
   it("must stringify `timestamp_gmt_m_07_field` table field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>(
       struct.models(0)?.tables(0)?.fields(36)
     );
@@ -2875,7 +3095,10 @@ describe("Field functions", () => {
 
   it("must stringify `timestamp_gmt_m_07_field` frame field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.frames(0)?.fields(36);
     const sql = getFrameFieldSQL(field);
     const html = getFieldHTML(field);
@@ -2889,7 +3112,10 @@ describe("Field functions", () => {
 
   it("must stringify `timestamp_gmt_m_08_field` table field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>(
       struct.models(0)?.tables(0)?.fields(37)
     );
@@ -2905,7 +3131,10 @@ describe("Field functions", () => {
 
   it("must stringify `timestamp_gmt_m_08_field` frame field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.frames(0)?.fields(37);
     const sql = getFrameFieldSQL(field);
     const html = getFieldHTML(field);
@@ -2919,7 +3148,10 @@ describe("Field functions", () => {
 
   it("must stringify `timestamp_gmt_m_09_field` table field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>(
       struct.models(0)?.tables(0)?.fields(38)
     );
@@ -2935,7 +3167,10 @@ describe("Field functions", () => {
 
   it("must stringify `timestamp_gmt_m_09_field` frame field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.frames(0)?.fields(38);
     const sql = getFrameFieldSQL(field);
     const html = getFieldHTML(field);
@@ -2949,7 +3184,10 @@ describe("Field functions", () => {
 
   it("must stringify `timestamp_gmt_m_10_field` table field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>(
       struct.models(0)?.tables(0)?.fields(39)
     );
@@ -2965,7 +3203,10 @@ describe("Field functions", () => {
 
   it("must stringify `timestamp_gmt_m_10_field` frame field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.frames(0)?.fields(39);
     const sql = getFrameFieldSQL(field);
     const html = getFieldHTML(field);
@@ -2979,7 +3220,10 @@ describe("Field functions", () => {
 
   it("must stringify `timestamp_gmt_m_11_field` table field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>(
       struct.models(0)?.tables(0)?.fields(40)
     );
@@ -2995,7 +3239,10 @@ describe("Field functions", () => {
 
   it("must stringify `timestamp_gmt_m_11_field` frame field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.frames(0)?.fields(40);
     const sql = getFrameFieldSQL(field);
     const html = getFieldHTML(field);
@@ -3009,7 +3256,10 @@ describe("Field functions", () => {
 
   it("must stringify `timestamp_gmt_m_12_field` table field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>(
       struct.models(0)?.tables(0)?.fields(41)
     );
@@ -3025,7 +3275,10 @@ describe("Field functions", () => {
 
   it("must stringify `timestamp_gmt_m_12_field` frame field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.frames(0)?.fields(41);
     const sql = getFrameFieldSQL(field);
     const html = getFieldHTML(field);
@@ -3039,7 +3292,10 @@ describe("Field functions", () => {
 
   it("must stringify `timestamp_gmt_p_01_field` table field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>(
       struct.models(0)?.tables(0)?.fields(42)
     );
@@ -3055,7 +3311,10 @@ describe("Field functions", () => {
 
   it("must stringify `timestamp_gmt_p_01_field` frame field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.frames(0)?.fields(42);
     const sql = getFrameFieldSQL(field);
     const html = getFieldHTML(field);
@@ -3069,7 +3328,10 @@ describe("Field functions", () => {
 
   it("must stringify `timestamp_gmt_p_02_field` table field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>(
       struct.models(0)?.tables(0)?.fields(43)
     );
@@ -3085,7 +3347,10 @@ describe("Field functions", () => {
 
   it("must stringify `timestamp_gmt_p_02_field` frame field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.frames(0)?.fields(43);
     const sql = getFrameFieldSQL(field);
     const html = getFieldHTML(field);
@@ -3099,7 +3364,10 @@ describe("Field functions", () => {
 
   it("must stringify `timestamp_gmt_p_03_field` table field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>(
       struct.models(0)?.tables(0)?.fields(44)
     );
@@ -3115,7 +3383,10 @@ describe("Field functions", () => {
 
   it("must stringify `timestamp_gmt_p_03_field` frame field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.frames(0)?.fields(44);
     const sql = getFrameFieldSQL(field);
     const html = getFieldHTML(field);
@@ -3129,7 +3400,10 @@ describe("Field functions", () => {
 
   it("must stringify `timestamp_gmt_p_04_field` table field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>(
       struct.models(0)?.tables(0)?.fields(45)
     );
@@ -3145,7 +3419,10 @@ describe("Field functions", () => {
 
   it("must stringify `timestamp_gmt_p_04_field` frame field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.frames(0)?.fields(45);
     const sql = getFrameFieldSQL(field);
     const html = getFieldHTML(field);
@@ -3159,7 +3436,10 @@ describe("Field functions", () => {
 
   it("must stringify `timestamp_gmt_p_05_field` table field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>(
       struct.models(0)?.tables(0)?.fields(46)
     );
@@ -3175,7 +3455,10 @@ describe("Field functions", () => {
 
   it("must stringify `timestamp_gmt_p_05_field` frame field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.frames(0)?.fields(46);
     const sql = getFrameFieldSQL(field);
     const html = getFieldHTML(field);
@@ -3189,7 +3472,10 @@ describe("Field functions", () => {
 
   it("must stringify `timestamp_gmt_p_06_field` table field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>(
       struct.models(0)?.tables(0)?.fields(47)
     );
@@ -3205,7 +3491,10 @@ describe("Field functions", () => {
 
   it("must stringify `timestamp_gmt_p_06_field` frame field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.frames(0)?.fields(47);
     const sql = getFrameFieldSQL(field);
     const html = getFieldHTML(field);
@@ -3219,7 +3508,10 @@ describe("Field functions", () => {
 
   it("must stringify `timestamp_gmt_p_07_field` table field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>(
       struct.models(0)?.tables(0)?.fields(48)
     );
@@ -3235,7 +3527,10 @@ describe("Field functions", () => {
 
   it("must stringify `timestamp_gmt_p_07_field` frame field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.frames(0)?.fields(48);
     const sql = getFrameFieldSQL(field);
     const html = getFieldHTML(field);
@@ -3249,7 +3544,10 @@ describe("Field functions", () => {
 
   it("must stringify `timestamp_gmt_p_08_field` table field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>(
       struct.models(0)?.tables(0)?.fields(49)
     );
@@ -3265,7 +3563,10 @@ describe("Field functions", () => {
 
   it("must stringify `timestamp_gmt_p_08_field` frame field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.frames(0)?.fields(49);
     const sql = getFrameFieldSQL(field);
     const html = getFieldHTML(field);
@@ -3279,7 +3580,10 @@ describe("Field functions", () => {
 
   it("must stringify `timestamp_gmt_p_09_field` table field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>(
       struct.models(0)?.tables(0)?.fields(50)
     );
@@ -3295,7 +3599,10 @@ describe("Field functions", () => {
 
   it("must stringify `timestamp_gmt_p_09_field` frame field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.frames(0)?.fields(50);
     const sql = getFrameFieldSQL(field);
     const html = getFieldHTML(field);
@@ -3309,7 +3616,10 @@ describe("Field functions", () => {
 
   it("must stringify `timestamp_gmt_p_10_field` table field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>(
       struct.models(0)?.tables(0)?.fields(51)
     );
@@ -3325,7 +3635,10 @@ describe("Field functions", () => {
 
   it("must stringify `timestamp_gmt_p_10_field` frame field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.frames(0)?.fields(51);
     const sql = getFrameFieldSQL(field);
     const html = getFieldHTML(field);
@@ -3339,7 +3652,10 @@ describe("Field functions", () => {
 
   it("must stringify `timestamp_gmt_p_11_field` table field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>(
       struct.models(0)?.tables(0)?.fields(52)
     );
@@ -3355,7 +3671,10 @@ describe("Field functions", () => {
 
   it("must stringify `timestamp_gmt_p_11_field` frame field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.frames(0)?.fields(52);
     const sql = getFrameFieldSQL(field);
     const html = getFieldHTML(field);
@@ -3369,7 +3688,10 @@ describe("Field functions", () => {
 
   it("must stringify `timestamp_gmt_p_12_field` table field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>(
       struct.models(0)?.tables(0)?.fields(53)
     );
@@ -3385,7 +3707,10 @@ describe("Field functions", () => {
 
   it("must stringify `timestamp_gmt_p_12_field` frame field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.frames(0)?.fields(53);
     const sql = getFrameFieldSQL(field);
     const html = getFieldHTML(field);
@@ -3399,7 +3724,10 @@ describe("Field functions", () => {
 
   it("must stringify `timestamp_gmt_p_13_field` table field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>(
       struct.models(0)?.tables(0)?.fields(54)
     );
@@ -3415,7 +3743,10 @@ describe("Field functions", () => {
 
   it("must stringify `timestamp_gmt_p_13_field` frame field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.frames(0)?.fields(54);
     const sql = getFrameFieldSQL(field);
     const html = getFieldHTML(field);
@@ -3429,7 +3760,10 @@ describe("Field functions", () => {
 
   it("must stringify `timestamp_gmt_p_14_field` table field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>(
       struct.models(0)?.tables(0)?.fields(55)
     );
@@ -3445,7 +3779,10 @@ describe("Field functions", () => {
 
   it("must stringify `timestamp_gmt_p_14_field` frame field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.frames(0)?.fields(55);
     const sql = getFrameFieldSQL(field);
     const html = getFieldHTML(field);
@@ -3459,7 +3796,10 @@ describe("Field functions", () => {
 
   it("must stringify `asc_field` table field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>(
       struct.models(0)?.tables(0)?.fields(56)
     );
@@ -3471,7 +3811,10 @@ describe("Field functions", () => {
 
   it("must stringify `asc_field` frame field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.frames(0)?.fields(56);
     const html = getFieldHTML(field);
     expect(html).toBe(
@@ -3481,7 +3824,10 @@ describe("Field functions", () => {
 
   it("must stringify `desc_field` table field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>(
       struct.models(0)?.tables(0)?.fields(57)
     );
@@ -3493,7 +3839,10 @@ describe("Field functions", () => {
 
   it("must stringify `desc_field` frame field", () => {
     const bytes = serialize(hdom);
-    const struct = structurize(bytes);
+    const struct = structurize(
+      bytes,
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
     const field = <FieldStruct>struct.frames(0)?.fields(57);
     const html = getFieldHTML(field);
     expect(html).toBe(
