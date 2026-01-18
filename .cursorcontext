@@ -81,7 +81,12 @@ The root structure representing an HDML document:
 
 ### @hdml/buffer
 - **Purpose**: Serialize and deserialize HDML using FlatBuffers
-- **Key Functions**: `serialize()`, `deserialize()`, `structurize()`
+- **Key Functions**: 
+  - `serialize(hdom: HDOM): Uint8Array` - Serialize HDOM to binary
+  - `deserialize(bytes: Uint8Array): HDOM` - Deserialize binary to HDOM
+  - `structurize(bytes: Uint8Array, type?: StructType): HDOMStruct | ConnectionStruct | ModelStruct | FrameStruct` - Convert binary to FlatBuffers struct (supports multiple struct types)
+  - `fileifize(buffer: Uint8Array): FileifizeResult` - Split HDOM buffer into individual connection, model, and frame buffers
+- **StructType Enum**: `HDOMStruct`, `ConnectionStruct`, `ModelStruct`, `FrameStruct` - Specifies which struct type to structurize
 - **Bufferify Functions** (in `bufferify/` directory): Convert TypeScript interfaces to FlatBuffers structures
   - `bufferifyHDOM()`, `bufferifyConnection()`, `bufferifyModel()`, `bufferifyFrame()`, `bufferifyField()`, `bufferifyFilterClause()`
 - **Objectify Functions** (in `objectify/` directory): Convert FlatBuffers structures back to TypeScript interfaces
@@ -220,9 +225,10 @@ The root structure representing an HDML document:
 1. HDML string → parseHDML() → HDOM interface
 2. HDOM interface → bufferify*() → FlatBuffers struct
 3. FlatBuffers struct → serialize() → Uint8Array
-4. Uint8Array → structurize() → FlatBuffers struct
+4. Uint8Array → structurize(bytes, StructType.HDOMStruct) → HDOMStruct (or other struct types)
 5. FlatBuffers struct → objectify*() → TypeScript interface
 6. Uint8Array → deserialize() → HDOM interface (complete round-trip)
+7. Uint8Array (HDOM) → fileifize() → Individual connection/model/frame buffers
 
 ### Stringification Flow
 1. HDOM/Model/Frame → get*SQL() → SQL string

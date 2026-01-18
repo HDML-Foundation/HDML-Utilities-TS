@@ -88,8 +88,9 @@ HDML-Utilities-TS/
 1. **Parsing**: HDML string → `parseHDML()` → HDOM interface
 2. **Serialization**: HDOM interface → `bufferify*()` → FlatBuffers struct → `serialize()` → Uint8Array
 3. **Deserialization**: Uint8Array → `deserialize()` → HDOM interface (complete round-trip)
-4. **Structurization**: Uint8Array → `structurize()` → FlatBuffers struct → `objectify*()` → TypeScript interface
-5. **Stringification**: HDOM/Model/Frame → `get*SQL()` / `get*HTML()` → SQL/HTML string
+4. **Structurization**: Uint8Array → `structurize(bytes, StructType.*)` → FlatBuffers struct (HDOMStruct/ConnectionStruct/ModelStruct/FrameStruct) → `objectify*()` → TypeScript interface
+5. **File Splitting**: Uint8Array (HDOM) → `fileifize()` → Individual connection/model/frame buffers
+6. **Stringification**: HDOM/Model/Frame → `get*SQL()` / `get*HTML()` → SQL/HTML string
 
 ---
 
@@ -222,7 +223,8 @@ interface Frame {
 **Key Functions**:
 - `serialize(hdom: HDOM): Uint8Array` - Serialize HDOM to binary
 - `deserialize(bytes: Uint8Array): HDOM` - Deserialize binary to HDOM
-- `structurize(bytes: Uint8Array): HDOMStruct` - Convert binary to FlatBuffers struct
+- `structurize(bytes: Uint8Array, type?: StructType): HDOMStruct | ConnectionStruct | ModelStruct | FrameStruct` - Convert binary to FlatBuffers struct (supports multiple struct types via optional `type` parameter, defaults to `HDOMStruct`)
+- `fileifize(buffer: Uint8Array): FileifizeResult` - Split HDOM buffer into separate connection, model, and frame buffers
 
 **Bufferify Functions** (in `bufferify/` directory) - TypeScript → FlatBuffers:
 - `bufferifyHDOM(hdom: HDOM): number` - Returns FlatBuffers offset
@@ -240,10 +242,17 @@ interface Frame {
 - `objectifyField(fieldStruct: FieldStruct): Field`
 - `objectifyFilterClause(clauseStruct: FilterClauseStruct): FilterClause`
 
+**StructType Enum**: Exported enum with values:
+- `StructType.HDOMStruct` - For structurizing complete HDOM structures
+- `StructType.ConnectionStruct` - For structurizing individual connection buffers
+- `StructType.ModelStruct` - For structurizing individual model buffers
+- `StructType.FrameStruct` - For structurizing individual frame buffers
+
 **Usage**:
 ```typescript
-import { serialize, deserialize, structurize } from "@hdml/buffer";
+import { serialize, deserialize, structurize, StructType, fileifize } from "@hdml/buffer";
 import { objectifyHDOM } from "@hdml/buffer/src/objectify/objectifyHDOM";
+import { HDOMStruct, ConnectionStruct, ModelStruct, FrameStruct } from "@hdml/schemas";
 
 const hdom: HDOM = { /* ... */ };
 
@@ -252,9 +261,26 @@ const bytes = serialize(hdom);
 const restored = deserialize(bytes);
 // restored is deeply equal to hdom
 
-// Working with FlatBuffers structs
-const struct = structurize(bytes);
-const hdomFromStruct = objectifyHDOM(struct);
+// Working with FlatBuffers structs (default HDOMStruct)
+const hdomStruct = structurize(bytes, StructType.HDOMStruct) as HDOMStruct;
+// Or simply: structurize(bytes) - defaults to HDOMStruct
+const hdomFromStruct = objectifyHDOM(hdomStruct);
+
+// Working with individual struct types
+const connBytes: Uint8Array = ...; // Individual connection buffer
+const connStruct = structurize(connBytes, StructType.ConnectionStruct) as ConnectionStruct;
+
+const modelBytes: Uint8Array = ...; // Individual model buffer
+const modelStruct = structurize(modelBytes, StructType.ModelStruct) as ModelStruct;
+
+const frameBytes: Uint8Array = ...; // Individual frame buffer
+const frameStruct = structurize(frameBytes, StructType.FrameStruct) as FrameStruct;
+
+// Splitting HDOM into individual file buffers
+const result = fileifize(bytes);
+// result.connections: Array<{ name: string; buffer: Uint8Array }>
+// result.models: Array<{ name: string; buffer: Uint8Array }>
+// result.frames: Array<{ name: string; buffer: Uint8Array }>
 ```
 
 **Dependencies**: `@hdml/types`, `@hdml/schemas`, `flatbuffers`
