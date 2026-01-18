@@ -36,9 +36,8 @@ describe("The `objectifyFilterClause` function", () => {
     builder.finish(offset);
     const buffer = builder.asUint8Array();
     const byteBuffer = new flatbuffers.ByteBuffer(buffer);
-    const clauseStruct = FilterClauseStruct.getRootAsFilterClauseStruct(
-      byteBuffer,
-    );
+    const clauseStruct =
+      FilterClauseStruct.getRootAsFilterClauseStruct(byteBuffer);
     const objectified = objectifyFilterClause(clauseStruct);
 
     expect(objectified).toEqual(clause);
@@ -63,9 +62,8 @@ describe("The `objectifyFilterClause` function", () => {
     builder.finish(offset);
     const buffer = builder.asUint8Array();
     const byteBuffer = new flatbuffers.ByteBuffer(buffer);
-    const clauseStruct = FilterClauseStruct.getRootAsFilterClauseStruct(
-      byteBuffer,
-    );
+    const clauseStruct =
+      FilterClauseStruct.getRootAsFilterClauseStruct(byteBuffer);
     const objectified = objectifyFilterClause(clauseStruct);
 
     expect(objectified).toEqual(clause);
@@ -87,9 +85,8 @@ describe("The `objectifyFilterClause` function", () => {
     builder.finish(offset);
     const buffer = builder.asUint8Array();
     const byteBuffer = new flatbuffers.ByteBuffer(buffer);
-    const clauseStruct = FilterClauseStruct.getRootAsFilterClauseStruct(
-      byteBuffer,
-    );
+    const clauseStruct =
+      FilterClauseStruct.getRootAsFilterClauseStruct(byteBuffer);
     const objectified = objectifyFilterClause(clauseStruct);
 
     expect(objectified).toEqual(parentClause);
@@ -130,9 +127,8 @@ describe("The `objectifyFilterClause` function", () => {
     builder.finish(offset);
     const buffer = builder.asUint8Array();
     const byteBuffer = new flatbuffers.ByteBuffer(buffer);
-    const clauseStruct = FilterClauseStruct.getRootAsFilterClauseStruct(
-      byteBuffer,
-    );
+    const clauseStruct =
+      FilterClauseStruct.getRootAsFilterClauseStruct(byteBuffer);
     const objectified = objectifyFilterClause(clauseStruct);
 
     expect(objectified).toEqual(clause);
@@ -158,9 +154,8 @@ describe("The `objectifyFilterClause` function", () => {
     builder.finish(offset);
     const buffer = builder.asUint8Array();
     const byteBuffer = new flatbuffers.ByteBuffer(buffer);
-    const clauseStruct = FilterClauseStruct.getRootAsFilterClauseStruct(
-      byteBuffer,
-    );
+    const clauseStruct =
+      FilterClauseStruct.getRootAsFilterClauseStruct(byteBuffer);
     const objectified = objectifyFilterClause(clauseStruct);
 
     expect(objectified).toEqual(clause);

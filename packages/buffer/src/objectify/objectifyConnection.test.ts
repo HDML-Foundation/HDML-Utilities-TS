@@ -4,6 +4,8 @@
  * @license Apache-2.0
  */
 
+/* eslint-disable max-len */
+
 import * as flatbuffers from "flatbuffers";
 import { Builder } from "flatbuffers";
 import { ConnectorTypesEnum, ConnectionStruct } from "@hdml/schemas";
@@ -37,9 +39,8 @@ describe("The `objectifyConnection` function", () => {
     builder.finish(offset);
     const buffer = builder.asUint8Array();
     const byteBuffer = new flatbuffers.ByteBuffer(buffer);
-    const connectionStruct = ConnectionStruct.getRootAsConnectionStruct(
-      byteBuffer,
-    );
+    const connectionStruct =
+      ConnectionStruct.getRootAsConnectionStruct(byteBuffer);
     const objectified = objectifyConnection(connectionStruct);
 
     expect(objectified).toEqual(connection);
@@ -62,9 +63,8 @@ describe("The `objectifyConnection` function", () => {
     builder.finish(offset);
     const buffer = builder.asUint8Array();
     const byteBuffer = new flatbuffers.ByteBuffer(buffer);
-    const connectionStruct = ConnectionStruct.getRootAsConnectionStruct(
-      byteBuffer,
-    );
+    const connectionStruct =
+      ConnectionStruct.getRootAsConnectionStruct(byteBuffer);
     const objectified = objectifyConnection(connectionStruct);
 
     expect(objectified).toEqual(connection);
@@ -87,9 +87,8 @@ describe("The `objectifyConnection` function", () => {
     builder.finish(offset);
     const buffer = builder.asUint8Array();
     const byteBuffer = new flatbuffers.ByteBuffer(buffer);
-    const connectionStruct = ConnectionStruct.getRootAsConnectionStruct(
-      byteBuffer,
-    );
+    const connectionStruct =
+      ConnectionStruct.getRootAsConnectionStruct(byteBuffer);
     const objectified = objectifyConnection(connectionStruct);
 
     expect(objectified).toEqual(connection);
@@ -118,9 +117,8 @@ describe("The `objectifyConnection` function", () => {
     builder.finish(offset);
     const buffer = builder.asUint8Array();
     const byteBuffer = new flatbuffers.ByteBuffer(buffer);
-    const connectionStruct = ConnectionStruct.getRootAsConnectionStruct(
-      byteBuffer,
-    );
+    const connectionStruct =
+      ConnectionStruct.getRootAsConnectionStruct(byteBuffer);
     const objectified = objectifyConnection(connectionStruct);
 
     expect(objectified).toEqual(connection);
@@ -147,9 +145,8 @@ describe("The `objectifyConnection` function", () => {
     builder.finish(offset);
     const buffer = builder.asUint8Array();
     const byteBuffer = new flatbuffers.ByteBuffer(buffer);
-    const connectionStruct = ConnectionStruct.getRootAsConnectionStruct(
-      byteBuffer,
-    );
+    const connectionStruct =
+      ConnectionStruct.getRootAsConnectionStruct(byteBuffer);
     const objectified = objectifyConnection(connectionStruct);
 
     expect(objectified).toEqual(connection);
@@ -176,9 +173,8 @@ describe("The `objectifyConnection` function", () => {
     builder.finish(offset);
     const buffer = builder.asUint8Array();
     const byteBuffer = new flatbuffers.ByteBuffer(buffer);
-    const connectionStruct = ConnectionStruct.getRootAsConnectionStruct(
-      byteBuffer,
-    );
+    const connectionStruct =
+      ConnectionStruct.getRootAsConnectionStruct(byteBuffer);
     const objectified = objectifyConnection(connectionStruct);
 
     expect(objectified).toEqual(connection);
