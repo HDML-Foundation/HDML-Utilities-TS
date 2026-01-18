@@ -32,7 +32,7 @@ import {
  * processes two main elements of the clause: `filters` (the array of
  * filter conditions) and `children` (the nested `FilterClauseStruct`
  * instances within the parent clause). Each element is serialized and
- * stored as a vector in FlatBuffers, which can later be deserialized
+ * stored as a vector in FlatBuffers, which can later be structurized
  * to reconstruct the original `FilterClauseStruct` object.
  *
  * @param builder The FlatBuffers `Builder` instance, responsible

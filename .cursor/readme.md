@@ -87,7 +87,7 @@ HDML-Utilities-TS/
 
 1. **Parsing**: HDML string → `parseHDML()` → HDOM interface
 2. **Serialization**: HDOM interface → `bufferify*()` → FlatBuffers struct → `serialize()` → Uint8Array
-3. **Deserialization**: Uint8Array → `deserialize()` → FlatBuffers struct → TypeScript interface
+3. **Structurization**: Uint8Array → `structurize()` → FlatBuffers struct → TypeScript interface
 4. **Stringification**: HDOM/Model/Frame → `get*SQL()` / `get*HTML()` → SQL/HTML string
 
 ---
@@ -216,11 +216,11 @@ interface Frame {
 
 ### @hdml/buffer
 
-**Purpose**: Serialize and deserialize HDML data structures using FlatBuffers.
+**Purpose**: Serialize and structurize HDML data structures using FlatBuffers.
 
 **Key Functions**:
 - `serialize(hdom: HDOMStruct): Uint8Array` - Serialize HDOM to binary
-- `deserialize(buffer: Uint8Array): HDOMStruct` - Deserialize binary to HDOM
+- `structurize(buffer: Uint8Array): HDOMStruct` - Structurize binary to HDOM
 
 **Bufferify Functions** (TypeScript → FlatBuffers):
 - `bufferifyHDOM(hdom: HDOM): HDOMStruct`
@@ -232,14 +232,14 @@ interface Frame {
 
 **Usage**:
 ```typescript
-import { serialize, deserialize } from "@hdml/buffer";
+import { serialize, structurize } from "@hdml/buffer";
 import { bufferifyHDOM } from "@hdml/buffer";
 
 const hdom: HDOM = { /* ... */ };
 const struct = bufferifyHDOM(hdom);
 const binary = serialize(struct);
 // ... transmit or store binary
-const restored = deserialize(binary);
+const restored = structurize(binary);
 ```
 
 **Dependencies**: `@hdml/types`, `@hdml/schemas`, `flatbuffers`

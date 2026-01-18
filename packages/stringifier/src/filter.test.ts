@@ -15,7 +15,7 @@ import {
   FilterNameEnum,
   FilterClauseStruct,
 } from "@hdml/schemas";
-import { serialize, deserialize } from "@hdml/buffer";
+import { serialize, structurize } from "@hdml/buffer";
 import {
   objectifyFilterOptions,
   objectifyFilterClause,
@@ -66,7 +66,7 @@ describe("The `objectifyFilterOptions` function", () => {
       frames: [],
     };
     const bytes = serialize(hdom);
-    const struct = deserialize(bytes);
+    const struct = structurize(bytes);
     const filter = <FilterStruct>(
       struct.models(0)?.joins(0)?.clause()?.filters(0)
     );
@@ -111,7 +111,7 @@ describe("The `objectifyFilterOptions` function", () => {
       frames: [],
     };
     const bytes = serialize(hdom);
-    const struct = deserialize(bytes);
+    const struct = structurize(bytes);
     const filter = <FilterStruct>(
       struct.models(0)?.joins(0)?.clause()?.filters(0)
     );
@@ -156,7 +156,7 @@ describe("The `objectifyFilterOptions` function", () => {
       frames: [],
     };
     const bytes = serialize(hdom);
-    const struct = deserialize(bytes);
+    const struct = structurize(bytes);
     const filter = <FilterStruct>(
       struct.models(0)?.joins(0)?.clause()?.filters(0)
     );
@@ -201,7 +201,7 @@ describe("The `objectifyFilterOptions` function", () => {
       frames: [],
     };
     const bytes = serialize(hdom);
-    const struct = deserialize(bytes);
+    const struct = structurize(bytes);
     const filter = <FilterStruct>(
       struct.models(0)?.joins(0)?.clause()?.filters(0)
     );
@@ -247,7 +247,7 @@ describe("The `objectifyFilterOptions` function", () => {
       frames: [],
     };
     const bytes = serialize(hdom);
-    const struct = deserialize(bytes);
+    const struct = structurize(bytes);
     const filter = <FilterStruct>(
       struct.models(0)?.joins(0)?.clause()?.filters(0)
     );
@@ -293,7 +293,7 @@ describe("The `objectifyFilterOptions` function", () => {
       frames: [],
     };
     const bytes = serialize(hdom);
-    const struct = deserialize(bytes);
+    const struct = structurize(bytes);
     const filter = <FilterStruct>(
       struct.models(0)?.joins(0)?.clause()?.filters(0)
     );
@@ -332,7 +332,7 @@ describe("The `objectifyFilterClause` function", () => {
       frames: [],
     };
     const bytes = serialize(hdom);
-    const struct = deserialize(bytes);
+    const struct = structurize(bytes);
     const clause = <FilterClauseStruct>(
       struct.models(0)?.joins(0)?.clause()
     );
@@ -375,7 +375,7 @@ describe("The `objectifyFilterClause` function", () => {
       frames: [],
     };
     const bytes = serialize(hdom);
-    const struct = deserialize(bytes);
+    const struct = structurize(bytes);
     const clause = <FilterClauseStruct>(
       struct.models(0)?.joins(0)?.clause()
     );
@@ -424,7 +424,7 @@ describe("The `objectifyFilterClause` function", () => {
       frames: [],
     };
     const bytes = serialize(hdom);
-    const struct = deserialize(bytes);
+    const struct = structurize(bytes);
     const clause = <FilterClauseStruct>(
       struct.models(0)?.joins(0)?.clause()
     );
@@ -482,7 +482,7 @@ describe("The `objectifyFilterClause` function", () => {
       frames: [],
     };
     const bytes = serialize(hdom);
-    const struct = deserialize(bytes);
+    const struct = structurize(bytes);
     const clause = <FilterClauseStruct>(
       struct.models(0)?.joins(0)?.clause()
     );

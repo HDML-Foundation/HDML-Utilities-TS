@@ -13,7 +13,7 @@ This package offers the following stringification functions:
 * `getModelHTML`: Converts a model structure into an HTML string.
 * `getModelSQL`: Converts a model structure into an SQL query string.
 
-These functions operate on data structures parsed using the `@hdml/buffer` package's deserialize function.
+These functions operate on data structures parsed using the `@hdml/buffer` package's structurize function.
 
 ## Installation
 
@@ -30,7 +30,7 @@ Here’s an example of using the `@hdml/stringlifier` functions:
 ```typescript
 import { HDOM } from "@hdml/types";
 import { ConnectorTypesEnum } from "@hdml/schemas";
-import { serialize, deserialize } from "@hdml/buffer";
+import { serialize, structurize } from "@hdml/buffer";
 import { getConnectionSQLs, getConnectionHTML } from "@hdml/stringlifier";
 
 const hdom: HDOM = {
@@ -54,7 +54,7 @@ const hdom: HDOM = {
   frames: [],
 };
 const buf = serialize(hdom);
-const struct = deserialize(buf);
+const struct = structurize(buf);
 const conn = struct.connections(0)!;
 const sqls = getConnectionSQLs(conn);
 const html = getConnectionHTML(conn);

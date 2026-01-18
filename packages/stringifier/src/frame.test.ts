@@ -15,7 +15,7 @@ import {
   FilterTypeEnum,
   FilterNameEnum,
 } from "@hdml/schemas";
-import { serialize, deserialize } from "@hdml/buffer";
+import { serialize, structurize } from "@hdml/buffer";
 import { getFrameSQL, getFrameHTML } from "./frame";
 
 let lvl1: string = "";
@@ -61,7 +61,7 @@ describe("The `getFrameSQL` and `getFrameHTML` functions", () => {
     };
 
     const bytes = serialize(hdom);
-    const struct = deserialize(bytes);
+    const struct = structurize(bytes);
     const frame = struct.frames(0)!;
     lvl3 = getFrameSQL(frame, { name: "cash", sql: "" }, 2);
     const html = getFrameHTML(frame, 2);
@@ -111,7 +111,7 @@ describe("The `getFrameSQL` and `getFrameHTML` functions", () => {
     };
 
     const bytes = serialize(hdom);
-    const struct = deserialize(bytes);
+    const struct = structurize(bytes);
     const frame = struct.frames(0)!;
     lvl2 = getFrameSQL(frame, { name: "sub", sql: lvl3 }, 1);
     const html = getFrameHTML(frame, 1);
@@ -161,7 +161,7 @@ describe("The `getFrameSQL` and `getFrameHTML` functions", () => {
     };
 
     const bytes = serialize(hdom);
-    const struct = deserialize(bytes);
+    const struct = structurize(bytes);
     const frame = struct.frames(0)!;
     lvl1 = getFrameSQL(frame, { name: "mid", sql: lvl2 }, 0);
     const html = getFrameHTML(frame, 0);
@@ -244,7 +244,7 @@ describe("The `getFrameSQL` and `getFrameHTML` functions", () => {
     };
 
     const bytes = serialize(hdom);
-    const struct = deserialize(bytes);
+    const struct = structurize(bytes);
     const frame = struct.frames(0)!;
     const sql = getFrameSQL(frame, { name: "cash", sql: "" });
     const html = getFrameHTML(frame);
@@ -336,7 +336,7 @@ describe("The `getFrameSQL` and `getFrameHTML` functions", () => {
     };
 
     const bytes = serialize(hdom);
-    const struct = deserialize(bytes);
+    const struct = structurize(bytes);
     const frame = struct.frames(0)!;
     const sql = getFrameSQL(frame, { name: "base", sql: "" });
     const html = getFrameHTML(frame);
@@ -442,7 +442,7 @@ describe("The `getFrameSQL` and `getFrameHTML` functions", () => {
     };
 
     const bytes = serialize(hdom);
-    const struct = deserialize(bytes);
+    const struct = structurize(bytes);
     const frame = struct.frames(0)!;
     const sql = getFrameSQL(frame, { name: "base", sql: "" });
     const html = getFrameHTML(frame);
@@ -548,7 +548,7 @@ describe("The `getFrameSQL` and `getFrameHTML` functions", () => {
     };
 
     const bytes = serialize(hdom);
-    const struct = deserialize(bytes);
+    const struct = structurize(bytes);
     const frame = struct.frames(0)!;
     const sql = getFrameSQL(frame, { name: "base", sql: "" });
     const html = getFrameHTML(frame);

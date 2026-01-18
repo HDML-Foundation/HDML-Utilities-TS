@@ -7,7 +7,7 @@ This module is part of the **HDML-Utilities** monorepo and provides a set of uti
 This package provides the following `buffer` functions:
 
 1. **serialize**: Serializes the entire HDML document (HDDM), including includes, connections, models, and frames.
-2. **deserialize**: Deserializes a FlatBuffers binary into an `HDOMStruct` object.
+2. **structurize**: Structurizes a FlatBuffers binary into an `HDOMStruct` object.
 
 ## Dependencies
 
@@ -27,14 +27,14 @@ Here’s a basic example of how to use the bufferify functions in your project:
 
 ```typescript
 import { HDOM } from "@hdml/types";
-import { serialize, deserialize } from "@hdml/buffer";
+import { serialize, structurize } from "@hdml/buffer";
 
 const hdom: HDOM = { ... };  // Your HyperData Document
 
 const bytes = serialize(hdom);
 // Transmit or store the binary.
 
-const struct = deserialize(bytes);
+const struct = structurize(bytes);
 // Interact with the FlatBuffers struct.
 ```
 

@@ -80,8 +80,8 @@ The root structure representing an HDML document:
 - **Dependencies**: @hdml/types, @hdml/schemas
 
 ### @hdml/buffer
-- **Purpose**: Serialize/deserialize HDML using FlatBuffers
-- **Key Functions**: `serialize()`, `deserialize()`
+- **Purpose**: Serialize/structurize HDML using FlatBuffers
+- **Key Functions**: `serialize()`, `structurize()`
 - **Bufferify Functions**: Convert TypeScript interfaces to FlatBuffers structures
 - **Dependencies**: @hdml/types, @hdml/schemas, flatbuffers
 
@@ -217,7 +217,7 @@ The root structure representing an HDML document:
 1. HDML string → parseHDML() → HDOM interface
 2. HDOM interface → bufferify*() → FlatBuffers struct
 3. FlatBuffers struct → serialize() → Uint8Array
-4. Uint8Array → deserialize() → FlatBuffers struct
+4. Uint8Array → structurize() → FlatBuffers struct
 5. FlatBuffers struct → TypeScript interface (manual conversion)
 
 ### Stringification Flow

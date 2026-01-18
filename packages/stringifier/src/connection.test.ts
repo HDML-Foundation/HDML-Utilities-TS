@@ -8,7 +8,7 @@
 
 import { HDOM, ConnectionOptions } from "@hdml/types";
 import { ConnectorTypesEnum } from "@hdml/schemas";
-import { serialize, deserialize } from "@hdml/buffer";
+import { serialize, structurize } from "@hdml/buffer";
 import { getConnectionSQLs, getConnectionHTML } from "./connection";
 
 describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
@@ -34,7 +34,7 @@ describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
       frames: [],
     };
     const buf = serialize(hdom);
-    const struct = deserialize(buf);
+    const struct = structurize(buf);
     const conn = struct.connections(0)!;
     const sqls = getConnectionSQLs(conn);
     const html = getConnectionHTML(conn);
@@ -57,7 +57,7 @@ describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
       frames: [],
     };
     const buf = serialize(hdom);
-    const struct = deserialize(buf);
+    const struct = structurize(buf);
     const conn = struct.connections(0)!;
 
     // TODO (buntarb): how to replace this without throwing?
@@ -87,7 +87,7 @@ describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
       frames: [],
     };
     const buf = serialize(hdom);
-    const struct = deserialize(buf);
+    const struct = structurize(buf);
     const conn = struct.connections(0)!;
     const sqls = getConnectionSQLs(conn);
     const html = getConnectionHTML(conn);
@@ -124,7 +124,7 @@ describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
       frames: [],
     };
     const buf = serialize(hdom);
-    const struct = deserialize(buf);
+    const struct = structurize(buf);
     const conn = struct.connections(0)!;
     const sqls = getConnectionSQLs(conn);
     const html = getConnectionHTML(conn);
@@ -161,7 +161,7 @@ describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
       frames: [],
     };
     const buf = serialize(hdom);
-    const struct = deserialize(buf);
+    const struct = structurize(buf);
     const conn = struct.connections(0)!;
     const sqls = getConnectionSQLs(conn);
     const html = getConnectionHTML(conn);
@@ -198,7 +198,7 @@ describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
       frames: [],
     };
     const buf = serialize(hdom);
-    const struct = deserialize(buf);
+    const struct = structurize(buf);
     const conn = struct.connections(0)!;
     const sqls = getConnectionSQLs(conn);
     const html = getConnectionHTML(conn);
@@ -235,7 +235,7 @@ describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
       frames: [],
     };
     const buf = serialize(hdom);
-    const struct = deserialize(buf);
+    const struct = structurize(buf);
     const conn = struct.connections(0)!;
     const sqls = getConnectionSQLs(conn);
     const html = getConnectionHTML(conn);
@@ -272,7 +272,7 @@ describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
       frames: [],
     };
     const buf = serialize(hdom);
-    const struct = deserialize(buf);
+    const struct = structurize(buf);
     const conn = struct.connections(0)!;
     const sqls = getConnectionSQLs(conn);
     const html = getConnectionHTML(conn);
@@ -309,7 +309,7 @@ describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
       frames: [],
     };
     const buf = serialize(hdom);
-    const struct = deserialize(buf);
+    const struct = structurize(buf);
     const conn = struct.connections(0)!;
     const sqls = getConnectionSQLs(conn);
     const html = getConnectionHTML(conn);
@@ -346,7 +346,7 @@ describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
       frames: [],
     };
     const buf = serialize(hdom);
-    const struct = deserialize(buf);
+    const struct = structurize(buf);
     const conn = struct.connections(0)!;
     const sqls = getConnectionSQLs(conn);
     const html = getConnectionHTML(conn);
@@ -383,7 +383,7 @@ describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
       frames: [],
     };
     const buf = serialize(hdom);
-    const struct = deserialize(buf);
+    const struct = structurize(buf);
     const conn = struct.connections(0)!;
     const sqls = getConnectionSQLs(conn);
     const html = getConnectionHTML(conn);
@@ -420,7 +420,7 @@ describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
       frames: [],
     };
     const buf = serialize(hdom);
-    const struct = deserialize(buf);
+    const struct = structurize(buf);
     const conn = struct.connections(0)!;
     const sqls = getConnectionSQLs(conn);
     const html = getConnectionHTML(conn);
@@ -455,7 +455,7 @@ describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
       frames: [],
     };
     const buf = serialize(hdom);
-    const struct = deserialize(buf);
+    const struct = structurize(buf);
     const conn = struct.connections(0)!;
     const sqls = getConnectionSQLs(conn);
     const html = getConnectionHTML(conn);
@@ -490,7 +490,7 @@ describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
       frames: [],
     };
     const buf = serialize(hdom);
-    const struct = deserialize(buf);
+    const struct = structurize(buf);
     const conn = struct.connections(0)!;
     const sqls = getConnectionSQLs(conn);
     const html = getConnectionHTML(conn);
@@ -525,7 +525,7 @@ describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
       frames: [],
     };
     const buf = serialize(hdom);
-    const struct = deserialize(buf);
+    const struct = structurize(buf);
     const conn = struct.connections(0)!;
     const sqls = getConnectionSQLs(conn);
     const html = getConnectionHTML(conn);
@@ -560,7 +560,7 @@ describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
       frames: [],
     };
     const buf = serialize(hdom);
-    const struct = deserialize(buf);
+    const struct = structurize(buf);
     const conn = struct.connections(0)!;
     const sqls = getConnectionSQLs(conn);
     const html = getConnectionHTML(conn);
@@ -601,7 +601,7 @@ describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
       frames: [],
     };
     const buf = serialize(hdom);
-    const struct = deserialize(buf);
+    const struct = structurize(buf);
     const conn = struct.connections(0)!;
     const sqls = getConnectionSQLs(conn);
     const html = getConnectionHTML(conn);
@@ -642,7 +642,7 @@ describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
       frames: [],
     };
     const buf = serialize(hdom);
-    const struct = deserialize(buf);
+    const struct = structurize(buf);
     const conn = struct.connections(0)!;
     const sqls = getConnectionSQLs(conn);
     const html = getConnectionHTML(conn);
@@ -681,7 +681,7 @@ describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
       frames: [],
     };
     const buf = serialize(hdom);
-    const struct = deserialize(buf);
+    const struct = structurize(buf);
     const conn = struct.connections(0)!;
     const sqls = getConnectionSQLs(conn);
     const html = getConnectionHTML(conn);
@@ -720,7 +720,7 @@ describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
       frames: [],
     };
     const buf = serialize(hdom);
-    const struct = deserialize(buf);
+    const struct = structurize(buf);
     const conn = struct.connections(0)!;
     const sqls = getConnectionSQLs(conn);
     const html = getConnectionHTML(conn);
@@ -759,7 +759,7 @@ describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
       frames: [],
     };
     const buf = serialize(hdom);
-    const struct = deserialize(buf);
+    const struct = structurize(buf);
     const conn = struct.connections(0)!;
     const sqls = getConnectionSQLs(conn);
     const html = getConnectionHTML(conn);
@@ -798,7 +798,7 @@ describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
       frames: [],
     };
     const buf = serialize(hdom);
-    const struct = deserialize(buf);
+    const struct = structurize(buf);
     const conn = struct.connections(0)!;
     const sqls = getConnectionSQLs(conn);
     const html = getConnectionHTML(conn);

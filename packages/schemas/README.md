@@ -25,7 +25,7 @@ Import the generated types into your TypeScript project to leverage the HyperDat
 ```typescript
 import { HDOM } from "@hdml/types";
 import { ConnectorTypesEnum } from "@hdml/schemas";
-import { serialize, deserialize } from "@hdml/buffer";
+import { serialize, structurize } from "@hdml/buffer";
 
 const hdom: HDOM = {
   includes: [],
@@ -48,7 +48,7 @@ const hdom: HDOM = {
   frames: [],
 };
 const buf = serialize(hdom);
-const struct = deserialize(buf);
+const struct = structurize(buf);
 ```
 
 ## Schema Compilation

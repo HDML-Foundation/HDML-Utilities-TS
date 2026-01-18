@@ -13,7 +13,7 @@ import {
   OrderTypeEnum,
 } from "@hdml/schemas";
 import { HDOM } from "@hdml/types";
-import { serialize, deserialize } from ".";
+import { serialize, structurize } from ".";
 
 describe("The `serialize` function", () => {
   it("should serialize an HDOM object to Uin8Array", () => {
@@ -95,7 +95,7 @@ describe("The `serialize` function", () => {
     };
 
     const bytes = serialize(hdom);
-    const struct = deserialize(bytes);
+    const struct = structurize(bytes);
 
     // includes
     expect(struct.includesLength()).toBe(1);
@@ -119,7 +119,7 @@ describe("The `serialize` function", () => {
       frames: [],
     };
     const bytes = serialize(hdom);
-    const struct = deserialize(bytes);
+    const struct = structurize(bytes);
 
     expect(struct.includesLength()).toBe(0);
     expect(struct.connectionsLength()).toBe(0);

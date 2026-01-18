@@ -28,7 +28,7 @@ Provides utility functions for hashing and generating unique identifiers. Includ
 
 ### @hdml/buffer
 
-Utility functions to serialize and deserialize HDML data structures using FlatBuffers. This package handles the conversion of complex HDML objects into a compact binary format for storage or transmission.
+Utility functions to serialize and structurize HDML data structures using FlatBuffers. This package handles the conversion of complex HDML objects into a compact binary format for storage or transmission.
 
 ## Usage
 
