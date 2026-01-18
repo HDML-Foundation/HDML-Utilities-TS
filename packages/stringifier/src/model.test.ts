@@ -293,7 +293,7 @@ describe("The `getTables` function", () => {
     expect(tables[2].name()).toEqual("T3");
   });
 
-  it("should returns all tables if joins not spcified", () => {
+  it("should return all tables if joins not specified", () => {
     const hdom: HDOM = {
       includes: [],
       connections: [],

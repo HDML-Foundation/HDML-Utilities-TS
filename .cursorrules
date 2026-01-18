@@ -1,0 +1,329 @@
+# HDML-Utilities-TS Coding Rules and Conventions
+
+## General Principles
+
+1. **Type Safety First**: Always use explicit types, avoid `any`. Use `@typescript-eslint/no-explicit-any: error` enforcement.
+2. **Explicit Module Boundaries**: All exported functions must have explicit return types (`@typescript-eslint/explicit-module-boundary-types: error`).
+3. **Documentation Required**: All exported functions, interfaces, and types must have JSDoc comments.
+4. **Consistency**: Follow existing code patterns and structure within each package.
+
+## Code Style
+
+### Formatting
+- **Line Length**: Maximum 70 characters (enforced by Prettier and ESLint)
+- **Indentation**: 2 spaces (no tabs)
+- **Semicolons**: Required
+- **Trailing Commas**: Always use trailing commas in multi-line structures
+- **Arrow Functions**: Always use parentheses for parameters: `(param) => {}`
+- **Bracket Spacing**: Use spaces: `{ key: value }`
+
+### TypeScript Conventions
+- Use `interface` for object shapes
+- Use `type` for unions, intersections, and aliases
+- Prefer `const` over `let`, avoid `var`
+- Use explicit return types on all exported functions
+- Use `null` instead of `undefined` for optional properties when appropriate
+- Use readonly arrays when appropriate: `readonly string[]`
+
+### Naming Conventions
+- **Files**: camelCase for source files, e.g., `bufferifyHDOM.ts`
+- **Test Files**: Same as source with `.test.ts` suffix, e.g., `bufferifyHDOM.test.ts`
+- **Functions**: camelCase, descriptive names, e.g., `getModelSQL()`, `parseHDML()`
+- **Interfaces**: PascalCase, e.g., `HDOM`, `Connection`, `Model`
+- **Types**: PascalCase, e.g., `FieldType`, `FilterType`
+- **Enums**: PascalCase with `_VALUES` suffix for value arrays, e.g., `FIELD_TYPE_VALUES`
+- **Constants**: UPPER_SNAKE_CASE or camelCase depending on context
+- **Private Variables**: Prefix with underscore if needed: `_privateVar`
+
+## File Structure
+
+### Package Structure
+```
+packages/
+  {package-name}/
+    src/
+      index.ts                    # Main exports
+      {feature}.ts               # Feature implementation
+      {feature}.test.ts          # Feature tests
+      types/                     # Type definitions (if needed)
+      {subdirectory}/            # Feature subdirectories
+    tsconfig/
+      cjs.json                   # CommonJS config
+      esm.json                   # ES Module config
+      dts.json                   # Declaration files config
+      tst.json                   # Test compilation config
+    package.json
+    README.md
+    LICENSE
+    .npmignore
+```
+
+### Import Organization
+1. External dependencies
+2. Internal package dependencies (from other @hdml packages)
+3. Local imports (from same package)
+4. Type-only imports use `import type`
+
+Example:
+```typescript
+import { parseFragment } from "parse5";
+import { HDOM } from "@hdml/types";
+import { hdmlTreeAdapter } from "./hdmlTreeAdapter/hdmlTreeAdapter";
+import type { HDMLTreeAdapterMap } from "./types/HDMLTreeAdapterMap";
+```
+
+## Documentation Standards
+
+### JSDoc Format
+All exported functions and interfaces must include:
+- Description of purpose
+- `@param` tags for all parameters
+- `@returns` tag with return type description
+- `@example` tag with usage example when helpful
+
+Example:
+```typescript
+/**
+ * Parses an HDML string into an HDOM structure.
+ *
+ * @param content The HDML content as a string.
+ *
+ * @returns The parsed HDOM object.
+ *
+ * @example
+ * ```ts
+ * const hdom = parseHDML("<hdml-model>...</hdml-model>");
+ * ```
+ */
+export function parseHDML(content: string): HDOM {
+  // implementation
+}
+```
+
+### Interface Documentation
+Interfaces should include:
+- Description of purpose
+- Property descriptions in JSDoc comments
+- Usage examples when appropriate
+
+Example:
+```typescript
+/**
+ * The HDOM interface represents the structure of an HDML document.
+ *
+ * ## Properties:
+ *
+ * - `includes`: Array of Include objects for remote documents
+ * - `connections`: Array of Connection objects for database connections
+ * - `models`: Array of Model objects representing data models
+ * - `frames`: Array of Frame objects defining queries
+ */
+export interface HDOM {
+  includes: Include[];
+  connections: Connection[];
+  models: Model[];
+  frames: Frame[];
+}
+```
+
+## Package-Specific Rules
+
+### @hdml/schemas
+- Generated files from FlatBuffers should not be manually edited
+- Run `compile_fbs` script to regenerate after schema changes
+- Generated files are in `src/document/` and `src/enum/` directories
+
+### @hdml/types
+- All interfaces must match FlatBuffers schema structures
+- Enum value arrays must be exported with `_VALUES` suffix
+- Attribute lists must be exported with `_ATTRS_LIST` suffix
+- Use enums from `@hdml/schemas` when available
+
+### @hdml/parser
+- Use parse5 for HDML parsing
+- Custom tree adapter required for HDML-specific elements
+- Tree adapter functions must handle all HDML tag types
+- Error handling should log to console but not throw (unless critical)
+
+### @hdml/stringifier
+- SQL generation must be properly formatted and indented
+- Use constants for indentation (see `constants.ts`)
+- HTML generation must produce valid HTML
+- Handle all enum values and edge cases
+
+### @hdml/buffer
+- Bufferify functions convert TypeScript interfaces to FlatBuffers structs
+- Handle null/undefined values appropriately
+- Use FlatBuffers builder pattern correctly
+- Deserialization functions convert FlatBuffers structs to TypeScript interfaces
+
+### @hdml/hash
+- Hash functions must be deterministic
+- UUID generation should use uuid package
+- Time-based hashing should handle timezone correctly
+
+## Testing Requirements
+
+### Test File Structure
+- One test file per source file: `{source}.test.ts`
+- Test file location: Same directory as source file
+- Test compilation: Uses `tst.json` TypeScript config
+
+### Test Naming
+- Use descriptive test names: `describe("functionName", () => { ... })`
+- Group related tests in describe blocks
+- Use `it()` or `test()` for individual test cases
+
+### Test Coverage
+- Aim for high coverage (enforced in CI)
+- Test edge cases and error conditions
+- Test with various input types and values
+
+### Test Examples
+```typescript
+describe("parseHDML", () => {
+  it("should parse basic HDML structure", () => {
+    const hdml = "<hdml-model>...</hdml-model>";
+    const result = parseHDML(hdml);
+    expect(result).toBeDefined();
+  });
+});
+```
+
+## Error Handling
+
+### General Rules
+- Use TypeScript's type system to prevent errors
+- Validate inputs when necessary
+- Log errors but avoid throwing unless critical
+- Return null or empty structures for non-critical errors
+
+### Parsing Errors
+- Log parsing errors to console
+- Return default/empty structures when parsing fails
+- Don't throw exceptions for malformed input (unless critical)
+
+## Build and Compilation
+
+### TypeScript Configuration
+- Use strict mode: `"strict": true`
+- Enable all recommended type checks
+- Use incremental compilation: `"incremental": true`
+- Generate source maps: `"sourceMap": true`
+
+### Output Formats
+- **CJS**: CommonJS for Node.js
+- **ESM**: ES Modules for modern environments
+- **DTS**: TypeScript declaration files
+- **IIFE**: Browser bundle (via esbuild)
+
+### Build Order
+1. Clear previous builds
+2. Lint code
+3. Run tests with coverage
+4. Compile all formats
+5. Generate documentation
+
+## Git and Versioning
+
+### Version Management
+- All packages share version numbers (currently 0.0.2-alpha.9)
+- Update versions in all package.json files together
+- Use semantic versioning
+
+### Git Submodules
+- HDML-Schemas is a git submodule
+- Always initialize submodules: `git submodule update --init --recursive`
+- Don't commit submodule changes directly (they're in separate repo)
+
+## Dependencies
+
+### Adding Dependencies
+- Add to appropriate package's `package.json`
+- Use exact versions or version ranges as appropriate
+- Update lock file: `npm install`
+- Consider if dependency should be in root or package
+
+### Internal Dependencies
+- Use workspace protocol: `"@hdml/types": "0.0.2-alpha.9"`
+- All internal packages must be listed in root `package.json` workspaces
+- Version numbers should match across packages
+
+## Performance Considerations
+
+### FlatBuffers
+- Use FlatBuffers for efficient serialization
+- Avoid unnecessary conversions between formats
+- Reuse builders when possible
+
+### Parsing
+- Use streaming parsers when available
+- Avoid parsing large documents multiple times
+- Cache parsed results when appropriate
+
+## Security
+
+### Input Validation
+- Validate all external inputs
+- Sanitize user-provided data
+- Handle malformed input gracefully
+
+### Dependencies
+- Keep dependencies up to date
+- Review security advisories
+- Use npm audit regularly
+
+## Common Patterns
+
+### Bufferify Pattern
+```typescript
+export function bufferifyHDOM(hdom: HDOM): HDOMStruct {
+  const builder = new flatbuffers.Builder();
+  // ... build structure
+  return HDOMStruct.getRootAsHDOMStruct(/* ... */);
+}
+```
+
+### Stringifier Pattern
+```typescript
+export function getModelSQL(model: ModelStruct, level = 0): string {
+  const prefix = t.repeat(level);
+  // ... build SQL string
+  return sql;
+}
+```
+
+### Parser Pattern
+```typescript
+export function parseHDML(content: string): HDOM {
+  const fragment = parseFragment(content, {
+    treeAdapter: hdmlTreeAdapter,
+  });
+  // ... extract HDOM
+  return hdom;
+}
+```
+
+## When Adding New Features
+
+1. **Plan**: Understand which packages need changes
+2. **Schema First**: If adding new HDML elements, update FlatBuffers schemas first
+3. **Types**: Add TypeScript interfaces in `@hdml/types`
+4. **Parser**: Add parsing support in `@hdml/parser`
+5. **Buffer**: Add serialization in `@hdml/buffer`
+6. **Stringifier**: Add SQL/HTML generation in `@hdml/stringifier`
+7. **Tests**: Write comprehensive tests
+8. **Documentation**: Update JSDoc and README files
+9. **Build**: Ensure all packages build successfully
+
+## Code Review Checklist
+
+- [ ] All exported functions have JSDoc documentation
+- [ ] All functions have explicit return types
+- [ ] No `any` types used
+- [ ] Code follows 70-character line limit
+- [ ] Tests are written and passing
+- [ ] Linter passes without errors
+- [ ] Build succeeds for all output formats
+- [ ] Documentation is updated
+- [ ] Version numbers are consistent (if changed)

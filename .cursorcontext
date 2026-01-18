@@ -1,0 +1,255 @@
+# HDML-Utilities-TS Project Context
+
+## Project Overview
+
+HDML-Utilities-TS is a TypeScript monorepo providing utilities for working with HDML (HyperData Markup Language) documents. HDML is a specialized markup language for modeling complex data relationships in web-based environments, enabling hierarchical data representation with support for distributed documents, external document inclusion, and server-side processing.
+
+## Architecture
+
+### Monorepo Structure
+- **Package Manager**: npm workspaces
+- **Build System**: TypeScript with multiple output formats (CJS, ESM, DTS, IIFE)
+- **Testing**: Jest with TypeScript compilation
+- **Documentation**: TypeDoc
+- **Linting**: ESLint with TypeScript ESLint and Prettier
+- **Code Generation**: FlatBuffers schema compilation
+
+### Package Dependencies
+```
+@hdml/common (base utilities: Apache Arrow, UUID, throttle-debounce)
+  └── @hdml/hash (depends on @hdml/common)
+  
+@hdml/schemas (FlatBuffers generated types)
+  ├── @hdml/types (depends on @hdml/schemas)
+  │   ├── @hdml/parser (depends on @hdml/types, @hdml/schemas)
+  │   ├── @hdml/buffer (depends on @hdml/types, @hdml/schemas)
+  │   └── @hdml/stringifier (depends on @hdml/types, @hdml/schemas)
+  └── @hdml/hooks (depends on @hdml/parser, @hdml/types, @hdml/schemas)
+```
+
+## Core Concepts
+
+### HDOM (HyperData Object Model)
+The root structure representing an HDML document:
+- `includes`: Array of Include objects for remote document inclusion
+- `connections`: Array of Connection objects defining database connections
+- `models`: Array of Model objects representing data models with tables and relationships
+- `frames`: Array of Frame objects defining queries over models/frames
+
+### Key Data Structures
+- **Connection**: Database connection definitions (BigQuery, Elasticsearch, Google Sheets, JDBC, MongoDB, Snowflake)
+- **Model**: Data models containing tables and joins
+- **Table**: Represents database tables, views, or SQL queries
+- **Join**: Join operations between datasets (Cross, Inner, Full, Left, Right, Outer variants)
+- **Frame**: Query definitions with fields, filters, and sorting
+- **Field**: Column definitions with types, aggregations, and metadata
+- **FilterClause**: Filtering conditions with expressions, named parameters, or keys
+
+### Serialization
+- **FlatBuffers**: Binary serialization format for efficient network transmission
+- **HDML**: XML-like markup language for human-readable representation
+- **SQL**: Generated SQL queries from HDOM structures
+- **HTML**: HTML representation of HDML structures
+
+## Package Details
+
+### @hdml/schemas
+- **Purpose**: TypeScript types generated from FlatBuffers schemas
+- **Source**: HDML-Schemas submodule (`.fbs` files)
+- **Build**: `flatc` compiler generates TypeScript from `.fbs` files
+- **Location**: `HDML-Schemas/src/*.fbs` → `packages/schemas/src/`
+
+### @hdml/types
+- **Purpose**: Core TypeScript interfaces for HDML documents
+- **Key Exports**: HDOM, Connection, Model, Frame, Field, FilterClause, Include
+- **Enums**: Comprehensive enum definitions for all HDML attributes and values
+- **Dependencies**: @hdml/schemas, flatbuffers
+
+### @hdml/parser
+- **Purpose**: Parse HTML/HDML strings into DOM/HDOM objects
+- **Key Functions**: `parseHDML()`, `parseHTML()`
+- **Dependencies**: parse5, node-html-parser, @hdml/types, @hdml/schemas
+- **Tree Adapter**: Custom HDMLTreeAdapter for HDML-specific parsing
+
+### @hdml/stringifier
+- **Purpose**: Convert HDML structures to SQL/HTML strings
+- **Key Functions**: 
+  - `getConnectionSQLs()`, `getConnectionHTML()`
+  - `getModelSQL()`, `getModelHTML()`
+  - `getFrameSQL()`, `getFrameHTML()`
+- **Dependencies**: @hdml/types, @hdml/schemas
+
+### @hdml/buffer
+- **Purpose**: Serialize/deserialize HDML using FlatBuffers
+- **Key Functions**: `serialize()`, `deserialize()`
+- **Bufferify Functions**: Convert TypeScript interfaces to FlatBuffers structures
+- **Dependencies**: @hdml/types, @hdml/schemas, flatbuffers
+
+### @hdml/hash
+- **Purpose**: Hashing and unique identifier generation
+- **Key Functions**: `md5()`, `uid()`, `hashtime()`, `parsetime()`, `hashify()`
+- **Dependencies**: @hdml/common
+
+### @hdml/hooks
+- **Purpose**: I/O hooks for reading/writing HDML data
+- **Key Functions**: `readJson()`, `readString()`, `readUint8Array()`, `writeJson()`, `writeString()`, `writeUint8Array()`
+- **Dependencies**: @hdml/parser, @hdml/types, @hdml/schemas
+
+### @hdml/common
+- **Purpose**: Common utilities shared across packages
+- **Dependencies**: apache-arrow, uuid, throttle-debounce
+
+## Build System
+
+### TypeScript Configurations
+- **base.json**: Base configuration for all packages
+- **cjs.json**: CommonJS output
+- **esm.json**: ES Module output
+- **dts.json**: TypeScript declaration files
+- **tst.json**: Test compilation configuration
+
+### Build Scripts
+- `compile_cjs`: CommonJS output
+- `compile_esm`: ES Module output
+- `compile_dts`: Type declarations
+- `compile_bin`: Bundled IIFE with esbuild
+- `compile_tst`: Test file compilation
+- `compile_all`: All output formats
+- `compile_fbs`: FlatBuffers schema compilation (schemas package only)
+
+### Output Directories
+- `cjs/`: CommonJS output
+- `esm/`: ES Module output
+- `dts/`: TypeScript declarations
+- `bin/`: Bundled browser-ready files
+- `tst/`: Compiled test files
+- `coverage/`: Test coverage reports
+- `docs/`: TypeDoc documentation
+
+## Code Style
+
+### Formatting
+- **Prettier**: 70 character line width, 2 space tabs, trailing commas
+- **ESLint**: TypeScript ESLint with strict type checking
+- **Max Line Length**: 70 characters
+- **Indentation**: 2 spaces
+
+### TypeScript Rules
+- **Strict Mode**: Enabled
+- **No Explicit Any**: Error
+- **Explicit Module Boundary Types**: Required
+- **No Namespaces**: Disabled (allowed for compatibility)
+
+### File Naming
+- **Source Files**: `*.ts`
+- **Test Files**: `*.test.ts`
+- **Filenames**: Enforced by eslint-plugin-filenames
+
+### Documentation
+- **JSDoc**: Required for all exported functions and interfaces
+- **Author**: Artem Lytvynov
+- **License**: Apache-2.0
+- **Copyright**: Artem Lytvynov
+
+## Testing
+
+### Test Framework
+- **Jest**: Test runner
+- **Test Pattern**: `**/?(*.)+(test).+(js)`
+- **Coverage**: Required for builds
+- **Test Location**: Same directory as source files with `.test.ts` extension
+
+### Test Compilation
+- Tests are compiled to JavaScript before running
+- Uses `tst.json` TypeScript configuration
+- Output directory: `tst/`
+
+## Development Workflow
+
+### Setup
+1. Clone repository
+2. Initialize git submodules: `git submodule update --init --recursive`
+3. Install dependencies: `npm install`
+4. Build schemas: `npm run build` in schemas package (compiles FlatBuffers)
+
+### Development Server
+- **Command**: `npm run srv` (in individual packages)
+- **Config**: `.srv.js` (web-dev-server)
+- **Purpose**: Browser testing with HTML test pages
+
+### Git Submodules
+- **HDML-Schemas**: Contains FlatBuffers schema definitions (`.fbs` files)
+- **Location**: `HDML-Schemas/` directory
+- **Initialization**: Required before building schemas package
+
+## CI/CD
+
+### GitHub Workflows
+- **devcontainer.yml**: Dev container CI
+- **main.yml**: Main CI pipeline
+- **release.yml**: Release automation
+
+### Build Process
+1. Lint code
+2. Run tests with coverage
+3. Compile all output formats
+4. Generate documentation
+
+## Key Technologies
+
+- **TypeScript**: 4.9.5
+- **FlatBuffers**: 24.3.25
+- **parse5**: HTML/HDML parsing
+- **node-html-parser**: HTML parsing alternative
+- **Jest**: Testing framework
+- **ESBuild**: Bundling
+- **TypeDoc**: Documentation generation
+- **Apache Arrow**: Columnar data format (common package)
+
+## Important Patterns
+
+### Interface Definitions
+- All HDML structures defined as TypeScript interfaces
+- Enums for attribute values and types
+- Comprehensive JSDoc documentation
+
+### Serialization Flow
+1. HDML string → parseHDML() → HDOM interface
+2. HDOM interface → bufferify*() → FlatBuffers struct
+3. FlatBuffers struct → serialize() → Uint8Array
+4. Uint8Array → deserialize() → FlatBuffers struct
+5. FlatBuffers struct → TypeScript interface (manual conversion)
+
+### Stringification Flow
+1. HDOM/Model/Frame → get*SQL() → SQL string
+2. HDOM/Model/Frame → get*HTML() → HTML string
+
+### Tree Adapter Pattern
+- Custom tree adapter for parse5
+- Maps HDML elements to HDOM structures
+- Handles attribute parsing and validation
+
+## Common Tasks
+
+### Adding a New Package
+1. Create package directory in `packages/`
+2. Add to root `package.json` workspaces
+3. Create `package.json` with proper dependencies
+4. Create `tsconfig/` directory with config files
+5. Create `src/` directory with source files
+6. Follow existing package structure
+
+### Modifying Schemas
+1. Edit `.fbs` files in `HDML-Schemas/src/`
+2. Run `npm run compile_fbs` in schemas package
+3. Update TypeScript interfaces in `@hdml/types` if needed
+4. Update bufferify functions in `@hdml/buffer` if needed
+
+### Adding New HDML Elements
+1. Add FlatBuffers schema in `HDML-Schemas/src/`
+2. Regenerate schemas
+3. Add TypeScript interface in `@hdml/types`
+4. Add parser support in `@hdml/parser/hdmlTreeAdapter/`
+5. Add bufferify function in `@hdml/buffer`
+6. Add stringifier functions in `@hdml/stringifier`
+7. Add enum values if needed

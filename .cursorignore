@@ -1,0 +1,68 @@
+# Build outputs
+/packages/**/cjs
+/packages/**/esm
+/packages/**/dts
+/packages/**/tst
+/packages/**/bin
+/packages/**/coverage
+/packages/**/docs
+/packages/**/tsconfig/*.tsbuildinfo
+
+# Dependencies
+/node_modules
+/packages/**/node_modules
+
+# Generated files from FlatBuffers
+/packages/schemas/src/document
+/packages/schemas/src/enum
+
+# IDE
+/.vscode
+/.idea
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+npm-debug.log
+/packages/**/npm-debug.log
+*.log
+
+# Temporary files
+*.bak
+*.tmp
+*.temp
+
+# Git
+.git
+.gitignore
+.gitmodules
+
+# CI/CD (keep workflows but ignore other CI files if any)
+/.github/actions
+
+# Test artifacts
+/packages/**/.jest-cache
+
+# Documentation builds (keep source, ignore generated)
+/packages/**/docs
+
+# Lock files (optional - uncomment if you want to ignore)
+# package-lock.json
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Coverage reports
+/packages/**/coverage
+.nyc_output
+
+# TypeScript build info
+*.tsbuildinfo
+/packages/**/tsconfig/*.tsbuildinfo
