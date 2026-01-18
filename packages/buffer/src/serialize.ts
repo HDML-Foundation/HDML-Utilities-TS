@@ -6,7 +6,7 @@
 
 import * as flatbuffers from "flatbuffers";
 import { HDOM } from "@hdml/types";
-import { bufferifyHDOM } from "./bufferifyHDOM";
+import { bufferifyHDOM } from "./bufferify/bufferifyHDOM";
 
 /**
  * Serializes an `HDOM` object into a FlatBuffers binary format.
