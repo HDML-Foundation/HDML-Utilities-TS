@@ -23,7 +23,7 @@ import { StructType } from "./StructType";
  * function to construct the FlatBuffers structure, and then finalizes
  * the buffer for output.
  *
- * @param object The `HDOM`, `Connection`, `Model`, or `Frame` object
+ * @param hdom The `HDOM`, `Connection`, `Model`, or `Frame` object
  * to be serialized. This object represents the hierarchical structure
  * of an HDML document, connection, model, or frame.
  *
