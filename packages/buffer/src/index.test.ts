@@ -20,8 +20,15 @@ import {
   ConnectionStruct,
   ModelStruct,
   FrameStruct,
+  DocumentFilesStruct,
 } from "@hdml/schemas";
-import { serialize, deserialize, structurize, StructType } from ".";
+import {
+  serialize,
+  deserialize,
+  structurize,
+  StructType,
+  fileifize,
+} from ".";
 import { objectifyConnection } from "./objectify/objectifyConnection";
 import { objectifyModel } from "./objectify/objectifyModel";
 import { objectifyFrame } from "./objectify/objectifyFrame";
@@ -29,7 +36,7 @@ import { bufferifyConnection } from "./bufferify/bufferifyConnection";
 import { bufferifyModel } from "./bufferify/bufferifyModel";
 import { bufferifyFrame } from "./bufferify/bufferifyFrame";
 import { Connection, Model, Frame } from "@hdml/types";
-import { Builder } from "flatbuffers";
+import { Builder, ByteBuffer } from "flatbuffers";
 
 describe("The `serialize` function", () => {
   it("should serialize an HDOM object to Uin8Array", () => {
@@ -728,5 +735,279 @@ describe("The `structurize` function", () => {
     expect(struct.fieldsLength()).toBe(1);
     const objectified = objectifyFrame(struct);
     expect(objectified).toEqual(frame);
+  });
+});
+
+describe("The `fileifize` function", () => {
+  it("should convert HDOM to DocumentFilesStruct Uint8Array", () => {
+    const hdom: HDOM = {
+      includes: [],
+      connections: [
+        {
+          name: "JDBCConnection",
+          description: "JDBC metadata",
+          options: {
+            connector: ConnectorTypesEnum.Postgres,
+            parameters: {
+              host: "localhost",
+              user: "root",
+              password: "password",
+              ssl: true,
+            },
+          },
+        },
+      ],
+      models: [
+        {
+          name: "TestModel",
+          description: null,
+          tables: [
+            {
+              name: "Table1",
+              description: null,
+              type: TableTypeEnum.Table,
+              identifier: "database.schema.table1",
+              fields: [
+                {
+                  name: "field1",
+                  description: null,
+                  origin: null,
+                  clause: null,
+                  type: {
+                    type: DataTypeEnum.Unspecified,
+                  },
+                  aggregation: AggregationTypeEnum.None,
+                  order: OrderTypeEnum.None,
+                },
+              ],
+            },
+          ],
+          joins: [],
+        },
+      ],
+      frames: [
+        {
+          name: "test_frame",
+          description: null,
+          source: "test_model",
+          offset: 0,
+          limit: 100,
+          fields: [
+            {
+              name: "field1",
+              description: null,
+              origin: null,
+              clause: null,
+              type: {
+                type: DataTypeEnum.Unspecified,
+              },
+              aggregation: AggregationTypeEnum.None,
+              order: OrderTypeEnum.None,
+            },
+          ],
+          filter_by: {
+            type: FilterOperatorEnum.None,
+            filters: [],
+            children: [],
+          },
+          group_by: [],
+          split_by: [],
+          sort_by: [],
+        },
+      ],
+    };
+
+    const bytes = fileifize(hdom);
+    expect(bytes).toBeInstanceOf(Uint8Array);
+    expect(bytes.length).toBeGreaterThan(0);
+
+    const byteBuffer = new ByteBuffer(bytes);
+    const struct =
+      DocumentFilesStruct.getRootAsDocumentFilesStruct(byteBuffer);
+
+    expect(struct.connectionsLength()).toBe(1);
+    expect(struct.modelsLength()).toBe(1);
+    expect(struct.framesLength()).toBe(1);
+
+    // Verify connection file
+    const connectionFile = struct.connections(0);
+    expect(connectionFile).toBeDefined();
+    expect(connectionFile?.name()).toBe("JDBCConnection");
+    const connectionContent = connectionFile?.contentArray();
+    expect(connectionContent).toBeDefined();
+    expect(connectionContent?.length).toBeGreaterThan(0);
+
+    // Verify model file
+    const modelFile = struct.models(0);
+    expect(modelFile).toBeDefined();
+    expect(modelFile?.name()).toBe("TestModel");
+    const modelContent = modelFile?.contentArray();
+    expect(modelContent).toBeDefined();
+    expect(modelContent?.length).toBeGreaterThan(0);
+
+    // Verify frame file
+    const frameFile = struct.frames(0);
+    expect(frameFile).toBeDefined();
+    expect(frameFile?.name()).toBe("test_frame");
+    const frameContent = frameFile?.contentArray();
+    expect(frameContent).toBeDefined();
+    expect(frameContent?.length).toBeGreaterThan(0);
+  });
+
+  it("should handle empty HDOM object", () => {
+    const hdom: HDOM = {
+      includes: [],
+      connections: [],
+      models: [],
+      frames: [],
+    };
+
+    const bytes = fileifize(hdom);
+    expect(bytes).toBeInstanceOf(Uint8Array);
+    expect(bytes.length).toBeGreaterThan(0);
+
+    const byteBuffer = new ByteBuffer(bytes);
+    const struct =
+      DocumentFilesStruct.getRootAsDocumentFilesStruct(byteBuffer);
+
+    expect(struct.connectionsLength()).toBe(0);
+    expect(struct.modelsLength()).toBe(0);
+    expect(struct.framesLength()).toBe(0);
+  });
+
+  it("should handle HDOM with only connections", () => {
+    const hdom: HDOM = {
+      includes: [],
+      connections: [
+        {
+          name: "Connection1",
+          description: "First connection",
+          options: {
+            connector: ConnectorTypesEnum.Postgres,
+            parameters: {
+              host: "localhost",
+              user: "user",
+              password: "pass",
+              ssl: false,
+            },
+          },
+        },
+        {
+          name: "Connection2",
+          description: "Second connection",
+          options: {
+            connector: ConnectorTypesEnum.MySQL,
+            parameters: {
+              host: "remote",
+              user: "admin",
+              password: "secret",
+              ssl: true,
+            },
+          },
+        },
+      ],
+      models: [],
+      frames: [],
+    };
+
+    const bytes = fileifize(hdom);
+    const byteBuffer = new ByteBuffer(bytes);
+    const struct =
+      DocumentFilesStruct.getRootAsDocumentFilesStruct(byteBuffer);
+
+    expect(struct.connectionsLength()).toBe(2);
+    expect(struct.modelsLength()).toBe(0);
+    expect(struct.framesLength()).toBe(0);
+
+    expect(struct.connections(0)?.name()).toBe("Connection1");
+    expect(struct.connections(1)?.name()).toBe("Connection2");
+  });
+
+  it("should handle HDOM with only models", () => {
+    const hdom: HDOM = {
+      includes: [],
+      connections: [],
+      models: [
+        {
+          name: "Model1",
+          description: null,
+          tables: [],
+          joins: [],
+        },
+        {
+          name: "Model2",
+          description: "Second model",
+          tables: [],
+          joins: [],
+        },
+      ],
+      frames: [],
+    };
+
+    const bytes = fileifize(hdom);
+    const byteBuffer = new ByteBuffer(bytes);
+    const struct =
+      DocumentFilesStruct.getRootAsDocumentFilesStruct(byteBuffer);
+
+    expect(struct.connectionsLength()).toBe(0);
+    expect(struct.modelsLength()).toBe(2);
+    expect(struct.framesLength()).toBe(0);
+
+    expect(struct.models(0)?.name()).toBe("Model1");
+    expect(struct.models(1)?.name()).toBe("Model2");
+  });
+
+  it("should handle HDOM with only frames", () => {
+    const hdom: HDOM = {
+      includes: [],
+      connections: [],
+      models: [],
+      frames: [
+        {
+          name: "Frame1",
+          description: null,
+          source: "model1",
+          offset: 0,
+          limit: 10,
+          fields: [],
+          filter_by: {
+            type: FilterOperatorEnum.None,
+            filters: [],
+            children: [],
+          },
+          group_by: [],
+          split_by: [],
+          sort_by: [],
+        },
+        {
+          name: "Frame2",
+          description: "Second frame",
+          source: "model2",
+          offset: 10,
+          limit: 20,
+          fields: [],
+          filter_by: {
+            type: FilterOperatorEnum.None,
+            filters: [],
+            children: [],
+          },
+          group_by: [],
+          split_by: [],
+          sort_by: [],
+        },
+      ],
+    };
+
+    const bytes = fileifize(hdom);
+    const byteBuffer = new ByteBuffer(bytes);
+    const struct =
+      DocumentFilesStruct.getRootAsDocumentFilesStruct(byteBuffer);
+
+    expect(struct.connectionsLength()).toBe(0);
+    expect(struct.modelsLength()).toBe(0);
+    expect(struct.framesLength()).toBe(2);
+
+    expect(struct.frames(0)?.name()).toBe("Frame1");
+    expect(struct.frames(1)?.name()).toBe("Frame2");
   });
 });
