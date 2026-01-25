@@ -52,3 +52,5 @@ export { TableStruct } from "./document/table-struct";
 export { TimeParametersStruct } from "./document/time-parameters-struct";
 export { TimestampParametersStruct } from "./document/timestamp-parameters-struct";
 export { UnspecifiedParametersStruct } from "./document/unspecified-parameters-struct";
+export { FileStruct } from "./document/file-struct";
+export { DocumentFilesStruct } from "./document/document-files-struct";
