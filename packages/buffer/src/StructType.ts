@@ -9,8 +9,8 @@
  * from binary data.
  */
 export enum StructType {
-  HDOMStruct = "HDOMStruct",
-  ConnectionStruct = "ConnectionStruct",
-  ModelStruct = "ModelStruct",
-  FrameStruct = "FrameStruct",
+  HDOMStruct = 1,
+  ConnectionStruct = 2,
+  ModelStruct = 3,
+  FrameStruct = 4,
 }
