@@ -7,6 +7,7 @@
 import { HDOM } from "@hdml/types";
 import { parseFragment } from "parse5";
 import { hdmlTreeAdapter } from "./hdmlTreeAdapter/hdmlTreeAdapter";
+import { sortFrames } from "./sortFrames";
 import { HDMLTreeAdapterMap } from "./types/HDMLTreeAdapterMap";
 
 /**
@@ -44,5 +45,8 @@ export function parseHDML(content: string): HDOM {
     models: [],
     frames: [],
   };
-  return hddm;
+  return {
+    ...hddm,
+    frames: sortFrames(hddm.frames),
+  };
 }
