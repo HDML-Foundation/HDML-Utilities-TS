@@ -1,17 +1,17 @@
 {
   "name": "@hdml/stringifier",
-  "version": "0.0.2-alpha.12",
+  "version": "0.0.2-alpha.13",
   "license": "Apache-2.0",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
     "access": "public"
   },
   "devDependencies": {
-    "@hdml/buffer": "0.0.2-alpha.12"
+    "@hdml/buffer": "0.0.2-alpha.13"
   },
   "dependencies": {
-    "@hdml/schemas": "0.0.2-alpha.12",
-    "@hdml/types": "0.0.2-alpha.12"
+    "@hdml/schemas": "0.0.2-alpha.13",
+    "@hdml/types": "0.0.2-alpha.13"
   },
   "scripts": {
     "clear": "rm -rf bin && rm -rf tst && rm -rf cjs && rm -rf coverage && rm -rf docs && rm -rf dts && rm -rf esm && rm -rf tsconfig/*.tsbuildinfo",
