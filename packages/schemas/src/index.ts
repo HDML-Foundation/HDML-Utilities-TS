@@ -54,3 +54,4 @@ export { TimestampParametersStruct } from "./document/timestamp-parameters-struc
 export { UnspecifiedParametersStruct } from "./document/unspecified-parameters-struct";
 export { FileStruct } from "./document/file-struct";
 export { DocumentFilesStruct } from "./document/document-files-struct";
+export { DocumentFileStatusesStruct } from "./document/document-file-statuses-struct";

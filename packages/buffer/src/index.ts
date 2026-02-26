@@ -14,6 +14,7 @@ export { deserialize } from "./deserialize";
 export { structurize } from "./structurize";
 export { StructType } from "./StructType";
 export { fileifize } from "./fileifize";
+export type { FileStatuses } from "./FileStatuses";
 
 const _export = globalThis as unknown as {
   "@hdml/buffer": {
@@ -29,6 +30,6 @@ _export["@hdml/buffer"] = {
   serialize,
   deserialize,
   structurize,
-  StructType,
   fileifize,
+  StructType,
 };

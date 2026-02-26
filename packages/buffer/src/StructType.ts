@@ -13,4 +13,5 @@ export enum StructType {
   ConnectionStruct = 2,
   ModelStruct = 3,
   FrameStruct = 4,
+  FileStatusesStruct = 5,
 }

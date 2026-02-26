@@ -10,6 +10,7 @@ import {
   ConnectionStruct,
   ModelStruct,
   FrameStruct,
+  DocumentFileStatusesStruct,
 } from "@hdml/schemas";
 import { structurize } from "./structurize";
 import { StructType } from "./StructType";
@@ -17,44 +18,40 @@ import { objectifyHDOM } from "./objectify/objectifyHDOM";
 import { objectifyConnection } from "./objectify/objectifyConnection";
 import { objectifyModel } from "./objectify/objectifyModel";
 import { objectifyFrame } from "./objectify/objectifyFrame";
+// eslint-disable-next-line max-len
+import { objectifyFileStatuses } from "./objectify/objectifyFileStatuses";
+import type { FileStatuses } from "./FileStatuses";
 
 /**
  * Deserializes a FlatBuffers binary format into an `HDOM`,
- * `Connection`, `Model`, or `Frame` object.
+ * `Connection`, `Model`, `Frame`, or `FileStatuses` object.
  *
  * This function takes a `Uint8Array` of FlatBuffers binary data and
- * converts it back into an `HDOM`, `Connection`, `Model`, or `Frame`
- * object. It uses the `structurize` function to convert the binary
- * data into a FlatBuffers struct, and then uses `objectifyHDOM`,
- * `objectifyConnection`, `objectifyModel`, or `objectifyFrame` to
- * convert the struct into a TypeScript `HDOM`, `Connection`, `Model`,
- * or `Frame` object.
+ * converts it back into an `HDOM`, `Connection`, `Model`, `Frame`,
+ * or `FileStatuses` object. It uses `structurize` to convert the
+ * binary into a FlatBuffers struct, then the appropriate objectify
+ * function to produce the TypeScript object.
  *
  * @param bytes A `Uint8Array` containing the binary FlatBuffers data
- * to be deserialized. This should be a binary representation of an
- * `HDOMStruct`, `ConnectionStruct`, `ModelStruct`, or `FrameStruct`
- * that was previously serialized using the `serialize` function.
- * function.
+ * to be deserialized.
  *
- * @returns The deserialized `HDOM`, `Connection`, `Model`, or `Frame`
- * object, which represents the hierarchical structure of an HDML
- * document, connection, model, or frame.
+ * @returns The deserialized `HDOM`, `Connection`, `Model`, `Frame`,
+ * or `FileStatuses` object.
  *
  * @example
  * ```ts
- * const uint8: Uint8Array = ...;  // Your binary FlatBuffers data
  * const hdom = deserialize(uint8, StructType.HDOMStruct);
  * const connection = deserialize(uint8, StructType.ConnectionStruct);
  * const model = deserialize(uint8, StructType.ModelStruct);
  * const frame = deserialize(uint8, StructType.FrameStruct);
- * // Now you can work with the `HDOM`, `Connection`, `Model`,
- * // or `Frame` object
+ * const fs = deserialize(uint8, StructType.FileStatusesStruct);
  * ```
  */
 export function deserialize(
   bytes: Uint8Array,
   type: StructType = StructType.HDOMStruct,
-): HDOM | Connection | Model | Frame {
+): HDOM | Connection | Model | Frame | FileStatuses {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const struct = structurize(bytes, type);
   switch (type) {
     case StructType.HDOMStruct:
@@ -65,11 +62,12 @@ export function deserialize(
       return objectifyModel(struct as ModelStruct);
     case StructType.FrameStruct:
       return objectifyFrame(struct as FrameStruct);
-    default: {
-      const _exhaustive: never = type;
-      throw new Error(
-        `Unsupported struct type: ${String(_exhaustive)}`,
+    case StructType.FileStatusesStruct:
+      return objectifyFileStatuses(
+        struct as DocumentFileStatusesStruct,
       );
+    default: {
+      throw new Error("Unsupported struct type");
     }
   }
 }

@@ -10,61 +10,68 @@ import { bufferifyHDOM } from "./bufferify/bufferifyHDOM";
 import { bufferifyConnection } from "./bufferify/bufferifyConnection";
 import { bufferifyModel } from "./bufferify/bufferifyModel";
 import { bufferifyFrame } from "./bufferify/bufferifyFrame";
+// eslint-disable-next-line max-len
+import { bufferifyFileStatuses } from "./bufferify/bufferifyFileStatuses";
 import { StructType } from "./StructType";
+import type { FileStatuses } from "./FileStatuses";
 
 /**
- * Serializes an `HDOM`, `Connection`, `Model`, or `Frame` object
- * into a FlatBuffers binary format.
+ * Serializes an `HDOM`, `Connection`, `Model`, `Frame`, or
+ * `FileStatuses` into a FlatBuffers binary format.
  *
- * This function takes an `HDOM`, `Connection`, `Model`, or `Frame`
- * object and converts it into a FlatBuffers binary representation for
- * efficient storage or transmission. It uses the `bufferifyHDOM`,
- * `bufferifyConnection`, `bufferifyModel`, or `bufferifyFrame`
- * function to construct the FlatBuffers structure, and then finalizes
- * the buffer for output.
+ * This function takes an `HDOM`, `Connection`, `Model`, `Frame`,
+ * or `FileStatuses` and converts it into a FlatBuffers binary
+ * representation for efficient storage or transmission.
  *
- * @param hdom The `HDOM`, `Connection`, `Model`, or `Frame` object
- * to be serialized. This object represents the hierarchical structure
- * of an HDML document, connection, model, or frame.
+ * @param data The `HDOM`, `Connection`, `Model`, `Frame`, or
+ * `FileStatuses` to be serialized.
  *
  * @returns A `Uint8Array` containing the binary FlatBuffers data
- * for the given `HDOM`, `Connection`, `Model`, or `Frame` object.
+ * for the given object.
  *
  * @example
  * ```ts
- * // This can be an HDOM, Connection, Model, or Frame object
- * const object: HDOM | Connection | Model | Frame = { ... };
- * const uint8 = serialize(object, StructType.HDOMStruct);
- * const uint8 = serialize(object, StructType.ConnectionStruct);
- * const uint8 = serialize(object, StructType.ModelStruct);
- * const uint8 = serialize(object, StructType.FrameStruct);
- * // Now you can transmit or store the binary FlatBuffers data
+ * const uint8 = serialize(hdom, StructType.HDOMStruct);
+ * const uint8 = serialize(conn, StructType.ConnectionStruct);
+ * const uint8 = serialize(model, StructType.ModelStruct);
+ * const uint8 = serialize(frame, StructType.FrameStruct);
+ * const uint8 = serialize(
+ *   { names, statuses, messages },
+ *   StructType.FileStatusesStruct,
+ * );
  * ```
  */
 export function serialize(
-  hdom: HDOM | Connection | Model | Frame,
+  data: HDOM | Connection | Model | Frame | FileStatuses,
   type: StructType = StructType.HDOMStruct,
 ): Uint8Array {
   const builder = new flatbuffers.Builder(1024);
   let offset: number;
   switch (type) {
     case StructType.HDOMStruct:
-      offset = bufferifyHDOM(builder, hdom as HDOM);
+      offset = bufferifyHDOM(builder, data as HDOM);
       break;
     case StructType.ConnectionStruct:
-      offset = bufferifyConnection(builder, hdom as Connection);
+      offset = bufferifyConnection(builder, data as Connection);
       break;
     case StructType.ModelStruct:
-      offset = bufferifyModel(builder, hdom as Model);
+      offset = bufferifyModel(builder, data as Model);
       break;
     case StructType.FrameStruct:
-      offset = bufferifyFrame(builder, hdom as Frame);
+      offset = bufferifyFrame(builder, data as Frame);
       break;
-    default: {
-      const _exhaustive: never = type;
-      throw new Error(
-        `Unsupported struct type: ${String(_exhaustive)}`,
+    case StructType.FileStatusesStruct: {
+      const fileStatuses = data as FileStatuses;
+      offset = bufferifyFileStatuses(
+        builder,
+        fileStatuses.names,
+        fileStatuses.statuses,
+        fileStatuses.messages,
       );
+      break;
+    }
+    default: {
+      throw new Error("Unsupported struct type");
     }
   }
   builder.finish(offset);

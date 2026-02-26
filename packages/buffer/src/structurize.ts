@@ -10,6 +10,7 @@ import {
   ConnectionStruct,
   ModelStruct,
   FrameStruct,
+  DocumentFileStatusesStruct,
 } from "@hdml/schemas";
 import { StructType } from "./StructType";
 
@@ -32,6 +33,7 @@ import { StructType } from "./StructType";
  * - `ConnectionStruct` for `StructType.ConnectionStruct`
  * - `ModelStruct` for `StructType.ModelStruct`
  * - `FrameStruct` for `StructType.FrameStruct`
+ * - `DocumentFileStatusesStruct` for `StructType.FileStatusesStruct`
  *
  * @example
  * ```ts
@@ -47,7 +49,12 @@ import { StructType } from "./StructType";
 export function structurize(
   bytes: Uint8Array,
   type: StructType = StructType.HDOMStruct,
-): HDOMStruct | ConnectionStruct | ModelStruct | FrameStruct {
+):
+  | HDOMStruct
+  | ConnectionStruct
+  | ModelStruct
+  | FrameStruct
+  | DocumentFileStatusesStruct {
   const byteBuffer = new flatbuffers.ByteBuffer(bytes);
 
   switch (type) {
@@ -59,11 +66,14 @@ export function structurize(
       return ModelStruct.getRootAsModelStruct(byteBuffer);
     case StructType.FrameStruct:
       return FrameStruct.getRootAsFrameStruct(byteBuffer);
-    default: {
-      const _exhaustive: never = type;
-      throw new Error(
-        `Unsupported struct type: ${String(_exhaustive)}`,
+    case StructType.FileStatusesStruct: {
+      // eslint-disable-next-line max-len
+      return DocumentFileStatusesStruct.getRootAsDocumentFileStatusesStruct(
+        byteBuffer,
       );
+    }
+    default: {
+      throw new Error("Unsupported struct type");
     }
   }
 }
