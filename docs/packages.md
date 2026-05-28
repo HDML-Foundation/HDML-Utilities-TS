@@ -152,6 +152,16 @@ TS interfaces** — bufferify first if you only have a TS object.
 
 Indentation comes from a single 2-space constant `t` in [packages/stringifier/src/constants.ts](../packages/stringifier/src/constants.ts).
 
+**Multi-table model field aliasing.** When a `ModelStruct` carries multiple tables (joined
+or not), `getModelSQL` emits the outer `SELECT` with every field aliased as
+**`"{table-name}_{field-name}"`** — see
+[packages/stringifier/src/model.ts:51-63](../packages/stringifier/src/model.ts#L51-L63).
+Downstream consumers (a `getFrameSQL` call sourcing this model, or an HDML author writing
+an `hdml-frame` with `source="?hdml-model=…"`) must reference parent fields by that
+compound name — bare field names won't resolve when several tables carry the same column. The rule
+applies even to single-table models. Frame-to-frame projection in `getFrameSQL` performs
+no such rewriting: parent-frame fields are exposed by their declared `name`.
+
 **Deps:** `@hdml/schemas`, `@hdml/types` (dev: `@hdml/buffer` for tests).
 
 ---
