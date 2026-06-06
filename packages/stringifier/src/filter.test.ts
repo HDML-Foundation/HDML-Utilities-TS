@@ -35,7 +35,6 @@ import {
 describe("The `objectifyFilterOptions` function", () => {
   it("should objectify empty `Expression` options", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [],
       models: [
         {
@@ -83,7 +82,6 @@ describe("The `objectifyFilterOptions` function", () => {
 
   it("should objectify `Expression` options", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [],
       models: [
         {
@@ -130,7 +128,6 @@ describe("The `objectifyFilterOptions` function", () => {
 
   it("should objectify empty `Keys` options", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [],
       models: [
         {
@@ -178,7 +175,6 @@ describe("The `objectifyFilterOptions` function", () => {
 
   it("should objectify `Keys` options", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [],
       models: [
         {
@@ -226,7 +222,6 @@ describe("The `objectifyFilterOptions` function", () => {
 
   it("should objectify empty `Named` options", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [],
       models: [
         {
@@ -275,7 +270,6 @@ describe("The `objectifyFilterOptions` function", () => {
 
   it("should objectify `Named` options", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [],
       models: [
         {
@@ -326,7 +320,6 @@ describe("The `objectifyFilterOptions` function", () => {
 describe("The `objectifyFilterClause` function", () => {
   it("should objectify empty clause", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [],
       models: [
         {
@@ -364,7 +357,6 @@ describe("The `objectifyFilterClause` function", () => {
 
   it("should objectify clause with filters only", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [],
       models: [
         {
@@ -410,7 +402,6 @@ describe("The `objectifyFilterClause` function", () => {
 
   it("should objectify clause with children only", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [],
       models: [
         {
@@ -462,7 +453,6 @@ describe("The `objectifyFilterClause` function", () => {
 
   it("should objectify clause with filters and children", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [],
       models: [
         {

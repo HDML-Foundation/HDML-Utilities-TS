@@ -22,7 +22,6 @@ describe("bufferifyHDOM", () => {
     const builder = new flatbuffers.Builder(1024);
 
     const hdom: HDOM = {
-      includes: [{ path: "/path/to/doc.hdml" }],
       connections: [
         {
           name: "JDBCConnection",
@@ -105,8 +104,6 @@ describe("bufferifyHDOM", () => {
     const byteBuffer = new flatbuffers.ByteBuffer(buffer);
     const fbHDDM = HDOMStruct.getRootAsHDOMStruct(byteBuffer);
 
-    expect(fbHDDM.includesLength()).toBe(1);
-    expect(fbHDDM.includes(0)?.path()).toBe("/path/to/doc.hdml");
     expect(fbHDDM.connectionsLength()).toBe(1);
     expect(fbHDDM.modelsLength()).toBe(1);
     expect(fbHDDM.framesLength()).toBe(1);
@@ -116,7 +113,6 @@ describe("bufferifyHDOM", () => {
     const builder = new flatbuffers.Builder(1024);
 
     const hdom: HDOM = {
-      includes: [],
       connections: [],
       models: [],
       frames: [],
@@ -129,7 +125,6 @@ describe("bufferifyHDOM", () => {
     const byteBuffer = new flatbuffers.ByteBuffer(buffer);
     const fbHDDM = HDOMStruct.getRootAsHDOMStruct(byteBuffer);
 
-    expect(fbHDDM.includesLength()).toBe(0);
     expect(fbHDDM.connectionsLength()).toBe(0);
     expect(fbHDDM.modelsLength()).toBe(0);
     expect(fbHDDM.framesLength()).toBe(0);

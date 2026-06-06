@@ -36,7 +36,6 @@ import { bufferifyFrame } from "./bufferifyFrame";
  * ```typescript
  * const builder = new flatbuffers.Builder(1024);
  * const hdom: HDOM = {
- *   includes: [],
  *   connections: [{ name: "conn1", ... }],
  *   models: [{ name: "model1", ... }],
  *   frames: [{ name: "frame1", ... }]

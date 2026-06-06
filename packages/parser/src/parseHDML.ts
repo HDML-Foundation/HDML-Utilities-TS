@@ -40,7 +40,6 @@ export function parseHDML(content: string): HDOM {
   });
   const node = hdmlTreeAdapter.getFirstChild(fragment);
   const hddm = node?.rootNode?.hddm || {
-    includes: [],
     connections: [],
     models: [],
     frames: [],

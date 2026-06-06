@@ -41,7 +41,6 @@ import { Builder, ByteBuffer } from "flatbuffers";
 describe("The `serialize` function", () => {
   it("should serialize an HDOM object to Uin8Array", () => {
     const hdom: HDOM = {
-      includes: [{ path: "/path/to/doc.hdml" }],
       connections: [
         {
           name: "JDBCConnection",
@@ -123,10 +122,6 @@ describe("The `serialize` function", () => {
       StructType.HDOMStruct,
     ) as HDOMStruct;
 
-    // includes
-    expect(struct.includesLength()).toBe(1);
-    expect(struct.includes(0)?.path()).toBe("/path/to/doc.hdml");
-
     // connections
     expect(struct.connectionsLength()).toBe(1);
 
@@ -139,7 +134,6 @@ describe("The `serialize` function", () => {
 
   it("should serialize an HDOM object with explicit type parameter", () => {
     const hdom: HDOM = {
-      includes: [{ path: "/path/to/doc.hdml" }],
       connections: [],
       models: [],
       frames: [],
@@ -151,8 +145,9 @@ describe("The `serialize` function", () => {
       StructType.HDOMStruct,
     ) as HDOMStruct;
 
-    expect(struct.includesLength()).toBe(1);
-    expect(struct.includes(0)?.path()).toBe("/path/to/doc.hdml");
+    expect(struct.connectionsLength()).toBe(0);
+    expect(struct.modelsLength()).toBe(0);
+    expect(struct.framesLength()).toBe(0);
   });
 
   it("should serialize a Connection object with ConnectionStruct type", () => {
@@ -264,7 +259,6 @@ describe("The `serialize` function", () => {
 
   it("should handle empty HDOM object", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [],
       models: [],
       frames: [],
@@ -275,7 +269,6 @@ describe("The `serialize` function", () => {
       StructType.HDOMStruct,
     ) as HDOMStruct;
 
-    expect(struct.includesLength()).toBe(0);
     expect(struct.connectionsLength()).toBe(0);
     expect(struct.modelsLength()).toBe(0);
     expect(struct.framesLength()).toBe(0);
@@ -285,7 +278,6 @@ describe("The `serialize` function", () => {
 describe("The `deserialize` function", () => {
   it("should deserialize an HDOM object from Uint8Array", () => {
     const hdom: HDOM = {
-      includes: [{ path: "/path/to/doc.hdml" }],
       connections: [
         {
           name: "JDBCConnection",
@@ -369,7 +361,6 @@ describe("The `deserialize` function", () => {
 
   it("should deserialize an HDOM object with explicit type parameter", () => {
     const hdom: HDOM = {
-      includes: [{ path: "/path/to/doc.hdml" }],
       connections: [],
       models: [],
       frames: [],
@@ -483,7 +474,6 @@ describe("The `deserialize` function", () => {
 
   it("should handle empty HDOM object", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [],
       models: [],
       frames: [],
@@ -499,7 +489,6 @@ describe("The `deserialize` function", () => {
 describe("The `structurize` function", () => {
   it("should structurize a FlatBuffers binary into HDOMStruct", () => {
     const hdom: HDOM = {
-      includes: [{ path: "/path/to/doc.hdml" }],
       connections: [
         {
           name: "JDBCConnection",
@@ -582,8 +571,6 @@ describe("The `structurize` function", () => {
     ) as HDOMStruct;
 
     expect(struct).toBeDefined();
-    expect(struct.includesLength()).toBe(1);
-    expect(struct.includes(0)?.path()).toBe("/path/to/doc.hdml");
     expect(struct.connectionsLength()).toBe(1);
     expect(struct.modelsLength()).toBe(1);
     expect(struct.framesLength()).toBe(1);
@@ -591,7 +578,6 @@ describe("The `structurize` function", () => {
 
   it("should handle empty HDOM object", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [],
       models: [],
       frames: [],
@@ -604,7 +590,6 @@ describe("The `structurize` function", () => {
     ) as HDOMStruct;
 
     expect(struct).toBeDefined();
-    expect(struct.includesLength()).toBe(0);
     expect(struct.connectionsLength()).toBe(0);
     expect(struct.modelsLength()).toBe(0);
     expect(struct.framesLength()).toBe(0);
@@ -741,7 +726,6 @@ describe("The `structurize` function", () => {
 describe("The `fileifize` function", () => {
   it("should convert HDOM to DocumentFilesStruct Uint8Array", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [
         {
           name: "JDBCConnection",
@@ -856,7 +840,6 @@ describe("The `fileifize` function", () => {
 
   it("should handle empty HDOM object", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [],
       models: [],
       frames: [],
@@ -877,7 +860,6 @@ describe("The `fileifize` function", () => {
 
   it("should handle HDOM with only connections", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [
         {
           name: "Connection1",
@@ -925,7 +907,6 @@ describe("The `fileifize` function", () => {
 
   it("should handle HDOM with only models", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [],
       models: [
         {
@@ -959,7 +940,6 @@ describe("The `fileifize` function", () => {
 
   it("should handle HDOM with only frames", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [],
       models: [],
       frames: [

@@ -25,7 +25,7 @@ Enums: `AggregationTypeEnum`, `ConnectorTypesEnum`, `DataTypeEnum`, `DateUnitEnu
 `DecimalBitWidthEnum`, `FilterNameEnum`, `FilterOperatorEnum`, `FilterTypeEnum`,
 `JoinTypeEnum`, `OrderTypeEnum`, `TableTypeEnum`, `TimeUnitEnum`, `TimeZoneEnum`.
 
-Structs: `HDOMStruct`, `IncludeStruct`, `ConnectionStruct`, `ConnectionOptionsStruct`,
+Structs: `HDOMStruct`, `ConnectionStruct`, `ConnectionOptionsStruct`,
 `ConnectionParametersStruct`, per-connector parameter structs (`BigQueryParametersStruct`,
 `JDBCParametersStruct`, `GoogleSheetsParametersStruct`, `ElasticsearchParametersStruct`,
 `MongoDBParametersStruct`, `SnowflakeParametersStruct`), `ModelStruct`, `TableStruct`,
@@ -52,7 +52,7 @@ stringifier.
 
 **Entry point:** [packages/types/src/index.ts](../packages/types/src/index.ts).
 
-**Object interfaces:** `HDOM`, `Include`, `Connection`, `Model`, `Table`, `Join`, `Frame`,
+**Object interfaces:** `HDOM`, `Connection`, `Model`, `Table`, `Join`, `Frame`,
 `Field`, `FieldType`, `FilterClause`, `Filter`, and per-connector / per-parameter parameter
 types (`BigQueryParameters`, `JDBCParameters`, `GoogleSheetsParameters`,
 `ElasticsearchParameters`, `MongoDBParameters`, `SnowflakeParameters`, `ConnectionOptions`,
@@ -62,12 +62,12 @@ types (`BigQueryParameters`, `JDBCParameters`, `GoogleSheetsParameters`,
 **Lookup tables** (string constants — used by parser to read attributes and by stringifier to
 emit them):
 
-- `HDML_TAG_NAMES` — `hdml-include`, `hdml-connection`, `hdml-model`, `hdml-table`,
+- `HDML_TAG_NAMES` — `hdml-connection`, `hdml-model`, `hdml-table`,
   `hdml-join`, `hdml-frame`, `hdml-field`, `hdml-connective`, `hdml-filter`,
   `hdml-filter-by`, `hdml-group-by`, `hdml-split-by`, `hdml-sort-by`.
 - `*_ATTRS_LIST` — `CONN_ATTRS_LIST`, `MODEL_ATTRS_LIST`, `TABLE_ATTRS_LIST`,
   `JOIN_ATTRS_LIST`, `FRAME_ATTRS_LIST`, `FIELD_ATTRS_LIST`, `FILTER_ATTRS_LIST`,
-  `CONNECTIVE_ATTRS_LIST`, `INCLUDE_ATTRS_LIST`.
+  `CONNECTIVE_ATTRS_LIST`.
 - `*_VALUES` — `AGGREGATION_VALUES`, `BITWIDTH_VALUES`, `CONN_TYPE_VALUES`,
   `CONNECTIVE_OP_VALUES`, `DT_UNIT_VALUES`, `FIELD_TYPE_VALUES`, `FILTER_NAME_VALUES`,
   `FILTER_TYPE_VALUES`, `JOIN_TYPE_VALUES`, `ORDER_VALUES`, `TABLE_TYPE_VALUES`,
@@ -95,7 +95,7 @@ emit them):
 | `HTMLElement` | re-export from `node-html-parser` | — |
 
 **Tree adapter:** [packages/parser/src/hdmlTreeAdapter/hdmlTreeAdapter.ts](../packages/parser/src/hdmlTreeAdapter/hdmlTreeAdapter.ts).
-One `get*Data` handler per HDML tag (Include / Connection / Model / Table / Frame / Join /
+One `get*Data` handler per HDML tag (Connection / Model / Table / Frame / Join /
 Connective / Filter / Field). Wrappers `hdml-filter-by`, `hdml-group-by`, `hdml-split-by`,
 `hdml-sort-by` have no data of their own — they organize children.
 

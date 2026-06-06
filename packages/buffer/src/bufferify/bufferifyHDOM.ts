@@ -5,7 +5,7 @@
  */
 
 import * as flatbuffers from "flatbuffers";
-import { HDOMStruct, IncludeStruct } from "@hdml/schemas";
+import { HDOMStruct } from "@hdml/schemas";
 import { HDOM } from "@hdml/types";
 import { bufferifyConnection } from "./bufferifyConnection";
 import { bufferifyModel } from "./bufferifyModel";
@@ -26,9 +26,8 @@ import { bufferifyFrame } from "./bufferifyFrame";
  *   used to construct the serialized document.
  *
  * - `hddm` (HDOM): The `HDOM` object to be serialized. This
- *   includes references to `IncludeStruct`, `Connection`, `Model`,
- *   and `Frame` elements, each of which will be serialized into the
- *   FlatBuffer.
+ *   includes references to `Connection`, `Model`, and `Frame`
+ *   elements, each of which will be serialized into the FlatBuffer.
  *
  * ## Returns:
  *
@@ -40,7 +39,6 @@ import { bufferifyFrame } from "./bufferifyFrame";
  * ```ts
  * const builder = new flatbuffers.Builder(1024);
  * const hdom: HDOM = {
- *   includes: [],
  *   connections: [],
  *   models: [],
  *   frames: []
@@ -55,14 +53,6 @@ export function bufferifyHDOM(
   builder: flatbuffers.Builder,
   hdom: HDOM,
 ): number {
-  const includesVector = HDOMStruct.createIncludesVector(
-    builder,
-    hdom.includes.map((include) => {
-      const path = builder.createString(include.path);
-      return IncludeStruct.createIncludeStruct(builder, path);
-    }),
-  );
-
   const connectionsVector = HDOMStruct.createConnectionsVector(
     builder,
     hdom.connections.map((conn) =>
@@ -81,7 +71,6 @@ export function bufferifyHDOM(
   );
 
   HDOMStruct.startHDOMStruct(builder);
-  HDOMStruct.addIncludes(builder, includesVector);
   HDOMStruct.addConnections(builder, connectionsVector);
   HDOMStruct.addModels(builder, modelsVector);
   HDOMStruct.addFrames(builder, framesVector);

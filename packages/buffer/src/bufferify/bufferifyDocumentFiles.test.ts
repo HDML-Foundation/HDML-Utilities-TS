@@ -31,7 +31,6 @@ describe("The `bufferifyDocumentFiles` function", () => {
 
   it("should bufferify HDOM with connections, models, and frames", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [
         {
           name: "JDBCConnection",
@@ -147,7 +146,6 @@ describe("The `bufferifyDocumentFiles` function", () => {
 
   it("should handle empty HDOM object", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [],
       models: [],
       frames: [],
@@ -169,7 +167,6 @@ describe("The `bufferifyDocumentFiles` function", () => {
 
   it("should handle multiple connections, models, and frames", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [
         {
           name: "Connection1",
@@ -273,7 +270,6 @@ describe("The `bufferifyDocumentFiles` function", () => {
 
   it("should serialize file content that can be deserialized", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [
         {
           name: "TestConnection",

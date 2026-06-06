@@ -5,7 +5,6 @@
  */
 
 export enum HDML_TAG_NAMES {
-  INCLUDE = "hdml-include",
   CONNECTION = "hdml-connection",
   FRAME = "hdml-frame",
   MODEL = "hdml-model",

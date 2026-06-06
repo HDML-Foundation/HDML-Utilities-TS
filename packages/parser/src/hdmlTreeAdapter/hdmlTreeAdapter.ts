@@ -8,7 +8,6 @@ import {
   Connection,
   Field,
   Frame,
-  Include,
   Join,
   Model,
   Table,
@@ -29,7 +28,6 @@ import {
 } from "../types/HDMLTreeAdapterMap";
 import { HDMLTreeAdapter } from "../types/HDMLTreeAdapter";
 import { HDDMData } from "../types/HDDMData";
-import { getIncludeData } from "./getIncludeData";
 import { getConnectionData } from "./getConnectionData";
 import { getModelData } from "./getModelData";
 import { getTableData } from "./getTableData";
@@ -56,9 +54,6 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
     let hddmData: null | HDDMData = null;
 
     switch (tagName as HDML_TAG_NAMES) {
-      case HDML_TAG_NAMES.INCLUDE:
-        hddmData = getIncludeData(attrs);
-        break;
       case HDML_TAG_NAMES.CONNECTION:
         hddmData = getConnectionData(attrs);
         break;
@@ -110,7 +105,6 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
     ) {
       parentNode.rootNode = parentNode;
       parentNode.hddm = {
-        includes: [],
         connections: [],
         models: [],
         frames: [],
@@ -131,20 +125,6 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
     let data: null | Model | Table | Frame | Join | FilterClause =
       null;
     switch (element?.nodeName) {
-      case HDML_TAG_NAMES.INCLUDE:
-        if (
-          element.hddmData &&
-          element.rootNode &&
-          element.rootNode.hddm &&
-          !~element.rootNode.hddm.includes.indexOf(
-            element.hddmData as Include,
-          )
-        ) {
-          element.rootNode?.hddm?.includes.push(
-            element.hddmData as Include,
-          );
-        }
-        break;
       case HDML_TAG_NAMES.CONNECTION:
         if (
           element.hddmData &&

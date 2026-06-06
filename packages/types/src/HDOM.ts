@@ -4,7 +4,6 @@
  * @license Apache-2.0
  */
 
-import { Include } from "./Include";
 import { Connection } from "./Connection";
 import { Model } from "./Model";
 import { Frame } from "./Frame";
@@ -16,10 +15,6 @@ import { Frame } from "./Frame";
  * document.
  *
  * ## Properties:
- *
- * - `includes` (Include[]): An array of `Include` objects specifying
- *   remote documents that need to be included in the current
- *   document.
  *
  * - `connections` (Connection[]): An array of `Connection` objects
  *   defining database connections and their parameters.
@@ -35,7 +30,6 @@ import { Frame } from "./Frame";
  *
  * ```ts
  * const hdom: HDOM = {
- *   includes: [],
  *   connections: [],
  *   models: [],
  *   frames: []
@@ -43,11 +37,10 @@ import { Frame } from "./Frame";
  * ```
  *
  * In this example, the `HDOM` interface contains empty arrays for
- * includes, connections, models, and frames, representing a basic
- * HDML document structure.
+ * connections, models, and frames, representing a basic HDML
+ * document structure.
  */
 export interface HDOM {
-  includes: Include[];
   connections: Connection[];
   models: Model[];
   frames: Frame[];

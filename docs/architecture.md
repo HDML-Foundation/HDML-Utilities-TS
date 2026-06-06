@@ -53,7 +53,6 @@ The root object is **HDOM** (HyperData Object Model — [packages/types/src/HDOM
 
 ```ts
 interface HDOM {
-  includes: Include[];      // pointers to remote HDML files
   connections: Connection[]; // BigQuery/JDBC/Snowflake/Mongo/ES/GoogleSheets/…
   models: Model[];          // tables + joins + fields
   frames: Frame[];          // SELECT-like queries over a model or another frame
@@ -61,7 +60,7 @@ interface HDOM {
 ```
 
 The HDML tag vocabulary lives in [packages/types/src/enums/HDML_TAG_NAMES.ts](../packages/types/src/enums/HDML_TAG_NAMES.ts):
-`hdml-include`, `hdml-connection`, `hdml-model`, `hdml-table`, `hdml-join`, `hdml-frame`,
+`hdml-connection`, `hdml-model`, `hdml-table`, `hdml-join`, `hdml-frame`,
 `hdml-field`, `hdml-filter-by`, `hdml-connective`, `hdml-filter`, `hdml-group-by`,
 `hdml-split-by`, `hdml-sort-by`.
 

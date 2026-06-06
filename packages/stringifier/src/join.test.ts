@@ -634,7 +634,6 @@ describe("The `getJoinSQL` and `getJoinHTML` functions", () => {
 describe("The `getJoins` function", () => {
   it("should objectify case 1", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [],
       models: [
         {
@@ -677,7 +676,6 @@ describe("The `getJoins` function", () => {
 
   it("should objectify case 2", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [],
       models: [
         {
@@ -739,7 +737,6 @@ describe("The `getJoins` function", () => {
 
   it("should objectify case 3", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [],
       models: [
         {
@@ -801,7 +798,6 @@ describe("The `getJoins` function", () => {
 
   it("should objectify case 4", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [],
       models: [
         {
@@ -882,7 +878,6 @@ describe("The `getJoins` function", () => {
 
   it("should objectify case 5", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [],
       models: [
         {
@@ -982,7 +977,6 @@ describe("The `getJoins` function", () => {
 
   it("should objectify case 6", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [],
       models: [
         {
@@ -1101,7 +1095,6 @@ describe("The `getJoins` function", () => {
 
   it("should objectify case 7", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [],
       models: [
         {
@@ -1239,7 +1232,6 @@ describe("The `getJoins` function", () => {
 
   it("should objectify case 8", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [],
       models: [
         {
@@ -1396,7 +1388,6 @@ describe("The `getJoins` function", () => {
 
   it("should objectify case 9", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [],
       models: [
         {
@@ -1553,7 +1544,6 @@ describe("The `getJoins` function", () => {
 
   it("should objectify case 10", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [],
       models: [
         {
@@ -1729,7 +1719,6 @@ describe("The `getJoins` function", () => {
 
   it("should objectify case 11", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [],
       models: [
         {
@@ -1924,7 +1913,6 @@ describe("The `getJoins` function", () => {
 
   it("should objectify case 12", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [],
       models: [
         {
@@ -2138,7 +2126,6 @@ describe("The `getJoins` function", () => {
 
   it("should objectify case 13", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [],
       models: [
         {

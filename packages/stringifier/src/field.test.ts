@@ -28,7 +28,6 @@ import {
 } from "./field";
 
 const hdom: HDOM = {
-  includes: [],
   connections: [],
   models: [
     {

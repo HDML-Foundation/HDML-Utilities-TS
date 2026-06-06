@@ -14,7 +14,6 @@ import { getConnectionSQLs, getConnectionHTML } from "./connection";
 describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
   it("should stringify unnamed connection", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [
         {
           name: "",
@@ -48,7 +47,6 @@ describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
 
   it("should throw with unconfigured connection", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [
         {
           name: "name",
@@ -73,7 +71,6 @@ describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
 
   it("should stringify empty JDBC connection", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [
         {
           name: "name",
@@ -113,7 +110,6 @@ describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
 
   it("should stringify Postgres connection", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [
         {
           name: "name",
@@ -153,7 +149,6 @@ describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
 
   it("should stringify MySQL connection", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [
         {
           name: "name",
@@ -193,7 +188,6 @@ describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
 
   it("should stringify MsSQL connection", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [
         {
           name: "name",
@@ -233,7 +227,6 @@ describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
 
   it("should stringify Oracle connection", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [
         {
           name: "name",
@@ -273,7 +266,6 @@ describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
 
   it("should stringify Clickhouse connection", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [
         {
           name: "name",
@@ -313,7 +305,6 @@ describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
 
   it("should stringify Druid connection", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [
         {
           name: "name",
@@ -353,7 +344,6 @@ describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
 
   it("should stringify Ignite connection", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [
         {
           name: "name",
@@ -393,7 +383,6 @@ describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
 
   it("should stringify Redshift connection", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [
         {
           name: "name",
@@ -433,7 +422,6 @@ describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
 
   it("should stringify MariaDB connection", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [
         {
           name: "name",
@@ -473,7 +461,6 @@ describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
 
   it("should stringify empty BigQuery connection", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [
         {
           name: "name",
@@ -511,7 +498,6 @@ describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
 
   it("should stringify BigQuery connection", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [
         {
           name: "name",
@@ -549,7 +535,6 @@ describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
 
   it("should stringify empty GoogleSheets connection", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [
         {
           name: "name",
@@ -587,7 +572,6 @@ describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
 
   it("should stringify GoogleSheets connection", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [
         {
           name: "name",
@@ -625,7 +609,6 @@ describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
 
   it("should stringify empty ElasticSearch connection", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [
         {
           name: "name",
@@ -669,7 +652,6 @@ describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
 
   it("should stringify ElasticSearch connection", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [
         {
           name: "name",
@@ -713,7 +695,6 @@ describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
 
   it("should stringify empty MongoDB connection", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [
         {
           name: "name",
@@ -755,7 +736,6 @@ describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
 
   it("should stringify MongoDB connection", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [
         {
           name: "name",
@@ -797,7 +777,6 @@ describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
 
   it("should stringify empty Snowflake connection", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [
         {
           name: "name",
@@ -839,7 +818,6 @@ describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
 
   it("should stringify Snowflake connection", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [
         {
           name: "name",

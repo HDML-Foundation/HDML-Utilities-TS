@@ -26,7 +26,6 @@ let lvl3: string = "";
 describe("The `getFrameSQL` and `getFrameHTML` functions", () => {
   it("should stringify frame with cached source", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [],
       models: [],
       frames: [
@@ -79,7 +78,6 @@ describe("The `getFrameSQL` and `getFrameHTML` functions", () => {
 
   it("should stringify frame with sub-query", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [],
       models: [],
       frames: [
@@ -132,7 +130,6 @@ describe("The `getFrameSQL` and `getFrameHTML` functions", () => {
 
   it("should stringify frame with two sub-queries", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [],
       models: [],
       frames: [
@@ -185,7 +182,6 @@ describe("The `getFrameSQL` and `getFrameHTML` functions", () => {
 
   it("should sort fields while stringifying frame", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [],
       models: [],
       frames: [
@@ -271,7 +267,6 @@ describe("The `getFrameSQL` and `getFrameHTML` functions", () => {
 
   it("should stringify frame with filter block", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [],
       models: [],
       frames: [
@@ -366,7 +361,6 @@ describe("The `getFrameSQL` and `getFrameHTML` functions", () => {
 
   it("should stringify frame with group by block", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [],
       models: [],
       frames: [
@@ -475,7 +469,6 @@ describe("The `getFrameSQL` and `getFrameHTML` functions", () => {
 
   it("should stringify frame with sort by block", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [],
       models: [],
       frames: [

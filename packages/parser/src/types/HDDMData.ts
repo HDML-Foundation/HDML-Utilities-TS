@@ -5,7 +5,6 @@
  */
 
 import {
-  Include,
   Connection,
   Frame,
   Model,
@@ -17,7 +16,6 @@ import {
 } from "@hdml/types";
 
 export type HDDMData =
-  | Include
   | Connection
   | Frame
   | Model

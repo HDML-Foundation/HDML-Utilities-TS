@@ -25,7 +25,6 @@ describe("objectifyHDOM", () => {
     const builder = new flatbuffers.Builder(1024);
 
     const hdom: HDOM = {
-      includes: [{ path: "/path/to/doc.hdml" }],
       connections: [
         {
           name: "JDBCConnection",
@@ -110,7 +109,6 @@ describe("objectifyHDOM", () => {
     ) as HDOMStruct;
     const objectified = objectifyHDOM(hdomStruct);
 
-    expect(objectified.includes).toEqual(hdom.includes);
     expect(objectified.connections).toEqual(hdom.connections);
     expect(objectified.models).toEqual(hdom.models);
     expect(objectified.frames).toEqual(hdom.frames);
@@ -120,7 +118,6 @@ describe("objectifyHDOM", () => {
     const builder = new flatbuffers.Builder(1024);
 
     const hdom: HDOM = {
-      includes: [],
       connections: [],
       models: [],
       frames: [],
@@ -135,7 +132,6 @@ describe("objectifyHDOM", () => {
     ) as HDOMStruct;
     const objectified = objectifyHDOM(hdomStruct);
 
-    expect(objectified.includes).toEqual(hdom.includes);
     expect(objectified.connections).toEqual(hdom.connections);
     expect(objectified.models).toEqual(hdom.models);
     expect(objectified.frames).toEqual(hdom.frames);

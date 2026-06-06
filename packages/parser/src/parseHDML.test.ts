@@ -20,17 +20,6 @@ const html = `
 `;
 
 const hdml = `
-  <!-- Includes ----------------------------------------------------->
-  <div>
-    <hdml-include
-      path="/my/path/include.hdml">
-    </hdml-include>
-
-    <hdml-include
-      pat="wrong/attribute/name">
-    </hdml-include>
-  </div>
-
   <!-- Connections -------------------------------------------------->
   <div>
     <hdml-connection
@@ -570,7 +559,6 @@ describe("The `parseHDML` function", () => {
     const hddm = parseHDML(html);
 
     expect(hddm).toEqual({
-      includes: [],
       connections: [],
       models: [],
       frames: [],
@@ -580,11 +568,6 @@ describe("The `parseHDML` function", () => {
   it("shoud parse HDML string", () => {
     const hddm = parseHDML(hdml);
     expect(hddm).toEqual({
-      includes: [
-        {
-          path: "/my/path/include.hdml",
-        },
-      ],
       connections: [
         {
           name: "db1",

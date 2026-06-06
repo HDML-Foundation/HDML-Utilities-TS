@@ -8,7 +8,7 @@ import * as schema from "./index";
 
 describe("@hdml/schema", () => {
   it("must exports required types", () => {
-    expect(Object.keys(schema).length).toBe(46);
+    expect(Object.keys(schema).length).toBe(45);
     expect(schema.AggregationTypeEnum).toBeDefined();
     expect(schema.ConnectorTypesEnum).toBeDefined();
     expect(schema.DataTypeEnum).toBeDefined();
@@ -41,7 +41,6 @@ describe("@hdml/schema", () => {
     expect(schema.FilterOptionsStruct).toBeDefined();
     expect(schema.FrameStruct).toBeDefined();
     expect(schema.GoogleSheetsParametersStruct).toBeDefined();
-    expect(schema.IncludeStruct).toBeDefined();
     expect(schema.JDBCParametersStruct).toBeDefined();
     expect(schema.JoinStruct).toBeDefined();
     expect(schema.KeysParametersStruct).toBeDefined();

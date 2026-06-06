@@ -20,17 +20,6 @@ const html = `
 `;
 
 const hdml = `
-  <!-- Includes ----------------------------------------------------->
-  <div>
-    <hdml-include
-      path="/my/path/include.hdml">
-    </hdml-include>
-
-    <hdml-include
-      pat="wrong/attribute/name">
-    </hdml-include>
-  </div>
-
   <!-- Connections -------------------------------------------------->
   <div>
     <hdml-connection
@@ -581,7 +570,7 @@ describe("The `parseHTML` function", () => {
     expect(dom.tagName).toBeNull();
     expect(dom.parentNode).toBeNull();
     expect(
-      dom.querySelector("hdml-include[path=/my/path/include.hdml]"),
+      dom.querySelector("hdml-connection[name=db1]"),
     ).not.toBeNull();
   });
 

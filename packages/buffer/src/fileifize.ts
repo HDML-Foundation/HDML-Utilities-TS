@@ -28,7 +28,6 @@ import { bufferifyDocumentFiles } from "./bufferify/bufferifyDocumentFiles";
  * @example
  * ```ts
  * const hdom: HDOM = {
- *   includes: [],
  *   connections: [{ name: "conn1", ... }],
  *   models: [{ name: "model1", ... }],
  *   frames: [{ name: "frame1", ... }]

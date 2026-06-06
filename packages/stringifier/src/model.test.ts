@@ -30,7 +30,6 @@ import {
 describe("The `getTables` function", () => {
   it("should objectify empty model", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [],
       models: [
         {
@@ -55,7 +54,6 @@ describe("The `getTables` function", () => {
 
   it("should filter out tables without names", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [],
       models: [
         {
@@ -138,7 +136,6 @@ describe("The `getTables` function", () => {
 
   it("should not sort tables with the same names", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [],
       models: [
         {
@@ -223,7 +220,6 @@ describe("The `getTables` function", () => {
 
   it("should sort tables", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [],
       models: [
         {
@@ -308,7 +304,6 @@ describe("The `getTables` function", () => {
 
   it("should return all tables if joins not specified", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [],
       models: [
         {
@@ -391,7 +386,6 @@ describe("The `getTables` function", () => {
 
   it("should returns tables that are specified in joins", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [],
       models: [
         {
@@ -497,7 +491,6 @@ describe("The `getTables` function", () => {
 
 describe("The `getTableSQL` and `getTableHTML` functions", () => {
   const hdom: HDOM = {
-    includes: [],
     connections: [],
     models: [
       {
@@ -696,7 +689,6 @@ describe("The `getTableSQL` and `getTableHTML` functions", () => {
 describe("The `getModelSQL` and `getModelHTML` function", () => {
   it("should stringify model without joins", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [],
       models: [
         {
@@ -785,7 +777,6 @@ describe("The `getModelSQL` and `getModelHTML` function", () => {
 
   it("should stringify model with one join", () => {
     const hdom: HDOM = {
-      includes: [],
       connections: [],
       models: [
         {

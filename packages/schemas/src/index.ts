@@ -40,7 +40,6 @@ export { FilterClauseStruct } from "./document/filter-clause-struct";
 export { FilterOptionsStruct } from "./document/filter-options-struct";
 export { FrameStruct } from "./document/frame-struct";
 export { GoogleSheetsParametersStruct } from "./document/google-sheets-parameters-struct";
-export { IncludeStruct } from "./document/include-struct";
 export { JDBCParametersStruct } from "./document/jdbcparameters-struct";
 export { JoinStruct } from "./document/join-struct";
 export { KeysParametersStruct } from "./document/keys-parameters-struct";

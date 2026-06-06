@@ -5,7 +5,7 @@
  */
 
 import { HDOMStruct } from "@hdml/schemas";
-import { HDOM, Include } from "@hdml/types";
+import { HDOM } from "@hdml/types";
 import { objectifyConnection } from "./objectifyConnection";
 import { objectifyModel } from "./objectifyModel";
 import { objectifyFrame } from "./objectifyFrame";
@@ -20,8 +20,8 @@ import { objectifyFrame } from "./objectifyFrame";
  *
  * @param hdomStruct The FlatBuffers `HDOMStruct` object to convert.
  *
- * @returns The converted `HDOM` object containing includes,
- * connections, models, and frames.
+ * @returns The converted `HDOM` object containing connections,
+ * models, and frames.
  *
  * @example
  * ```ts
@@ -32,16 +32,6 @@ import { objectifyFrame } from "./objectifyFrame";
  * ```
  */
 export function objectifyHDOM(hdomStruct: HDOMStruct): HDOM {
-  const includes: Include[] = [];
-  for (let i = 0; i < hdomStruct.includesLength(); i++) {
-    const includeStruct = hdomStruct.includes(i);
-    if (includeStruct) {
-      includes.push({
-        path: includeStruct.path() || "",
-      });
-    }
-  }
-
   const connections = [];
   for (let i = 0; i < hdomStruct.connectionsLength(); i++) {
     const connStruct = hdomStruct.connections(i);
@@ -67,7 +57,6 @@ export function objectifyHDOM(hdomStruct: HDOMStruct): HDOM {
   }
 
   return {
-    includes,
     connections,
     models,
     frames,
