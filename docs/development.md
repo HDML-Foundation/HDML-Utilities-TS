@@ -41,12 +41,27 @@ Every package exposes the same compile targets (driven by `tsconfig/{cjs,esm,dts
 | `compile_cjs` | `cjs/` (CommonJS, `main`) | `tsconfig/cjs.json` (extends [tsconfig/base.json](../tsconfig/base.json)) |
 | `compile_esm` | `esm/` (ES modules, `module`) | `tsconfig/esm.json` |
 | `compile_dts` | `dts/` (`.d.ts`, `types`) | `tsconfig/dts.json` (declaration-only) |
-| `compile_bin` | `bin/index.min.js` (IIFE, minified, sourcemap) | `esbuild` over `esm/index.js` |
+| `compile_bin` | one or more `bin/*.min.js` (IIFE, minified, sourcemap) | orchestrator; runs `esbuild` per entry |
 | `compile_tst` | `tst/` (test compilation) | `tsconfig/tst.json` (extends `cjs.json`, includes `.test.ts`) |
 | `compile_all` | all of the above | — |
 
 `bin/` exists only on packages with a runtime surface (everything except `@hdml/types`, which
 has no `srv` / `compile_bin` script either).
+
+`@hdml/hooks` publishes **three** bin outputs, so its `compile_bin` is an orchestrator that
+fans out to three per-entry esbuild sub-targets:
+
+| Script | Output | esbuild entry |
+|---|---|---|
+| `compile_bin` | (runs the three below in order) | — |
+| `compile_bin_io` | `bin/index.min.js` (the I/O primitives barrel) | `esm/index.js` |
+| `compile_bin_parser` | `bin/parser-wasm.min.js` (predefined-module entry) | `esm/parser-wasm.js` |
+| `compile_bin_compiler` | `bin/compiler-wasm.min.js` (predefined-module entry) | `esm/compiler-wasm.js` |
+
+The two predefined-module entries (`parser-wasm.min.js`, `compiler-wasm.min.js`) are the
+javy-ready bundles consumed by HDIO-Javy-Plugin's `javy build`. They reference the
+plugin-provided `globalThis["@hdml/*"]` globals directly rather than inlining any `@hdml/*`
+source.
 
 ## Test
 

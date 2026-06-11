@@ -9,7 +9,7 @@ The TypeScript monorepo behind HDML — eight npm packages under `@hdml/*` that 
 markup, model it as `HDOM`, serialize it to FlatBuffers, and emit SQL / HTML from it. The
 same code runs in browsers (via HDML-Components), inside `hdio.wasm` (via HDIO-Javy-Plugin),
 and in Node consumers. **Node 18 / TypeScript 4.9.5 / FlatBuffers 24.3.25 / lockstep
-versioning (currently `0.0.2-alpha.13`).**
+versioning (currently `0.0.2-alpha.15`).**
 
 This repo does **not** own the FlatBuffers schema. The `.fbs` files live in the
 [HDML-Schemas/](HDML-Schemas/) submodule; `@hdml/schemas` regenerates TS bindings from them.
@@ -59,7 +59,7 @@ Per-format compile targets (`compile_cjs`, `compile_esm`, `compile_dts`, `compil
 | [packages/parser/](packages/parser/) | `parseHDML`, `parseHTML`, `sortFrames`. parse5 + custom tree adapter. |
 | [packages/buffer/](packages/buffer/) | `serialize`, `deserialize`, `structurize`, `fileifize` + the `bufferify/` / `objectify/` converters. |
 | [packages/stringifier/](packages/stringifier/) | `get{Connection,Model,Frame}{SQL,HTML}`. Inputs are FlatBuffers structs, **not** TS interfaces. |
-| [packages/hooks/](packages/hooks/) | `Javy.IO` stdin/stdout helpers (`read/writeJson`, `read/writeString`, `read/writeUint8Array`). |
+| [packages/hooks/](packages/hooks/) | `Javy.IO` stdin/stdout helpers (`read/writeJson`, `read/writeString`, `read/writeUint8Array`). Also ships two stub WASM module entries — `parser-wasm` / `compiler-wasm` (`bin/{parser,compiler}-wasm.min.js`) — consumed by the HDIO-Javy-Plugin release flow. |
 | [packages/hash/](packages/hash/) | `md5`, `uid`, `hashify`, `hashtime`, `parsetime`, base64 codec. |
 | [packages/common/](packages/common/) | Pinned `apache-arrow`, `uuid`, `throttle-debounce` re-exports. |
 
