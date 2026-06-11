@@ -22,8 +22,8 @@
     "compile_dts": "tsc -b ./tsconfig/dts.json",
     "compile_bin": "npm run compile_bin_io && npm run compile_bin_parser && npm run compile_bin_compiler",
     "compile_bin_io": "../../node_modules/.bin/esbuild ./esm/index.js --bundle --minify --format=iife --sourcemap --outfile=./bin/index.min.js",
-    "compile_bin_parser": "../../node_modules/.bin/esbuild ./esm/parser-wasm.js --bundle --minify --format=iife --sourcemap --outfile=./bin/parser-wasm.min.js",
-    "compile_bin_compiler": "../../node_modules/.bin/esbuild ./esm/compiler-wasm.js --bundle --minify --format=iife --sourcemap --outfile=./bin/compiler-wasm.min.js",
+    "compile_bin_parser": "../../node_modules/.bin/esbuild ./esm/parser.js --bundle --minify --format=iife --sourcemap --outfile=./bin/parser.min.js",
+    "compile_bin_compiler": "../../node_modules/.bin/esbuild ./esm/compiler.js --bundle --minify --format=iife --sourcemap --outfile=./bin/compiler.min.js",
     "compile_tst": "tsc -b ./tsconfig/tst.json",
     "compile_all": "npm run compile_cjs && npm run compile_esm && npm run compile_dts && npm run compile_bin",
     "srv": "../../node_modules/.bin/web-dev-server --config ../../.srv.js --open index.html"

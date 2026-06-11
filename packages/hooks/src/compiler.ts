@@ -2,7 +2,7 @@
 // @copyright Artem Lytvynov
 // @license Apache-2.0
 //
-// 003 STUB. See parser-wasm.ts. The real { docs, root, … } →
+// 003 STUB. See parser.ts. The real { docs, root, … } →
 // { sql, columns, connections } body + column walker land in
 // project 004.
 
