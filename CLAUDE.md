@@ -59,7 +59,7 @@ Per-format compile targets (`compile_cjs`, `compile_esm`, `compile_dts`, `compil
 | [packages/parser/](packages/parser/) | `parseHDML`, `parseHTML`, `sortFrames`. parse5 + custom tree adapter. |
 | [packages/buffer/](packages/buffer/) | `serialize`, `deserialize`, `structurize`, `fileifize` + the `bufferify/` / `objectify/` converters. |
 | [packages/stringifier/](packages/stringifier/) | `get{Connection,Model,Frame}{SQL,HTML}`. Inputs are FlatBuffers structs, **not** TS interfaces. |
-| [packages/hooks/](packages/hooks/) | `Javy.IO` stdin/stdout helpers (`read/writeJson`, `read/writeString`, `read/writeUint8Array`). Also ships two stub WASM module entries — `parser-wasm` / `compiler-wasm` (`bin/{parser,compiler}-wasm.min.js`) — consumed by the HDIO-Javy-Plugin release flow. |
+| [packages/hooks/](packages/hooks/) | `Javy.IO` stdin/stdout helpers (`read/writeJson`, `read/writeString`, `read/writeUint8Array`). Also ships two stub WASM module entries — `parser` / `compiler` (`bin/{parser,compiler}.min.js`) — consumed by the HDIO-Javy-Plugin release flow. |
 | [packages/hash/](packages/hash/) | `md5`, `uid`, `hashify`, `hashtime`, `parsetime`, base64 codec. |
 | [packages/common/](packages/common/) | Pinned `apache-arrow`, `uuid`, `throttle-debounce` re-exports. |
 

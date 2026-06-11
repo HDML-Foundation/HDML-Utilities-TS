@@ -55,10 +55,10 @@ fans out to three per-entry esbuild sub-targets:
 |---|---|---|
 | `compile_bin` | (runs the three below in order) | — |
 | `compile_bin_io` | `bin/index.min.js` (the I/O primitives barrel) | `esm/index.js` |
-| `compile_bin_parser` | `bin/parser-wasm.min.js` (predefined-module entry) | `esm/parser-wasm.js` |
-| `compile_bin_compiler` | `bin/compiler-wasm.min.js` (predefined-module entry) | `esm/compiler-wasm.js` |
+| `compile_bin_parser` | `bin/parser.min.js` (predefined-module entry) | `esm/parser.js` |
+| `compile_bin_compiler` | `bin/compiler.min.js` (predefined-module entry) | `esm/compiler.js` |
 
-The two predefined-module entries (`parser-wasm.min.js`, `compiler-wasm.min.js`) are the
+The two predefined-module entries (`parser.min.js`, `compiler.min.js`) are the
 javy-ready bundles consumed by HDIO-Javy-Plugin's `javy build`. They reference the
 plugin-provided `globalThis["@hdml/*"]` globals directly rather than inlining any `@hdml/*`
 source.
