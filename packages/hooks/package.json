@@ -1,18 +1,18 @@
 {
   "name": "@hdml/hooks",
-  "version": "0.0.2-alpha.16",
+  "version": "0.0.2-alpha.17",
   "license": "Apache-2.0",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
     "access": "public"
   },
   "dependencies": {
-    "@hdml/buffer": "0.0.2-alpha.16",
-    "@hdml/hash": "0.0.2-alpha.16",
-    "@hdml/parser": "0.0.2-alpha.16",
-    "@hdml/schemas": "0.0.2-alpha.16",
-    "@hdml/stringifier": "0.0.2-alpha.16",
-    "@hdml/types": "0.0.2-alpha.16"
+    "@hdml/buffer": "0.0.2-alpha.17",
+    "@hdml/hash": "0.0.2-alpha.17",
+    "@hdml/parser": "0.0.2-alpha.17",
+    "@hdml/schemas": "0.0.2-alpha.17",
+    "@hdml/stringifier": "0.0.2-alpha.17",
+    "@hdml/types": "0.0.2-alpha.17"
   },
   "scripts": {
     "clear": "rm -rf bin && rm -rf tst && rm -rf cjs && rm -rf coverage && rm -rf docs && rm -rf dts && rm -rf esm && rm -rf tsconfig/*.tsbuildinfo",
