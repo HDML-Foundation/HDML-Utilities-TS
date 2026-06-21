@@ -32,6 +32,19 @@ npm -w @hdml/parser run build
 Each package's `build` runs: `clear → lint → test --coverage → compile_all → docs`.
 `@hdml/schemas` additionally runs `compile_fbs` before lint.
 
+> **Workspace build order is dependency order, not alphabetical.**
+> `npm run build --workspaces` builds packages in the **literal order of
+> the root [`package.json`](../package.json) `workspaces` array** — npm
+> does *not* topologically sort. Because each package's `build` runs
+> `clear` first (wiping its own `dts/`), a package whose `lint`/`compile`
+> type-checks against another `@hdml/*` must appear **after** that
+> dependency in the array, or its `dts/` will be absent on a clean
+> checkout and the type-aware lint fails with `no-unsafe-*` (the symbol
+> resolves to `any`). This only bites on a **clean** tree (CI, fresh
+> clone) — stale local `dts/` masks it. Current safe order ends with
+> `… parser, stringifier, hooks`: `@hdml/hooks` depends on the most
+> packages, so it builds **last**.
+
 ### Per-format compile targets
 
 Every package exposes the same compile targets (driven by `tsconfig/{cjs,esm,dts,tst}.json`):
@@ -154,6 +167,8 @@ Generated / build output directories (gitignored): `packages/*/{bin,cjs,dts,esm,
 2. Copy `tsconfig/{cjs,esm,dts,tst}.json` from a peer package, adjust `references` if needed
 3. Author `package.json` — mirror an existing package; bump version to match the lockstep
 4. Add `"packages/<name>"` to root [package.json](../package.json) workspaces
+   — **place it after every `@hdml/*` it depends on** (build order = array
+   order; see the note under [Build](#build))
 5. Create `src/index.ts`, write the `globalThis["@hdml/<name>"]` registration block, write tests
 6. `npm install` to refresh the workspace symlinks, `npm -w @hdml/<name> run build`
 
