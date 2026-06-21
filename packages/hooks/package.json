@@ -11,6 +11,7 @@
     "@hdml/hash": "0.0.2-alpha.16",
     "@hdml/parser": "0.0.2-alpha.16",
     "@hdml/schemas": "0.0.2-alpha.16",
+    "@hdml/stringifier": "0.0.2-alpha.16",
     "@hdml/types": "0.0.2-alpha.16"
   },
   "scripts": {
