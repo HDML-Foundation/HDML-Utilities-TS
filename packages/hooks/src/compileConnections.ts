@@ -12,10 +12,12 @@ import type {
   getConnectionSQLs,
   getModelHTML,
   getFrameHTML,
+  getModelSQL,
+  getFrameSQL,
 } from "@hdml/stringifier";
+import type { parseHTML, parseHDML } from "@hdml/parser";
 import type { Connection } from "@hdml/types";
 import type { ConnectionStruct } from "@hdml/schemas";
-import { compileSource } from "./compileSource";
 
 /**
  * One connection artifact in the compiler envelope: the bare element
@@ -28,11 +30,12 @@ export interface ConnectionEntry {
 
 /**
  * The `hdml_compiler.wasm` input envelope (RFC 002 §3). The
- * `connection` (Slice B) and `source` (Slice C) output modes are
- * implemented; `sql` (Slice C, Step 02) and `effective` (Slice D)
- * are not. `frames` / `model` carry the closure the `source` branch
- * reconstructs; `roles` / `scope` / `columns` / adaptation are the
- * `sql` branch's and land later.
+ * `connection` (Slice B), `source`, and `sql` (both Slice C) output
+ * modes are implemented; `effective` (Slice D) is not. `frames` /
+ * `model` carry the closure (leaf→root) the `source` / `sql` branches
+ * consume. `env` / `scope` drive `sql` injection; `columns` is the
+ * `sql` SELECT projection; `adaptation_policy` / `roles` are carried
+ * for D's adaptation step but unused in C (D4).
  */
 export interface CompilerInput {
   connections?: ConnectionEntry[];
@@ -40,6 +43,10 @@ export interface CompilerInput {
   output?: string;
   frames?: string[];
   model?: string;
+  adaptation_policy?: unknown;
+  roles?: string[];
+  scope?: Record<string, unknown>;
+  columns?: string[];
 }
 
 /** A flat `result` array — the uniform compiler output shape. */
@@ -59,7 +66,11 @@ export interface CompilerError {
  * WASM bin entry resolves them from `globalThis` (provided by the
  * plugin) while tests pass the real implementations in directly.
  * `getConnectionSQLs` serves `connection`; `getModelHTML` /
- * `getFrameHTML` serve `source`.
+ * `getFrameHTML` serve `source`. The `sql` branch reconstructs the
+ * document (`getModelHTML` / `getFrameHTML`), round-trips it through
+ * the DOM (`parseHTML` for adaptation selectors, `parseHDML` to
+ * re-extract the adapted HDOM), then emits SQL (`getModelSQL` /
+ * `getFrameSQL`).
  */
 export interface CompilerDeps {
   deserialize: typeof deserialize;
@@ -69,6 +80,10 @@ export interface CompilerDeps {
   getConnectionSQLs: typeof getConnectionSQLs;
   getModelHTML: typeof getModelHTML;
   getFrameHTML: typeof getFrameHTML;
+  getModelSQL: typeof getModelSQL;
+  getFrameSQL: typeof getFrameSQL;
+  parseHTML: typeof parseHTML;
+  parseHDML: typeof parseHDML;
   StructType: typeof StructType;
 }
 
@@ -184,29 +199,6 @@ export function compileConnections(
     }
   }
   return { result };
-}
-
-/**
- * Dispatches the compiler envelope on `output`. `connection`
- * (Slice B) and `source` (Slice C) are wired; `sql` (C, Step 02) and
- * `effective` (D) fall through to `invalid_output` so the dispatch
- * stays extensible without pre-empting those slices.
- */
-export function compile(
-  deps: CompilerDeps,
-  input: CompilerInput,
-): CompilerResult | CompilerError {
-  switch (input.output) {
-    case "connection":
-      return compileConnections(deps, input);
-    case "source":
-      return compileSource(deps, input);
-    default:
-      return {
-        error: "invalid_output",
-        detail: `unsupported output mode: ${String(input.output)}`,
-      };
-  }
 }
 
 /** Extracts a human-readable message from an unknown thrown value. */

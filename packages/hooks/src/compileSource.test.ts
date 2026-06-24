@@ -6,20 +6,22 @@
 
 /* eslint-disable max-len */
 
-import { parseHDML } from "@hdml/parser";
+import { parseHDML, parseHTML } from "@hdml/parser";
 import { serialize, structurize, StructType } from "@hdml/buffer";
 import { bytesToBase64, base64ToBytes } from "@hdml/hash";
 import {
   getConnectionSQLs,
   getModelHTML,
   getFrameHTML,
+  getModelSQL,
+  getFrameSQL,
 } from "@hdml/stringifier";
 import {
-  compile,
   CompilerDeps,
   CompilerResult,
   CompilerError,
 } from "./compileConnections";
+import { compile } from "./compile";
 import { compileSource } from "./compileSource";
 
 const deps: CompilerDeps = {
@@ -32,6 +34,10 @@ const deps: CompilerDeps = {
   getConnectionSQLs,
   getModelHTML,
   getFrameHTML,
+  getModelSQL,
+  getFrameSQL,
+  parseHTML,
+  parseHDML,
   StructType,
 };
 

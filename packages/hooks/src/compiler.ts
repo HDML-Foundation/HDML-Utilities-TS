@@ -3,12 +3,12 @@
 // @license Apache-2.0
 //
 // 004 compiler bin entry. Reads the compiler envelope from stdin,
-// dispatches on `output`, and writes the result to stdout. Slice B
-// implements only the `connection` mode (find-drop-create catalog
-// DDL with ${env.*} injection); source/sql (C) and effective (D)
-// land later. Resolves @hdml/* from globalThis (provided by the Javy
-// plugin): a broken hdio-javy-core link leaves these undefined and
-// throws at _start, keeping the link load-bearing.
+// dispatches on `output`, and writes the result to stdout. The
+// `connection` (B), `source`, and `sql` (C) modes are implemented;
+// `effective` (D) lands later. Resolves @hdml/* from globalThis
+// (provided by the Javy plugin): a broken hdio-javy-core link leaves
+// these undefined and throws at _start, so the link is load-bearing.
+// The `sql`/`source` modes also pull @hdml/parser (DOM round-trip).
 
 import type { readJson, writeJson } from "./index";
 import type {
@@ -22,8 +22,12 @@ import type {
   getConnectionSQLs,
   getModelHTML,
   getFrameHTML,
+  getModelSQL,
+  getFrameSQL,
 } from "@hdml/stringifier";
-import { compile, CompilerInput } from "./compileConnections";
+import type { parseHTML, parseHDML } from "@hdml/parser";
+import { CompilerInput } from "./compileConnections";
+import { compile } from "./compile";
 
 const _export = globalThis as unknown as {
   "@hdml/hooks": {
@@ -41,6 +45,12 @@ const _export = globalThis as unknown as {
     getConnectionSQLs: typeof getConnectionSQLs;
     getModelHTML: typeof getModelHTML;
     getFrameHTML: typeof getFrameHTML;
+    getModelSQL: typeof getModelSQL;
+    getFrameSQL: typeof getFrameSQL;
+  };
+  "@hdml/parser": {
+    parseHTML: typeof parseHTML;
+    parseHDML: typeof parseHDML;
   };
   env?: Record<string, string>;
 };
@@ -57,7 +67,11 @@ const {
   getConnectionSQLs: connSQLs,
   getModelHTML: modelHTML,
   getFrameHTML: frameHTML,
+  getModelSQL: modelSQL,
+  getFrameSQL: frameSQL,
 } = _export["@hdml/stringifier"];
+const { parseHTML: parseHtml, parseHDML: parseHdml } =
+  _export["@hdml/parser"];
 
 const input = read<CompilerInput>();
 
@@ -75,6 +89,10 @@ write(
       getConnectionSQLs: connSQLs,
       getModelHTML: modelHTML,
       getFrameHTML: frameHTML,
+      getModelSQL: modelSQL,
+      getFrameSQL: frameSQL,
+      parseHTML: parseHtml,
+      parseHDML: parseHdml,
       StructType: structType,
     },
     input ?? {},

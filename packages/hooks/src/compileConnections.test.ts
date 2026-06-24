@@ -6,7 +6,7 @@
 
 /* eslint-disable max-len */
 
-import { parseHDML } from "@hdml/parser";
+import { parseHDML, parseHTML } from "@hdml/parser";
 import {
   serialize,
   deserialize,
@@ -18,9 +18,10 @@ import {
   getConnectionSQLs,
   getModelHTML,
   getFrameHTML,
+  getModelSQL,
+  getFrameSQL,
 } from "@hdml/stringifier";
 import {
-  compile,
   compileConnections,
   injectEnv,
   CompilerDeps,
@@ -28,6 +29,7 @@ import {
   CompilerError,
   ConnectionEntry,
 } from "./compileConnections";
+import { compile } from "./compile";
 
 const deps: CompilerDeps = {
   deserialize,
@@ -37,6 +39,10 @@ const deps: CompilerDeps = {
   getConnectionSQLs,
   getModelHTML,
   getFrameHTML,
+  getModelSQL,
+  getFrameSQL,
+  parseHTML,
+  parseHDML,
   StructType,
 };
 
@@ -170,10 +176,11 @@ describe("compile dispatch", () => {
     expect(out.result).toHaveLength(3);
   });
 
-  it("returns invalid_output for non-connection modes", () => {
+  it("returns invalid_output for unimplemented modes", () => {
+    // `effective` (Slice D) is not yet wired; `sql` now is.
     const out = compile(deps, {
       connections: [],
-      output: "sql",
+      output: "effective",
     }) as CompilerError;
     expect(out.error).toBe("invalid_output");
   });
