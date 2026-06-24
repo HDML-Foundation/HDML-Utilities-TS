@@ -14,7 +14,11 @@ import {
   StructType,
 } from "@hdml/buffer";
 import { bytesToBase64, base64ToBytes } from "@hdml/hash";
-import { getConnectionSQLs } from "@hdml/stringifier";
+import {
+  getConnectionSQLs,
+  getModelHTML,
+  getFrameHTML,
+} from "@hdml/stringifier";
 import {
   compile,
   compileConnections,
@@ -31,6 +35,8 @@ const deps: CompilerDeps = {
   structurize,
   base64ToBytes,
   getConnectionSQLs,
+  getModelHTML,
+  getFrameHTML,
   StructType,
 };
 

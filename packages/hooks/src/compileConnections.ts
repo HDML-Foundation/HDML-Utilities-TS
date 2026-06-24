@@ -8,9 +8,14 @@ import type { serialize, structurize } from "@hdml/buffer";
 import type { StructType } from "@hdml/buffer";
 import type { deserialize } from "@hdml/buffer";
 import type { base64ToBytes } from "@hdml/hash";
-import type { getConnectionSQLs } from "@hdml/stringifier";
+import type {
+  getConnectionSQLs,
+  getModelHTML,
+  getFrameHTML,
+} from "@hdml/stringifier";
 import type { Connection } from "@hdml/types";
 import type { ConnectionStruct } from "@hdml/schemas";
+import { compileSource } from "./compileSource";
 
 /**
  * One connection artifact in the compiler envelope: the bare element
@@ -22,14 +27,19 @@ export interface ConnectionEntry {
 }
 
 /**
- * The `hdml_compiler.wasm` input envelope (RFC 002 §3). Only the
- * `connection` output mode is implemented here (Slice B);
- * `source` / `sql` (Slice C) and `effective` (Slice D) are not.
+ * The `hdml_compiler.wasm` input envelope (RFC 002 §3). The
+ * `connection` (Slice B) and `source` (Slice C) output modes are
+ * implemented; `sql` (Slice C, Step 02) and `effective` (Slice D)
+ * are not. `frames` / `model` carry the closure the `source` branch
+ * reconstructs; `roles` / `scope` / `columns` / adaptation are the
+ * `sql` branch's and land later.
  */
 export interface CompilerInput {
   connections?: ConnectionEntry[];
   env?: Record<string, string>;
   output?: string;
+  frames?: string[];
+  model?: string;
 }
 
 /** A flat `result` array — the uniform compiler output shape. */
@@ -45,9 +55,11 @@ export interface CompilerError {
 }
 
 /**
- * The `@hdml/*` functions the connection branch needs, injected so
- * the WASM bin entry resolves them from `globalThis` (provided by
- * the plugin) while tests pass the real implementations in directly.
+ * The `@hdml/*` functions the compiler branches need, injected so the
+ * WASM bin entry resolves them from `globalThis` (provided by the
+ * plugin) while tests pass the real implementations in directly.
+ * `getConnectionSQLs` serves `connection`; `getModelHTML` /
+ * `getFrameHTML` serve `source`.
  */
 export interface CompilerDeps {
   deserialize: typeof deserialize;
@@ -55,6 +67,8 @@ export interface CompilerDeps {
   structurize: typeof structurize;
   base64ToBytes: typeof base64ToBytes;
   getConnectionSQLs: typeof getConnectionSQLs;
+  getModelHTML: typeof getModelHTML;
+  getFrameHTML: typeof getFrameHTML;
   StructType: typeof StructType;
 }
 
@@ -173,10 +187,10 @@ export function compileConnections(
 }
 
 /**
- * Dispatches the compiler envelope on `output`. Slice B owns only
- * the `connection` mode; `source` / `sql` (C) and `effective` (D)
- * are left as `invalid_output` so the dispatch stays extensible
- * without pre-empting those slices.
+ * Dispatches the compiler envelope on `output`. `connection`
+ * (Slice B) and `source` (Slice C) are wired; `sql` (C, Step 02) and
+ * `effective` (D) fall through to `invalid_output` so the dispatch
+ * stays extensible without pre-empting those slices.
  */
 export function compile(
   deps: CompilerDeps,
@@ -185,6 +199,8 @@ export function compile(
   switch (input.output) {
     case "connection":
       return compileConnections(deps, input);
+    case "source":
+      return compileSource(deps, input);
     default:
       return {
         error: "invalid_output",
@@ -194,6 +210,6 @@ export function compile(
 }
 
 /** Extracts a human-readable message from an unknown thrown value. */
-function message(e: unknown): string {
+export function message(e: unknown): string {
   return e instanceof Error ? e.message : String(e);
 }

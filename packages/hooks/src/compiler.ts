@@ -18,7 +18,11 @@ import type {
   StructType,
 } from "@hdml/buffer";
 import type { base64ToBytes } from "@hdml/hash";
-import type { getConnectionSQLs } from "@hdml/stringifier";
+import type {
+  getConnectionSQLs,
+  getModelHTML,
+  getFrameHTML,
+} from "@hdml/stringifier";
 import { compile, CompilerInput } from "./compileConnections";
 
 const _export = globalThis as unknown as {
@@ -35,6 +39,8 @@ const _export = globalThis as unknown as {
   "@hdml/hash": { base64ToBytes: typeof base64ToBytes };
   "@hdml/stringifier": {
     getConnectionSQLs: typeof getConnectionSQLs;
+    getModelHTML: typeof getModelHTML;
+    getFrameHTML: typeof getFrameHTML;
   };
   env?: Record<string, string>;
 };
@@ -47,7 +53,11 @@ const {
   StructType: structType,
 } = _export["@hdml/buffer"];
 const { base64ToBytes: fromBase64 } = _export["@hdml/hash"];
-const { getConnectionSQLs: connSQLs } = _export["@hdml/stringifier"];
+const {
+  getConnectionSQLs: connSQLs,
+  getModelHTML: modelHTML,
+  getFrameHTML: frameHTML,
+} = _export["@hdml/stringifier"];
 
 const input = read<CompilerInput>();
 
@@ -63,6 +73,8 @@ write(
       structurize: struct,
       base64ToBytes: fromBase64,
       getConnectionSQLs: connSQLs,
+      getModelHTML: modelHTML,
+      getFrameHTML: frameHTML,
       StructType: structType,
     },
     input ?? {},
