@@ -49,7 +49,7 @@ export function reconstructDocument(
 /**
  * Runs the `source` output mode (RFC 002 §5.1): reconstructs the HDML
  * document for the closure carried in the envelope. Unlike `sql`,
- * this branch ignores `env`, `scope`, `roles`, `columns`, and
+ * this branch ignores `env`, `scope`, `role`, `columns`, and
  * adaptation: it is a pure struct→HTML round-trip. Returns
  * `{ result: ["<HDML>"] }` (exactly one string), or
  * `{ error: "structurize_failed" }` when any decode fails.

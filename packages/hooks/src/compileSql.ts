@@ -14,6 +14,7 @@ import type {
   CompilerDeps,
 } from "./compileConnections";
 import { message } from "./compileConnections";
+import type { AdaptationPolicy } from "./adaptation";
 import { reconstructDocument } from "./compileSource";
 import {
   injectObjectVars,
@@ -28,7 +29,7 @@ import {
  * several frames + the model, so adaptation cannot be applied to
  * isolated fragments. No-op in C — the DOM is returned unmutated.
  *
- * TODO(Slice D): for each rule of the request's roles —
+ * TODO(Slice D): for each rule of the request's single `role` —
  *   dom.querySelectorAll(rule.selector).forEach((el) =>
  *     rule.action === "remove-element"
  *       ? el.remove()
@@ -40,12 +41,12 @@ import {
  */
 function applyAdaptation(
   dom: HTMLElement,
-  policy: unknown,
-  roles: string[],
+  policy: AdaptationPolicy | undefined,
+  role: string,
 ): void {
   void dom;
   void policy;
-  void roles;
+  void role;
 }
 
 /** Serializes a `Model` object back to a `ModelStruct`. */
@@ -140,7 +141,7 @@ export function compileSql(
   let hdom: HDOM;
   try {
     const dom = deps.parseHTML(html);
-    applyAdaptation(dom, input.adaptation_policy, input.roles ?? []);
+    applyAdaptation(dom, input.adaptation_policy, input.role ?? "");
     hdom = deps.parseHDML(dom.toString());
   } catch (e) {
     return { error: "adaptation_failed", detail: message(e) };

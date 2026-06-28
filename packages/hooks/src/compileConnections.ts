@@ -18,6 +18,7 @@ import type {
 import type { parseHTML, parseHDML } from "@hdml/parser";
 import type { Connection } from "@hdml/types";
 import type { ConnectionStruct } from "@hdml/schemas";
+import type { AdaptationPolicy } from "./adaptation";
 
 /**
  * One connection artifact in the compiler envelope: the bare element
@@ -34,8 +35,9 @@ export interface ConnectionEntry {
  * modes are implemented; `effective` (Slice D) is not. `frames` /
  * `model` carry the closure (leaf→root) the `source` / `sql` branches
  * consume. `env` / `scope` drive `sql` injection; `columns` is the
- * `sql` SELECT projection; `adaptation_policy` / `roles` are carried
- * for D's adaptation step but unused in C (D4).
+ * `sql` SELECT projection; `adaptation_policy` / `role` are carried
+ * for D's adaptation step but unused in C (D4). `role` is the
+ * caller's single active role (single-role contract, Slice D D1).
  */
 export interface CompilerInput {
   connections?: ConnectionEntry[];
@@ -43,8 +45,8 @@ export interface CompilerInput {
   output?: string;
   frames?: string[];
   model?: string;
-  adaptation_policy?: unknown;
-  roles?: string[];
+  adaptation_policy?: AdaptationPolicy;
+  role?: string;
   scope?: Record<string, unknown>;
   columns?: string[];
 }
