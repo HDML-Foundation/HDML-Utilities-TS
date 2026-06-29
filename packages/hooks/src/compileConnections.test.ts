@@ -176,11 +176,12 @@ describe("compile dispatch", () => {
     expect(out.result).toHaveLength(3);
   });
 
-  it("returns invalid_output for unimplemented modes", () => {
-    // `effective` (Slice D) is not yet wired; `sql` now is.
+  it("returns invalid_output for an unknown mode", () => {
+    // `connection` / `source` / `sql` / `effective` are all wired;
+    // only a genuinely unrecognized mode falls through.
     const out = compile(deps, {
       connections: [],
-      output: "effective",
+      output: "nonsense",
     }) as CompilerError;
     expect(out.error).toBe("invalid_output");
   });

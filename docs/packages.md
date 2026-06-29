@@ -186,20 +186,22 @@ stdin/stdout/stderr inside `hdio.wasm`.
 fd 2 for stderr logs. See [integration.md#wasm-host-abi](integration.md#wasm-host-abi).
 
 **Compiler branch (`compiler.min.js`):** beyond the I/O helpers, `@hdml/hooks` ships the
-`hdml_compiler.wasm` body — the `connection` / `source` / `sql` output modes
+`hdml_compiler.wasm` body — the `connection` / `source` / `sql` / `effective` output modes
 ([compileConnections.ts](../packages/hooks/src/compileConnections.ts),
 [compileSource.ts](../packages/hooks/src/compileSource.ts),
-[compileSql.ts](../packages/hooks/src/compileSql.ts)) plus the shared
+[compileSql.ts](../packages/hooks/src/compileSql.ts),
+[compileEffective.ts](../packages/hooks/src/compileEffective.ts)) plus the shared
 [applyAdaptation.ts](../packages/hooks/src/applyAdaptation.ts).
 
 | Symbol | Notes |
 |---|---|
 | `applyAdaptation(dom, policy, role): void` | Mutates the reconstructed-document DOM **in place** for the caller's single active `role` (single-role contract, Slice D D1). Selects only `policy.roles[role]` and applies its rules in **array order** — a later `set-attribute` on the same `(node, attribute)` overwrites an earlier one, so broad-then-specific resolves to the specific value (D5). `remove-element` deletes the matched element and its whole subtree; `set-attribute` writes `String(rule.value)` (Go `interface{}` → string coercion) to **any** attribute, structural ones (`source` / `identifier` / `name`) included — no allowlist (D6). A `${scope.*}` / `${env.*}` in a forced value is left literal here; in `sql` it runs **before** injection, which then resolves it. |
-| `AdaptationError` (extends `Error`) | Fail-loud carrier (D3): thrown on a selector the DOM rejects or an unknown `action`. The `sql` branch's round-trip `try/catch` maps it to `adaptation_failed`. |
+| `AdaptationError` (extends `Error`) | Fail-loud carrier (D3): thrown on a selector the DOM rejects or an unknown `action`. The `sql` / `effective` branches' round-trip `try/catch` map it to `adaptation_failed`. |
+| `compileEffective(deps, input)` | The `effective` mode (Slice D, D2): reconstruct the document (shared `reconstructDocument`) → `parseHTML` → `applyAdaptation` for `input.role` → return `{ result: [dom.toString()] }`, length 1. **Stops** at the adapted DOM — no `parseHDML`, no `${…}` injection, no `getFrameSQL`, so templates stay literal. Lenient (no `missing_model` gate); with no policy / role it is byte-identical to `source` (D5). Errors: `structurize_failed` (reconstruct) \| `adaptation_failed` (parse / adapt / serialize). |
 
 No-op identity (D5): an absent `policy`, a `role` not in `policy.roles`, or a selector
-matching nothing leaves the DOM unchanged. The body is **single-sourced** — imported by
-both `compileSql.ts` and (Slice D Step 02) the `effective` branch.
+matching nothing leaves the DOM unchanged. The body is **single-sourced** — `applyAdaptation`
+and `reconstructDocument` are imported by both `compileSql.ts` and `compileEffective.ts`.
 
 **Dep:** `@hdml/parser`, `@hdml/types`, `@hdml/schemas`, `@hdml/buffer`,
 `@hdml/stringifier`, `@hdml/hash`. (The parser provides the `parseHTML` DOM the adaptation
