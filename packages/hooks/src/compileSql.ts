@@ -6,7 +6,6 @@
 
 import type { ModelStruct, FrameStruct } from "@hdml/schemas";
 import type { HDOM, Model, Frame } from "@hdml/types";
-import type { HTMLElement } from "@hdml/parser";
 import type {
   CompilerInput,
   CompilerResult,
@@ -14,40 +13,13 @@ import type {
   CompilerDeps,
 } from "./compileConnections";
 import { message } from "./compileConnections";
-import type { AdaptationPolicy } from "./adaptation";
+import { applyAdaptation } from "./applyAdaptation";
 import { reconstructDocument } from "./compileSource";
 import {
   injectObjectVars,
   UndefinedEnvError,
   UndefinedScopeError,
 } from "./injectVars";
-
-/**
- * Adaptation seam (RFC 002 §5.1, decision D4) — **document-level**.
- * Runs over the reconstructed DOM so the CSS-like selectors in
- * `adaptation.yml` see the whole document: a selector can span
- * several frames + the model, so adaptation cannot be applied to
- * isolated fragments. No-op in C — the DOM is returned unmutated.
- *
- * TODO(Slice D): for each rule of the request's single `role` —
- *   dom.querySelectorAll(rule.selector).forEach((el) =>
- *     rule.action === "remove-element"
- *       ? el.remove()
- *       : el.setAttribute(rule.attribute, String(rule.value)));
- * applied here, **before** injection (a forced attribute may itself
- * carry a `${scope.*}` ref the injection step must still resolve),
- * and shared with `effective` (which stops at the adapted HTML).
- * Mutates `dom` in place.
- */
-function applyAdaptation(
-  dom: HTMLElement,
-  policy: AdaptationPolicy | undefined,
-  role: string,
-): void {
-  void dom;
-  void policy;
-  void role;
-}
 
 /** Serializes a `Model` object back to a `ModelStruct`. */
 function modelToStruct(
@@ -101,8 +73,9 @@ function projectColumns(
 /**
  * Runs the `sql` output mode (RFC 002 §5.1) as a single pipeline:
  * reconstruct the whole document (shared with `source`) → parse to a
- * DOM → **adaptation** (D4 seam, no-op in C) → re-parse the adapted
- * HTML → strict `${env.*}` / `${scope.*}` injection → compose the
+ * DOM → **adaptation** (the single-role `applyAdaptation` body, run
+ * before injection) → re-parse the adapted HTML → strict `${env.*}` /
+ * `${scope.*}` injection → compose the
  * chain via `getFrameSQL` → apply the `columns` projection (§5.3).
  *
  * Adaptation's CSS-like selectors are document-scoped, so there is no
@@ -136,8 +109,10 @@ export function compileSql(
     return { error: "structurize_failed", detail: message(e) };
   }
 
-  // 2. DOM round-trip: parse → adaptation (D, no-op in C) → re-parse.
-  //    Selectors run over the assembled document, never fragments.
+  // 2. DOM round-trip: parse → adaptation (single role, before
+  //    injection) → re-parse. A throw (bad selector / unknown
+  //    action, D3) maps to adaptation_failed. Selectors run over the
+  //    assembled document, never fragments.
   let hdom: HDOM;
   try {
     const dom = deps.parseHTML(html);

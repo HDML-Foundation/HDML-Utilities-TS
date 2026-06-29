@@ -185,8 +185,25 @@ stdin/stdout/stderr inside `hdio.wasm`.
 **Host contract:** The Go host (HDIO-Server) wires temp files on a tmpfs to fd 0/1, plus
 fd 2 for stderr logs. See [integration.md#wasm-host-abi](integration.md#wasm-host-abi).
 
-**Dep:** `@hdml/parser`, `@hdml/types`, `@hdml/schemas`. (The parser dep is for tests / a
-future round-trip helper; the I/O primitives themselves do not touch HDML.)
+**Compiler branch (`compiler.min.js`):** beyond the I/O helpers, `@hdml/hooks` ships the
+`hdml_compiler.wasm` body — the `connection` / `source` / `sql` output modes
+([compileConnections.ts](../packages/hooks/src/compileConnections.ts),
+[compileSource.ts](../packages/hooks/src/compileSource.ts),
+[compileSql.ts](../packages/hooks/src/compileSql.ts)) plus the shared
+[applyAdaptation.ts](../packages/hooks/src/applyAdaptation.ts).
+
+| Symbol | Notes |
+|---|---|
+| `applyAdaptation(dom, policy, role): void` | Mutates the reconstructed-document DOM **in place** for the caller's single active `role` (single-role contract, Slice D D1). Selects only `policy.roles[role]` and applies its rules in **array order** — a later `set-attribute` on the same `(node, attribute)` overwrites an earlier one, so broad-then-specific resolves to the specific value (D5). `remove-element` deletes the matched element and its whole subtree; `set-attribute` writes `String(rule.value)` (Go `interface{}` → string coercion) to **any** attribute, structural ones (`source` / `identifier` / `name`) included — no allowlist (D6). A `${scope.*}` / `${env.*}` in a forced value is left literal here; in `sql` it runs **before** injection, which then resolves it. |
+| `AdaptationError` (extends `Error`) | Fail-loud carrier (D3): thrown on a selector the DOM rejects or an unknown `action`. The `sql` branch's round-trip `try/catch` maps it to `adaptation_failed`. |
+
+No-op identity (D5): an absent `policy`, a `role` not in `policy.roles`, or a selector
+matching nothing leaves the DOM unchanged. The body is **single-sourced** — imported by
+both `compileSql.ts` and (Slice D Step 02) the `effective` branch.
+
+**Dep:** `@hdml/parser`, `@hdml/types`, `@hdml/schemas`, `@hdml/buffer`,
+`@hdml/stringifier`, `@hdml/hash`. (The parser provides the `parseHTML` DOM the adaptation
+selectors run over; the I/O primitives themselves do not touch HDML.)
 
 ---
 
