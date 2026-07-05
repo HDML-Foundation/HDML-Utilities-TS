@@ -1,0 +1,9 @@
+{
+  "note": "Shared TS<->Go drift guard for @hdml/hash.bytesToBase64 + hashify (Slice E, RFC 004 Decision E). Byte-identical copy asserted by the Go test in this package AND the @hdml/hash Jest suite (Step 04). Do NOT edit an expected value without the other side's test failing. `base64` = @hdml/hash.bytesToBase64(content_utf8) — the exact string hashify consumes on the FE, reproduced in Go by hash.BytesToBase64 (NOT encoding/base64 StdEncoding). `std` = encoding/base64 StdEncoding of the same bytes, recorded ONLY to document the divergence: for content whose byte length is not a multiple of 3, bytesToBase64 emits 'A' value-padding where StdEncoding emits '=' (see the mod1/mod2 cases). `hashify` = hashify(base64), always 8 chars — never ~6 as the upstream JSDoc claims. Cases cover all three length residues (mod0 no pad, mod1 two 'A' pads, mod2 one 'A' pad). Values generated from the real @hdml/hash cjs build, not hand-computed.",
+  "cases": [
+    { "name": "empty",          "content_utf8": "",        "base64": "",             "std": "",             "hashify": "edncdsbh" },
+    { "name": "ascii-mod1",     "content_utf8": "example",  "base64": "ZXhhbXBsZQAA", "std": "ZXhhbXBsZQ==", "hashify": "yjokd12g" },
+    { "name": "multibyte-mod0", "content_utf8": "héllo✓",   "base64": "aMOpbGxv4pyT", "std": "aMOpbGxv4pyT", "hashify": "etzmdzah" },
+    { "name": "multibyte-mod2", "content_utf8": "café",     "base64": "Y2Fmw6kA",     "std": "Y2Fmw6k=",     "hashify": "edoad1im" }
+  ]
+}

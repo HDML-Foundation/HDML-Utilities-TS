@@ -5,40 +5,65 @@
  */
 
 import * as flatbuffers from "flatbuffers";
-import { HDOM } from "@hdml/types";
 // eslint-disable-next-line max-len
 import { bufferifyDocumentFiles } from "./bufferify/bufferifyDocumentFiles";
 
 /**
- * Converts an `HDOM` object into a `Uint8Array` representing a
- * `DocumentFilesStruct`.
+ * A single pre-serialized document file: its canonical name plus the
+ * already-serialized `*Struct` bytes.
+ */
+export interface FileBlob {
+  /**
+   * The full canonical key — `hdml-{type}={name}@{hash}.hdml` for a
+   * frame/model, or `{tenant}_{conn}.hdml` for a connection. Written
+   * verbatim into `FileStruct.name`.
+   */
+  name: string;
+
+  /**
+   * The pre-serialized `ConnectionStruct` / `ModelStruct` /
+   * `FrameStruct` bytes. Copied verbatim into `FileStruct.content`.
+   */
+  content: Uint8Array;
+}
+
+/**
+ * The three per-vector groups of pre-serialized file blobs that make
+ * up a `DocumentFilesStruct`.
+ */
+export interface DocumentFileBlobs {
+  connections: FileBlob[];
+  models: FileBlob[];
+  frames: FileBlob[];
+}
+
+/**
+ * Assembles a `DocumentFilesStruct` `Uint8Array` from pre-serialized
+ * `{ name, content }` blobs.
  *
- * This function takes an `HDOM` object and converts it into a
- * FlatBuffers binary format where each connection, model, and frame
- * is serialized individually as a `FileStruct` within a
- * `DocumentFilesStruct`. This format is suitable for file-based
- * storage or transmission of HDML document components.
+ * Repurposed packer: the former `HDOM`-taking, element-serializing
+ * form is gone. This function does **not** serialize the elements —
+ * the caller (the composition root) already did, exactly once — and
+ * writes each caller-supplied `name` verbatim into `FileStruct.name`
+ * and each `content` verbatim into `FileStruct.content`.
  *
- * @param hdom The `HDOM` object to be converted. This object
- * represents the hierarchical structure of an HDML document.
+ * @param blobs The pre-serialized connection/model/frame file blobs.
  *
  * @returns A `Uint8Array` containing the binary FlatBuffers data
  * representing the `DocumentFilesStruct` structure.
  *
  * @example
  * ```ts
- * const hdom: HDOM = {
- *   connections: [{ name: "conn1", ... }],
- *   models: [{ name: "model1", ... }],
- *   frames: [{ name: "frame1", ... }]
- * };
- * const uint8 = fileifize(hdom);
- * // Now you can transmit or store the binary DocumentFilesStruct
+ * const data = fileifize({
+ *   connections: [{ name: "t_pg.hdml", content: cBytes }],
+ *   models: [{ name: "hdml-model=m@abc123de.hdml", content: m }],
+ *   frames: [{ name: "hdml-frame=f@0a1b2c3d.hdml", content: f }],
+ * });
  * ```
  */
-export function fileifize(hdom: HDOM): Uint8Array {
+export function fileifize(blobs: DocumentFileBlobs): Uint8Array {
   const builder = new flatbuffers.Builder(1024);
-  const offset = bufferifyDocumentFiles(builder, hdom);
+  const offset = bufferifyDocumentFiles(builder, blobs);
   builder.finish(offset);
   return builder.asUint8Array();
 }

@@ -14,6 +14,7 @@ export { deserialize } from "./deserialize";
 export { structurize } from "./structurize";
 export { StructType } from "./StructType";
 export { fileifize } from "./fileifize";
+export type { FileBlob, DocumentFileBlobs } from "./fileifize";
 export type { FileStatuses } from "./FileStatuses";
 
 const _export = globalThis as unknown as {

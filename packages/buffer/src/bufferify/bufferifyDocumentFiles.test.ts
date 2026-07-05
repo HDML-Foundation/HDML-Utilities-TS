@@ -7,20 +7,9 @@
 /* eslint-disable max-len */
 
 import * as flatbuffers from "flatbuffers";
-import {
-  DocumentFilesStruct,
-  ConnectorTypesEnum,
-  TableTypeEnum,
-  FilterOperatorEnum,
-  DataTypeEnum,
-  AggregationTypeEnum,
-  OrderTypeEnum,
-  ConnectionStruct,
-  ModelStruct,
-  FrameStruct,
-} from "@hdml/schemas";
-import { HDOM } from "@hdml/types";
+import { DocumentFilesStruct } from "@hdml/schemas";
 import { bufferifyDocumentFiles } from "./bufferifyDocumentFiles";
+import type { DocumentFileBlobs } from "../fileifize";
 
 describe("The `bufferifyDocumentFiles` function", () => {
   let builder: flatbuffers.Builder;
@@ -29,329 +18,109 @@ describe("The `bufferifyDocumentFiles` function", () => {
     builder = new flatbuffers.Builder(1024);
   });
 
-  it("should bufferify HDOM with connections, models, and frames", () => {
-    const hdom: HDOM = {
-      connections: [
-        {
-          name: "JDBCConnection",
-          description: "JDBC metadata",
-          options: {
-            connector: ConnectorTypesEnum.Postgres,
-            parameters: {
-              host: "localhost",
-              user: "root",
-              password: "password",
-              ssl: true,
-            },
-          },
-        },
-      ],
+  const pack = (blobs: DocumentFileBlobs): DocumentFilesStruct => {
+    const offset = bufferifyDocumentFiles(builder, blobs);
+    expect(offset).toBeGreaterThan(0);
+    builder.finish(offset);
+    const bytes = builder.asUint8Array();
+    return DocumentFilesStruct.getRootAsDocumentFilesStruct(
+      new flatbuffers.ByteBuffer(bytes),
+    );
+  };
+
+  it("writes name verbatim and content byte-for-byte", () => {
+    const connContent = new Uint8Array([1, 2, 3, 4]);
+    const modelContent = new Uint8Array([5, 6, 7]);
+    const frameContent = new Uint8Array([8, 9]);
+    const blobs: DocumentFileBlobs = {
+      connections: [{ name: "tenant_pg.hdml", content: connContent }],
       models: [
-        {
-          name: "TestModel",
-          description: null,
-          tables: [
-            {
-              name: "Table1",
-              description: null,
-              type: TableTypeEnum.Table,
-              identifier: "database.schema.table1",
-              fields: [
-                {
-                  name: "field1",
-                  description: null,
-                  origin: null,
-                  clause: null,
-                  type: {
-                    type: DataTypeEnum.Unspecified,
-                  },
-                  aggregation: AggregationTypeEnum.None,
-                  order: OrderTypeEnum.None,
-                },
-              ],
-            },
-          ],
-          joins: [],
-        },
+        { name: "hdml-model=m@abc123de.hdml", content: modelContent },
       ],
       frames: [
-        {
-          name: "test_frame",
-          description: null,
-          source: "test_model",
-          offset: 0,
-          limit: 100,
-          fields: [
-            {
-              name: "field1",
-              description: null,
-              origin: null,
-              clause: null,
-              type: {
-                type: DataTypeEnum.Unspecified,
-              },
-              aggregation: AggregationTypeEnum.None,
-              order: OrderTypeEnum.None,
-            },
-          ],
-          filter_by: {
-            type: FilterOperatorEnum.None,
-            filters: [],
-            children: [],
-          },
-          group_by: [],
-          split_by: [],
-          sort_by: [],
-        },
+        { name: "hdml-frame=f@0a1b2c3d.hdml", content: frameContent },
       ],
     };
 
-    const offset = bufferifyDocumentFiles(builder, hdom);
-    expect(offset).toBeGreaterThan(0);
-
-    builder.finish(offset);
-    const bytes = builder.asUint8Array();
-    const byteBuffer = new flatbuffers.ByteBuffer(bytes);
-    const struct =
-      DocumentFilesStruct.getRootAsDocumentFilesStruct(byteBuffer);
+    const struct = pack(blobs);
 
     expect(struct.connectionsLength()).toBe(1);
     expect(struct.modelsLength()).toBe(1);
     expect(struct.framesLength()).toBe(1);
 
-    // Verify connection file
-    const connectionFile = struct.connections(0);
-    expect(connectionFile).toBeDefined();
-    expect(connectionFile?.name()).toBe("JDBCConnection");
-    const connectionContent = connectionFile?.contentArray();
-    expect(connectionContent).toBeDefined();
-    expect(connectionContent?.length).toBeGreaterThan(0);
+    // Name written verbatim — the caller-supplied canonical key.
+    expect(struct.connections(0)?.name()).toBe("tenant_pg.hdml");
+    expect(struct.models(0)?.name()).toBe(
+      "hdml-model=m@abc123de.hdml",
+    );
+    expect(struct.frames(0)?.name()).toBe(
+      "hdml-frame=f@0a1b2c3d.hdml",
+    );
 
-    // Verify model file
-    const modelFile = struct.models(0);
-    expect(modelFile).toBeDefined();
-    expect(modelFile?.name()).toBe("TestModel");
-    const modelContent = modelFile?.contentArray();
-    expect(modelContent).toBeDefined();
-    expect(modelContent?.length).toBeGreaterThan(0);
-
-    // Verify frame file
-    const frameFile = struct.frames(0);
-    expect(frameFile).toBeDefined();
-    expect(frameFile?.name()).toBe("test_frame");
-    const frameContent = frameFile?.contentArray();
-    expect(frameContent).toBeDefined();
-    expect(frameContent?.length).toBeGreaterThan(0);
+    // Content copied byte-for-byte — the packer never re-serializes.
+    expect(
+      Array.from(struct.connections(0)?.contentArray() ?? []),
+    ).toEqual(Array.from(connContent));
+    expect(
+      Array.from(struct.models(0)?.contentArray() ?? []),
+    ).toEqual(Array.from(modelContent));
+    expect(
+      Array.from(struct.frames(0)?.contentArray() ?? []),
+    ).toEqual(Array.from(frameContent));
   });
 
-  it("should handle empty HDOM object", () => {
-    const hdom: HDOM = {
-      connections: [],
-      models: [],
-      frames: [],
-    };
-
-    const offset = bufferifyDocumentFiles(builder, hdom);
-    expect(offset).toBeGreaterThan(0);
-
-    builder.finish(offset);
-    const bytes = builder.asUint8Array();
-    const byteBuffer = new flatbuffers.ByteBuffer(bytes);
-    const struct =
-      DocumentFilesStruct.getRootAsDocumentFilesStruct(byteBuffer);
-
+  it("handles empty blob groups", () => {
+    const struct = pack({ connections: [], models: [], frames: [] });
     expect(struct.connectionsLength()).toBe(0);
     expect(struct.modelsLength()).toBe(0);
     expect(struct.framesLength()).toBe(0);
   });
 
-  it("should handle multiple connections, models, and frames", () => {
-    const hdom: HDOM = {
+  it("preserves order across multiple blobs per vector", () => {
+    const struct = pack({
       connections: [
-        {
-          name: "Connection1",
-          description: null,
-          options: {
-            connector: ConnectorTypesEnum.Postgres,
-            parameters: {
-              host: "localhost",
-              user: "user1",
-              password: "pass1",
-              ssl: false,
-            },
-          },
-        },
-        {
-          name: "Connection2",
-          description: null,
-          options: {
-            connector: ConnectorTypesEnum.MongoDB,
-            parameters: {
-              host: "localhost",
-              port: 27017,
-              user: "user2",
-              password: "pass2",
-              schema: "schema2",
-              ssl: true,
-            },
-          },
-        },
+        { name: "t_a.hdml", content: new Uint8Array([1]) },
+        { name: "t_b.hdml", content: new Uint8Array([2]) },
       ],
       models: [
         {
-          name: "Model1",
-          description: null,
-          tables: [],
-          joins: [],
+          name: "hdml-model=m1@aaaaaaaa.hdml",
+          content: new Uint8Array([3]),
         },
         {
-          name: "Model2",
-          description: null,
-          tables: [],
-          joins: [],
+          name: "hdml-model=m2@bbbbbbbb.hdml",
+          content: new Uint8Array([4]),
         },
       ],
       frames: [
         {
-          name: "Frame1",
-          description: null,
-          source: "Model1",
-          offset: 0,
-          limit: 10,
-          fields: [],
-          filter_by: {
-            type: FilterOperatorEnum.None,
-            filters: [],
-            children: [],
-          },
-          group_by: [],
-          split_by: [],
-          sort_by: [],
+          name: "hdml-frame=f1@cccccccc.hdml",
+          content: new Uint8Array([5]),
         },
         {
-          name: "Frame2",
-          description: null,
-          source: "Model2",
-          offset: 0,
-          limit: 20,
-          fields: [],
-          filter_by: {
-            type: FilterOperatorEnum.None,
-            filters: [],
-            children: [],
-          },
-          group_by: [],
-          split_by: [],
-          sort_by: [],
+          name: "hdml-frame=f2@dddddddd.hdml",
+          content: new Uint8Array([6]),
         },
       ],
-    };
-
-    const offset = bufferifyDocumentFiles(builder, hdom);
-    expect(offset).toBeGreaterThan(0);
-
-    builder.finish(offset);
-    const bytes = builder.asUint8Array();
-    const byteBuffer = new flatbuffers.ByteBuffer(bytes);
-    const struct =
-      DocumentFilesStruct.getRootAsDocumentFilesStruct(byteBuffer);
+    });
 
     expect(struct.connectionsLength()).toBe(2);
     expect(struct.modelsLength()).toBe(2);
     expect(struct.framesLength()).toBe(2);
 
-    expect(struct.connections(0)?.name()).toBe("Connection1");
-    expect(struct.connections(1)?.name()).toBe("Connection2");
-    expect(struct.models(0)?.name()).toBe("Model1");
-    expect(struct.models(1)?.name()).toBe("Model2");
-    expect(struct.frames(0)?.name()).toBe("Frame1");
-    expect(struct.frames(1)?.name()).toBe("Frame2");
-  });
-
-  it("should serialize file content that can be deserialized", () => {
-    const hdom: HDOM = {
-      connections: [
-        {
-          name: "TestConnection",
-          description: "Test description",
-          options: {
-            connector: ConnectorTypesEnum.Postgres,
-            parameters: {
-              host: "testhost",
-              user: "testuser",
-              password: "testpass",
-              ssl: true,
-            },
-          },
-        },
-      ],
-      models: [
-        {
-          name: "TestModel",
-          description: null,
-          tables: [],
-          joins: [],
-        },
-      ],
-      frames: [
-        {
-          name: "TestFrame",
-          description: null,
-          source: "TestModel",
-          offset: 0,
-          limit: 100,
-          fields: [],
-          filter_by: {
-            type: FilterOperatorEnum.None,
-            filters: [],
-            children: [],
-          },
-          group_by: [],
-          split_by: [],
-          sort_by: [],
-        },
-      ],
-    };
-
-    const offset = bufferifyDocumentFiles(builder, hdom);
-    builder.finish(offset);
-    const bytes = builder.asUint8Array();
-    const byteBuffer = new flatbuffers.ByteBuffer(bytes);
-    const struct =
-      DocumentFilesStruct.getRootAsDocumentFilesStruct(byteBuffer);
-
-    // Verify connection content can be deserialized
-    const connectionFile = struct.connections(0);
-    const connectionContent = connectionFile?.contentArray();
-    if (connectionContent) {
-      const connectionBuffer = new flatbuffers.ByteBuffer(
-        connectionContent,
-      );
-      const connectionStruct =
-        ConnectionStruct.getRootAsConnectionStruct(connectionBuffer);
-      expect(connectionStruct.name()).toBe("TestConnection");
-      expect(connectionStruct.description()).toBe("Test description");
-    }
-
-    // Verify model content can be deserialized
-    const modelFile = struct.models(0);
-    const modelContent = modelFile?.contentArray();
-    if (modelContent) {
-      const modelBuffer = new flatbuffers.ByteBuffer(modelContent);
-      const modelStruct =
-        ModelStruct.getRootAsModelStruct(modelBuffer);
-      expect(modelStruct.name()).toBe("TestModel");
-    }
-
-    // Verify frame content can be deserialized
-    const frameFile = struct.frames(0);
-    const frameContent = frameFile?.contentArray();
-    if (frameContent) {
-      const frameBuffer = new flatbuffers.ByteBuffer(frameContent);
-      const frameStruct =
-        FrameStruct.getRootAsFrameStruct(frameBuffer);
-      expect(frameStruct.name()).toBe("TestFrame");
-      expect(frameStruct.source()).toBe("TestModel");
-    }
+    expect(struct.connections(0)?.name()).toBe("t_a.hdml");
+    expect(struct.connections(1)?.name()).toBe("t_b.hdml");
+    expect(struct.models(0)?.name()).toBe(
+      "hdml-model=m1@aaaaaaaa.hdml",
+    );
+    expect(struct.models(1)?.name()).toBe(
+      "hdml-model=m2@bbbbbbbb.hdml",
+    );
+    expect(struct.frames(0)?.name()).toBe(
+      "hdml-frame=f1@cccccccc.hdml",
+    );
+    expect(struct.frames(1)?.name()).toBe(
+      "hdml-frame=f2@dddddddd.hdml",
+    );
   });
 });
