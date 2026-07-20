@@ -101,7 +101,7 @@ describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
     expect(sqls).toEqual([
       "show catalogs like 'name'",
       'drop catalog "name"',
-      'create catalog "name" using postgresql\nwith (\n  "connection-url" = \'\'\n  "connection-user" = \'\'\n  "connection-password" = \'\'\n)\n',
+      'create catalog "name" using postgresql\nwith (\n  "connection-url" = \'\',\n  "connection-user" = \'\',\n  "connection-password" = \'\'\n)\n',
     ]);
     expect(html).toBe(
       '<hdml-connection\n  name="name"\n  type="postgresql"\n  host=""\n  ssl="false"\n  user=""\n  password=""\n</hdml-connection>\n',
@@ -140,7 +140,7 @@ describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
     expect(sqls).toEqual([
       "show catalogs like 'name'",
       'drop catalog "name"',
-      'create catalog "name" using postgresql\nwith (\n  "connection-url" = \'host?ssl=true\'\n  "connection-user" = \'user\'\n  "connection-password" = \'password\'\n)\n',
+      'create catalog "name" using postgresql\nwith (\n  "connection-url" = \'host?ssl=true\',\n  "connection-user" = \'user\',\n  "connection-password" = \'password\'\n)\n',
     ]);
     expect(html).toBe(
       '<hdml-connection\n  name="name"\n  type="postgresql"\n  host="host"\n  ssl="true"\n  user="user"\n  password="password"\n</hdml-connection>\n',
@@ -179,7 +179,7 @@ describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
     expect(sqls).toEqual([
       "show catalogs like 'name'",
       'drop catalog "name"',
-      'create catalog "name" using mysql\nwith (\n  "connection-url" = \'host?ssl=true\'\n  "connection-user" = \'user\'\n  "connection-password" = \'password\'\n)\n',
+      'create catalog "name" using mysql\nwith (\n  "connection-url" = \'host?ssl=true\',\n  "connection-user" = \'user\',\n  "connection-password" = \'password\'\n)\n',
     ]);
     expect(html).toBe(
       '<hdml-connection\n  name="name"\n  type="mysql"\n  host="host"\n  ssl="true"\n  user="user"\n  password="password"\n</hdml-connection>\n',
@@ -218,7 +218,7 @@ describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
     expect(sqls).toEqual([
       "show catalogs like 'name'",
       'drop catalog "name"',
-      'create catalog "name" using mssql\nwith (\n  "connection-url" = \'host?ssl=true\'\n  "connection-user" = \'user\'\n  "connection-password" = \'password\'\n)\n',
+      'create catalog "name" using mssql\nwith (\n  "connection-url" = \'host?ssl=true\',\n  "connection-user" = \'user\',\n  "connection-password" = \'password\'\n)\n',
     ]);
     expect(html).toBe(
       '<hdml-connection\n  name="name"\n  type="mssql"\n  host="host"\n  ssl="true"\n  user="user"\n  password="password"\n</hdml-connection>\n',
@@ -257,7 +257,7 @@ describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
     expect(sqls).toEqual([
       "show catalogs like 'name'",
       'drop catalog "name"',
-      'create catalog "name" using oracle\nwith (\n  "connection-url" = \'host?ssl=true\'\n  "connection-user" = \'user\'\n  "connection-password" = \'password\'\n)\n',
+      'create catalog "name" using oracle\nwith (\n  "connection-url" = \'host?ssl=true\',\n  "connection-user" = \'user\',\n  "connection-password" = \'password\'\n)\n',
     ]);
     expect(html).toBe(
       '<hdml-connection\n  name="name"\n  type="oracle"\n  host="host"\n  ssl="true"\n  user="user"\n  password="password"\n</hdml-connection>\n',
@@ -296,7 +296,7 @@ describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
     expect(sqls).toEqual([
       "show catalogs like 'name'",
       'drop catalog "name"',
-      'create catalog "name" using clickhouse\nwith (\n  "connection-url" = \'host?ssl=true\'\n  "connection-user" = \'user\'\n  "connection-password" = \'password\'\n)\n',
+      'create catalog "name" using clickhouse\nwith (\n  "connection-url" = \'host?ssl=true\',\n  "connection-user" = \'user\',\n  "connection-password" = \'password\'\n)\n',
     ]);
     expect(html).toBe(
       '<hdml-connection\n  name="name"\n  type="clickhouse"\n  host="host"\n  ssl="true"\n  user="user"\n  password="password"\n</hdml-connection>\n',
@@ -335,7 +335,7 @@ describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
     expect(sqls).toEqual([
       "show catalogs like 'name'",
       'drop catalog "name"',
-      'create catalog "name" using druid\nwith (\n  "connection-url" = \'host?ssl=true\'\n  "connection-user" = \'user\'\n  "connection-password" = \'password\'\n)\n',
+      'create catalog "name" using druid\nwith (\n  "connection-url" = \'host?ssl=true\',\n  "connection-user" = \'user\',\n  "connection-password" = \'password\'\n)\n',
     ]);
     expect(html).toBe(
       '<hdml-connection\n  name="name"\n  type="druid"\n  host="host"\n  ssl="true"\n  user="user"\n  password="password"\n</hdml-connection>\n',
@@ -374,7 +374,7 @@ describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
     expect(sqls).toEqual([
       "show catalogs like 'name'",
       'drop catalog "name"',
-      'create catalog "name" using ignite\nwith (\n  "connection-url" = \'host?ssl=true\'\n  "connection-user" = \'user\'\n  "connection-password" = \'password\'\n)\n',
+      'create catalog "name" using ignite\nwith (\n  "connection-url" = \'host?ssl=true\',\n  "connection-user" = \'user\',\n  "connection-password" = \'password\'\n)\n',
     ]);
     expect(html).toBe(
       '<hdml-connection\n  name="name"\n  type="ignite"\n  host="host"\n  ssl="true"\n  user="user"\n  password="password"\n</hdml-connection>\n',
@@ -413,7 +413,7 @@ describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
     expect(sqls).toEqual([
       "show catalogs like 'name'",
       'drop catalog "name"',
-      'create catalog "name" using redshift\nwith (\n  "connection-url" = \'host?ssl=true\'\n  "connection-user" = \'user\'\n  "connection-password" = \'password\'\n)\n',
+      'create catalog "name" using redshift\nwith (\n  "connection-url" = \'host?ssl=true\',\n  "connection-user" = \'user\',\n  "connection-password" = \'password\'\n)\n',
     ]);
     expect(html).toBe(
       '<hdml-connection\n  name="name"\n  type="redshift"\n  host="host"\n  ssl="true"\n  user="user"\n  password="password"\n</hdml-connection>\n',
@@ -452,7 +452,7 @@ describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
     expect(sqls).toEqual([
       "show catalogs like 'name'",
       'drop catalog "name"',
-      'create catalog "name" using mariadb\nwith (\n  "connection-url" = \'host?ssl=true\'\n  "connection-user" = \'user\'\n  "connection-password" = \'password\'\n)\n',
+      'create catalog "name" using mariadb\nwith (\n  "connection-url" = \'host?ssl=true\',\n  "connection-user" = \'user\',\n  "connection-password" = \'password\'\n)\n',
     ]);
     expect(html).toBe(
       '<hdml-connection\n  name="name"\n  type="mariadb"\n  host="host"\n  ssl="true"\n  user="user"\n  password="password"\n</hdml-connection>\n',
@@ -489,7 +489,7 @@ describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
     expect(sqls).toEqual([
       "show catalogs like 'name'",
       'drop catalog "name"',
-      'create catalog "name" using bigquery\nwith (\n  "project-id" = \'\'\n  "credentials-key" = \'\'\n)\n',
+      'create catalog "name" using bigquery\nwith (\n  "project-id" = \'\',\n  "credentials-key" = \'\'\n)\n',
     ]);
     expect(html).toBe(
       '<hdml-connection\n  name="name"\n  type="bigquery"\n  project-id=""\n  credentials-key=""\n</hdml-connection>\n',
@@ -526,7 +526,7 @@ describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
     expect(sqls).toEqual([
       "show catalogs like 'name'",
       'drop catalog "name"',
-      'create catalog "name" using bigquery\nwith (\n  "project-id" = \'project_id\'\n  "credentials-key" = \'credentials_key\'\n)\n',
+      'create catalog "name" using bigquery\nwith (\n  "project-id" = \'project_id\',\n  "credentials-key" = \'credentials_key\'\n)\n',
     ]);
     expect(html).toBe(
       '<hdml-connection\n  name="name"\n  type="bigquery"\n  project-id="project_id"\n  credentials-key="credentials_key"\n</hdml-connection>\n',
@@ -563,7 +563,7 @@ describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
     expect(sqls).toEqual([
       "show catalogs like 'name'",
       'drop catalog "name"',
-      'create catalog "name" using googlesheets\nwith (\n  "gsheets.metadata-sheet-id" = \'\'\n  "gsheets.credentials-key" = \'\'\n)\n',
+      'create catalog "name" using googlesheets\nwith (\n  "gsheets.metadata-sheet-id" = \'\',\n  "gsheets.credentials-key" = \'\'\n)\n',
     ]);
     expect(html).toBe(
       '<hdml-connection\n  name="name"\n  type="googlesheets"\n  sheet-id=""\n  credentials-key=""\n</hdml-connection>\n',
@@ -600,7 +600,7 @@ describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
     expect(sqls).toEqual([
       "show catalogs like 'name'",
       'drop catalog "name"',
-      'create catalog "name" using googlesheets\nwith (\n  "gsheets.metadata-sheet-id" = \'sheet_id\'\n  "gsheets.credentials-key" = \'credentials_key\'\n)\n',
+      'create catalog "name" using googlesheets\nwith (\n  "gsheets.metadata-sheet-id" = \'sheet_id\',\n  "gsheets.credentials-key" = \'credentials_key\'\n)\n',
     ]);
     expect(html).toBe(
       '<hdml-connection\n  name="name"\n  type="googlesheets"\n  sheet-id="sheet_id"\n  credentials-key="credentials_key"\n</hdml-connection>\n',
@@ -643,7 +643,7 @@ describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
     expect(sqls).toEqual([
       "show catalogs like 'name'",
       'drop catalog "name"',
-      'create catalog "name" using elasticsearch\nwith (\n  "elasticsearch.host" = \'\'\n  "elasticsearch.port" = \'0\'\n  "elasticsearch.auth.user" = \'\'\n  "elasticsearch.auth.password" = \'\'\n  "elasticsearch.aws.region" = \'\'\n  "elasticsearch.aws.access-key" = \'\'\n  "elasticsearch.aws.secret-key" = \'\'\n)\n',
+      'create catalog "name" using elasticsearch\nwith (\n  "elasticsearch.host" = \'\',\n  "elasticsearch.port" = \'0\',\n  "elasticsearch.auth.user" = \'\',\n  "elasticsearch.auth.password" = \'\',\n  "elasticsearch.aws.region" = \'\',\n  "elasticsearch.aws.access-key" = \'\',\n  "elasticsearch.aws.secret-key" = \'\'\n)\n',
     ]);
     expect(html).toBe(
       '<hdml-connection\n  name="name"\n  type="elasticsearch"\n  host=""\n  port="0"\n  user=""\n  password=""\n  region=""\n  access-key=""\n  secret-key=""\n</hdml-connection>\n',
@@ -686,7 +686,7 @@ describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
     expect(sqls).toEqual([
       "show catalogs like 'name'",
       'drop catalog "name"',
-      'create catalog "name" using elasticsearch\nwith (\n  "elasticsearch.host" = \'host\'\n  "elasticsearch.port" = \'9200\'\n  "elasticsearch.auth.user" = \'user\'\n  "elasticsearch.auth.password" = \'password\'\n  "elasticsearch.aws.region" = \'region\'\n  "elasticsearch.aws.access-key" = \'access_key\'\n  "elasticsearch.aws.secret-key" = \'secret_key\'\n)\n',
+      'create catalog "name" using elasticsearch\nwith (\n  "elasticsearch.host" = \'host\',\n  "elasticsearch.port" = \'9200\',\n  "elasticsearch.auth.user" = \'user\',\n  "elasticsearch.auth.password" = \'password\',\n  "elasticsearch.aws.region" = \'region\',\n  "elasticsearch.aws.access-key" = \'access_key\',\n  "elasticsearch.aws.secret-key" = \'secret_key\'\n)\n',
     ]);
     expect(html).toBe(
       '<hdml-connection\n  name="name"\n  type="elasticsearch"\n  host="host"\n  port="9200"\n  user="user"\n  password="password"\n  region="region"\n  access-key="access_key"\n  secret-key="secret_key"\n</hdml-connection>\n',
@@ -727,7 +727,7 @@ describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
     expect(sqls).toEqual([
       "show catalogs like 'name'",
       'drop catalog "name"',
-      'create catalog "name" using mongodb\nwith (\n  "mongodb.connection-url" = \'mongodb://:@:0/\'\n  "mongodb.schema-collection" = \'\'\n  "mongodb.tls.enabled" = \'false\'\n)\n',
+      'create catalog "name" using mongodb\nwith (\n  "mongodb.connection-url" = \'mongodb://:@:0/\',\n  "mongodb.schema-collection" = \'\',\n  "mongodb.tls.enabled" = \'false\'\n)\n',
     ]);
     expect(html).toBe(
       '<hdml-connection\n  name="name"\n  type="mongodb"\n  host=""\n  port="0"\n  user=""\n  password=""\n  schema=""\n  ssl="false"\n</hdml-connection>\n',
@@ -768,7 +768,7 @@ describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
     expect(sqls).toEqual([
       "show catalogs like 'name'",
       'drop catalog "name"',
-      'create catalog "name" using mongodb\nwith (\n  "mongodb.connection-url" = \'mongodb://user:password@host:27017/\'\n  "mongodb.schema-collection" = \'schema\'\n  "mongodb.tls.enabled" = \'true\'\n)\n',
+      'create catalog "name" using mongodb\nwith (\n  "mongodb.connection-url" = \'mongodb://user:password@host:27017/\',\n  "mongodb.schema-collection" = \'schema\',\n  "mongodb.tls.enabled" = \'true\'\n)\n',
     ]);
     expect(html).toBe(
       '<hdml-connection\n  name="name"\n  type="mongodb"\n  host="host"\n  port="27017"\n  user="user"\n  password="password"\n  schema="schema"\n  ssl="true"\n</hdml-connection>\n',
@@ -809,7 +809,7 @@ describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
     expect(sqls).toEqual([
       "show catalogs like 'name'",
       'drop catalog "name"',
-      'create catalog "name" using snowflake\nwith (\n  "connection-url" = \'jdbc:snowflake://.snowflakecomputing.com\'\n  "connection-user" = \'\'\n  "connection-password" = \'\'\n  "snowflake.account" = \'\'\n  "snowflake.database" = \'\'\n  "snowflake.role" = \'\'\n  "snowflake.warehouse" = \'\'\n)\n',
+      'create catalog "name" using snowflake\nwith (\n  "connection-url" = \'jdbc:snowflake://.snowflakecomputing.com\',\n  "connection-user" = \'\',\n  "connection-password" = \'\',\n  "snowflake.account" = \'\',\n  "snowflake.database" = \'\',\n  "snowflake.role" = \'\',\n  "snowflake.warehouse" = \'\'\n)\n',
     ]);
     expect(html).toBe(
       '<hdml-connection\n  name="name"\n  type="snowflake"\n  account=""\n  warehouse=""\n  database=""\n  user=""\n  password=""\n  role=""\n</hdml-connection>\n',
@@ -850,7 +850,7 @@ describe("The `getConnectionSQLs` and `getConnectionHTML` functions", () => {
     expect(sqls).toEqual([
       "show catalogs like 'name'",
       'drop catalog "name"',
-      'create catalog "name" using snowflake\nwith (\n  "connection-url" = \'jdbc:snowflake://account.snowflakecomputing.com\'\n  "connection-user" = \'user\'\n  "connection-password" = \'password\'\n  "snowflake.account" = \'account\'\n  "snowflake.database" = \'database\'\n  "snowflake.role" = \'role\'\n  "snowflake.warehouse" = \'warehouse\'\n)\n',
+      'create catalog "name" using snowflake\nwith (\n  "connection-url" = \'jdbc:snowflake://account.snowflakecomputing.com\',\n  "connection-user" = \'user\',\n  "connection-password" = \'password\',\n  "snowflake.account" = \'account\',\n  "snowflake.database" = \'database\',\n  "snowflake.role" = \'role\',\n  "snowflake.warehouse" = \'warehouse\'\n)\n',
     ]);
     expect(html).toBe(
       '<hdml-connection\n  name="name"\n  type="snowflake"\n  account="account"\n  warehouse="warehouse"\n  database="database"\n  user="user"\n  password="password"\n  role="role"\n</hdml-connection>\n',

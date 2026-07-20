@@ -122,8 +122,8 @@ export function getJdbcSQL(
   }
   sql =
     sql +
-    `${t}"connection-url" = '${host}${ssl ? "?ssl=true" : ""}'\n` +
-    `${t}"connection-user" = '${user}'\n` +
+    `${t}"connection-url" = '${host}${ssl ? "?ssl=true" : ""}',\n` +
+    `${t}"connection-user" = '${user}',\n` +
     `${t}"connection-password" = '${pass}'\n` +
     ")\n";
 
@@ -142,7 +142,7 @@ export function getBigQuerySQL(
   const credentialsKey = params.credentialsKey() || "";
   const sql =
     `create catalog "${name}" using bigquery\nwith (\n` +
-    `${t}"project-id" = '${projectId}'\n` +
+    `${t}"project-id" = '${projectId}',\n` +
     `${t}"credentials-key" = '${credentialsKey}'\n` +
     `)\n`;
 
@@ -161,7 +161,7 @@ export function getGoogleSheetsSQL(
   const credentialsKey = params.credentialsKey() || "";
   const sql =
     `create catalog "${name}" using googlesheets\nwith (\n` +
-    `${t}"gsheets.metadata-sheet-id" = '${sheetId}'\n` +
+    `${t}"gsheets.metadata-sheet-id" = '${sheetId}',\n` +
     `${t}"gsheets.credentials-key" = '${credentialsKey}'\n` +
     `)\n`;
 
@@ -185,12 +185,12 @@ export function getElasticSearchSQL(
   const secretKey = params.secretKey() || "";
   const sql =
     `create catalog "${name}" using elasticsearch\nwith (\n` +
-    `${t}"elasticsearch.host" = '${host}'\n` +
-    `${t}"elasticsearch.port" = '${port}'\n` +
-    `${t}"elasticsearch.auth.user" = '${user}'\n` +
-    `${t}"elasticsearch.auth.password" = '${password}'\n` +
-    `${t}"elasticsearch.aws.region" = '${region}'\n` +
-    `${t}"elasticsearch.aws.access-key" = '${accessKey}'\n` +
+    `${t}"elasticsearch.host" = '${host}',\n` +
+    `${t}"elasticsearch.port" = '${port}',\n` +
+    `${t}"elasticsearch.auth.user" = '${user}',\n` +
+    `${t}"elasticsearch.auth.password" = '${password}',\n` +
+    `${t}"elasticsearch.aws.region" = '${region}',\n` +
+    `${t}"elasticsearch.aws.access-key" = '${accessKey}',\n` +
     `${t}"elasticsearch.aws.secret-key" = '${secretKey}'\n` +
     `)\n`;
 
@@ -214,8 +214,8 @@ export function getMongoSQL(
   const url = `mongodb://${user}:${password}@${host}:${port}/`;
   const sql =
     `create catalog "${name}" using mongodb\nwith (\n` +
-    `${t}"mongodb.connection-url" = '${url}'\n` +
-    `${t}"mongodb.schema-collection" = '${schema}'\n` +
+    `${t}"mongodb.connection-url" = '${url}',\n` +
+    `${t}"mongodb.schema-collection" = '${schema}',\n` +
     `${t}"mongodb.tls.enabled" = '${ssl ? "true" : "false"}'\n` +
     `)\n`;
 
@@ -239,12 +239,12 @@ export function getSnowflakeSQL(
   const url = `jdbc:snowflake://${account}.snowflakecomputing.com`;
   const sql =
     `create catalog "${name}" using snowflake\nwith (\n` +
-    `${t}"connection-url" = '${url}'\n` +
-    `${t}"connection-user" = '${user}'\n` +
-    `${t}"connection-password" = '${password}'\n` +
-    `${t}"snowflake.account" = '${account}'\n` +
-    `${t}"snowflake.database" = '${database}'\n` +
-    `${t}"snowflake.role" = '${role}'\n` +
+    `${t}"connection-url" = '${url}',\n` +
+    `${t}"connection-user" = '${user}',\n` +
+    `${t}"connection-password" = '${password}',\n` +
+    `${t}"snowflake.account" = '${account}',\n` +
+    `${t}"snowflake.database" = '${database}',\n` +
+    `${t}"snowflake.role" = '${role}',\n` +
     `${t}"snowflake.warehouse" = '${warehouse}'\n` +
     `)\n`;
 
