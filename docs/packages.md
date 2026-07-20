@@ -99,6 +99,19 @@ One `get*Data` handler per HDML tag (Connection / Model / Table / Frame / Join /
 Connective / Filter / Field). Wrappers `hdml-filter-by`, `hdml-group-by`, `hdml-split-by`,
 `hdml-sort-by` have no data of their own — they organize children.
 
+**Identifier-quote normalization.** SQL-bearing attributes are authored with **backticks**
+so a `"`-quoted identifier sits inside a double-quoted HTML attribute without `&quot;`; the
+tree adapter decodes those backticks to standard double quotes via
+[`backticksToQuotes`](../packages/parser/src/hdmlTreeAdapter/backticksToQuotes.ts) when it
+reads `hdml-table@identifier`, `hdml-field@clause`, and `hdml-filter@clause`/`@field`/`@values`
+(`getTableData`/`getFieldData`/`getFilterData`). So the **canonical FlatBuffers form uses
+double quotes** — `getModelSQL`/`getFrameSQL` emit it verbatim into Trino-valid SQL — and this
+is the exact inverse of the `"`→backtick swap the stringifier applies when reconstructing HTML
+([`getModelHTML`](../packages/stringifier/src/model.ts#L190),
+[`getFieldHTML`](../packages/stringifier/src/field.ts#L332), `getFilterHTML`), closing the
+HTML↔struct round-trip. Author style doesn't fork identity: a backtick-quoted and an
+equivalently double-quoted document serialize identically.
+
 **Deps:** `parse5`, `node-html-parser`, `@hdml/types`, `@hdml/schemas`.
 
 ---

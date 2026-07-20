@@ -24,6 +24,7 @@ import {
   TIMEZONE_VALUES,
 } from "@hdml/types";
 import { Token } from "parse5";
+import { backticksToQuotes } from "./backticksToQuotes";
 
 export function getFieldData(attrs: Token.Attribute[]): null | Field {
   let name: null | string = null;
@@ -52,7 +53,7 @@ export function getFieldData(attrs: Token.Attribute[]): null | Field {
         origin = attr.value;
         break;
       case FIELD_ATTRS_LIST.CLAUSE:
-        clause = attr.value;
+        clause = backticksToQuotes(attr.value);
         break;
       case FIELD_ATTRS_LIST.TYPE:
         type = attr.value;

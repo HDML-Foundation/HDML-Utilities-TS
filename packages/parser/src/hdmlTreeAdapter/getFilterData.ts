@@ -12,6 +12,7 @@ import {
   FILTER_NAME_VALUES,
 } from "@hdml/types";
 import { Token } from "parse5";
+import { backticksToQuotes } from "./backticksToQuotes";
 
 export function getFilterData(
   attrs: Token.Attribute[],
@@ -41,7 +42,7 @@ export function getFilterData(
         }
         break;
       case FILTER_ATTRS_LIST.CLAUSE:
-        clause = attr.value;
+        clause = backticksToQuotes(attr.value);
         break;
       case FILTER_ATTRS_LIST.LEFT:
         left = attr.value;
@@ -93,10 +94,10 @@ export function getFilterData(
         }
         break;
       case FILTER_ATTRS_LIST.FIELD:
-        field = attr.value;
+        field = backticksToQuotes(attr.value);
         break;
       case FILTER_ATTRS_LIST.VALUES:
-        values = attr.value.split(",");
+        values = backticksToQuotes(attr.value).split(",");
         break;
     }
   });

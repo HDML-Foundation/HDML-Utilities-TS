@@ -11,6 +11,7 @@ import {
   TABLE_TYPE_VALUES,
 } from "@hdml/types";
 import { Token } from "parse5";
+import { backticksToQuotes } from "./backticksToQuotes";
 
 export function getTableData(attrs: Token.Attribute[]): null | Table {
   let data: null | Table = null;
@@ -34,7 +35,7 @@ export function getTableData(attrs: Token.Attribute[]): null | Table {
         }
         break;
       case TABLE_ATTRS_LIST.IDENTIFIER:
-        identifier = attr.value;
+        identifier = backticksToQuotes(attr.value);
         break;
       case TABLE_ATTRS_LIST.DESCRIPTION:
         description = attr.value;

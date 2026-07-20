@@ -607,7 +607,7 @@ describe("The `parseHDML` function", () => {
               name: "amazon",
               description: null,
               type: 0,
-              identifier: "`tenant_postgres`.`public`.`amazon_stock`",
+              identifier: '"tenant_postgres"."public"."amazon_stock"',
               fields: [
                 {
                   name: "open",
@@ -692,7 +692,7 @@ describe("The `parseHDML` function", () => {
               name: "apple",
               description: null,
               type: 0,
-              identifier: "`tenant_postgres`.`public`.`apple_stock`",
+              identifier: '"tenant_postgres"."public"."apple_stock"',
               fields: [
                 {
                   name: "open",
@@ -777,7 +777,7 @@ describe("The `parseHDML` function", () => {
               name: "google",
               description: null,
               type: 0,
-              identifier: "`tenant_postgres`.`public`.`google_stock`",
+              identifier: '"tenant_postgres"."public"."google_stock"',
               fields: [
                 {
                   name: "open",
@@ -863,7 +863,7 @@ describe("The `parseHDML` function", () => {
               description: null,
               type: 0,
               identifier:
-                "`tenant_postgres`.`public`.`microsoft_stock`",
+                '"tenant_postgres"."public"."microsoft_stock"',
               fields: [
                 {
                   name: "open",
@@ -949,7 +949,7 @@ describe("The `parseHDML` function", () => {
               description: null,
               type: 0,
               identifier:
-                "`tenant_postgres`.`public`.`netflix_stock`",
+                '"tenant_postgres"."public"."netflix_stock"',
               fields: [
                 {
                   name: "open",
@@ -1143,7 +1143,7 @@ describe("The `parseHDML` function", () => {
               description: null,
               origin: null,
               clause:
-                "\n        cast(\n          date_format(\n            coalesce(\n              `amazon_date`,\n              `apple_date`,\n              `google_date`,\n              `microsoft_date`,\n              `netflix_date`\n            ),\n            '%Y'\n          ) as smallint\n        )",
+                '\n        cast(\n          date_format(\n            coalesce(\n              "amazon_date",\n              "apple_date",\n              "google_date",\n              "microsoft_date",\n              "netflix_date"\n            ),\n            \'%Y\'\n          ) as smallint\n        )',
               type: {
                 type: 0,
               },
@@ -1155,7 +1155,7 @@ describe("The `parseHDML` function", () => {
               description: null,
               origin: null,
               clause:
-                "\n        cast(\n          date_format(\n            coalesce(\n              `amazon_date`,\n              `apple_date`,\n              `google_date`,\n              `microsoft_date`,\n              `netflix_date`\n            ),\n            '%m'\n          ) as smallint\n        )",
+                '\n        cast(\n          date_format(\n            coalesce(\n              "amazon_date",\n              "apple_date",\n              "google_date",\n              "microsoft_date",\n              "netflix_date"\n            ),\n            \'%m\'\n          ) as smallint\n        )',
               type: {
                 type: 0,
               },
@@ -1167,7 +1167,7 @@ describe("The `parseHDML` function", () => {
               description: null,
               origin: null,
               clause:
-                "\n        cast(\n          date_format(\n            coalesce(\n              `amazon_date`,\n              `apple_date`,\n              `google_date`,\n              `microsoft_date`,\n              `netflix_date`\n            ),\n            '%d'\n          ) as smallint\n        )",
+                '\n        cast(\n          date_format(\n            coalesce(\n              "amazon_date",\n              "apple_date",\n              "google_date",\n              "microsoft_date",\n              "netflix_date"\n            ),\n            \'%d\'\n          ) as smallint\n        )',
               type: {
                 type: 0,
               },
@@ -1541,7 +1541,7 @@ describe("The `parseHDML` function", () => {
                   {
                     type: 0,
                     options: {
-                      clause: "`maang_stock`.`year` = 2021",
+                      clause: '"maang_stock"."year" = 2021',
                     },
                   },
                 ],
