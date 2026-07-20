@@ -96,7 +96,7 @@ describe("compileConnections", () => {
     }) as CompilerResult;
     expect(out.result).toHaveLength(3);
     expect(out.result[0]).toBe("show catalogs like 'tenant_pg'");
-    expect(out.result[1]).toBe("drop catalog tenant_pg");
+    expect(out.result[1]).toBe('drop catalog "tenant_pg"');
     expect(out.result[2]).toContain("db.example.com");
     expect(out.result[2]).toContain("s3cret");
     expect(out.result[2]).not.toContain("${env.");
