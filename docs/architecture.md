@@ -127,7 +127,7 @@ with HDML-friendly options (`lowerCaseTagName: false`, comments off, custom void
 Each `get*SQL` walks the FlatBuffers struct and emits indented SQL using a single
 2-space indent constant (`t` in [packages/stringifier/src/constants.ts](../packages/stringifier/src/constants.ts)).
 
-- **Connection** — emits `show catalogs like …` / `drop catalog …` / `create catalog … using <connector> with (…)`. Per-connector parameter blocks for `postgresql`, `mysql`, `mssql`, `oracle`, `clickhouse`, `druid`, `ignite`, `redshift`, `mariadb`, `bigquery`, `googlesheets`, `elasticsearch`, `mongodb`, `snowflake`.
+- **Connection** — emits `show catalogs like '…'` / `drop catalog "…"` / `create catalog "…" using <connector> with (…)`. The catalog name is double-quoted where it is an identifier (`drop`/`create`) so hyphenated `{tenant}_{conn}` names are valid Trino identifiers. Per-connector parameter blocks for `postgresql`, `mysql`, `mssql`, `oracle`, `clickhouse`, `druid`, `ignite`, `redshift`, `mariadb`, `bigquery`, `googlesheets`, `elasticsearch`, `mongodb`, `snowflake`.
 - **Model** — emits `with <tables as CTEs> select <table.field as table_field …> from <joins or plain from>`. Joins are sorted via `sortJoins`.
 - **Frame** — emits `with "<source>" as (…) select … from "<source>" [where …] [group by …] [order by …] offset N limit N`. Operates over a `from: { name, sql }` upstream descriptor so frames can chain.
 

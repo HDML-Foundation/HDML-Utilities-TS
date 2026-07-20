@@ -143,7 +143,7 @@ TS interfaces** — bufferify first if you only have a TS object.
 
 | Symbol | Signature | Defined in |
 |---|---|---|
-| `getConnectionSQLs(conn: ConnectionStruct): string[]` | Emits `show catalogs like …`, `drop catalog …`, `create catalog … using <connector> with (…)` triple. Dispatches on `ConnectorTypesEnum`. | [packages/stringifier/src/connection.ts:25](../packages/stringifier/src/connection.ts#L25) |
+| `getConnectionSQLs(conn: ConnectionStruct): string[]` | Emits `show catalogs like '…'`, `drop catalog "…"`, `create catalog "…" using <connector> with (…)` triple. Dispatches on `ConnectorTypesEnum`. The catalog **name is double-quoted** in `drop`/`create` (identifier), so non-identifier-safe names — e.g. a hyphenated `{tenant}_{conn}` like `tenant-a_maang` — are valid Trino identifiers; the `show catalogs like` name stays a single-quoted string literal. | [packages/stringifier/src/connection.ts:25](../packages/stringifier/src/connection.ts#L25) |
 | `getConnectionHTML(conn: ConnectionStruct): string` | HDML `<hdml-connection …>` element. | [packages/stringifier/src/connection.ts:254](../packages/stringifier/src/connection.ts#L254) |
 | `getModelSQL(model: ModelStruct, level?: number): string` | `with … select … from / join …`. Uses `sortJoins` for stable join order. | [packages/stringifier/src/model.ts:24](../packages/stringifier/src/model.ts#L24) |
 | `getModelHTML(model: ModelStruct, level?: number): string` | HDML `<hdml-model>` element. | same file |
