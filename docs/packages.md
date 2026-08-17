@@ -62,12 +62,31 @@ types (`BigQueryParameters`, `JDBCParameters`, `GoogleSheetsParameters`,
 **Lookup tables** (string constants — used by parser to read attributes and by stringifier to
 emit them):
 
-- `HDML_TAG_NAMES` — `hdml-connection`, `hdml-model`, `hdml-table`,
-  `hdml-join`, `hdml-frame`, `hdml-field`, `hdml-connective`, `hdml-filter`,
-  `hdml-filter-by`, `hdml-group-by`, `hdml-split-by`, `hdml-sort-by`.
-- `*_ATTRS_LIST` — `CONN_ATTRS_LIST`, `MODEL_ATTRS_LIST`, `TABLE_ATTRS_LIST`,
-  `JOIN_ATTRS_LIST`, `FRAME_ATTRS_LIST`, `FIELD_ATTRS_LIST`, `FILTER_ATTRS_LIST`,
-  `CONNECTIVE_ATTRS_LIST`.
+- `HDML_TAG_NAMES` — **every tag of the HDML language, 33 members in two
+  groups.** The twelve **data** tags (HDQL): `hdml-connection`, `hdml-frame`,
+  `hdml-model`, `hdml-table`, `hdml-join`, `hdml-connective`, `hdml-filter-by`,
+  `hdml-filter`, `hdml-group-by`, `hdml-split-by`, `hdml-sort-by`,
+  `hdml-field`. Then the twenty-one **display** tags (HDVL): `hdml-view`,
+  `hdml-cartesian-plane`, `hdml-polar-plane`, `hdml-continuous-scale`,
+  `hdml-datetime-scale`, `hdml-ordinal-scale`, `hdml-line`, `hdml-area`,
+  `hdml-bar`, `hdml-point`, `hdml-arc`, `hdml-rule`, `hdml-pie`,
+  `hdml-cluster`, `hdml-stack`, `hdml-axis`, `hdml-tick`, `hdml-label`,
+  `hdml-grid`, `hdml-legend`, `hdml-fallback`. One flat enum for the whole
+  language — there is no parallel display-only tag enum. The display half is
+  consumed by HDML-Components, not by the parser or stringifier.
+- `*_ATTRS_LIST` — one per element that has its own attributes; elements with
+  none (`hdml-filter-by`, `hdml-group-by`, `hdml-sort-by`, `hdml-fallback`)
+  have no enum. **Data:** `CONN_ATTRS_LIST`, `MODEL_ATTRS_LIST`,
+  `TABLE_ATTRS_LIST`, `JOIN_ATTRS_LIST`, `FRAME_ATTRS_LIST`,
+  `FIELD_ATTRS_LIST`, `FILTER_ATTRS_LIST`, `CONNECTIVE_ATTRS_LIST`.
+  **Display:** `VIEW_`, `CARTESIAN_PLANE_`, `POLAR_PLANE_`,
+  `CONTINUOUS_SCALE_`, `DATETIME_SCALE_`, `ORDINAL_SCALE_`, `LINE_`, `AREA_`,
+  `BAR_`, `POINT_`, `ARC_`, `RULE_`, `PIE_`, `CLUSTER_`, `STACK_`, `AXIS_`,
+  `TICK_`, `LABEL_`, `GRID_`, `LEGEND_ATTRS_LIST`. The display enums carry
+  binding, domain and configuration keys only — HTML global attributes
+  (`class`, `style`, `aria-*`) are deliberately out, with `hidden` the one
+  exception (it is load-bearing vocabulary on `hdml-bar`, `hdml-area` and
+  `hdml-stack`, where it re-derives a layout container's relation).
 - `*_VALUES` — `AGGREGATION_VALUES`, `BITWIDTH_VALUES`, `CONN_TYPE_VALUES`,
   `CONNECTIVE_OP_VALUES`, `DT_UNIT_VALUES`, `FIELD_TYPE_VALUES`, `FILTER_NAME_VALUES`,
   `FILTER_TYPE_VALUES`, `JOIN_TYPE_VALUES`, `ORDER_VALUES`, `TABLE_TYPE_VALUES`,
