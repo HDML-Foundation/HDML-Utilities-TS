@@ -9,7 +9,7 @@ The TypeScript monorepo behind HDML — eight npm packages under `@hdml/*` that 
 markup, model it as `HDOM`, serialize it to FlatBuffers, and emit SQL / HTML from it. The
 same code runs in browsers (via HDML-Components), inside `hdio.wasm` (via HDIO-Javy-Plugin),
 and in Node consumers. **Node 18 / TypeScript 4.9.5 / FlatBuffers 24.3.25 / lockstep
-versioning (currently `0.0.2-alpha.15`).**
+versioning (currently `0.0.2-alpha.24`).**
 
 This repo does **not** own the FlatBuffers schema. The `.fbs` files live in the
 [HDML-Schemas/](HDML-Schemas/) submodule; `@hdml/schemas` regenerates TS bindings from them.
