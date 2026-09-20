@@ -37,7 +37,18 @@ export class AdaptationError extends Error {
  *
  * `remove-element` deletes every matched element and its whole
  * subtree (a removed `hdml-frame` takes its `hdml-field`s); it
- * ignores `attribute` / `value`. `set-attribute` writes
+ * ignores `attribute` / `value`. It removes a **declaration**, not a
+ * column: dropping an `hdml-field` from a model's `hdml-table` leaves
+ * every surviving sibling still reading the physical column, through
+ * `clause` or through `origin` alone — `@hdml/stringifier`'s
+ * `getPlainClauseSQL` falls back to `"${origin || name}"` against the
+ * physical table. A per-role restriction binds at a **frame**, whose
+ * SQL selects only from its source's surviving projection; see the two
+ * `LEAKS` cases and the `HOLDS` case in `compileSql.test.ts`
+ * (`describe("adaptation boundary (O10)")`), and the HDML-Intelligence
+ * workspace's `docs/contracts/authorization.md` for the authoring rule.
+ *
+ * `set-attribute` writes
  * `String(rule.value)` to `rule.attribute` — `value` is
  * `interface{}` on the Go side, so int / float / bool / string all
  * coerce to a string. A value
