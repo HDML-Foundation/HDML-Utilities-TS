@@ -5,10 +5,30 @@
  */
 
 import { JoinTypeEnum, FilterOperatorEnum } from "@hdml/schemas";
-import { Join, JOIN_ATTRS_LIST, JOIN_TYPE_VALUES } from "@hdml/types";
+import {
+  Join,
+  JOIN_ATTRS_LIST,
+  JOIN_TYPE_VALUES,
+  HDQL_DIAGNOSTIC_CODES,
+} from "@hdml/types";
 import { Token } from "parse5";
+import { DiagnosticSink, pushDiagnostic } from "../diagnostics";
 
-export function getJoinData(attrs: Token.Attribute[]): null | Join {
+/**
+ * Reads an `<hdml-join>`'s attributes into a {@link Join}, or
+ * returns `null` when the element must be dropped.
+ *
+ * @param attrs The element's attributes.
+ * @param sink The parse's diagnostics sink. **Optional**: the
+ * module-singleton adapter and the existing unit cases call this
+ * with one argument, and an absent sink discards.
+ *
+ * @returns The join, or `null`.
+ */
+export function getJoinData(
+  attrs: Token.Attribute[],
+  sink?: DiagnosticSink,
+): null | Join {
   let type: JoinTypeEnum = JoinTypeEnum.Cross;
   let left: null | string = null;
   let right: null | string = null;
@@ -56,6 +76,15 @@ export function getJoinData(attrs: Token.Attribute[]): null | Join {
   });
 
   if (!left || !right) {
+    // The diagnostic does NOT change the `return null`: 019
+    // carries diagnostics, it does not change accept/reject
+    // (RFC 019/002 §10.2, D11).
+    pushDiagnostic(
+      sink,
+      HDQL_DIAGNOSTIC_CODES.MISSING_JOIN_SIDES,
+      "`<hdml-join>` needs `left` and `right`; this one was " +
+        "dropped.",
+    );
     return null;
   }
 

@@ -7,8 +7,18 @@
 /* eslint-disable max-len */
 
 import { TableTypeEnum } from "@hdml/schemas";
-import { Table, DATASET_ATTRS_LIST } from "@hdml/types";
+import {
+  Table,
+  DATASET_ATTRS_LIST,
+  DATASET_TYPE_VALUES,
+  HDQL_DIAGNOSTIC_CODES,
+} from "@hdml/types";
 import { getTableData } from "./getTableData";
+import { DiagnosticSink } from "../diagnostics";
+
+const NEEDS =
+  "`<hdml-dataset>` needs `name`, `type` (`table` or `query`) and `identifier`; missing or not recognized: ";
+const TAIL = ". This one was dropped.";
 
 describe("The `getTableData` function", () => {
   it("shoud return `null` if empty attributes passed", () => {
@@ -89,5 +99,77 @@ describe("The `getTableData` function", () => {
       identifier: "identifier",
       fields: [],
     });
+  });
+});
+
+describe("The `getTableData` diagnostic", () => {
+  it("names `identifier` when it is absent", () => {
+    const sink: DiagnosticSink = [];
+    const data = getTableData(
+      [
+        { name: DATASET_ATTRS_LIST.NAME, value: "d" },
+        {
+          name: DATASET_ATTRS_LIST.TYPE,
+          value: DATASET_TYPE_VALUES.TABLE,
+        },
+      ],
+      sink,
+    );
+
+    // ★ `null` here is the `return data` at the bottom of the
+    // helper, not an early `return null` -- this is the one drop
+    // site of the seventeen with no `return null` behind it.
+    expect(data).toBeNull();
+    expect(sink.length).toBe(1);
+    expect(sink[0].code).toBe(
+      HDQL_DIAGNOSTIC_CODES.MISSING_DATASET_ATTRS,
+    );
+    expect(sink[0].severity).toBe("error");
+    expect(sink[0].message).toBe(NEEDS + "`identifier`" + TAIL);
+  });
+
+  it("names `type` when it is not recognized", () => {
+    const sink: DiagnosticSink = [];
+    const data = getTableData(
+      [
+        { name: DATASET_ATTRS_LIST.NAME, value: "d" },
+        { name: DATASET_ATTRS_LIST.TYPE, value: "view" },
+        { name: DATASET_ATTRS_LIST.IDENTIFIER, value: "t" },
+      ],
+      sink,
+    );
+
+    // ★ The author DID write a `type`; it was not `table` or
+    // `query`, so the switch never assigned one. "missing or not
+    // recognized" is why the message is worded that way.
+    expect(data).toBeNull();
+    expect(sink[0].message).toBe(NEEDS + "`type`" + TAIL);
+  });
+
+  it("names all three when none is present", () => {
+    const sink: DiagnosticSink = [];
+
+    expect(getTableData([], sink)).toBeNull();
+    expect(sink[0].message).toBe(
+      NEEDS + "`name`, `type`, `identifier`" + TAIL,
+    );
+  });
+
+  it("records nothing for a dataset it accepts", () => {
+    const sink: DiagnosticSink = [];
+    const data = getTableData(
+      [
+        { name: DATASET_ATTRS_LIST.NAME, value: "d" },
+        {
+          name: DATASET_ATTRS_LIST.TYPE,
+          value: DATASET_TYPE_VALUES.TABLE,
+        },
+        { name: DATASET_ATTRS_LIST.IDENTIFIER, value: "t" },
+      ],
+      sink,
+    ) as Table;
+
+    expect(data).not.toBeNull();
+    expect(sink.length).toBe(0);
   });
 });

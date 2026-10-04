@@ -1843,3 +1843,310 @@ describe("HDQL parse diagnostics", () => {
     expect(elementPath(found[1])).toBe(d[0].path);
   });
 });
+
+// ---------------------------------------------------------------
+// 019 step 10 -- the other six helpers, end to end.
+//
+// ★ Wrapper markup again (C91): `<div id="hdml">`, a `<div>`
+// around each HDML element, and a nested `<div>` around the
+// dropped field. A flat document cannot test an anchor.
+// ---------------------------------------------------------------
+
+/**
+ * A document that drops three elements of three different kinds:
+ * a model with no `name`, a frame with no `source`, and a field
+ * with no `name` inside a dataset that is itself fine.
+ */
+const threeDrops = `
+  <div id="hdml">
+    <div>
+      <hdml-model></hdml-model>
+    </div>
+    <div>
+      <hdml-model name="m2">
+        <hdml-dataset name="d2" type="table" identifier="t2">
+          <div><hdml-field type="int32"></hdml-field></div>
+        </hdml-dataset>
+      </hdml-model>
+    </div>
+    <div>
+      <hdml-frame name="f"></hdml-frame>
+    </div>
+  </div>
+`;
+
+/**
+ * ★ The dropped containers above are childless for readability,
+ * not out of necessity. Before 019 step 10 they HAD to be:
+ * `appendHddmChild` read `parent.hddmData as Model` unguarded at
+ * ten sites, so a dropped CONTAINER with any surviving HDML child
+ * threw a `TypeError` out of `parseHDML` -- and because
+ * `drainDiagnostics` runs only after `parseFragment` returns, the
+ * caller got an exception and an EMPTY array, losing the reason
+ * the parser had already computed. Ten of thirteen parent/child
+ * shapes threw.
+ *
+ * Step 10 guarded every one of those dereferences (founder
+ * decision S13). `CONTAINER_SHAPES` below is the gate.
+ */
+
+describe("HDQL parse diagnostics across the vocabulary", () => {
+  it("reports three drops of three kinds in order", () => {
+    const d: HdqlDiagnostic[] = [];
+    const hdom = parseHDML(threeDrops, d);
+
+    // ★ Document order, which is `createElement` order: the
+    // nameless model opens first, the nameless field is inside
+    // the SECOND model, and the sourceless frame closes.
+    expect(d.map((x) => x.code)).toEqual([
+      HDQL_DIAGNOSTIC_CODES.MISSING_MODEL_NAME,
+      HDQL_DIAGNOSTIC_CODES.MISSING_FIELD_NAME,
+      HDQL_DIAGNOSTIC_CODES.MISSING_FRAME_NAME_OR_SOURCE,
+    ]);
+
+    for (const one of d) {
+      expect(one.severity).toBe("error");
+      // ★ Every one is anchored, and no `path` carries a wrapper
+      // segment -- the path names HDML elements only.
+      expect(one.path !== null).toBe(true);
+      expect(one.path?.includes("div")).toBe(false);
+      expect(one.line !== null).toBe(true);
+      expect(one.column !== null).toBe(true);
+      expect(one.offset !== null).toBe(true);
+    }
+
+    expect(d[0].path).toBe("hdml-model[0]");
+    expect(d[1].path).toBe(
+      "hdml-model[1]/hdml-dataset[0]/hdml-field[0]",
+    );
+    expect(d[2].path).toBe("hdml-frame[0]");
+
+    // ★ Derived from the source, not hard-coded: prettier
+    // re-indents test documents.
+    const anchor = at(threeDrops, '<hdml-frame name="f"');
+    expect(d[2].line).toBe(anchor.line);
+    expect(d[2].column).toBe(anchor.column);
+    expect(d[2].offset).toBe(anchor.offset);
+
+    // ★ What survived still survived: 019 carries diagnostics, it
+    // does not change accept/reject (RFC 019/002 §10.2, D11).
+    expect(hdom.models.map((m) => m.name)).toEqual(["m2"]);
+    expect(hdom.models[0].tables[0].fields.length).toBe(0);
+    expect(hdom.frames.length).toBe(0);
+  });
+
+  it("stays empty for the same document made whole", () => {
+    const whole = threeDrops
+      .replace("<hdml-model>", '<hdml-model name="m1">')
+      .replace('type="int32"', 'name="also"')
+      .replace(
+        '<hdml-frame name="f">',
+        '<hdml-frame name="f" source="/s.html">',
+      );
+    const d: HdqlDiagnostic[] = [];
+    const hdom = parseHDML(whole, d);
+
+    expect(Array.isArray(d)).toBe(true);
+    expect(d.length).toBe(0);
+    expect(hdom.models.map((m) => m.name)).toEqual(["m1", "m2"]);
+    expect(hdom.frames.length).toBe(1);
+  });
+});
+
+/**
+ * The four kinds `threeDrops` does NOT reach. ★ Added because
+ * negative control 2 -- dropping the `, sink` argument at ONE
+ * `buildElement` case -- fired NOTHING: the thirteen
+ * `getConnectionData` unit cases call the helper directly, so
+ * nothing in the suite exercised four of the six new adapter
+ * arguments. Between this document and `threeDrops` all six are
+ * covered end to end.
+ *
+ * ★ Every dropped container here is childless for the same
+ * reason as `threeDrops` -- see the note above it.
+ */
+const fourMoreDrops = `
+  <div id="hdml">
+    <div>
+      <hdml-connection name="c"></hdml-connection>
+    </div>
+    <div>
+      <hdml-model name="m">
+        <hdml-dataset name="d" type="table"></hdml-dataset>
+        <hdml-join left="a"></hdml-join>
+      </hdml-model>
+    </div>
+    <div>
+      <hdml-frame name="f" source="/s.html">
+        <hdml-filter-by>
+          <hdml-connective operator="and">
+            <hdml-filter type="keys" left="a"></hdml-filter>
+          </hdml-connective>
+        </hdml-filter-by>
+      </hdml-frame>
+    </div>
+  </div>
+`;
+
+describe("Every adapter case forwards the sink", () => {
+  it("reports a connection, dataset, join and filter", () => {
+    const d: HdqlDiagnostic[] = [];
+    const hdom = parseHDML(fourMoreDrops, d);
+
+    expect(d.map((x) => x.code)).toEqual([
+      HDQL_DIAGNOSTIC_CODES.MISSING_CONNECTION_ATTRS,
+      HDQL_DIAGNOSTIC_CODES.MISSING_DATASET_ATTRS,
+      HDQL_DIAGNOSTIC_CODES.MISSING_JOIN_SIDES,
+      HDQL_DIAGNOSTIC_CODES.MISSING_FILTER_OPERANDS,
+    ]);
+
+    expect(d[0].path).toBe("hdml-connection[0]");
+    expect(d[1].path).toBe("hdml-model[0]/hdml-dataset[0]");
+    expect(d[2].path).toBe("hdml-model[0]/hdml-join[0]");
+    // ★ `hdml-filter-by` and `hdml-connective` DO appear: the
+    // path names HDML elements, and those two are HDML elements.
+    // Only the wrapper `<div>`s are skipped.
+    expect(d[3].path).toBe(
+      "hdml-frame[0]/hdml-filter-by[0]/hdml-connective[0]/hdml-filter[0]",
+    );
+
+    for (const one of d) {
+      expect(one.severity).toBe("error");
+      expect(one.path?.includes("div")).toBe(false);
+      expect(one.offset !== null).toBe(true);
+    }
+
+    // ★ What was dropped stayed dropped; what surrounded it
+    // survived (RFC 019/002 §10.2, D11).
+    expect(hdom.connections.length).toBe(0);
+    expect(hdom.models.length).toBe(1);
+    expect(hdom.models[0].tables.length).toBe(0);
+    expect(hdom.models[0].joins.length).toBe(0);
+    expect(hdom.frames.length).toBe(1);
+  });
+});
+
+/** Every parent/child shape that used to throw. */
+const CONTAINER_SHAPES: {
+  what: string;
+  code: HDQL_DIAGNOSTIC_CODES;
+  doc: string;
+}[] = [
+  {
+    what: "a dropped model keeping a dataset",
+    code: HDQL_DIAGNOSTIC_CODES.MISSING_MODEL_NAME,
+    doc: '<hdml-model><hdml-dataset name="d" type="table" identifier="t"></hdml-dataset></hdml-model>',
+  },
+  {
+    what: "a dropped model keeping a join",
+    code: HDQL_DIAGNOSTIC_CODES.MISSING_MODEL_NAME,
+    doc: '<hdml-model><hdml-join left="a" right="b"></hdml-join></hdml-model>',
+  },
+  {
+    what: "a dropped model two levels deep",
+    code: HDQL_DIAGNOSTIC_CODES.MISSING_MODEL_NAME,
+    doc: '<hdml-model><hdml-dataset name="d" type="table" identifier="t"><hdml-field name="f"></hdml-field></hdml-dataset></hdml-model>',
+  },
+  {
+    what: "a dropped dataset keeping a field",
+    code: HDQL_DIAGNOSTIC_CODES.MISSING_DATASET_ATTRS,
+    doc: '<hdml-model name="m"><hdml-dataset name="d" type="table"><hdml-field name="f"></hdml-field></hdml-dataset></hdml-model>',
+  },
+  {
+    what: "a dropped frame keeping a field",
+    code: HDQL_DIAGNOSTIC_CODES.MISSING_FRAME_NAME_OR_SOURCE,
+    doc: '<hdml-frame name="f"><hdml-field name="x"></hdml-field></hdml-frame>',
+  },
+  {
+    what: "a dropped frame keeping a connective",
+    code: HDQL_DIAGNOSTIC_CODES.MISSING_FRAME_NAME_OR_SOURCE,
+    doc: '<hdml-frame name="f"><hdml-filter-by><hdml-connective operator="and"></hdml-connective></hdml-filter-by></hdml-frame>',
+  },
+  {
+    what: "a dropped join keeping a connective",
+    code: HDQL_DIAGNOSTIC_CODES.MISSING_JOIN_SIDES,
+    doc: '<hdml-model name="m"><hdml-join left="a"><hdml-connective operator="and"></hdml-connective></hdml-join></hdml-model>',
+  },
+  {
+    what: "a dropped frame keeping a group-by field",
+    code: HDQL_DIAGNOSTIC_CODES.MISSING_FRAME_NAME_OR_SOURCE,
+    doc: '<hdml-frame name="f"><hdml-group-by><hdml-field name="g"></hdml-field></hdml-group-by></hdml-frame>',
+  },
+  {
+    what: "a dropped frame keeping a sort-by field",
+    code: HDQL_DIAGNOSTIC_CODES.MISSING_FRAME_NAME_OR_SOURCE,
+    doc: '<hdml-frame name="f"><hdml-sort-by><hdml-field name="s"></hdml-field></hdml-sort-by></hdml-frame>',
+  },
+  {
+    what: "a dropped frame keeping a split-by field",
+    code: HDQL_DIAGNOSTIC_CODES.MISSING_FRAME_NAME_OR_SOURCE,
+    doc: '<hdml-frame name="f"><hdml-split-by><hdml-field name="p"></hdml-field></hdml-split-by></hdml-frame>',
+  },
+];
+
+/** `shape.doc` inside the wrapper markup a real page has. */
+function wrap(doc: string): string {
+  return '<div id="hdml"><div>' + doc + "</div></div>";
+}
+
+describe("A dropped container with a surviving child", () => {
+  for (const shape of CONTAINER_SHAPES) {
+    it("reports " + shape.what, () => {
+      const d: HdqlDiagnostic[] = [];
+
+      // ★ Each of these ten threw a TypeError before step 10.
+      expect(() => parseHDML(wrap(shape.doc), d)).not.toThrow();
+      expect(d.length).toBe(1);
+      expect(d[0].code).toBe(shape.code);
+      // ★ And the reason REACHES the caller, which is the half
+      // the crash destroyed: the diagnostic was already in the
+      // sink when it threw, and the drain never ran.
+      expect(d[0].path !== null).toBe(true);
+      expect(d[0].offset !== null).toBe(true);
+    });
+  }
+
+  it("takes the whole subtree with it", () => {
+    const d: HdqlDiagnostic[] = [];
+    const hdom = parseHDML(
+      wrap(
+        '<hdml-model><hdml-dataset name="d" type="table" identifier="t"><hdml-field name="f"></hdml-field></hdml-dataset></hdml-model>',
+      ),
+      d,
+    );
+
+    // ★ The surviving dataset is not orphan-attached anywhere: a
+    // dropped parent takes its subtree with it, and the parent's
+    // own diagnostic is the explanation. The orphan gets NO
+    // diagnostic of its own -- that would need a new code and
+    // would report one problem per descendant.
+    expect(hdom.models.length).toBe(0);
+    expect(d.length).toBe(1);
+    expect(d[0].code).toBe(HDQL_DIAGNOSTIC_CODES.MISSING_MODEL_NAME);
+  });
+
+  it("still attaches every slot of a SURVIVING frame", () => {
+    // ★★ The regression control for WHERE the guard was placed.
+    // `<hdml-group-by>`, `<hdml-sort-by>`, `<hdml-split-by>` and
+    // `<hdml-filter-by>` carry `hddmData === null` ALWAYS, so a
+    // guard on the `<hdml-field>` case's OUTER `if (parent)`
+    // would compile, throw nothing, and silently drop every
+    // grouped, sorted and split field. This case is what makes
+    // that mistake visible.
+    const d: HdqlDiagnostic[] = [];
+    const hdom = parseHDML(
+      wrap(
+        '<hdml-frame name="f" source="/s.html"><hdml-field name="a"></hdml-field><hdml-group-by><hdml-field name="g"></hdml-field></hdml-group-by><hdml-sort-by><hdml-field name="s"></hdml-field></hdml-sort-by><hdml-split-by><hdml-field name="p"></hdml-field></hdml-split-by><hdml-filter-by><hdml-connective operator="and"><hdml-filter type="expr" clause="1 = 1"></hdml-filter></hdml-connective></hdml-filter-by></hdml-frame>',
+      ),
+      d,
+    );
+    const frame = hdom.frames[0];
+
+    expect(d.length).toBe(0);
+    expect(frame.fields.map((f) => f.name)).toEqual(["a"]);
+    expect(frame.group_by.map((f) => f.name)).toEqual(["g"]);
+    expect(frame.sort_by.map((f) => f.name)).toEqual(["s"]);
+    expect(frame.split_by.map((f) => f.name)).toEqual(["p"]);
+    expect(frame.filter_by.filters.length).toBe(1);
+  });
+});

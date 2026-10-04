@@ -4,7 +4,7 @@
  * @license Apache-2.0
  */
 
-import type { parseHDML } from "@hdml/parser";
+import type { parseHDML, HdqlDiagnostic } from "@hdml/parser";
 import type { serialize, StructType } from "@hdml/buffer";
 import type { bytesToBase64 } from "@hdml/hash";
 import type { Connection, Model, Frame } from "@hdml/types";
@@ -26,6 +26,26 @@ export interface Manifest {
   connections: ManifestEntry[];
   models: ManifestEntry[];
   frames: ManifestEntry[];
+  /**
+   * Every element `parseHDML` dropped, in document order.
+   *
+   * ★ **ALWAYS present**, `[]` on a clean document -- never
+   * omitted and never `undefined`. That is not cosmetic: 022
+   * cannot tell an absent field from a clean parse, and step 26
+   * turns the distinction into a Go-side fault (RFC 019/002 §2.3,
+   * A3). A consumer reading `[]` knows the parser had nothing to
+   * say; a consumer reading nothing knows only that something is
+   * wrong upstream.
+   *
+   * ★ {@link ManifestError} deliberately carries NO such field: a
+   * document that did not parse has nothing to attribute.
+   *
+   * ★ A diagnostic here does not mean the compile failed. Every
+   * code is `error` severity in the sense that what the author
+   * wrote is not in the output, but the document still compiles
+   * and this is still a {@link Manifest} (RFC 019/002 §10.2, D11).
+   */
+  diagnostics: HdqlDiagnostic[];
 }
 
 /**
@@ -70,9 +90,12 @@ export function buildManifest(
   if (!source) {
     return { error: "empty_source" };
   }
+  // Declared BEFORE the `try` or it is not in scope in the
+  // return literal below.
+  const diagnostics: HdqlDiagnostic[] = [];
   let hdom: ReturnType<typeof parseHDML>;
   try {
-    hdom = deps.parseHDML(source);
+    hdom = deps.parseHDML(source, diagnostics);
   } catch (e) {
     return { error: "parse_failed", detail: message(e) };
   }
@@ -87,6 +110,7 @@ export function buildManifest(
       frames: hdom.frames.map((f) =>
         encode(deps, f, deps.StructType.FrameStruct),
       ),
+      diagnostics,
     };
   } catch (e) {
     return { error: "serialize_failed", detail: message(e) };

@@ -10,12 +10,32 @@ import {
   FILTER_ATTRS_LIST,
   FILTER_TYPE_VALUES,
   FILTER_NAME_VALUES,
+  HDQL_DIAGNOSTIC_CODES,
 } from "@hdml/types";
 import { Token } from "parse5";
 import { backticksToQuotes } from "./backticksToQuotes";
+import { DiagnosticSink, pushDiagnostic } from "../diagnostics";
 
+/**
+ * Reads an `<hdml-filter>`'s attributes into a {@link Filter}, or
+ * returns `null` when the element must be dropped.
+ *
+ * Four rejection paths, over two codes: an absent or unrecognized
+ * `type` (`missing-filter-type`) and, per type, absent operands
+ * (`missing-filter-operands`). ★ The fifth exit -- the
+ * `return data` at the bottom -- emits **nothing**, deliberately:
+ * see the comment there.
+ *
+ * @param attrs The element's attributes.
+ * @param sink The parse's diagnostics sink. **Optional**: the
+ * module-singleton adapter and the existing unit cases call this
+ * with one argument, and an absent sink discards.
+ *
+ * @returns The filter, or `null`.
+ */
 export function getFilterData(
   attrs: Token.Attribute[],
+  sink?: DiagnosticSink,
 ): null | Filter {
   let data: null | Filter = null;
   let type: null | FilterTypeEnum = null;
@@ -103,11 +123,30 @@ export function getFilterData(
   });
 
   if (type === null) {
+    // The diagnostic does NOT change the `return null`: 019
+    // carries diagnostics, it does not change accept/reject
+    // (RFC 019/002 §10.2, D11). The three legal values are named
+    // because `type` is also `null` for a value the switch above
+    // did not recognize.
+    pushDiagnostic(
+      sink,
+      HDQL_DIAGNOSTIC_CODES.MISSING_FILTER_TYPE,
+      "`<hdml-filter>` needs a `type` of `expr`, `keys` or " +
+        "`named`; this one was dropped.",
+    );
     return null;
   } else {
     switch (type) {
       case FilterTypeEnum.Keys:
         if (!left || !right) {
+          // The diagnostic does NOT change the `return null`
+          // (RFC 019/002 §10.2, D11).
+          pushDiagnostic(
+            sink,
+            HDQL_DIAGNOSTIC_CODES.MISSING_FILTER_OPERANDS,
+            '`<hdml-filter type="keys">` needs `left` and ' +
+              "`right`; this one was dropped.",
+          );
           return null;
         } else {
           data = {
@@ -121,6 +160,14 @@ export function getFilterData(
         }
       case FilterTypeEnum.Expression:
         if (!clause) {
+          // The diagnostic does NOT change the `return null`
+          // (RFC 019/002 §10.2, D11).
+          pushDiagnostic(
+            sink,
+            HDQL_DIAGNOSTIC_CODES.MISSING_FILTER_OPERANDS,
+            '`<hdml-filter type="expr">` needs a `clause`; ' +
+              "this one was dropped.",
+          );
           return null;
         } else {
           data = {
@@ -133,6 +180,14 @@ export function getFilterData(
         }
       case FilterTypeEnum.Named:
         if (name === null || !field || !values.length) {
+          // The diagnostic does NOT change the `return null`
+          // (RFC 019/002 §10.2, D11).
+          pushDiagnostic(
+            sink,
+            HDQL_DIAGNOSTIC_CODES.MISSING_FILTER_OPERANDS,
+            '`<hdml-filter type="named">` needs `name`, ' +
+              "`field` and `values`; this one was dropped.",
+          );
           return null;
         } else {
           data = {
@@ -148,5 +203,14 @@ export function getFilterData(
     }
   }
 
+  // ★ NOTHING is emitted here, deliberately. This `return data`
+  // is unreachable with `data === null`: the `type === null` guard
+  // above covers every value the switch did not recognize, and
+  // each of the three `case`s either returns `null` itself or
+  // assigns `data` and breaks -- so by the time control reaches
+  // this line `data` is always a `Filter`. A diagnostic here
+  // would be dead code (RFC 019/002 §3.1, which lists this as one
+  // of the two null-typed returns; the other, in `getTableData`,
+  // IS reachable and does emit).
   return data;
 }

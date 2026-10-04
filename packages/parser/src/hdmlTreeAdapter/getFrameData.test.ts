@@ -8,7 +8,11 @@
 
 import { FilterOperatorEnum } from "@hdml/schemas";
 import { getFrameData } from "./getFrameData";
-import { FRAME_ATTRS_LIST } from "@hdml/types";
+import { FRAME_ATTRS_LIST, HDQL_DIAGNOSTIC_CODES } from "@hdml/types";
+import { DiagnosticSink } from "../diagnostics";
+
+const NEEDS = "`<hdml-frame>` needs `name` and `source`; missing: ";
+const TAIL = ". This one was dropped.";
 
 describe("The `getFrameData` function", () => {
   it("shoud return `null` if empty attributes passed", () => {
@@ -85,5 +89,58 @@ describe("The `getFrameData` function", () => {
       filters: [],
       children: [],
     });
+  });
+});
+
+describe("The `getFrameData` diagnostic", () => {
+  it("names `source` when only `name` is present", () => {
+    const sink: DiagnosticSink = [];
+    const data = getFrameData(
+      [{ name: FRAME_ATTRS_LIST.NAME, value: "f" }],
+      sink,
+    );
+
+    expect(data).toBeNull();
+    expect(sink.length).toBe(1);
+    expect(sink[0].code).toBe(
+      HDQL_DIAGNOSTIC_CODES.MISSING_FRAME_NAME_OR_SOURCE,
+    );
+    expect(sink[0].severity).toBe("error");
+    expect(sink[0].message).toBe(NEEDS + "`source`" + TAIL);
+  });
+
+  it("names `name` when only `source` is present", () => {
+    const sink: DiagnosticSink = [];
+    const data = getFrameData(
+      [{ name: FRAME_ATTRS_LIST.SOURCE, value: "/s.html" }],
+      sink,
+    );
+
+    expect(data).toBeNull();
+    // ★ The mirror. One message that says "name or source is
+    // missing" would pass both of these and tell the author
+    // nothing; two different strings are the gate.
+    expect(sink[0].message).toBe(NEEDS + "`name`" + TAIL);
+  });
+
+  it("names both when neither is present", () => {
+    const sink: DiagnosticSink = [];
+
+    expect(getFrameData([], sink)).toBeNull();
+    expect(sink[0].message).toBe(NEEDS + "`name`, `source`" + TAIL);
+  });
+
+  it("records nothing for a frame it accepts", () => {
+    const sink: DiagnosticSink = [];
+    const data = getFrameData(
+      [
+        { name: FRAME_ATTRS_LIST.NAME, value: "f" },
+        { name: FRAME_ATTRS_LIST.SOURCE, value: "/s.html" },
+      ],
+      sink,
+    );
+
+    expect(data).not.toBeNull();
+    expect(sink.length).toBe(0);
   });
 });

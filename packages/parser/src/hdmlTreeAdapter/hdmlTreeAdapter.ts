@@ -66,25 +66,25 @@ function buildElement(
 
   switch (tagName as HDML_TAG_NAMES) {
     case HDML_TAG_NAMES.CONNECTION:
-      hddmData = getConnectionData(attrs);
+      hddmData = getConnectionData(attrs, sink);
       break;
     case HDML_TAG_NAMES.MODEL:
-      hddmData = getModelData(attrs);
+      hddmData = getModelData(attrs, sink);
       break;
     case HDML_TAG_NAMES.DATASET:
-      hddmData = getTableData(attrs);
+      hddmData = getTableData(attrs, sink);
       break;
     case HDML_TAG_NAMES.FRAME:
-      hddmData = getFrameData(attrs);
+      hddmData = getFrameData(attrs, sink);
       break;
     case HDML_TAG_NAMES.JOIN:
-      hddmData = getJoinData(attrs);
+      hddmData = getJoinData(attrs, sink);
       break;
     case HDML_TAG_NAMES.CONNECTIVE:
       hddmData = getConnectiveData(attrs);
       break;
     case HDML_TAG_NAMES.FILTER:
-      hddmData = getFilterData(attrs);
+      hddmData = getFilterData(attrs, sink);
       break;
     case HDML_TAG_NAMES.FIELD:
       hddmData = getFieldData(attrs, sink);
@@ -158,6 +158,39 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
     }
   },
 
+  /**
+   * Hangs a structurized element onto its structurized parent.
+   *
+   * ★ **Every `parent.hddmData` read is guarded.** A parent whose
+   * own `get*Data` helper dropped it has `hddmData === null`, and
+   * the `as Model` casts below hide that from the compiler -- so
+   * before 019 step 10 a dropped CONTAINER with any surviving
+   * HDML child threw a `TypeError` out of `parseHDML` instead of
+   * returning (measured: ten of thirteen parent/child shapes).
+   * Worse, the parent's diagnostic was already in the sink when
+   * it threw, and `drainDiagnostics` runs only after
+   * `parseFragment` returns -- so the caller got an exception and
+   * NO explanation, and `buildManifest` reported `parse_failed`
+   * with an empty `diagnostics`.
+   *
+   * A dropped parent now simply takes its subtree with it: the
+   * child is not attached, and the parent's own diagnostic is the
+   * explanation. ★ The orphaned child gets **no diagnostic of its
+   * own** -- that would need a new `HDQL_DIAGNOSTIC_CODES` member
+   * and would emit one entry per descendant (a dropped model with
+   * twenty fields would report twenty-one problems for one
+   * mistake). Named successor, not an oversight.
+   *
+   * ⚠ The guard is per-DEREFERENCE, not on the enclosing
+   * `if (parent)`. `<hdml-group-by>`, `<hdml-sort-by>`,
+   * `<hdml-split-by>` and `<hdml-filter-by>` carry
+   * `hddmData === null` ALWAYS -- `buildElement`'s switch assigns
+   * nothing for them -- so guarding the `<hdml-field>` case's
+   * outer `if (parent)` would silently stop every grouped,
+   * sorted and split field from being attached.
+   *
+   * @param element The element to attach.
+   */
   appendHddmChild(element: ChildNode): void {
     let parent: null | ChildNode = null;
     let data: null | Model | Table | Frame | Join | FilterClause =
@@ -196,7 +229,7 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
           parent = hdmlTreeAdapter.getHdmlParentTag(element, [
             HDML_TAG_NAMES.MODEL,
           ]);
-          if (parent) {
+          if (parent?.hddmData) {
             data = parent.hddmData as Model;
             data.tables.push(element.hddmData as Table);
           }
@@ -221,7 +254,7 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
           parent = hdmlTreeAdapter.getHdmlParentTag(element, [
             HDML_TAG_NAMES.MODEL,
           ]);
-          if (parent) {
+          if (parent?.hddmData) {
             data = parent.hddmData as Model;
             data.joins.push(element.hddmData as Join);
           }
@@ -233,7 +266,7 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
           HDML_TAG_NAMES.FRAME,
           HDML_TAG_NAMES.CONNECTIVE,
         ]);
-        if (parent) {
+        if (parent?.hddmData) {
           switch (parent.nodeName as HDML_TAG_NAMES) {
             case HDML_TAG_NAMES.JOIN:
               data = parent.hddmData as Join;
@@ -255,7 +288,7 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
           parent = hdmlTreeAdapter.getHdmlParentTag(element, [
             HDML_TAG_NAMES.CONNECTIVE,
           ]);
-          if (parent) {
+          if (parent?.hddmData) {
             data = parent.hddmData as FilterClause;
             data.filters.push(element.hddmData as Filter);
           }
@@ -274,14 +307,16 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
             switch (parent.nodeName as HDML_TAG_NAMES) {
               case HDML_TAG_NAMES.DATASET:
               case HDML_TAG_NAMES.FRAME:
-                data = parent.hddmData as Table | Frame;
-                data.fields.push(element.hddmData as Field);
+                if (parent.hddmData) {
+                  data = parent.hddmData as Table | Frame;
+                  data.fields.push(element.hddmData as Field);
+                }
                 break;
               case HDML_TAG_NAMES.GROUP_BY:
                 parent = hdmlTreeAdapter.getHdmlParentTag(element, [
                   HDML_TAG_NAMES.FRAME,
                 ]);
-                if (parent) {
+                if (parent?.hddmData) {
                   data = parent.hddmData as Frame;
                   data.group_by.push(element.hddmData as Field);
                 }
@@ -290,7 +325,7 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
                 parent = hdmlTreeAdapter.getHdmlParentTag(element, [
                   HDML_TAG_NAMES.FRAME,
                 ]);
-                if (parent) {
+                if (parent?.hddmData) {
                   data = parent.hddmData as Frame;
                   data.sort_by.push(element.hddmData as Field);
                 }
@@ -299,7 +334,7 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
                 parent = hdmlTreeAdapter.getHdmlParentTag(element, [
                   HDML_TAG_NAMES.FRAME,
                 ]);
-                if (parent) {
+                if (parent?.hddmData) {
                   data = parent.hddmData as Frame;
                   data.split_by.push(element.hddmData as Field);
                 }

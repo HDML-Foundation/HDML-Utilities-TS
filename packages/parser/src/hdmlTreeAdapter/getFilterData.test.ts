@@ -12,7 +12,18 @@ import {
   FILTER_ATTRS_LIST,
   FILTER_TYPE_VALUES,
   FILTER_NAME_VALUES,
+  HDQL_DIAGNOSTIC_CODES,
 } from "@hdml/types";
+import { DiagnosticSink } from "../diagnostics";
+
+const NO_TYPE =
+  "`<hdml-filter>` needs a `type` of `expr`, `keys` or `named`; this one was dropped.";
+const KEYS =
+  '`<hdml-filter type="keys">` needs `left` and `right`; this one was dropped.';
+const EXPR =
+  '`<hdml-filter type="expr">` needs a `clause`; this one was dropped.';
+const NAMED =
+  '`<hdml-filter type="named">` needs `name`, `field` and `values`; this one was dropped.';
 
 describe("The `getFilterData` function", () => {
   it("shoud return `null` if empty attributes passed", () => {
@@ -556,5 +567,121 @@ describe("The `getFilterData` function", () => {
         values: ["value"],
       },
     });
+  });
+});
+
+describe("The `getFilterData` diagnostic", () => {
+  it("reports an absent `type`", () => {
+    const sink: DiagnosticSink = [];
+
+    expect(getFilterData([], sink)).toBeNull();
+    expect(sink.length).toBe(1);
+    expect(sink[0].code).toBe(
+      HDQL_DIAGNOSTIC_CODES.MISSING_FILTER_TYPE,
+    );
+    expect(sink[0].severity).toBe("error");
+    expect(sink[0].message).toBe(NO_TYPE);
+  });
+
+  it("reports an unrecognized `type` the same way", () => {
+    const sink: DiagnosticSink = [];
+    const data = getFilterData(
+      [{ name: FILTER_ATTRS_LIST.TYPE, value: "nope" }],
+      sink,
+    );
+
+    // ★ The author wrote a `type` and it was none of the three,
+    // so the switch never assigned one -- which is why the
+    // message LISTS the three legal values rather than saying
+    // `type` is missing.
+    expect(data).toBeNull();
+    expect(sink[0].code).toBe(
+      HDQL_DIAGNOSTIC_CODES.MISSING_FILTER_TYPE,
+    );
+    expect(sink[0].message).toBe(NO_TYPE);
+  });
+
+  it("names what `keys` requires", () => {
+    const sink: DiagnosticSink = [];
+    const data = getFilterData(
+      [
+        {
+          name: FILTER_ATTRS_LIST.TYPE,
+          value: FILTER_TYPE_VALUES.KEYS,
+        },
+        { name: FILTER_ATTRS_LIST.LEFT, value: "a" },
+      ],
+      sink,
+    );
+
+    expect(data).toBeNull();
+    expect(sink[0].code).toBe(
+      HDQL_DIAGNOSTIC_CODES.MISSING_FILTER_OPERANDS,
+    );
+    expect(sink[0].message).toBe(KEYS);
+  });
+
+  it("names what `expr` requires", () => {
+    const sink: DiagnosticSink = [];
+    const data = getFilterData(
+      [
+        {
+          name: FILTER_ATTRS_LIST.TYPE,
+          value: FILTER_TYPE_VALUES.EXPR,
+        },
+      ],
+      sink,
+    );
+
+    expect(data).toBeNull();
+    expect(sink[0].code).toBe(
+      HDQL_DIAGNOSTIC_CODES.MISSING_FILTER_OPERANDS,
+    );
+    // ★ Three sites share one code and must NOT share one
+    // string: the author needs to know what THIS type requires.
+    expect(sink[0].message).toBe(EXPR);
+    expect(sink[0].message).not.toBe(KEYS);
+  });
+
+  it("names what `named` requires", () => {
+    const sink: DiagnosticSink = [];
+    const data = getFilterData(
+      [
+        {
+          name: FILTER_ATTRS_LIST.TYPE,
+          value: FILTER_TYPE_VALUES.NAMED,
+        },
+        {
+          name: FILTER_ATTRS_LIST.NAME,
+          value: FILTER_NAME_VALUES.EQUALS,
+        },
+        { name: FILTER_ATTRS_LIST.FIELD, value: "f" },
+      ],
+      sink,
+    );
+
+    expect(data).toBeNull();
+    expect(sink[0].code).toBe(
+      HDQL_DIAGNOSTIC_CODES.MISSING_FILTER_OPERANDS,
+    );
+    expect(sink[0].message).toBe(NAMED);
+    expect(sink[0].message).not.toBe(EXPR);
+  });
+
+  it("records nothing for a filter it accepts", () => {
+    const sink: DiagnosticSink = [];
+    const data = getFilterData(
+      [
+        {
+          name: FILTER_ATTRS_LIST.TYPE,
+          value: FILTER_TYPE_VALUES.EXPR,
+        },
+        { name: FILTER_ATTRS_LIST.CLAUSE, value: "1 = 1" },
+      ],
+      sink,
+    );
+
+    expect(data).not.toBeNull();
+    expect(sink.length).toBe(0);
   });
 });

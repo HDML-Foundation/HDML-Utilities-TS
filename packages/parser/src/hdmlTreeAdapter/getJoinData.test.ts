@@ -7,8 +7,16 @@
 /* eslint-disable max-len */
 
 import { JoinTypeEnum, FilterOperatorEnum } from "@hdml/schemas";
-import { JOIN_ATTRS_LIST, JOIN_TYPE_VALUES } from "@hdml/types";
+import {
+  JOIN_ATTRS_LIST,
+  JOIN_TYPE_VALUES,
+  HDQL_DIAGNOSTIC_CODES,
+} from "@hdml/types";
 import { getJoinData } from "./getJoinData";
+import { DiagnosticSink } from "../diagnostics";
+
+const MESSAGE =
+  "`<hdml-join>` needs `left` and `right`; this one was dropped.";
 
 describe("The `getJoinData` function", () => {
   it("shoud return `null` if empty attributes passed", () => {
@@ -208,5 +216,37 @@ describe("The `getJoinData` function", () => {
       },
       description: null,
     });
+  });
+});
+
+describe("The `getJoinData` diagnostic", () => {
+  it("records the drop and still returns `null`", () => {
+    const sink: DiagnosticSink = [];
+    const data = getJoinData(
+      [{ name: JOIN_ATTRS_LIST.LEFT, value: "a" }],
+      sink,
+    );
+
+    expect(data).toBeNull();
+    expect(sink.length).toBe(1);
+    expect(sink[0].code).toBe(
+      HDQL_DIAGNOSTIC_CODES.MISSING_JOIN_SIDES,
+    );
+    expect(sink[0].severity).toBe("error");
+    expect(sink[0].message).toBe(MESSAGE);
+  });
+
+  it("records nothing for a join it accepts", () => {
+    const sink: DiagnosticSink = [];
+    const data = getJoinData(
+      [
+        { name: JOIN_ATTRS_LIST.LEFT, value: "a" },
+        { name: JOIN_ATTRS_LIST.RIGHT, value: "b" },
+      ],
+      sink,
+    );
+
+    expect(data).not.toBeNull();
+    expect(sink.length).toBe(0);
   });
 });

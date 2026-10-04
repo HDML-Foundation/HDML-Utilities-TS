@@ -16,8 +16,11 @@ import {
   MongoDBParameters,
   SnowflakeParameters,
   CONN_ATTRS_LIST,
+  CONN_TYPE_VALUES,
+  HDQL_DIAGNOSTIC_CODES,
 } from "@hdml/types";
 import { getConnectionData } from "./getConnectionData";
+import { DiagnosticSink } from "../diagnostics";
 
 describe("The `getConnectionData` function", () => {
   // Common
@@ -1112,5 +1115,257 @@ describe("The `getConnectionData` function", () => {
     expect(params.role).toBe("role");
     expect(params.database).toBe("database");
     expect(params.warehouse).toBe("warehouse");
+  });
+});
+
+// ---------------------------------------------------------------
+// 019 step 10 -- nine drop sites, three codes, SEVEN functions.
+//
+// Six of the nine live in module-local connector-shape helpers
+// that the switch above reaches one per `type`, so these cases go
+// through the exported `getConnectionData` rather than calling a
+// helper directly: that is the only public way in.
+// ---------------------------------------------------------------
+
+/** `{name: value}` to the `Token.Attribute[]` the helper takes. */
+function attrs(o: Record<string, string>): {
+  name: string;
+  value: string;
+}[] {
+  return Object.entries(o).map(([name, value]) => ({
+    name,
+    value,
+  }));
+}
+
+/** The one diagnostic a dropped connection produced. */
+function dropped(o: Record<string, string>): {
+  code: HDQL_DIAGNOSTIC_CODES;
+  severity: "error";
+  message: string;
+} {
+  const sink: DiagnosticSink = [];
+  expect(getConnectionData(attrs(o), sink)).toBeNull();
+  expect(sink.length).toBe(1);
+  return {
+    code: sink[0].code,
+    severity: sink[0].severity,
+    message: sink[0].message,
+  };
+}
+
+describe("The `getConnectionData` diagnostic", () => {
+  it("reports an absent `name` or `type`", () => {
+    const d = dropped({ [CONN_ATTRS_LIST.NAME]: "c" });
+
+    expect(d.code).toBe(
+      HDQL_DIAGNOSTIC_CODES.MISSING_CONNECTION_ATTRS,
+    );
+    expect(d.severity).toBe("error");
+    expect(d.message).toBe(
+      "`<hdml-connection>` needs `name` and `type`; this one was dropped.",
+    );
+  });
+
+  it("names the value and the legal connectors", () => {
+    const d = dropped({
+      [CONN_ATTRS_LIST.NAME]: "c",
+      [CONN_ATTRS_LIST.TYPE]: "postgres",
+    });
+
+    expect(d.code).toBe(HDQL_DIAGNOSTIC_CODES.UNKNOWN_CONNECTOR);
+    // ★ `postgres` is the near-miss an author actually writes;
+    // the legal spelling is `postgresql`. A message that did not
+    // echo the value could not show the difference.
+    expect(d.message).toContain('type="postgres"');
+    expect(d.message).toContain("`postgresql`");
+    // Derived, so a new connector cannot leave the message stale.
+    for (const legal of Object.values(CONN_TYPE_VALUES)) {
+      expect(d.message).toContain("`" + legal + "`");
+    }
+  });
+
+  it("names the connector and the missing jdbc fields", () => {
+    const d = dropped({
+      [CONN_ATTRS_LIST.NAME]: "c",
+      [CONN_ATTRS_LIST.TYPE]: CONN_TYPE_VALUES.POSTGRES,
+      [CONN_ATTRS_LIST.HOST]: "h",
+      [CONN_ATTRS_LIST.USER]: "u",
+    });
+
+    expect(d.code).toBe(
+      HDQL_DIAGNOSTIC_CODES.MISSING_CONNECTOR_CREDENTIALS,
+    );
+    expect(d.message).toBe(
+      '`<hdml-connection type="postgresql">` needs `host`, `user` and `password`; missing: `password`. This one was dropped.',
+    );
+  });
+
+  it("spells the jdbc connector the author wrote", () => {
+    const d = dropped({
+      [CONN_ATTRS_LIST.NAME]: "c",
+      [CONN_ATTRS_LIST.TYPE]: CONN_TYPE_VALUES.CLICKHOUSE,
+      [CONN_ATTRS_LIST.HOST]: "h",
+      [CONN_ATTRS_LIST.USER]: "u",
+    });
+
+    // ★ One helper serves NINE connectors. Without the spelling
+    // map every one of them would say `postgresql`, or nothing.
+    expect(d.message).toContain('type="clickhouse"');
+    expect(d.message).not.toContain("postgres");
+  });
+
+  it("names the missing bigquery fields", () => {
+    const d = dropped({
+      [CONN_ATTRS_LIST.NAME]: "c",
+      [CONN_ATTRS_LIST.TYPE]: CONN_TYPE_VALUES.BIGQUERY,
+      [CONN_ATTRS_LIST.PROJECT_ID]: "p",
+    });
+
+    expect(d.code).toBe(
+      HDQL_DIAGNOSTIC_CODES.MISSING_CONNECTOR_CREDENTIALS,
+    );
+    expect(d.message).toBe(
+      '`<hdml-connection type="bigquery">` needs `project-id` and `credentials-key`; missing: `credentials-key`. This one was dropped.',
+    );
+  });
+
+  it("names the missing googlesheets fields", () => {
+    const d = dropped({
+      [CONN_ATTRS_LIST.NAME]: "c",
+      [CONN_ATTRS_LIST.TYPE]: CONN_TYPE_VALUES.GOOGLESHEETS,
+      [CONN_ATTRS_LIST.SHEET_ID]: "s",
+    });
+
+    expect(d.message).toBe(
+      '`<hdml-connection type="googlesheets">` needs `credentials-key` and `sheet-id`; missing: `credentials-key`. This one was dropped.',
+    );
+  });
+
+  it("reports an elasticsearch with no `host`", () => {
+    const d = dropped({
+      [CONN_ATTRS_LIST.NAME]: "c",
+      [CONN_ATTRS_LIST.TYPE]: CONN_TYPE_VALUES.ELASTICSEARCH,
+    });
+
+    expect(d.code).toBe(
+      HDQL_DIAGNOSTIC_CODES.MISSING_CONNECTOR_CREDENTIALS,
+    );
+    expect(d.message).toBe(
+      '`<hdml-connection type="elasticsearch">` needs `host`; this one was dropped.',
+    );
+  });
+
+  it("names the missing mongodb fields", () => {
+    const d = dropped({
+      [CONN_ATTRS_LIST.NAME]: "c",
+      [CONN_ATTRS_LIST.TYPE]: CONN_TYPE_VALUES.MONGODB,
+      [CONN_ATTRS_LIST.HOST]: "h",
+      [CONN_ATTRS_LIST.USER]: "u",
+    });
+
+    expect(d.message).toBe(
+      '`<hdml-connection type="mongodb">` needs `host`, `user`, `password` and `schema`; missing: `password`, `schema`. This one was dropped.',
+    );
+  });
+
+  it("names the missing snowflake fields", () => {
+    const d = dropped({
+      [CONN_ATTRS_LIST.NAME]: "c",
+      [CONN_ATTRS_LIST.TYPE]: CONN_TYPE_VALUES.SNOWFLAKE,
+      [CONN_ATTRS_LIST.ACCOUNT]: "a",
+      [CONN_ATTRS_LIST.USER]: "u",
+    });
+
+    expect(d.message).toBe(
+      '`<hdml-connection type="snowflake">` needs `account`, `user`, `password`, `database`, `role` and `warehouse`; missing: `password`, `database`, `role`, `warehouse`. This one was dropped.',
+    );
+  });
+
+  it("names which AWS credentials are missing", () => {
+    const d = dropped({
+      [CONN_ATTRS_LIST.NAME]: "c",
+      [CONN_ATTRS_LIST.TYPE]: CONN_TYPE_VALUES.ELASTICSEARCH,
+      [CONN_ATTRS_LIST.HOST]: "h",
+      [CONN_ATTRS_LIST.REGION]: "eu-central-1",
+    });
+
+    expect(d.code).toBe(
+      HDQL_DIAGNOSTIC_CODES.MISSING_CONNECTOR_CREDENTIALS,
+    );
+    // ★ The ONE site of the seven where the author supplied SOME
+    // of what is required. Asserted as SUBSTRINGS, not as a whole
+    // string: the gate is that the message names the two fields
+    // that are ABSENT and does not name the one that is PRESENT.
+    // A generic "credentials are missing" passes neither clause.
+    expect(d.message).toContain("`access-key`");
+    expect(d.message).toContain("`secret-key`");
+    expect(d.message).not.toContain("region");
+  });
+
+  it("mirrors it for the other two of the triple", () => {
+    const d = dropped({
+      [CONN_ATTRS_LIST.NAME]: "c",
+      [CONN_ATTRS_LIST.TYPE]: CONN_TYPE_VALUES.ELASTICSEARCH,
+      [CONN_ATTRS_LIST.HOST]: "h",
+      [CONN_ATTRS_LIST.ACCESS_KEY]: "ak",
+    });
+
+    expect(d.message).toContain("`region`");
+    expect(d.message).toContain("`secret-key`");
+    expect(d.message).not.toContain("`access-key`");
+  });
+
+  it("says nothing when all three AWS keys are present", () => {
+    const sink: DiagnosticSink = [];
+    const data = getConnectionData(
+      attrs({
+        [CONN_ATTRS_LIST.NAME]: "c",
+        [CONN_ATTRS_LIST.TYPE]: CONN_TYPE_VALUES.ELASTICSEARCH,
+        [CONN_ATTRS_LIST.HOST]: "h",
+        [CONN_ATTRS_LIST.REGION]: "eu-central-1",
+        [CONN_ATTRS_LIST.ACCESS_KEY]: "ak",
+        [CONN_ATTRS_LIST.SECRET_KEY]: "sk",
+      }),
+      sink,
+    );
+
+    expect(data).not.toBeNull();
+    expect(sink.length).toBe(0);
+  });
+
+  it("says nothing when none of the three is present", () => {
+    const sink: DiagnosticSink = [];
+    const data = getConnectionData(
+      attrs({
+        [CONN_ATTRS_LIST.NAME]: "c",
+        [CONN_ATTRS_LIST.TYPE]: CONN_TYPE_VALUES.ELASTICSEARCH,
+        [CONN_ATTRS_LIST.HOST]: "h",
+      }),
+      sink,
+    );
+
+    // ★ The guard is `(a || b || c) && (!a || !b || !c)`, so an
+    // empty triple is legal. These two cases are what make the
+    // case above a discrimination rather than a spelling test.
+    expect(data).not.toBeNull();
+    expect(sink.length).toBe(0);
+  });
+
+  it("records nothing for a connection it accepts", () => {
+    const sink: DiagnosticSink = [];
+    const data = getConnectionData(
+      attrs({
+        [CONN_ATTRS_LIST.NAME]: "c",
+        [CONN_ATTRS_LIST.TYPE]: CONN_TYPE_VALUES.POSTGRES,
+        [CONN_ATTRS_LIST.HOST]: "h",
+        [CONN_ATTRS_LIST.USER]: "u",
+        [CONN_ATTRS_LIST.PASSWORD]: "p",
+      }),
+      sink,
+    );
+
+    expect(data).not.toBeNull();
+    expect(sink.length).toBe(0);
   });
 });

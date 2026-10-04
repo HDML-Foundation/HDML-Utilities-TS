@@ -5,10 +5,29 @@
  */
 
 import { FilterOperatorEnum } from "@hdml/schemas";
-import { Frame, FRAME_ATTRS_LIST } from "@hdml/types";
+import {
+  Frame,
+  FRAME_ATTRS_LIST,
+  HDQL_DIAGNOSTIC_CODES,
+} from "@hdml/types";
 import { Token } from "parse5";
+import { DiagnosticSink, pushDiagnostic } from "../diagnostics";
 
-export function getFrameData(attrs: Token.Attribute[]): null | Frame {
+/**
+ * Reads an `<hdml-frame>`'s attributes into a {@link Frame}, or
+ * returns `null` when the element must be dropped.
+ *
+ * @param attrs The element's attributes.
+ * @param sink The parse's diagnostics sink. **Optional**: the
+ * module-singleton adapter and the existing unit cases call this
+ * with one argument, and an absent sink discards.
+ *
+ * @returns The frame, or `null`.
+ */
+export function getFrameData(
+  attrs: Token.Attribute[],
+  sink?: DiagnosticSink,
+): null | Frame {
   let frame: null | Frame = null;
   let name: null | string = null;
   let description: null | string = null;
@@ -37,6 +56,23 @@ export function getFrameData(attrs: Token.Attribute[]): null | Frame {
   });
 
   if (!name || !source) {
+    // The diagnostic does NOT change the `return null`: 019
+    // carries diagnostics, it does not change accept/reject
+    // (RFC 019/002 §10.2, D11).
+    const missing: string[] = [];
+    if (!name) {
+      missing.push("`name`");
+    }
+    if (!source) {
+      missing.push("`source`");
+    }
+    pushDiagnostic(
+      sink,
+      HDQL_DIAGNOSTIC_CODES.MISSING_FRAME_NAME_OR_SOURCE,
+      "`<hdml-frame>` needs `name` and `source`; missing: " +
+        missing.join(", ") +
+        ". This one was dropped.",
+    );
     return null;
   }
 
