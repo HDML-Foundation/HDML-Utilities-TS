@@ -24,7 +24,9 @@ import {
   BITWIDTH_VALUES,
   DT_UNIT_VALUES,
   TIMEZONE_VALUES,
+  HDQL_DIAGNOSTIC_CODES,
 } from "@hdml/types";
+import { DiagnosticSink } from "../diagnostics";
 import { getFieldData } from "./getFieldData";
 
 describe("The `getFieldData` function", () => {
@@ -1360,5 +1362,45 @@ describe("The `getFieldData` function", () => {
         origin: null,
       });
     }
+  });
+});
+
+describe("The `getFieldData` diagnostic", () => {
+  it("discards with no sink and still returns `null`", () => {
+    expect(
+      getFieldData([{ name: FIELD_ATTRS_LIST.TYPE, value: "int32" }]),
+    ).toBeNull();
+  });
+
+  it("records the drop and still returns `null`", () => {
+    const sink: DiagnosticSink = [];
+    const data = getFieldData(
+      [{ name: FIELD_ATTRS_LIST.TYPE, value: "int32" }],
+      sink,
+    );
+
+    expect(data).toBeNull();
+    expect(sink.length).toBe(1);
+    expect(sink[0].code).toBe(
+      HDQL_DIAGNOSTIC_CODES.MISSING_FIELD_NAME,
+    );
+    expect(sink[0].severity).toBe("error");
+    expect(sink[0].message).toBe(
+      "`<hdml-field>` needs a `name`; this one was dropped.",
+    );
+    // The helper has no element to anchor to: `createElement`
+    // attaches it after the switch returns.
+    expect(sink[0].element === null).toBe(true);
+  });
+
+  it("records nothing for a field it accepts", () => {
+    const sink: DiagnosticSink = [];
+    const data = getFieldData(
+      [{ name: FIELD_ATTRS_LIST.NAME, value: "ok" }],
+      sink,
+    );
+
+    expect(data).not.toBeNull();
+    expect(sink.length).toBe(0);
   });
 });

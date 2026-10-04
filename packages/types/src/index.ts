@@ -61,6 +61,7 @@ export { FILTER_TYPE_VALUES } from "./enums/FILTER_TYPE_VALUES";
 export { FRAME_ATTRS_LIST } from "./enums/FRAME_ATTRS_LIST";
 export { GRID_ATTRS_LIST } from "./enums/GRID_ATTRS_LIST";
 export { HDML_TAG_NAMES } from "./enums/HDML_TAG_NAMES";
+export { HDQL_DIAGNOSTIC_CODES } from "./enums/HDQL_DIAGNOSTIC_CODES";
 export { JOIN_ATTRS_LIST } from "./enums/JOIN_ATTRS_LIST";
 export { JOIN_TYPE_VALUES } from "./enums/JOIN_TYPE_VALUES";
 export { LABEL_ATTRS_LIST } from "./enums/LABEL_ATTRS_LIST";

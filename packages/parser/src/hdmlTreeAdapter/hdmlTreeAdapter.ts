@@ -37,6 +37,80 @@ import { getJoinData } from "./getJoinData";
 import { getConnectiveData } from "./getConnectiveData";
 import { getFilterData } from "./getFilterData";
 import { elementPath } from "./elementPath";
+import { DiagnosticSink, anchorDiagnostics } from "../diagnostics";
+
+/**
+ * Builds the `Element` and, when a sink is supplied, records every
+ * element the `get*Data` helpers dropped. Factored out of the
+ * adapter literal so {@link createHdmlTreeAdapter} can bind it to
+ * one parse's sink; `createElement`'s own signature is fixed by
+ * `parse5`'s `TreeAdapter` and cannot carry it.
+ *
+ * @param tagName The element's tag name.
+ * @param attrs The element's attributes.
+ * @param sink The parse's sink, or `undefined` to discard.
+ *
+ * @returns The new element.
+ */
+function buildElement(
+  tagName: string,
+  attrs: Token.Attribute[],
+  sink?: DiagnosticSink,
+): Element {
+  // Read BEFORE the switch: whatever the helper pushes lands at or
+  // after this index, and the element it is about is the one built
+  // below -- which does not exist yet, and has neither `loc` nor
+  // `path` until `parse5` stamps them two calls later.
+  const mark = sink ? sink.length : 0;
+  let hddmData: null | HDDMData = null;
+
+  switch (tagName as HDML_TAG_NAMES) {
+    case HDML_TAG_NAMES.CONNECTION:
+      hddmData = getConnectionData(attrs);
+      break;
+    case HDML_TAG_NAMES.MODEL:
+      hddmData = getModelData(attrs);
+      break;
+    case HDML_TAG_NAMES.DATASET:
+      hddmData = getTableData(attrs);
+      break;
+    case HDML_TAG_NAMES.FRAME:
+      hddmData = getFrameData(attrs);
+      break;
+    case HDML_TAG_NAMES.JOIN:
+      hddmData = getJoinData(attrs);
+      break;
+    case HDML_TAG_NAMES.CONNECTIVE:
+      hddmData = getConnectiveData(attrs);
+      break;
+    case HDML_TAG_NAMES.FILTER:
+      hddmData = getFilterData(attrs);
+      break;
+    case HDML_TAG_NAMES.FIELD:
+      hddmData = getFieldData(attrs, sink);
+      break;
+    case HDML_TAG_NAMES.FILTER_BY:
+    case HDML_TAG_NAMES.GROUP_BY:
+    case HDML_TAG_NAMES.SORT_BY:
+    case HDML_TAG_NAMES.SPLIT_BY:
+      break;
+  }
+
+  const element: Element = {
+    nodeName: tagName,
+    tagName,
+    attrs,
+    rootNode: null,
+    parentNode: null,
+    childNodes: [],
+    hddm: null,
+    hddmData,
+    loc: null,
+    path: null,
+  };
+  anchorDiagnostics(sink, mark, element);
+  return element;
+}
 
 export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
   // HDML related methods
@@ -52,52 +126,9 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
     namespaceURI: html.NS,
     attrs: Token.Attribute[],
   ): Element {
-    let hddmData: null | HDDMData = null;
-
-    switch (tagName as HDML_TAG_NAMES) {
-      case HDML_TAG_NAMES.CONNECTION:
-        hddmData = getConnectionData(attrs);
-        break;
-      case HDML_TAG_NAMES.MODEL:
-        hddmData = getModelData(attrs);
-        break;
-      case HDML_TAG_NAMES.DATASET:
-        hddmData = getTableData(attrs);
-        break;
-      case HDML_TAG_NAMES.FRAME:
-        hddmData = getFrameData(attrs);
-        break;
-      case HDML_TAG_NAMES.JOIN:
-        hddmData = getJoinData(attrs);
-        break;
-      case HDML_TAG_NAMES.CONNECTIVE:
-        hddmData = getConnectiveData(attrs);
-        break;
-      case HDML_TAG_NAMES.FILTER:
-        hddmData = getFilterData(attrs);
-        break;
-      case HDML_TAG_NAMES.FIELD:
-        hddmData = getFieldData(attrs);
-        break;
-      case HDML_TAG_NAMES.FILTER_BY:
-      case HDML_TAG_NAMES.GROUP_BY:
-      case HDML_TAG_NAMES.SORT_BY:
-      case HDML_TAG_NAMES.SPLIT_BY:
-        break;
-    }
-
-    return {
-      nodeName: tagName,
-      tagName,
-      attrs,
-      rootNode: null,
-      parentNode: null,
-      childNodes: [],
-      hddm: null,
-      hddmData,
-      loc: null,
-      path: null,
-    };
+    // No sink: the module singleton collects nothing. A parse that
+    // wants diagnostics goes through `createHdmlTreeAdapter`.
+    return buildElement(tagName, attrs);
   },
 
   appendChild(parentNode: ParentNode, newNode: ChildNode): void {
@@ -484,3 +515,41 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
     Object.assign(node.loc, location);
   },
 };
+
+/**
+ * Builds a tree adapter bound to **one** parse's diagnostics sink.
+ *
+ * ★ The seam exists for exactly one reason: `parseFragment` takes a
+ * `treeAdapter` and offers no way to hand it per-parse state, and
+ * `parseHDML` is called **twice inside one `sql` compile** — once
+ * on the reconstructed document, once on the adapted one. A
+ * module-level collector would merge the two documents'
+ * diagnostics with no way to tell them apart (RFC 019/002 §3.5).
+ * The obvious simplification — one shared array — breaks that
+ * silently; the gate that catches it parses a bad document and then
+ * a clean one and asserts the second is empty.
+ *
+ * ★ Only `createElement` is rebound. Every other method on the
+ * adapter is a pure function of its arguments — none reads or
+ * writes adapter state — so the spread copies share the
+ * singleton's implementations, including their `hdmlTreeAdapter.*`
+ * self-calls, with identical behaviour.
+ *
+ * @param sink The sink this adapter's `createElement` pushes onto.
+ *
+ * @returns An adapter usable exactly once, for one document.
+ */
+export function createHdmlTreeAdapter(
+  sink: DiagnosticSink,
+): HDMLTreeAdapter<HDMLTreeAdapterMap> {
+  return {
+    ...hdmlTreeAdapter,
+    createElement(
+      tagName: string,
+      namespaceURI: html.NS,
+      attrs: Token.Attribute[],
+    ): Element {
+      return buildElement(tagName, attrs, sink);
+    },
+  };
+}

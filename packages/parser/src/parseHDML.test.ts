@@ -6,8 +6,18 @@
 
 /* eslint-disable max-len */
 
+import { HDQL_DIAGNOSTIC_CODES } from "@hdml/types";
 import { performance } from "perf_hooks";
+import { parseFragment } from "parse5";
+import { HdqlDiagnostic } from "./diagnostics";
+import { elementPath } from "./hdmlTreeAdapter/elementPath";
+import { hdmlTreeAdapter } from "./hdmlTreeAdapter/hdmlTreeAdapter";
 import { parseHDML } from "./parseHDML";
+import {
+  Element,
+  HDMLTreeAdapterMap,
+  ParentNode,
+} from "./types/HDMLTreeAdapterMap";
 
 const html = `
   <!doctype html>
@@ -1663,5 +1673,173 @@ describe("The `parseHDML` function", () => {
       measures.reduce((a, b) => a + b, 0) / measures.length || 0;
 
     expect(avg).toBeLessThan(5);
+  });
+});
+
+// ---------------------------------------------------------------
+// 019 step 09 -- the first HDQL parse diagnostic.
+//
+// ★ Every document here carries wrapper markup. A flat HDML
+// document cannot test an anchor: at step 08 eleven path gates
+// passed against a path that was wrong, because every test
+// document had its HDML elements as each other's direct children,
+// and the live corpus wraps everything in `<div id="hdml"><div>`.
+// ---------------------------------------------------------------
+
+/** A document whose SECOND `<hdml-field>` has no `name`. */
+const dropped = `
+  <div id="hdml">
+    <div>
+      <hdml-model name="m">
+        <hdml-dataset name="d" type="table" identifier="t">
+          <div><hdml-field name="ok"></hdml-field></div>
+          <div><hdml-field type="int32"></hdml-field></div>
+        </hdml-dataset>
+      </hdml-model>
+    </div>
+  </div>
+`;
+
+/** The same document with the second field named. */
+const clean = dropped.replace('type="int32"', 'name="also"');
+
+/**
+ * The one-based line, one-based column and zero-based offset of
+ * `needle` in `src`. Derived rather than hard-coded, so the gate
+ * does not move when the literal above is re-indented.
+ */
+function at(
+  src: string,
+  needle: string,
+): { line: number; column: number; offset: number } {
+  const offset = src.indexOf(needle);
+  return {
+    line: src.slice(0, offset).split("\n").length,
+    column: offset - src.lastIndexOf("\n", offset),
+    offset,
+  };
+}
+
+const FIELD_PATH = "hdml-model[0]/hdml-dataset[0]/hdml-field[1]";
+const FIELD_MESSAGE =
+  "`<hdml-field>` needs a `name`; this one was dropped.";
+
+describe("HDQL parse diagnostics", () => {
+  it("reports the field that vanishes", () => {
+    const d: HdqlDiagnostic[] = [];
+    const hdom = parseHDML(dropped, d);
+
+    expect(d.length).toBe(1);
+    expect(d[0].code).toBe(HDQL_DIAGNOSTIC_CODES.MISSING_FIELD_NAME);
+    expect(d[0].severity).toBe("error");
+    expect(d[0].message).toBe(FIELD_MESSAGE);
+    // ★ The ordinal is [1] even though only [0] survived into
+    // `fields`: the path counts TREE siblings, which is what an
+    // author needs to hear -- "the second field in that dataset".
+    expect(d[0].path).toBe(FIELD_PATH);
+
+    const anchor = at(dropped, '<hdml-field type="int32"');
+    expect(d[0].line).toBe(anchor.line);
+    expect(d[0].column).toBe(anchor.column);
+    expect(d[0].offset).toBe(anchor.offset);
+
+    // ★ The HDOM is unchanged: 019 carries diagnostics, it does
+    // not change accept/reject (RFC 019/002 §10.2, D11).
+    expect(
+      hdom.models[0].tables[0].fields.map((f) => f.name),
+    ).toEqual(["ok"]);
+  });
+
+  it("does not throw and still returns an HDOM", () => {
+    expect(() => parseHDML(dropped)).not.toThrow();
+    const hdom = parseHDML(dropped);
+    expect(hdom.models.length).toBe(1);
+    expect(hdom.models[0].tables[0].fields.length).toBe(1);
+  });
+
+  it("returns an empty array for a clean document", () => {
+    const d: HdqlDiagnostic[] = [];
+    const hdom = parseHDML(clean, d);
+
+    // ★ An empty ARRAY, asserted as one -- never a falsy check
+    // that an absent value would also pass. This is the
+    // distinction 022 inherits.
+    expect(Array.isArray(d)).toBe(true);
+    expect(d.length).toBe(0);
+    expect(
+      hdom.models[0].tables[0].fields.map((f) => f.name),
+    ).toEqual(["ok", "also"]);
+  });
+
+  it("keeps two parses apart", () => {
+    const first: HdqlDiagnostic[] = [];
+    const second: HdqlDiagnostic[] = [];
+    parseHDML(dropped, first);
+    parseHDML(clean, second);
+    expect(first.length).toBe(1);
+    expect(second.length).toBe(0);
+  });
+
+  it("keeps two parses apart in either order", () => {
+    const first: HdqlDiagnostic[] = [];
+    const second: HdqlDiagnostic[] = [];
+    parseHDML(clean, first);
+    parseHDML(dropped, second);
+    expect(first.length).toBe(0);
+    expect(second.length).toBe(1);
+  });
+
+  it("does not leak from a parse with no array", () => {
+    // ★ A module-level sink that resets itself on EVERY drain is
+    // behaviourally a per-parse sink and the two gates above
+    // cannot see it -- measured. One that resets only when it
+    // drains is a real defect, and this is the observable: a
+    // caller that wants no diagnostics still gets a parse, and
+    // what that parse dropped may not reach the next caller.
+    parseHDML(dropped);
+    const d: HdqlDiagnostic[] = [];
+    parseHDML(clean, d);
+    expect(d.length).toBe(0);
+  });
+
+  it("resolves the anchor after the parse, not before", () => {
+    const d: HdqlDiagnostic[] = [];
+    parseHDML(dropped, d);
+
+    // ★ An anchor read where the diagnostic is PUSHED is read
+    // before `appendChild` has run at all, so it is `null`. These
+    // four clauses are the whole discrimination.
+    expect(d[0].path !== null).toBe(true);
+    expect(d[0].path?.includes("div")).toBe(false);
+    expect(d[0].path).toBe(FIELD_PATH);
+    expect(d[0].offset !== null).toBe(true);
+  });
+
+  it("agrees with the path stamped on the element", () => {
+    const d: HdqlDiagnostic[] = [];
+    parseHDML(dropped, d);
+
+    const fragment = parseFragment<HDMLTreeAdapterMap>(dropped, {
+      onParseError: () => {},
+      scriptingEnabled: false,
+      treeAdapter: hdmlTreeAdapter,
+    });
+    const found: Element[] = [];
+    const visit = (node: ParentNode): void => {
+      for (const child of node.childNodes) {
+        if (!child) {
+          continue;
+        }
+        if (child.tagName === "hdml-field") {
+          found.push(child);
+        }
+        visit(child);
+      }
+    };
+    visit(fragment);
+
+    expect(found.length).toBe(2);
+    expect(found[1].hddmData === null).toBe(true);
+    expect(elementPath(found[1])).toBe(d[0].path);
   });
 });

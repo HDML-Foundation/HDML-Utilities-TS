@@ -22,11 +22,27 @@ import {
   BITWIDTH_VALUES,
   DT_UNIT_VALUES,
   TIMEZONE_VALUES,
+  HDQL_DIAGNOSTIC_CODES,
 } from "@hdml/types";
 import { Token } from "parse5";
 import { backticksToQuotes } from "./backticksToQuotes";
+import { DiagnosticSink, pushDiagnostic } from "../diagnostics";
 
-export function getFieldData(attrs: Token.Attribute[]): null | Field {
+/**
+ * Reads an `<hdml-field>`'s attributes into a {@link Field}, or
+ * returns `null` when the element must be dropped.
+ *
+ * @param attrs The element's attributes.
+ * @param sink The parse's diagnostics sink. **Optional**: the
+ * module-singleton adapter and ~60 existing unit cases call this
+ * with one argument, and an absent sink discards.
+ *
+ * @returns The field, or `null`.
+ */
+export function getFieldData(
+  attrs: Token.Attribute[],
+  sink?: DiagnosticSink,
+): null | Field {
   let name: null | string = null;
   let description: null | string = null;
   let origin: null | string = null;
@@ -220,6 +236,15 @@ export function getFieldData(attrs: Token.Attribute[]): null | Field {
   });
 
   if (!name) {
+    // The diagnostic does NOT change the `return null`: 019
+    // carries diagnostics, it does not change accept/reject
+    // (RFC 019/002 §10.2, D11). The element still vanishes from
+    // its dataset's `fields`; it now says so.
+    pushDiagnostic(
+      sink,
+      HDQL_DIAGNOSTIC_CODES.MISSING_FIELD_NAME,
+      "`<hdml-field>` needs a `name`; this one was dropped.",
+    );
     return null;
   }
 

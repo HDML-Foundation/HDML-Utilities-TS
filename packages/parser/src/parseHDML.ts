@@ -6,7 +6,13 @@
 
 import { HDOM } from "@hdml/types";
 import { parseFragment } from "parse5";
-import { hdmlTreeAdapter } from "./hdmlTreeAdapter/hdmlTreeAdapter";
+// eslint-disable-next-line max-len
+import { createHdmlTreeAdapter } from "./hdmlTreeAdapter/hdmlTreeAdapter";
+import {
+  DiagnosticSink,
+  HdqlDiagnostic,
+  drainDiagnostics,
+} from "./diagnostics";
 import { sortFrames } from "./sortFrames";
 import { HDMLTreeAdapterMap } from "./types/HDMLTreeAdapterMap";
 
@@ -21,9 +27,16 @@ import { HDMLTreeAdapterMap } from "./types/HDMLTreeAdapterMap";
  * document's structure.
  *
  * @param content The HDML content represented as a string.
+ * @param diagnostics An array this call appends one
+ * {@link HdqlDiagnostic} to per element the parser dropped. Pass
+ * one to receive them; omit it and they are discarded. It is an
+ * out-parameter rather than part of the return value because
+ * `HDOM` is serialized and hashed, so a fourth field on it would
+ * move every `@hdml/hash` and `@hdml/buffer` digest.
  *
  * @returns The parsed `HDOM` object, representing the HDML
- * document structure.
+ * document structure. ★ Unchanged by this parameter: a dropped
+ * element does not fail the compile (RFC 019/002 §10.2, D11).
  *
  * ## Example:
  * ```ts
@@ -32,13 +45,25 @@ import { HDMLTreeAdapterMap } from "./types/HDMLTreeAdapterMap";
  * console.log(hdom);
  * ```
  */
-export function parseHDML(content: string): HDOM {
+export function parseHDML(
+  content: string,
+  diagnostics?: HdqlDiagnostic[],
+): HDOM {
+  // One sink per call, handed to one adapter per call. See
+  // `createHdmlTreeAdapter` for why it may not be module-level.
+  const sink: DiagnosticSink = [];
+  const adapter = createHdmlTreeAdapter(sink);
   const fragment = parseFragment<HDMLTreeAdapterMap>(content, {
     onParseError: console.error,
     scriptingEnabled: false,
-    treeAdapter: hdmlTreeAdapter,
+    treeAdapter: adapter,
   });
-  const node = hdmlTreeAdapter.getFirstChild(fragment);
+  // Drained here, not where each entry was pushed: `loc` and
+  // `path` are only final once the parse has finished.
+  if (diagnostics) {
+    diagnostics.push(...drainDiagnostics(sink));
+  }
+  const node = adapter.getFirstChild(fragment);
   const hddm = node?.rootNode?.hddm || {
     connections: [],
     models: [],
