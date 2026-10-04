@@ -49,7 +49,7 @@ const hdml = `
     <!-- Tables -->
     <div>
       <!-- Amazon stock table -->
-      <hdml-table
+      <hdml-dataset
         name="amazon"
         type="table"
         identifier="\`tenant_postgres\`.\`public\`.\`amazon_stock\`">
@@ -81,10 +81,10 @@ const hdml = `
         <hdml-field
           name="date">
         </hdml-field>
-      </hdml-table>
+      </hdml-dataset>
 
       <!-- Apple stock table -->
-      <hdml-table
+      <hdml-dataset
         name="apple"
         type="table"
         identifier="\`tenant_postgres\`.\`public\`.\`apple_stock\`">
@@ -116,10 +116,10 @@ const hdml = `
         <hdml-field
           name="date">
         </hdml-field>
-      </hdml-table>
+      </hdml-dataset>
 
       <!-- Google stock table -->
-      <hdml-table
+      <hdml-dataset
         name="google"
         type="table"
         identifier="\`tenant_postgres\`.\`public\`.\`google_stock\`">
@@ -151,10 +151,10 @@ const hdml = `
         <hdml-field
           name="date">
         </hdml-field>
-      </hdml-table>
+      </hdml-dataset>
 
       <!-- Microsoft stock table -->
-      <hdml-table
+      <hdml-dataset
         name="microsoft"
         type="table"
         identifier="\`tenant_postgres\`.\`public\`.\`microsoft_stock\`">
@@ -186,10 +186,10 @@ const hdml = `
         <hdml-field
           name="date">
         </hdml-field>
-      </hdml-table>
+      </hdml-dataset>
 
       <!-- Netflix stock table -->
-      <hdml-table
+      <hdml-dataset
         name="netflix"
         type="table"
         identifier="\`tenant_postgres\`.\`public\`.\`netflix_stock\`">
@@ -221,7 +221,7 @@ const hdml = `
         <hdml-field
           name="date">
         </hdml-field>
-      </hdml-table>
+      </hdml-dataset>
     </div>
 
     <!-- Joins -->

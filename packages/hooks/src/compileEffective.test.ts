@@ -34,13 +34,13 @@ import { compileEffective } from "./compileEffective";
 
 const modelHDML = `
   <hdml-model name="m_stock">
-    <hdml-table
+    <hdml-dataset
       name="amazon"
       type="table"
       identifier="\`pg\`.\`public\`.\`amazon_stock\`">
       <hdml-field name="open"></hdml-field>
       <hdml-field name="salary"></hdml-field>
-    </hdml-table>
+    </hdml-dataset>
   </hdml-model>
 `;
 

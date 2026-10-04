@@ -14,8 +14,8 @@ import {
   Join,
   HDML_TAG_NAMES,
   MODEL_ATTRS_LIST,
-  TABLE_ATTRS_LIST,
-  TABLE_TYPE_VALUES,
+  DATASET_ATTRS_LIST,
+  DATASET_TYPE_VALUES,
 } from "@hdml/types";
 import { t } from "./constants";
 import { getTableFieldSQL, getFieldHTML } from "./field";
@@ -174,22 +174,22 @@ export function getTableHTML(table: TableStruct, level = 0): string {
   let type = "";
   switch (table.type()) {
     case TableTypeEnum.Table:
-      type = TABLE_TYPE_VALUES.TABLE;
+      type = DATASET_TYPE_VALUES.TABLE;
       break;
 
     case TableTypeEnum.Query:
-      type = TABLE_TYPE_VALUES.QUERY;
+      type = DATASET_TYPE_VALUES.QUERY;
       break;
   }
 
   let html =
-    `${prefix}<${HDML_TAG_NAMES.TABLE} ` +
-    `${TABLE_ATTRS_LIST.NAME}="${table.name()}" ` +
-    `${TABLE_ATTRS_LIST.TYPE}="${type}" ` +
-    `${TABLE_ATTRS_LIST.IDENTIFIER}=` +
+    `${prefix}<${HDML_TAG_NAMES.DATASET} ` +
+    `${DATASET_ATTRS_LIST.NAME}="${table.name()}" ` +
+    `${DATASET_ATTRS_LIST.TYPE}="${type}" ` +
+    `${DATASET_ATTRS_LIST.IDENTIFIER}=` +
     `"${table.identifier()?.replaceAll('"', "`")}">\n`;
   html = html + `${fieldsHTML}\n`;
-  html = html + `${prefix}</${HDML_TAG_NAMES.TABLE}>`;
+  html = html + `${prefix}</${HDML_TAG_NAMES.DATASET}>`;
   return html;
 }
 

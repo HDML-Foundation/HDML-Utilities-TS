@@ -38,9 +38,9 @@ export class AdaptationError extends Error {
  * `remove-element` deletes every matched element and its whole
  * subtree (a removed `hdml-frame` takes its `hdml-field`s); it
  * ignores `attribute` / `value`. It removes a **declaration**, not a
- * column: dropping an `hdml-field` from a model's `hdml-table` leaves
- * every surviving sibling still reading the physical column, through
- * `clause` or through `origin` alone — `@hdml/stringifier`'s
+ * column: dropping an `hdml-field` from a model's `hdml-dataset`
+ * leaves every surviving sibling still reading the physical column,
+ * through `clause` or through `origin` alone — `@hdml/stringifier`'s
  * `getPlainClauseSQL` falls back to `"${origin || name}"` against the
  * physical table. A per-role restriction binds at a **frame**, whose
  * SQL selects only from its source's surviving projection; see the

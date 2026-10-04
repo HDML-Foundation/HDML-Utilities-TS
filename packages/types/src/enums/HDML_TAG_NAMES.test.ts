@@ -30,13 +30,23 @@ import { VIEW_ATTRS_LIST } from "./VIEW_ATTRS_LIST";
 
 /**
  * The twelve data (HDQL) tags, hardcoded. This list is the regression
- * guard on a published enum: it must never change.
+ * guard on a published enum: an accidental edit to `HDML_TAG_NAMES`
+ * fails here rather than silently changing the authoring vocabulary.
+ *
+ * It has changed exactly once. Project 019 renamed `hdml-table` to
+ * `hdml-dataset` (`TABLE` -> `DATASET`), a deliberate breaking change
+ * with no deprecation alias, because an element called `hdml-table`
+ * that can also hold a query is the thing that lies — `type="table"`
+ * and `type="query"` remain the discriminator (RFC 019/001 §3.4,
+ * D15). It was safe to break because no external consumer exists.
+ * Moving a line here is therefore a decision, never a fix: change it
+ * only with the same kind of reason written down.
  */
 const DATA_TAGS = [
   "hdml-connection",
   "hdml-frame",
   "hdml-model",
-  "hdml-table",
+  "hdml-dataset",
   "hdml-join",
   "hdml-connective",
   "hdml-filter-by",

@@ -7,7 +7,7 @@
 /* eslint-disable max-len */
 
 import { TableTypeEnum } from "@hdml/schemas";
-import { Table, TABLE_ATTRS_LIST } from "@hdml/types";
+import { Table, DATASET_ATTRS_LIST } from "@hdml/types";
 import { getTableData } from "./getTableData";
 
 describe("The `getTableData` function", () => {
@@ -21,8 +21,8 @@ describe("The `getTableData` function", () => {
 
   it("shoud return `null` if `name` attribute is missed", () => {
     const data = getTableData([
-      { name: TABLE_ATTRS_LIST.TYPE, value: "table" },
-      { name: TABLE_ATTRS_LIST.IDENTIFIER, value: "identifier" },
+      { name: DATASET_ATTRS_LIST.TYPE, value: "table" },
+      { name: DATASET_ATTRS_LIST.IDENTIFIER, value: "identifier" },
     ]) as Table;
 
     expect(data).toBeNull();
@@ -30,8 +30,8 @@ describe("The `getTableData` function", () => {
 
   it("shoud return `null` if `type` attribute is missed", () => {
     const data = getTableData([
-      { name: TABLE_ATTRS_LIST.NAME, value: "name" },
-      { name: TABLE_ATTRS_LIST.IDENTIFIER, value: "identifier" },
+      { name: DATASET_ATTRS_LIST.NAME, value: "name" },
+      { name: DATASET_ATTRS_LIST.IDENTIFIER, value: "identifier" },
     ]) as Table;
 
     expect(data).toBeNull();
@@ -39,8 +39,8 @@ describe("The `getTableData` function", () => {
 
   it("shoud return `null` if `identifier` attribute is missed", () => {
     const data = getTableData([
-      { name: TABLE_ATTRS_LIST.NAME, value: "name" },
-      { name: TABLE_ATTRS_LIST.TYPE, value: "table" },
+      { name: DATASET_ATTRS_LIST.NAME, value: "name" },
+      { name: DATASET_ATTRS_LIST.TYPE, value: "table" },
     ]) as Table;
 
     expect(data).toBeNull();
@@ -48,9 +48,9 @@ describe("The `getTableData` function", () => {
 
   it("shoud return `null` if incorrect `type` attribute was passed", () => {
     const data = getTableData([
-      { name: TABLE_ATTRS_LIST.NAME, value: "name" },
-      { name: TABLE_ATTRS_LIST.TYPE, value: "type" },
-      { name: TABLE_ATTRS_LIST.IDENTIFIER, value: "identifier" },
+      { name: DATASET_ATTRS_LIST.NAME, value: "name" },
+      { name: DATASET_ATTRS_LIST.TYPE, value: "type" },
+      { name: DATASET_ATTRS_LIST.IDENTIFIER, value: "identifier" },
     ]) as Table;
 
     expect(data).toBeNull();
@@ -59,10 +59,10 @@ describe("The `getTableData` function", () => {
   it("shoud return `Table` object if correct attributes are passed", () => {
     // table type
     let data = getTableData([
-      { name: TABLE_ATTRS_LIST.NAME, value: "name" },
-      { name: TABLE_ATTRS_LIST.TYPE, value: "table" },
-      { name: TABLE_ATTRS_LIST.IDENTIFIER, value: "identifier" },
-      { name: TABLE_ATTRS_LIST.DESCRIPTION, value: "description" },
+      { name: DATASET_ATTRS_LIST.NAME, value: "name" },
+      { name: DATASET_ATTRS_LIST.TYPE, value: "table" },
+      { name: DATASET_ATTRS_LIST.IDENTIFIER, value: "identifier" },
+      { name: DATASET_ATTRS_LIST.DESCRIPTION, value: "description" },
     ]) as Table;
 
     expect(data).not.toBeNull();
@@ -76,9 +76,9 @@ describe("The `getTableData` function", () => {
 
     // query type
     data = getTableData([
-      { name: TABLE_ATTRS_LIST.NAME, value: "name" },
-      { name: TABLE_ATTRS_LIST.TYPE, value: "query" },
-      { name: TABLE_ATTRS_LIST.IDENTIFIER, value: "identifier" },
+      { name: DATASET_ATTRS_LIST.NAME, value: "name" },
+      { name: DATASET_ATTRS_LIST.TYPE, value: "query" },
+      { name: DATASET_ATTRS_LIST.IDENTIFIER, value: "identifier" },
     ]) as Table;
 
     expect(data).not.toBeNull();

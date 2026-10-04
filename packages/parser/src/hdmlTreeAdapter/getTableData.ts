@@ -7,8 +7,8 @@
 import { TableTypeEnum } from "@hdml/schemas";
 import {
   Table,
-  TABLE_ATTRS_LIST,
-  TABLE_TYPE_VALUES,
+  DATASET_ATTRS_LIST,
+  DATASET_TYPE_VALUES,
 } from "@hdml/types";
 import { Token } from "parse5";
 import { backticksToQuotes } from "./backticksToQuotes";
@@ -20,24 +20,24 @@ export function getTableData(attrs: Token.Attribute[]): null | Table {
   let identifier: null | string = null;
   let description: null | string = null;
   attrs.forEach((attr) => {
-    switch (attr.name as TABLE_ATTRS_LIST) {
-      case TABLE_ATTRS_LIST.NAME:
+    switch (attr.name as DATASET_ATTRS_LIST) {
+      case DATASET_ATTRS_LIST.NAME:
         name = attr.value;
         break;
-      case TABLE_ATTRS_LIST.TYPE:
-        switch (attr.value as TABLE_TYPE_VALUES) {
-          case TABLE_TYPE_VALUES.TABLE:
+      case DATASET_ATTRS_LIST.TYPE:
+        switch (attr.value as DATASET_TYPE_VALUES) {
+          case DATASET_TYPE_VALUES.TABLE:
             type = TableTypeEnum.Table;
             break;
-          case TABLE_TYPE_VALUES.QUERY:
+          case DATASET_TYPE_VALUES.QUERY:
             type = TableTypeEnum.Query;
             break;
         }
         break;
-      case TABLE_ATTRS_LIST.IDENTIFIER:
+      case DATASET_ATTRS_LIST.IDENTIFIER:
         identifier = backticksToQuotes(attr.value);
         break;
-      case TABLE_ATTRS_LIST.DESCRIPTION:
+      case DATASET_ATTRS_LIST.DESCRIPTION:
         description = attr.value;
         break;
     }

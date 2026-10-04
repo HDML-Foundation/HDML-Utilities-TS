@@ -43,13 +43,13 @@ const deps: CompilerDeps = {
 
 const modelHDML = `
   <hdml-model name="m_stock">
-    <hdml-table
+    <hdml-dataset
       name="amazon"
       type="table"
       identifier="\`pg\`.\`public\`.\`amazon_stock\`">
       <hdml-field name="open"></hdml-field>
       <hdml-field name="close"></hdml-field>
-    </hdml-table>
+    </hdml-dataset>
   </hdml-model>
 `;
 
@@ -87,7 +87,7 @@ describe("compileSource", () => {
     expect(out.result).toHaveLength(1);
     const html = out.result[0];
     expect(html).toContain('<hdml-model name="m_stock">');
-    expect(html).toContain('<hdml-table name="amazon"');
+    expect(html).toContain('<hdml-dataset name="amazon"');
     expect(html).toContain('<hdml-frame name="leaf"');
   });
 

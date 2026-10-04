@@ -48,13 +48,13 @@ const deps: CompilerDeps = {
 
 const modelHDML = `
   <hdml-model name="m_stock">
-    <hdml-table
+    <hdml-dataset
       name="amazon"
       type="table"
       identifier="\`pg\`.\`public\`.\`amazon_stock\`">
       <hdml-field name="open"></hdml-field>
       <hdml-field name="close"></hdml-field>
-    </hdml-table>
+    </hdml-dataset>
   </hdml-model>
 `;
 
@@ -241,12 +241,12 @@ describe("compileSql", () => {
 function empModelHDML(fields: string): string {
   return `
     <hdml-model name="m_emp">
-      <hdml-table
+      <hdml-dataset
         name="employees"
         type="table"
         identifier="\`pg\`.\`public\`.\`employees\`">
         ${fields}
-      </hdml-table>
+      </hdml-dataset>
     </hdml-model>
   `;
 }
@@ -316,7 +316,7 @@ describe("adaptation boundary (O10)", () => {
       ],
       output: "sql",
       adaptation_policy: removePolicy(
-        "hdml-table hdml-field[name='salary']",
+        "hdml-dataset hdml-field[name='salary']",
       ),
       role: "analyst",
     }) as CompilerResult;
@@ -360,7 +360,7 @@ describe("adaptation boundary (O10)", () => {
       ],
       output: "sql",
       adaptation_policy: removePolicy(
-        "hdml-table hdml-field[name='salary']",
+        "hdml-dataset hdml-field[name='salary']",
       ),
       role: "analyst",
     }) as CompilerResult;
@@ -483,7 +483,7 @@ describe("adaptation boundary (O10)", () => {
         roles: {
           analyst: [
             {
-              selector: "hdml-table hdml-field[name='emp_name']",
+              selector: "hdml-dataset hdml-field[name='emp_name']",
               action: "set-attribute",
               attribute: "origin",
               value: "salary",

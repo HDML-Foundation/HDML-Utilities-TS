@@ -60,7 +60,7 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
       case HDML_TAG_NAMES.MODEL:
         hddmData = getModelData(attrs);
         break;
-      case HDML_TAG_NAMES.TABLE:
+      case HDML_TAG_NAMES.DATASET:
         hddmData = getTableData(attrs);
         break;
       case HDML_TAG_NAMES.FRAME:
@@ -153,7 +153,7 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
           );
         }
         break;
-      case HDML_TAG_NAMES.TABLE:
+      case HDML_TAG_NAMES.DATASET:
         if (element.hddmData) {
           parent = hdmlTreeAdapter.getHdmlParentTag(element, [
             HDML_TAG_NAMES.MODEL,
@@ -226,7 +226,7 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
       case HDML_TAG_NAMES.FIELD:
         if (element.hddmData) {
           parent = hdmlTreeAdapter.getHdmlParentTag(element, [
-            HDML_TAG_NAMES.TABLE,
+            HDML_TAG_NAMES.DATASET,
             HDML_TAG_NAMES.FRAME,
             HDML_TAG_NAMES.GROUP_BY,
             HDML_TAG_NAMES.SORT_BY,
@@ -234,7 +234,7 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
           ]);
           if (parent) {
             switch (parent.nodeName as HDML_TAG_NAMES) {
-              case HDML_TAG_NAMES.TABLE:
+              case HDML_TAG_NAMES.DATASET:
               case HDML_TAG_NAMES.FRAME:
                 data = parent.hddmData as Table | Frame;
                 data.fields.push(element.hddmData as Field);

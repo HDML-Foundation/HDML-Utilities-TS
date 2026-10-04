@@ -274,7 +274,7 @@ export type FieldType =
  *   additional information about the field's purpose or usage.
  *
  * - `origin` (string): The name of the original field in the database
- *   if used within the scope of hdml-table, or in the parent
+ *   if used within the scope of hdml-dataset, or in the parent
  *   structure if used within the scope of an hdml-frame. If omitted,
  *   it is assumed to be the same as the HDML field name.
  *

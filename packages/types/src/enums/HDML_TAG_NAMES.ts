@@ -14,7 +14,7 @@ export enum HDML_TAG_NAMES {
   CONNECTION = "hdml-connection",
   FRAME = "hdml-frame",
   MODEL = "hdml-model",
-  TABLE = "hdml-table",
+  DATASET = "hdml-dataset",
   JOIN = "hdml-join",
   CONNECTIVE = "hdml-connective",
   FILTER_BY = "hdml-filter-by",

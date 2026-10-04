@@ -35,13 +35,13 @@ const hdml = `
     </hdml-connection>
 
     <hdml-model name="sales">
-      <hdml-table
+      <hdml-dataset
         name="orders"
         type="table"
         identifier="\`tenant_pg\`.\`public\`.\`orders\`">
         <hdml-field name="id"></hdml-field>
         <hdml-field name="amount"></hdml-field>
-      </hdml-table>
+      </hdml-dataset>
     </hdml-model>
 
     <hdml-frame
