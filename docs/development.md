@@ -124,17 +124,60 @@ useful when validating a parser/stringifier change against a real browser.
 ## Release
 
 [scripts/release.sh](../scripts/release.sh) bumps `version` in every `packages/*/package.json`,
-rewrites cross-package `@hdml/*` deps to the new version, commits, tags `vX.Y.Z`, and pushes.
-GitHub Actions then runs the **release.yml** workflow which `npm publish --workspaces`.
+rewrites cross-package `@hdml/*` deps to the new version, regenerates `package-lock.json`,
+commits, tags, and pushes. **23 rewrites in all** — the eight `version` keys plus the fifteen
+real `@hdml/*` dependency edges (one of which, `@hdml/stringifier`'s on `@hdml/buffer`, is a
+*devDependency*; `sed` rewrites it regardless of which block it sits in).
+
+**The tag is bare** — `0.0.2-alpha.24`, not `v0.0.2-alpha.24`. `release.sh` runs
+`git tag -a $RELEASE`, and no tag in this repo has ever carried a `v` prefix.
+
+GitHub Actions then runs the **release.yml** workflow, which is
+`set -e && npm ci && npm run build --workspaces && npm publish --workspaces`.
 
 Versions are **lockstep** — all eight packages publish at the same version. Currently
-**0.0.2-alpha.13**. See [docs/integration.md#versioning](integration.md#versioning).
+**0.0.2-alpha.24**. See [docs/integration.md#versioning](integration.md#versioning).
 
 ```bash
-sh scripts/release.sh 0.0.2-alpha.14
+bash scripts/release.sh 0.0.2-alpha.25
 ```
 
+**`bash`, not `sh`, and not `./scripts/release.sh`.** The file is committed mode `100644`, so
+the `./` form exits 126 and nothing runs. The `sh` form matters less than it used to — `:66`'s
+branch guard was a bashism (`[[ ]]`) until 019, and under a dash `/bin/sh` that made the
+condition read *false*, so the guard was **bypassed** and the script pushed from whatever
+branch it was on. It is a POSIX `[` now and holds under either shell. Prefer `bash` anyway:
+the shebang says so, and the remaining bashisms are undiagnosed.
+
 Must be run from `main`. Reads `/home/.ssh/gh_token` for push credentials.
+
+Note that the branch and token guards sit **after** the 23 rewrites, so a guard that fires
+leaves a dirty tree to clean up by hand — under either shell. And `:87` is `git commit -a`, so
+**any** unrelated tracked modification rides into the release commit: a clean tree is a
+precondition, not hygiene.
+
+#### Two things `release.yml` depends on
+
+**`set -e` is load-bearing.** Without it a red `npm run build --workspaces` falls through and
+`npm publish --workspaces` runs anyway, with the step reporting *npm publish's* exit code — so
+CI goes green on a release that was never built. That is not hypothetical: it is how
+`@hdml/components@0.0.2-alpha.25` first shipped a three-file tarball behind six red tests, and
+it is why the same line now opens `runCmd` in both this repo's workflows. **A red build is now
+a failed release**, which also means a lint error anywhere in the eight packages blocks the
+publish rather than being published through.
+
+**`release.sh` regenerates the lockfile.** It did not before 019, so `package-lock.json`
+recorded the *previous* version for all eight workspaces while every manifest read the new one
+— a full release of drift. It was survivable for a structural reason worth knowing: all eight
+`@hdml/*` entries are workspace `link: true` entries, so npm resolves them against the on-disk
+manifests and **never reads the lock's recorded version**. `npm ci` therefore exits 0 on a
+stale lock here. In [HDIO-Javy-Plugin](../../HDIO-Javy-Plugin)'s `.hdml/`, where the same eight
+come from the **registry**, the lock entry *is* the resolution and the same staleness is a hard
+`EUSAGE`. Same drift, opposite symptom; do not generalise either rule to the other repo.
+
+`npm install --package-lock-only` is the right regeneration command: it writes no
+`node_modules`, cannot float a transitive dependency, and — measured — exits 0 even when the
+new version is not yet published, precisely because of the `link: true` resolution above.
 
 ## Repo layout
 

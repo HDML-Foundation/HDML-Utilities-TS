@@ -43,10 +43,11 @@ export class AdaptationError extends Error {
  * `clause` or through `origin` alone — `@hdml/stringifier`'s
  * `getPlainClauseSQL` falls back to `"${origin || name}"` against the
  * physical table. A per-role restriction binds at a **frame**, whose
- * SQL selects only from its source's surviving projection; see the two
- * `LEAKS` cases and the `HOLDS` case in `compileSql.test.ts`
- * (`describe("adaptation boundary (O10)")`), and the HDML-Intelligence
- * workspace's `docs/contracts/authorization.md` for the authoring rule.
+ * SQL selects only from its source's surviving projection; see the
+ * two `LEAKS` cases and the `HOLDS` case in `compileSql.test.ts`
+ * (`describe("adaptation boundary (O10)")`), and the
+ * HDML-Intelligence workspace's `docs/contracts/authorization.md`
+ * for the authoring rule.
  *
  * `set-attribute` writes
  * `String(rule.value)` to `rule.attribute` — `value` is

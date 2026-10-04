@@ -104,6 +104,8 @@ jobs:
         with:
           push: never
           cacheFrom: hdio/hdml-utilities-dev
+          # `set -e`: a red build must fail the step, not fall through.
           runCmd: |
+            set -e
             npm ci
             npm run build --workspaces

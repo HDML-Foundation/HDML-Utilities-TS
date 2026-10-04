@@ -26,10 +26,13 @@ for d in packages/*/ ; do
 
   # updating package.json version:
   sed -i.bak -E "s/\"version\": \"[^\"]+\"/\"version\": \"$RELEASE\"/" $p
-  if [ $? -eq 0 ]; then
+  # `sed -i` exits 0 even when it matches nothing, so grep the file it
+  # just wrote. A manifest with no "version" key is a hard error.
+  if grep -q "\"version\": \"$RELEASE\"" "$p"; then
     echo "Version updated to $RELEASE in $p"
   else
-    echo "Failed to update version in $p"
+    echo "Error: failed to update version in $p"
+    exit 1
   fi
 
   # recursively update current package version in all dependent packages: 
@@ -43,10 +46,11 @@ for d in packages/*/ ; do
 
     # updating package.json version:
     sed -i.bak -E "s/\"@hdml\/$n\": \"[^\"]+\"/\"@hdml\/$n\": \"$RELEASE\"/" $sub_p
-    if [ $? -eq 0 ]; then
+    # Unlike the version rewrite above, a miss here is NORMAL: only 15
+    # of the 64 (package, manifest) pairs are real dependency edges, so
+    # report a rewrite and stay silent otherwise. Never exit.
+    if grep -q "\"@hdml/$n\": \"$RELEASE\"" "$sub_p"; then
       echo "@hdml/$n version updated to $RELEASE in $sub_p"
-    else
-      echo "Failed to update @hdml/$n version in $sub_p"
     fi
   done
 done
@@ -63,13 +67,24 @@ fi
 
 # Checking git branch:
 BRANCH="$(git rev-parse --abbrev-ref HEAD)"
-if [[ "$BRANCH" != "main" ]]; then
+# POSIX `[` on purpose: under a dash /bin/sh, `[[` is "not found", the
+# condition reads FALSE, and execution falls through to the push block
+# below -- the guard is bypassed rather than failed.
+if [ "$BRANCH" != "main" ]; then
   echo "Error: must be run from the 'main' branch";
   exit 1;
 fi
 
+# Keep package-lock.json in step with the manifests this script just
+# rewrote. Without this the lock records the PREVIOUS version, which
+# release.yml's `npm ci` then installs from -- survivable only because
+# all eight are workspace `link: true` entries, so npm resolves them
+# against the on-disk manifests and never reads the lock's version.
+# It is still wrong, and it drifted a full release before 019 caught it.
+npm install --package-lock-only
+
 # Commiting changes and adding new tag:
-git commit -a -m "$RELEASE"
+git commit -a -m "chore(release): $RELEASE"
 git push origin main
 git tag -a $RELEASE -m "$RELEASE"
 git push origin $RELEASE
