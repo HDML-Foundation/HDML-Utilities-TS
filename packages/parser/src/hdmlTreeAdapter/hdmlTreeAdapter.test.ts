@@ -6,10 +6,12 @@
 
 /* eslint-disable max-len */
 
-import { HDML_TAG_NAMES } from "@hdml/types";
+import { HDML_TAG_NAMES, Table } from "@hdml/types";
 import { html, parseFragment } from "parse5";
 import { hdmlTreeAdapter } from "./hdmlTreeAdapter";
 import { sortFrames } from "../sortFrames";
+
+const HDML_TAGS = new Set<string>(Object.values(HDML_TAG_NAMES));
 import {
   Element,
   ParentNode,
@@ -54,7 +56,13 @@ function firstOf(src: string, tagName: string): Element {
   return hit;
 }
 
-/** Walks a tag-and-ordinal path back to the element it names. */
+/**
+ * Walks a tag-and-ordinal path back to the element it names.
+ * ★ Descends THROUGH non-HDML elements and stops at HDML ones,
+ * mirroring `elementPath`: a path names HDML elements only, so a
+ * resolver that looked at direct children alone would miss an
+ * `<hdml-field>` an author wrapped in a `<div>`.
+ */
 function resolvePath(root: ParentNode, path: string): null | Element {
   let node: ParentNode = root;
   for (const segment of path.split("/")) {
@@ -66,15 +74,25 @@ function resolvePath(root: ParentNode, path: string): null | Element {
     const wanted = Number(parsed[2]);
     let seen = 0;
     let found: null | Element = null;
-    for (const child of node.childNodes) {
-      if (child && child.tagName === tagName) {
-        if (seen === wanted) {
-          found = child;
-          break;
+    const visit = (parent: ParentNode): void => {
+      for (const child of parent.childNodes) {
+        if (found || !child) {
+          continue;
         }
-        seen++;
+        if (HDML_TAGS.has(child.tagName)) {
+          if (child.tagName === tagName) {
+            if (seen === wanted) {
+              found = child;
+              return;
+            }
+            seen++;
+          }
+          continue;
+        }
+        visit(child);
       }
-    }
+    };
+    visit(node);
     if (!found) {
       return null;
     }
@@ -184,6 +202,43 @@ describe("The parse anchor", () => {
     }
   });
 
+  // ★ The path agrees with the parser's own nesting, and
+  // round-trips through the HTML the parser ignores.
+  it("anchors through the HTML the parser ignores", () => {
+    const src =
+      '<body><div id="x"><div>' +
+      '<hdml-model name="m">' +
+      '<hdml-dataset name="d" type="table" identifier="i">' +
+      '<div class="w"><hdml-field name="a"></hdml-field></div>' +
+      '<div class="w"><hdml-field name="b"></hdml-field></div>' +
+      "</hdml-dataset></hdml-model></div></div></body>";
+    const tree = parseTree(src);
+    const fields = tagsOf(tree, HDML_TAG_NAMES.FIELD);
+    expect(fields.length).toBe(2);
+    // Both wrappers are discarded, so the two fields are siblings
+    // of the dataset and their ordinals DIFFER. Counting the
+    // `<div>`s would make both of them `hdml-field[0]`.
+    expect(fields[0].path).toBe(
+      "hdml-model[0]/hdml-dataset[0]/hdml-field[0]",
+    );
+    expect(fields[1].path).toBe(
+      "hdml-model[0]/hdml-dataset[0]/hdml-field[1]",
+    );
+    // and each still resolves back to its own element
+    for (const field of fields) {
+      const hit = resolvePath(tree, String(field.path));
+      expect(hit === field).toBe(true);
+    }
+    // the dataset really does hold both, which is the semantics
+    // the path has to agree with
+    const model = tagsOf(tree, HDML_TAG_NAMES.MODEL)[0];
+    const data = model.hddmData as null | { tables: Table[] };
+    expect(data?.tables[0].fields.map((f) => f.name)).toEqual([
+      "a",
+      "b",
+    ]);
+  });
+
   // (d), `:309` -- a fake element, in the returned tree
   it("records a synthesised element as `null`", () => {
     const els = elementsOf(parseTree(`${MODEL}</br>`));
@@ -207,7 +262,10 @@ describe("The parse anchor", () => {
     const br = els.find((e) => e.tagName === "br");
     expect(br === undefined).toBe(false);
     expect(br?.loc).toBeNull();
-    expect(br?.path).toBeNull();
+    // ★ `loc` is the whole gate. `br.path` is `null` either
+    // way, because a `<br>` is not an HDML tag, so asserting
+    // it here would look like a clause and discriminate
+    // nothing.
   });
 
   // (d), `:326` -- the fake fragment root, asserted at unit level

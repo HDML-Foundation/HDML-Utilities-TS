@@ -53,12 +53,17 @@ export interface Element {
    */
   loc: null | Token.ElementLocation;
   /**
-   * Tag-and-ordinal path from the document root, e.g.
-   * `hdml-model[0]/hdml-dataset[1]/hdml-field[3]`. Ordinals count
-   * SAME-TAG siblings only, so an unrelated sibling appearing
-   * before this element does not shift it. `null` while the element
-   * has no parent, and on `parse5`'s synthesised fragment root,
-   * which is not part of the authored document.
+   * Tag-and-ordinal path to this element, e.g.
+   * `hdml-model[0]/hdml-dataset[1]/hdml-field[3]`.
+   *
+   * Every segment is an HDML element and nothing else is: the
+   * parser ignores the surrounding HTML, so the path has to as
+   * well, or it would disagree with the document the parser
+   * actually built. Ordinals count SAME-TAG siblings only, so an
+   * unrelated sibling before this element does not shift it.
+   *
+   * `null` for an element that is not HDML vocabulary -- including
+   * every node `parse5` invents -- and while it has no parent.
    */
   path: null | string;
 }
