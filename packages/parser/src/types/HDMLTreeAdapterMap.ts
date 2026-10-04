@@ -41,6 +41,26 @@ export interface Element {
   hddm: null | HDOM;
   /** HDDM parent node. */
   hddmData: null | HDDMData;
+  /**
+   * Source-code location of the element's own start tag, widened to
+   * its end tag when the document has one, with per-attribute
+   * positions in `attrs`. `null` for a node `parse5` synthesised:
+   * a fake element (`parse5/dist/parser/index.js:309`), a fake
+   * fragment root (`:326`), or a `template`'s content (`:320` --
+   * which is an `HDMLDocument` and so never carries this field at
+   * all). Required-but-nullable on purpose: an optional field would
+   * make "not stamped yet" and "synthesised" indistinguishable.
+   */
+  loc: null | Token.ElementLocation;
+  /**
+   * Tag-and-ordinal path from the document root, e.g.
+   * `hdml-model[0]/hdml-dataset[1]/hdml-field[3]`. Ordinals count
+   * SAME-TAG siblings only, so an unrelated sibling appearing
+   * before this element does not shift it. `null` while the element
+   * has no parent, and on `parse5`'s synthesised fragment root,
+   * which is not part of the authored document.
+   */
+  path: null | string;
 }
 
 export interface Template extends Element {

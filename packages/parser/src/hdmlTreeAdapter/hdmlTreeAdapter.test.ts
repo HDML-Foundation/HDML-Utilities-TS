@@ -7,8 +7,243 @@
 /* eslint-disable max-len */
 
 import { HDML_TAG_NAMES } from "@hdml/types";
-import { html } from "parse5";
+import { html, parseFragment } from "parse5";
 import { hdmlTreeAdapter } from "./hdmlTreeAdapter";
+import { sortFrames } from "../sortFrames";
+import {
+  Element,
+  ParentNode,
+  HDMLTreeAdapterMap,
+} from "../types/HDMLTreeAdapterMap";
+
+function parseTree(src: string): ParentNode {
+  return parseFragment<HDMLTreeAdapterMap>(src, {
+    onParseError: () => undefined,
+    scriptingEnabled: false,
+    treeAdapter: hdmlTreeAdapter,
+  });
+}
+
+function elementsOf(parent: ParentNode): Element[] {
+  const out: Element[] = [];
+  for (const child of parent.childNodes) {
+    if (child) {
+      out.push(child, ...elementsOf(child));
+    }
+  }
+  return out;
+}
+
+/**
+ * Collects the elements of an ALREADY-PARSED tree by tag name. The
+ * `tagName` parameter is a plain `string` on purpose: comparing
+ * `Element.tagName` to an `HDML_TAG_NAMES` member directly is an
+ * `@typescript-eslint/no-unsafe-enum-comparison` error.
+ */
+function tagsOf(parent: ParentNode, tagName: string): Element[] {
+  return elementsOf(parent).filter((e) => e.tagName === tagName);
+}
+
+function firstOf(src: string, tagName: string): Element {
+  const hit = elementsOf(parseTree(src)).find(
+    (e) => e.tagName === tagName,
+  );
+  if (!hit) {
+    throw new Error(`no <${tagName}> in ${JSON.stringify(src)}`);
+  }
+  return hit;
+}
+
+/** Walks a tag-and-ordinal path back to the element it names. */
+function resolvePath(root: ParentNode, path: string): null | Element {
+  let node: ParentNode = root;
+  for (const segment of path.split("/")) {
+    const parsed = /^(.+)\[(\d+)\]$/.exec(segment);
+    if (!parsed) {
+      return null;
+    }
+    const tagName = parsed[1];
+    const wanted = Number(parsed[2]);
+    let seen = 0;
+    let found: null | Element = null;
+    for (const child of node.childNodes) {
+      if (child && child.tagName === tagName) {
+        if (seen === wanted) {
+          found = child;
+          break;
+        }
+        seen++;
+      }
+    }
+    if (!found) {
+      return null;
+    }
+    node = found;
+  }
+  return node === root ? null : (node as Element);
+}
+
+const MODEL = '<hdml-model name="m"></hdml-model>';
+
+describe("The parse anchor", () => {
+  // (a)
+  it("stamps an element with its own start tag", () => {
+    const el = firstOf(MODEL, HDML_TAG_NAMES.MODEL);
+    const loc = hdmlTreeAdapter.getNodeSourceCodeLocation(el);
+    expect(loc).not.toBeNull();
+    expect(loc).not.toBeUndefined();
+    expect(loc?.startTag).toBeDefined();
+    expect(loc?.startLine).toBe(1);
+    expect(loc?.startCol).toBe(1);
+    expect(loc?.startOffset).toBe(0);
+    expect(loc?.endOffset).toBe(MODEL.length);
+  });
+
+  // (a), the per-attribute positions `LocationWithAttributes` adds
+  it("stamps a position for each attribute", () => {
+    const el = firstOf(MODEL, HDML_TAG_NAMES.MODEL);
+    const loc = hdmlTreeAdapter.getNodeSourceCodeLocation(el);
+    expect(loc?.attrs?.name).toBeDefined();
+    expect(loc?.attrs?.name.startOffset).toBe(
+      MODEL.indexOf('name="m"'),
+    );
+    expect(loc?.attrs?.name.startLine).toBe(1);
+  });
+
+  // (b)
+  it("is not widened by the whitespace that follows it", () => {
+    const el = firstOf(`${MODEL}\n\n  `, HDML_TAG_NAMES.MODEL);
+    const loc = hdmlTreeAdapter.getNodeSourceCodeLocation(el);
+    // The end of `</hdml-model>`, never the end of the run.
+    expect(loc?.endOffset).toBe(MODEL.length);
+    expect(loc?.endTag?.endOffset).toBe(MODEL.length);
+  });
+
+  // (b), the control: the same expectation with no run at all, so
+  // the assertion above cannot pass by reading a stale value.
+  it("has that same end with no whitespace at all", () => {
+    const el = firstOf(MODEL, HDML_TAG_NAMES.MODEL);
+    const loc = hdmlTreeAdapter.getNodeSourceCodeLocation(el);
+    expect(loc?.endOffset).toBe(MODEL.length);
+  });
+
+  // (c)
+  it("stamps a path that survives `sortFrames`", () => {
+    const src = ["c", "b", "a"]
+      .map(
+        (n) =>
+          `<hdml-frame name="${n}" ` +
+          `source="/p?hdml-model=m"></hdml-frame>`,
+      )
+      .join("\n");
+    const tree = parseTree(src);
+    const els = tagsOf(tree, HDML_TAG_NAMES.FRAME);
+    expect(els.length).toBe(3);
+    const hddm = els[0].rootNode?.hddm;
+    expect(hddm).toBeDefined();
+    const unsorted = hddm ? hddm.frames : [];
+    expect(unsorted.map((f) => f.name)).toEqual(["c", "b", "a"]);
+    const anchors = els.map((e) => ({
+      frame: unsorted[els.indexOf(e)],
+      path: String(e.path),
+      element: e,
+    }));
+    const sorted = sortFrames(unsorted);
+    expect(sorted.map((f) => f.name)).toEqual(["a", "b", "c"]);
+    for (const anchor of anchors) {
+      // Identity as a boolean: an `Element` operand in a failed
+      // assertion is circular through `rootNode`, and jest's
+      // worker dies serialising it, so the suite would report
+      // "failed to run" and name no gate.
+      const hit = resolvePath(tree, anchor.path);
+      expect(hit === anchor.element).toBe(true);
+      expect(hit?.hddmData === anchor.frame).toBe(true);
+    }
+  });
+
+  // (c), the negative control: the reason an index is illegal.
+  it("outlives a frames-array index, which does not", () => {
+    const src = ["c", "b", "a"]
+      .map(
+        (n) =>
+          `<hdml-frame name="${n}" ` +
+          `source="/p?hdml-model=m"></hdml-frame>`,
+      )
+      .join("\n");
+    const tree = parseTree(src);
+    const els = tagsOf(tree, HDML_TAG_NAMES.FRAME);
+    const hddm = els[0].rootNode?.hddm;
+    const unsorted = hddm ? hddm.frames : [];
+    const sorted = sortFrames(unsorted);
+    const moved = unsorted.filter((f, i) => sorted.indexOf(f) !== i);
+    expect(moved.length).toBeGreaterThan(0);
+    expect(sorted.indexOf(unsorted[0])).not.toBe(0);
+    // while every path still resolves
+    for (const el of els) {
+      expect(resolvePath(tree, String(el.path)) === el).toBe(true);
+    }
+  });
+
+  // (d), `:309` -- a fake element, in the returned tree
+  it("records a synthesised element as `null`", () => {
+    const els = elementsOf(parseTree(`${MODEL}</br>`));
+    const br = els.find((e) => e.tagName === "br");
+    expect(br === undefined).toBe(false);
+    expect(br?.loc).toBeNull();
+    expect(br?.loc).not.toBeUndefined();
+    expect(
+      br ? hdmlTreeAdapter.getNodeSourceCodeLocation(br) : 0,
+    ).toBeNull();
+  });
+
+  // (d), and the mirror of (b): the ONLY observable that catches
+  // `setNodeSourceCodeLocation` losing its `startTag` guard. A
+  // real element always has a location by the time a run reaches
+  // it, so `:367` never touches one -- but a SYNTHESISED element
+  // reads falsy, so the run's location is stamped onto it,
+  // fabricating a source position for a node that has none.
+  it("does not fabricate a location for a synthesised node", () => {
+    const els = elementsOf(parseTree(`${MODEL}</br>\n  `));
+    const br = els.find((e) => e.tagName === "br");
+    expect(br === undefined).toBe(false);
+    expect(br?.loc).toBeNull();
+    expect(br?.path).toBeNull();
+  });
+
+  // (d), `:326` -- the fake fragment root, asserted at unit level
+  // because `parseFragment` adopts the authored elements out of it
+  // and never returns it.
+  it("accepts a `null` location without fabricating one", () => {
+    const el = firstOf(MODEL, HDML_TAG_NAMES.MODEL);
+    hdmlTreeAdapter.setNodeSourceCodeLocation(el, null);
+    expect(el.loc).toBeNull();
+    expect(hdmlTreeAdapter.getNodeSourceCodeLocation(el)).toBeNull();
+  });
+
+  // (d), `:320` -- a `template`'s content, which is an
+  // `HDMLDocument` and carries no `loc` field at all.
+  it("ignores a `null` stamp on a non-element node", () => {
+    const content = hdmlTreeAdapter.createDocumentFragment();
+    expect(() =>
+      hdmlTreeAdapter.setNodeSourceCodeLocation(content, null),
+    ).not.toThrow();
+    expect(content).toEqual({
+      nodeName: "#hdml-document",
+      childNodes: [],
+    });
+  });
+
+  // `:367` hands the setter `siblings[-1]`, i.e. `undefined`,
+  // whenever the run has no preceding sibling.
+  it("ignores a stamp on an absent node", () => {
+    expect(() =>
+      hdmlTreeAdapter.setNodeSourceCodeLocation(null, null),
+    ).not.toThrow();
+    expect(
+      hdmlTreeAdapter.getNodeSourceCodeLocation(null),
+    ).toBeNull();
+  });
+});
 
 describe("The `hdmlTreeAdapter` object", () => {
   it("`getHdmlParentTag` method should return `null` if `element` is equal to null", () => {
@@ -28,6 +263,8 @@ describe("The `hdmlTreeAdapter` object", () => {
           parentNode: null,
           hddm: null,
           hddmData: null,
+          loc: null,
+          path: null,
           childNodes: [],
         },
         [HDML_TAG_NAMES.MODEL],
@@ -65,6 +302,8 @@ describe("The `hdmlTreeAdapter` object", () => {
           parentNode: null,
           hddm: null,
           hddmData: null,
+          loc: null,
+          path: null,
           childNodes: [],
         },
         {
@@ -75,6 +314,8 @@ describe("The `hdmlTreeAdapter` object", () => {
           parentNode: null,
           hddm: null,
           hddmData: null,
+          loc: null,
+          path: null,
           childNodes: [],
         },
         {
@@ -85,6 +326,8 @@ describe("The `hdmlTreeAdapter` object", () => {
           parentNode: null,
           hddm: null,
           hddmData: null,
+          loc: null,
+          path: null,
           childNodes: [],
         },
       ),
@@ -107,6 +350,8 @@ describe("The `hdmlTreeAdapter` object", () => {
           childNodes: [],
           hddm: null,
           hddmData: null,
+          loc: null,
+          path: null,
         },
         {
           nodeName: "#hdml-document",
@@ -131,6 +376,8 @@ describe("The `hdmlTreeAdapter` object", () => {
         childNodes: [],
         hddm: null,
         hddmData: null,
+        loc: null,
+        path: null,
       }),
     ).toEqual({
       nodeName: "#hdml-document",
@@ -210,6 +457,8 @@ describe("The `hdmlTreeAdapter` object", () => {
           childNodes: [],
           hddm: null,
           hddmData: null,
+          loc: null,
+          path: null,
         },
         [],
       ),
@@ -227,6 +476,8 @@ describe("The `hdmlTreeAdapter` object", () => {
         childNodes: [],
         hddm: null,
         hddmData: null,
+        loc: null,
+        path: null,
       }),
     ).toEqual([]);
   });

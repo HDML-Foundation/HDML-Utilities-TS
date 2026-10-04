@@ -36,6 +36,7 @@ import { getFieldData } from "./getFieldData";
 import { getJoinData } from "./getJoinData";
 import { getConnectiveData } from "./getConnectiveData";
 import { getFilterData } from "./getFilterData";
+import { elementPath } from "./elementPath";
 
 export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
   // HDML related methods
@@ -94,6 +95,8 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
       childNodes: [],
       hddm: null,
       hddmData,
+      loc: null,
+      path: null,
     };
   },
 
@@ -116,6 +119,10 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
       }
       parentNode.childNodes.push(newNode);
       newNode.parentNode = parentNode;
+      // The first moment the child<->parent link exists in both
+      // directions, and `appendChild` only appends, so the node's
+      // count of preceding same-tag siblings is already final.
+      newNode.path = elementPath(newNode);
       hdmlTreeAdapter.appendHddmChild(newNode);
     }
   },
@@ -326,13 +333,46 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
     return Object.prototype.hasOwnProperty.call(node, "tagName");
   },
 
-  setNodeSourceCodeLocation(): void {},
+  setNodeSourceCodeLocation(
+    node: Node,
+    location: Token.ElementLocation | null,
+  ): void {
+    // `insertText` appends nothing, so a whitespace run never
+    // becomes a sibling of its own and `parse5` resolves
+    // `siblings[idx - 1]` to the element PRECEDING the run, then
+    // stamps the run's location onto it
+    // (`parse5/dist/parser/index.js:359-367`).
+    // `_attachElementToTree` always sets `startTag` when it has a
+    // location (`:279`); the character-token stamp at `:367` never
+    // does. So `startTag` is the exact discriminator between "this
+    // is my own start tag" and "this is a run misfiled onto me".
+    // Measured: deleting this guard does NOT move a real
+    // element, because one always has a location by the time a
+    // run reaches it, so `:367` is never called on it. What it
+    // moves is a SYNTHESISED element, which reads falsy and so is
+    // handed the run's location -- fabricating a source position,
+    // and a path, for a node that has neither (RFC 019/002 §3.3).
+    if (location !== null && location.startTag === undefined) {
+      return;
+    }
+    // `:367` also passes `siblings[-1]`, i.e. `undefined`, when the
+    // run has no preceding sibling; and `:320` passes a
+    // `template`'s content, which is an `HDMLDocument` and has no
+    // `loc`. A `null` location is legal and records that `parse5`
+    // synthesised the node (`:309`, `:320`, `:326`).
+    if (!node || !hdmlTreeAdapter.isElementNode(node)) {
+      return;
+    }
+    node.loc = location;
+  },
 
-  getNodeSourceCodeLocation():
-    | Token.ElementLocation
-    | undefined
-    | null {
-    return null;
+  getNodeSourceCodeLocation(
+    node: Node,
+  ): Token.ElementLocation | undefined | null {
+    if (!node || !hdmlTreeAdapter.isElementNode(node)) {
+      return null;
+    }
+    return node.loc;
   },
 
   // Default methods (not in use for the HDML parsing)
@@ -416,5 +456,31 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
     return !node;
   },
 
-  updateNodeSourceCodeLocation(): void {},
+  updateNodeSourceCodeLocation(
+    node: Node,
+    location: Partial<Token.ElementLocation>,
+  ): void {
+    // An element's extent is its own start tag, widened only by its
+    // own end tag -- so an update that carries no `endTag` is not
+    // about this element's extent and is dropped. `parse5` makes
+    // exactly two such calls and they are identical in shape, a
+    // bare `{endLine, endCol, endOffset}` triple: the destructive
+    // one from `_insertCharacters` (`index.js:364`, a whitespace
+    // run misfiled onto the preceding element) and the legitimate
+    // one from `_setEndLocation`'s implied-close branch. Nothing
+    // distinguishes them, so neither is taken: an element the
+    // author never closed reports `endTag: undefined` and its
+    // start tag's extent, which is honest, where an element whose
+    // extent silently swallowed the next newline is not.
+    if (location.endTag === undefined) {
+      return;
+    }
+    if (!node || !hdmlTreeAdapter.isElementNode(node)) {
+      return;
+    }
+    if (node.loc === null) {
+      return;
+    }
+    Object.assign(node.loc, location);
+  },
 };
