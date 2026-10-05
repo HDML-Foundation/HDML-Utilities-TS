@@ -6,7 +6,13 @@
 
 # Checking version parameter:
 RELEASE=$1
-if [ "v$RELEASE" == "v" ]; then
+# POSIX `[` uses `=`, not `==`. Under a dash /bin/sh the `[` builtin rejects
+# `==` ("unexpected operator") and exits non-zero, which makes this condition
+# read FALSE -- so the guard below is BYPASSED rather than failed and the
+# script runs on through `git commit -a` and `git push origin main` with an
+# EMPTY $RELEASE, blanking all 23 version entries. Same defect class as the
+# branch guard below (019 S9/C57/C174); measured in both shells.
+if [ "v$RELEASE" = "v" ]; then
   echo "Error: release number must be specified";
   exit 1;
 fi

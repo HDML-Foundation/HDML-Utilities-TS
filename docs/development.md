@@ -143,16 +143,23 @@ bash scripts/release.sh 0.0.2-alpha.25
 ```
 
 **`bash`, not `sh`, and not `./scripts/release.sh`.** The file is committed mode `100644`, so
-the `./` form exits 126 and nothing runs. The `sh` form matters less than it used to — `:66`'s
-branch guard was a bashism (`[[ ]]`) until 019, and under a dash `/bin/sh` that made the
-condition read *false*, so the guard was **bypassed** and the script pushed from whatever
-branch it was on. It is a POSIX `[` now and holds under either shell. Prefer `bash` anyway:
-the shebang says so, and the remaining bashisms are undiagnosed.
+the `./` form exits 126 and nothing runs. **Both** guards were bashisms until 019 and both
+are POSIX now. `:79`'s branch guard used `[[ ]]`, and `:15`'s version guard used `==` inside
+`[ ]`; under a dash `/bin/sh` each made its condition read *false*, so the guard was
+**bypassed rather than failed**. Measured in a scratch clone at 019 step 18: the `[[ ]]`
+form released from whatever branch it was on, and the `==` form, run with **no argument**,
+blanked all 23 version entries, committed them, and reached `git push origin main` before
+dying on `git tag -a`'s usage error. Both now exit 1 identically under `bash` and `dash`.
+★ `bash -n` and `dash -n` cannot see either defect — both forms parse, and fail only at
+runtime. Prefer `bash` anyway: the shebang says so.
 
 Must be run from `main`. Reads `/home/.ssh/gh_token` for push credentials.
 
 Note that the branch and token guards sit **after** the 23 rewrites, so a guard that fires
-leaves a dirty tree to clean up by hand — under either shell. And `:87` is `git commit -a`, so
+leaves a dirty tree to clean up by hand — **8 modified manifests**, under either shell
+(measured at 019 step 18). A *completed* run touches **9**, the ninth being
+`package-lock.json`, which `:90` regenerates — below both guards. And `:93` is
+`git commit -a`, so
 **any** unrelated tracked modification rides into the release commit: a clean tree is a
 precondition, not hygiene.
 
