@@ -20,11 +20,21 @@ export interface HdqlDiagnostic {
   /** The code. Messages and codes are both contract (§2.4). */
   code: HDQL_DIAGNOSTIC_CODES;
   /**
-   * Always `"error"` today: the author wrote a construct that is
-   * not in the output. Step 11 widens this to `"warning"` when
-   * `misplaced-key` lands.
+   * `"error"` — the author wrote a construct that is **not in the
+   * output**: the element was dropped, and the diagnostic is the
+   * only record that it existed. Ten of the eleven codes.
+   *
+   * `"warning"` — the construct **is** in the output and is
+   * well-formed, but something the author declared on it has no
+   * effect where they put it. Nothing was lost from the document;
+   * an expectation was. `misplaced-key` is the only one in 019.
+   *
+   * ★ The distinction is *did the author's markup survive*, not
+   * *how bad is it*. Neither severity fails the compile: the
+   * envelope still carries a `result` either way
+   * (RFC 019/002 §10.2, D11).
    */
-  severity: "error";
+  severity: "error" | "warning";
   /** Human-readable, and contract — a test asserts the string. */
   message: string;
   /** `hdml-model[0]/hdml-dataset[0]/hdml-field[1]`, or `null`. */
@@ -58,39 +68,61 @@ export interface HdqlDiagnostic {
  */
 interface DiagnosticEntry {
   code: HDQL_DIAGNOSTIC_CODES;
-  severity: "error";
+  severity: "error" | "warning";
   message: string;
   element: null | Element;
 }
 
 /**
  * The per-parse collector. ★ It belongs to **one** `parseHDML`
- * call, never to the module: a `sql` compile parses twice — once on
- * the reconstructed document, once on the adapted one — and a
- * module-level sink would merge two documents' diagnostics with no
- * way to tell them apart (RFC 019/002 §3.5).
+ * call, never to the module.
+ *
+ * ⚠ **Corrected at step 11 (C104).** This comment used to justify
+ * that with RFC 019/002 §3.5's *"a `sql` compile parses twice —
+ * once on the reconstructed document, once on the adapted one"*,
+ * which step 09 **measured false** and banner-corrected in the
+ * RFC; the source comment outlived the banner. The real reason is
+ * simpler and does not depend on any one caller: a sink is
+ * per-DOCUMENT state, and `parseFragment` offers no way to hand
+ * per-parse state to a tree adapter, so the only alternative is a
+ * module-level array — which would accumulate across every parse
+ * in the process and attribute one document's diagnostics to the
+ * next. The gate that catches it parses a bad document and then a
+ * clean one and asserts the second comes back empty.
  */
 export type DiagnosticSink = DiagnosticEntry[];
 
 /**
- * Records a dropped element. `sink` is optional because the seven
+ * Records a diagnostic. `sink` is optional because the seven
  * `get*Data` helpers are called directly by ~60 existing tests and
  * by the module-singleton adapter, neither of which collects
  * anything; an absent sink and an empty sink must both work.
  *
+ * ★ `severity` is a fourth **parameter**, defaulted, rather than a
+ * `pushWarning` sibling. A fourth function in this module would
+ * duplicate the falsy-sink guard and the entry shape for the sake
+ * of one caller, and a fourth function here is the stated sign
+ * that an emission is in the wrong place. Defaulting it leaves all
+ * eighteen `error` call sites untouched, so the one warning is the
+ * only caller that has to say anything.
+ *
  * @param sink The parse's sink, or `undefined` to discard.
  * @param code The diagnostic code.
  * @param message The author-facing message (contract, §2.4).
+ * @param severity `"error"` (the default) when the element was
+ * dropped; `"warning"` when it survives and only something
+ * declared on it was ignored. See {@link HdqlDiagnostic.severity}.
  */
 export function pushDiagnostic(
   sink: undefined | DiagnosticSink,
   code: HDQL_DIAGNOSTIC_CODES,
   message: string,
+  severity: "error" | "warning" = "error",
 ): void {
   if (!sink) {
     return;
   }
-  sink.push({ code, severity: "error", message, element: null });
+  sink.push({ code, severity, message, element: null });
 }
 
 /**

@@ -107,3 +107,95 @@ describe("the hdml-dataset round trip", () => {
     expect(ds.type).toBe(TableTypeEnum.Table);
   });
 });
+
+/**
+ * ★ **Gate (b) — item 3's `key` survives every hop** (019 step 11).
+ *
+ * This lives beside the dataset round trip for the same reason that
+ * one does: `@hdml/hooks` is the only workspace depending on both
+ * `@hdml/parser` and `@hdml/stringifier`, so it is the only place
+ * the emitter and the parser can be checked against each other.
+ *
+ * ★ **Why the whole chain and not a unit test.** Item 3 adds `key`
+ * to seven hand-maintained legs. Six of them can be right while the
+ * seventh -- `getFieldHTML`'s emit -- is missing, and NOTHING else
+ * goes red: `@hdml/buffer`'s 88 tests round-trip through
+ * `objectify`, never through HTML, and `@hdml/stringifier`'s 264
+ * assert HTML strings whose fixtures carry no `key` at all. The
+ * `description` case below is that exact failure, already shipped.
+ */
+describe("the `key` round trip", () => {
+  const MODEL =
+    '<hdml-model name="model">' +
+    '<hdml-dataset name="ds" type="table" identifier="`c`.`s`.`t`">' +
+    '<hdml-field name="id" key="pk"></hdml-field>' +
+    '<hdml-field name="plain"></hdml-field>' +
+    "</hdml-dataset></hdml-model>";
+
+  it("carries a named key group through the whole chain", () => {
+    const ds = soleDataset(roundTrip(MODEL));
+
+    expect(ds.fields.length).toBe(2);
+    // ★ The assertion the emit line exists for.
+    expect(ds.fields[0].key).toBe("pk");
+  });
+
+  it("emits `key` as an attribute the parser reads back", () => {
+    const struct = structurize(
+      serialize(parseHDML(MODEL)),
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
+    const html = getModelHTML(<ModelStruct>struct.models(0));
+
+    expect(html).toContain('key="pk"');
+  });
+
+  it("leaves an ABSENT `key` absent, and emits no attribute", () => {
+    // ★ `key` is a `string`, so "not declared" is `null` and is
+    // distinguishable from any declared value -- unlike a `bool`,
+    // whose `false` default would be indistinguishable from
+    // absence (RFC 019/001 §4.4). The second field proves it.
+    const ds = soleDataset(roundTrip(MODEL));
+
+    expect(ds.fields[1].name).toBe("plain");
+    expect(ds.fields[1].key).toBeNull();
+
+    const struct = structurize(
+      serialize(parseHDML(MODEL)),
+      StructType.HDOMStruct,
+    ) as HDOMStruct;
+    const html = getModelHTML(<ModelStruct>struct.models(0));
+
+    // Exactly one `key=` in the document: the first field's.
+    expect(html.match(/key="/g)?.length).toBe(1);
+    expect(html).toContain('<hdml-field name="plain"');
+    expect(html).not.toContain('key=""');
+  });
+
+  it("still loses `description` — a KNOWN, pre-019 bug", () => {
+    // ★ Asserted so the loss stays known rather than being
+    // rediscovered. `git grep DESCRIPTION -- packages/stringifier`
+    // returns ZERO hits: no stringifier emits a `description` for
+    // any element, so every round trip drops every description in
+    // the document (RFC 019/001 §4.5, measured).
+    //
+    // ⚠ This test passing is NOT a good thing. It is the negative
+    // control for the emit line above: it documents what happens
+    // to a field whose emit line was never written, which is
+    // precisely the failure mode `key` was at risk of. Fixing
+    // `description` is a named successor, and when it is fixed
+    // THIS TEST MUST BE INVERTED, not deleted.
+    const src = MODEL.replace(
+      'name="plain"',
+      'name="plain" description="FIELD DESC"',
+    );
+
+    // The parse itself is fine -- the loss is in the emitter.
+    expect(soleDataset(parseHDML(src)).fields[1].description).toBe(
+      "FIELD DESC",
+    );
+
+    const ds = soleDataset(roundTrip(src));
+    expect(ds.fields[1].description).toBeNull();
+  });
+});

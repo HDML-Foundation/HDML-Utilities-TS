@@ -312,6 +312,26 @@ export function getCastedClauseSQL(
   return sql;
 }
 
+/**
+ * Serializes a `FieldStruct` back to `<hdml-field>` markup.
+ *
+ * ⚠ **`description` is NOT emitted, and that is a live bug this
+ * function is the proof of.** `git grep DESCRIPTION --
+ * packages/stringifier/src` returns zero hits, so no stringifier
+ * emits a `description` for any element: a
+ * `parseHDML -> serialize -> structurize -> getModelHTML ->
+ * parseHDML` round trip reads `"FIELD DESC"` back as `null`.
+ * Measured, not inferred (RFC 019/001 §4.5).
+ *
+ * ★ Which is why `key` is emitted below. Every other leg of the
+ * chain -- the schema, the type, the attribute enum, the parser,
+ * bufferify, objectify -- can carry a new field correctly and the
+ * value still vanishes here, silently, with no test red anywhere:
+ * `description` has been doing exactly that. **The emit line is
+ * part of adding a field, not a follow-up.** A gate round-trips
+ * `key` through this function and asserts `description`'s loss
+ * explicitly, so the known bug stays known.
+ */
 export function getFieldHTML(field: FieldStruct): string {
   if (field.name() === null) {
     return "";
@@ -338,6 +358,14 @@ export function getFieldHTML(field: FieldStruct): string {
 
     result = result + getFieldAggregationHTML(field.aggregation());
     result = result + getFieldOrderHTML(field.order());
+
+    // ★ THE EMIT LINE. Conditional, like `origin` above: an
+    // absent `key` must emit no attribute at all, or every field
+    // in every round-tripped document grows a `key=""`.
+    if (field.key() !== null) {
+      result = result + ` ${FIELD_ATTRS_LIST.KEY}="${field.key()}"`;
+    }
+
     result = result + `></${HDML_TAG_NAMES.FIELD}>`;
 
     return result;

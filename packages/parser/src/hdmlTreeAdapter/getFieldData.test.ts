@@ -57,6 +57,7 @@ describe("The `getFieldData` function", () => {
       name: "name",
       aggregation: AggregationTypeEnum.None,
       order: OrderTypeEnum.None,
+      key: null,
       clause: null,
       description: null,
       origin: null,
@@ -78,6 +79,7 @@ describe("The `getFieldData` function", () => {
       description: "description",
       aggregation: AggregationTypeEnum.None,
       order: OrderTypeEnum.None,
+      key: null,
       clause: null,
       origin: null,
       type: {
@@ -100,6 +102,7 @@ describe("The `getFieldData` function", () => {
       origin: "origin",
       aggregation: AggregationTypeEnum.None,
       order: OrderTypeEnum.None,
+      key: null,
       clause: null,
       type: {
         type: DataTypeEnum.Unspecified,
@@ -123,6 +126,7 @@ describe("The `getFieldData` function", () => {
       clause: "clause",
       aggregation: AggregationTypeEnum.None,
       order: OrderTypeEnum.None,
+      key: null,
       type: {
         type: DataTypeEnum.Unspecified,
       },
@@ -293,6 +297,7 @@ describe("The `getFieldData` function", () => {
       name: "name",
       aggregation: AggregationTypeEnum.None,
       order: OrderTypeEnum.None,
+      key: null,
       clause: null,
       description: null,
       origin: null,
@@ -312,6 +317,7 @@ describe("The `getFieldData` function", () => {
       name: "name",
       aggregation: AggregationTypeEnum.None,
       order: OrderTypeEnum.None,
+      key: null,
       clause: null,
       description: null,
       origin: null,
@@ -331,6 +337,7 @@ describe("The `getFieldData` function", () => {
       name: "name",
       aggregation: AggregationTypeEnum.None,
       order: OrderTypeEnum.None,
+      key: null,
       clause: null,
       description: null,
       origin: null,
@@ -351,6 +358,7 @@ describe("The `getFieldData` function", () => {
       name: "name",
       aggregation: AggregationTypeEnum.None,
       order: OrderTypeEnum.None,
+      key: null,
       type: {
         type: DataTypeEnum.Int8,
         options: {
@@ -373,6 +381,7 @@ describe("The `getFieldData` function", () => {
       name: "name",
       aggregation: AggregationTypeEnum.None,
       order: OrderTypeEnum.None,
+      key: null,
       type: {
         type: DataTypeEnum.Int8,
         options: {
@@ -395,6 +404,7 @@ describe("The `getFieldData` function", () => {
       name: "name",
       aggregation: AggregationTypeEnum.None,
       order: OrderTypeEnum.None,
+      key: null,
       type: {
         type: DataTypeEnum.Int8,
         options: {
@@ -418,6 +428,7 @@ describe("The `getFieldData` function", () => {
       name: "name",
       aggregation: AggregationTypeEnum.None,
       order: OrderTypeEnum.None,
+      key: null,
       type: {
         type: DataTypeEnum.Int16,
         options: {
@@ -441,6 +452,7 @@ describe("The `getFieldData` function", () => {
       name: "name",
       aggregation: AggregationTypeEnum.None,
       order: OrderTypeEnum.None,
+      key: null,
       type: {
         type: DataTypeEnum.Int32,
         options: {
@@ -464,6 +476,7 @@ describe("The `getFieldData` function", () => {
       name: "name",
       aggregation: AggregationTypeEnum.None,
       order: OrderTypeEnum.None,
+      key: null,
       type: {
         type: DataTypeEnum.Int64,
         options: {
@@ -490,6 +503,7 @@ describe("The `getFieldData` function", () => {
       name: "name",
       aggregation: AggregationTypeEnum.None,
       order: OrderTypeEnum.None,
+      key: null,
       type: {
         type: DataTypeEnum.Float32,
         options: {
@@ -516,6 +530,7 @@ describe("The `getFieldData` function", () => {
       name: "name",
       aggregation: AggregationTypeEnum.None,
       order: OrderTypeEnum.None,
+      key: null,
       type: {
         type: DataTypeEnum.Float64,
         options: {
@@ -542,6 +557,7 @@ describe("The `getFieldData` function", () => {
       name: "name",
       aggregation: AggregationTypeEnum.None,
       order: OrderTypeEnum.None,
+      key: null,
       type: {
         type: DataTypeEnum.Binary,
         options: {
@@ -565,6 +581,7 @@ describe("The `getFieldData` function", () => {
       name: "name",
       aggregation: AggregationTypeEnum.None,
       order: OrderTypeEnum.None,
+      key: null,
       type: {
         type: DataTypeEnum.Utf8,
         options: {
@@ -591,6 +608,7 @@ describe("The `getFieldData` function", () => {
       name: "name",
       aggregation: AggregationTypeEnum.None,
       order: OrderTypeEnum.None,
+      key: null,
       type: {
         type: DataTypeEnum.Decimal,
         options: {
@@ -622,6 +640,7 @@ describe("The `getFieldData` function", () => {
       name: "name",
       aggregation: AggregationTypeEnum.None,
       order: OrderTypeEnum.None,
+      key: null,
       type: {
         type: DataTypeEnum.Decimal,
         options: {
@@ -653,6 +672,7 @@ describe("The `getFieldData` function", () => {
       name: "name",
       aggregation: AggregationTypeEnum.None,
       order: OrderTypeEnum.None,
+      key: null,
       type: {
         type: DataTypeEnum.Decimal,
         options: {
@@ -684,6 +704,7 @@ describe("The `getFieldData` function", () => {
       name: "name",
       aggregation: AggregationTypeEnum.None,
       order: OrderTypeEnum.None,
+      key: null,
       type: {
         type: DataTypeEnum.Decimal,
         options: {
@@ -715,6 +736,7 @@ describe("The `getFieldData` function", () => {
       name: "name",
       aggregation: AggregationTypeEnum.None,
       order: OrderTypeEnum.None,
+      key: null,
       type: {
         type: DataTypeEnum.Decimal,
         options: {
@@ -746,6 +768,7 @@ describe("The `getFieldData` function", () => {
       name: "name",
       aggregation: AggregationTypeEnum.None,
       order: OrderTypeEnum.None,
+      key: null,
       type: {
         type: DataTypeEnum.Decimal,
         options: {
@@ -772,6 +795,7 @@ describe("The `getFieldData` function", () => {
       name: "name",
       aggregation: AggregationTypeEnum.None,
       order: OrderTypeEnum.None,
+      key: null,
       type: {
         type: DataTypeEnum.Date,
         options: {
@@ -795,6 +819,7 @@ describe("The `getFieldData` function", () => {
       name: "name",
       aggregation: AggregationTypeEnum.None,
       order: OrderTypeEnum.None,
+      key: null,
       type: {
         type: DataTypeEnum.Date,
         options: {
@@ -818,6 +843,7 @@ describe("The `getFieldData` function", () => {
       name: "name",
       aggregation: AggregationTypeEnum.None,
       order: OrderTypeEnum.None,
+      key: null,
       type: {
         type: DataTypeEnum.Date,
         options: {
@@ -844,6 +870,7 @@ describe("The `getFieldData` function", () => {
       name: "name",
       aggregation: AggregationTypeEnum.None,
       order: OrderTypeEnum.None,
+      key: null,
       type: {
         type: DataTypeEnum.Date,
         options: {
@@ -868,6 +895,7 @@ describe("The `getFieldData` function", () => {
       name: "name",
       aggregation: AggregationTypeEnum.None,
       order: OrderTypeEnum.None,
+      key: null,
       type: {
         type: DataTypeEnum.Time,
         options: {
@@ -891,6 +919,7 @@ describe("The `getFieldData` function", () => {
       name: "name",
       aggregation: AggregationTypeEnum.None,
       order: OrderTypeEnum.None,
+      key: null,
       type: {
         type: DataTypeEnum.Time,
         options: {
@@ -914,6 +943,7 @@ describe("The `getFieldData` function", () => {
       name: "name",
       aggregation: AggregationTypeEnum.None,
       order: OrderTypeEnum.None,
+      key: null,
       type: {
         type: DataTypeEnum.Time,
         options: {
@@ -940,6 +970,7 @@ describe("The `getFieldData` function", () => {
       name: "name",
       aggregation: AggregationTypeEnum.None,
       order: OrderTypeEnum.None,
+      key: null,
       type: {
         type: DataTypeEnum.Time,
         options: {
@@ -966,6 +997,7 @@ describe("The `getFieldData` function", () => {
       name: "name",
       aggregation: AggregationTypeEnum.None,
       order: OrderTypeEnum.None,
+      key: null,
       type: {
         type: DataTypeEnum.Time,
         options: {
@@ -992,6 +1024,7 @@ describe("The `getFieldData` function", () => {
       name: "name",
       aggregation: AggregationTypeEnum.None,
       order: OrderTypeEnum.None,
+      key: null,
       type: {
         type: DataTypeEnum.Time,
         options: {
@@ -1019,6 +1052,7 @@ describe("The `getFieldData` function", () => {
       name: "name",
       aggregation: AggregationTypeEnum.None,
       order: OrderTypeEnum.None,
+      key: null,
       type: {
         type: DataTypeEnum.Timestamp,
         options: {
@@ -1046,6 +1080,7 @@ describe("The `getFieldData` function", () => {
       name: "name",
       aggregation: AggregationTypeEnum.None,
       order: OrderTypeEnum.None,
+      key: null,
       type: {
         type: DataTypeEnum.Timestamp,
         options: {
@@ -1073,6 +1108,7 @@ describe("The `getFieldData` function", () => {
       name: "name",
       aggregation: AggregationTypeEnum.None,
       order: OrderTypeEnum.None,
+      key: null,
       type: {
         type: DataTypeEnum.Timestamp,
         options: {
@@ -1103,6 +1139,7 @@ describe("The `getFieldData` function", () => {
       name: "name",
       aggregation: AggregationTypeEnum.None,
       order: OrderTypeEnum.None,
+      key: null,
       type: {
         type: DataTypeEnum.Timestamp,
         options: {
@@ -1133,6 +1170,7 @@ describe("The `getFieldData` function", () => {
       name: "name",
       aggregation: AggregationTypeEnum.None,
       order: OrderTypeEnum.None,
+      key: null,
       type: {
         type: DataTypeEnum.Timestamp,
         options: {
@@ -1163,6 +1201,7 @@ describe("The `getFieldData` function", () => {
       name: "name",
       aggregation: AggregationTypeEnum.None,
       order: OrderTypeEnum.None,
+      key: null,
       type: {
         type: DataTypeEnum.Timestamp,
         options: {
@@ -1197,6 +1236,7 @@ describe("The `getFieldData` function", () => {
       name: "name",
       aggregation: AggregationTypeEnum.None,
       order: OrderTypeEnum.None,
+      key: null,
       type: {
         type: DataTypeEnum.Timestamp,
         options: {
@@ -1231,6 +1271,7 @@ describe("The `getFieldData` function", () => {
       name: "name",
       aggregation: AggregationTypeEnum.None,
       order: OrderTypeEnum.None,
+      key: null,
       type: {
         type: DataTypeEnum.Timestamp,
         options: {
@@ -1265,6 +1306,7 @@ describe("The `getFieldData` function", () => {
       name: "name",
       aggregation: AggregationTypeEnum.None,
       order: OrderTypeEnum.None,
+      key: null,
       type: {
         type: DataTypeEnum.Timestamp,
         options: {
@@ -1313,6 +1355,7 @@ describe("The `getFieldData` function", () => {
           name: "name",
           aggregation: AggregationTypeEnum.None,
           order: OrderTypeEnum.None,
+          key: null,
           type: {
             type: DataTypeEnum.Timestamp,
             options: {
@@ -1349,6 +1392,7 @@ describe("The `getFieldData` function", () => {
         name: "name",
         aggregation: AggregationTypeEnum.None,
         order: OrderTypeEnum.None,
+        key: null,
         type: {
           type: DataTypeEnum.Timestamp,
           options: {

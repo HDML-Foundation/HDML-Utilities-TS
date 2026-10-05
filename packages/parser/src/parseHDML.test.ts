@@ -629,6 +629,7 @@ describe("The `parseHDML` function", () => {
                   },
                   aggregation: 0,
                   order: 0,
+                  key: null,
                 },
                 {
                   name: "high",
@@ -640,6 +641,7 @@ describe("The `parseHDML` function", () => {
                   },
                   aggregation: 0,
                   order: 0,
+                  key: null,
                 },
                 {
                   name: "low",
@@ -651,6 +653,7 @@ describe("The `parseHDML` function", () => {
                   },
                   aggregation: 0,
                   order: 0,
+                  key: null,
                 },
                 {
                   name: "close",
@@ -662,6 +665,7 @@ describe("The `parseHDML` function", () => {
                   },
                   aggregation: 0,
                   order: 0,
+                  key: null,
                 },
                 {
                   name: "adj_close",
@@ -673,6 +677,7 @@ describe("The `parseHDML` function", () => {
                   },
                   aggregation: 0,
                   order: 0,
+                  key: null,
                 },
                 {
                   name: "volume",
@@ -684,6 +689,7 @@ describe("The `parseHDML` function", () => {
                   },
                   aggregation: 0,
                   order: 0,
+                  key: null,
                 },
                 {
                   name: "date",
@@ -695,6 +701,7 @@ describe("The `parseHDML` function", () => {
                   },
                   aggregation: 0,
                   order: 0,
+                  key: null,
                 },
               ],
             },
@@ -714,6 +721,7 @@ describe("The `parseHDML` function", () => {
                   },
                   aggregation: 0,
                   order: 0,
+                  key: null,
                 },
                 {
                   name: "high",
@@ -725,6 +733,7 @@ describe("The `parseHDML` function", () => {
                   },
                   aggregation: 0,
                   order: 0,
+                  key: null,
                 },
                 {
                   name: "low",
@@ -736,6 +745,7 @@ describe("The `parseHDML` function", () => {
                   },
                   aggregation: 0,
                   order: 0,
+                  key: null,
                 },
                 {
                   name: "close",
@@ -747,6 +757,7 @@ describe("The `parseHDML` function", () => {
                   },
                   aggregation: 0,
                   order: 0,
+                  key: null,
                 },
                 {
                   name: "adj_close",
@@ -758,6 +769,7 @@ describe("The `parseHDML` function", () => {
                   },
                   aggregation: 0,
                   order: 0,
+                  key: null,
                 },
                 {
                   name: "volume",
@@ -769,6 +781,7 @@ describe("The `parseHDML` function", () => {
                   },
                   aggregation: 0,
                   order: 0,
+                  key: null,
                 },
                 {
                   name: "date",
@@ -780,6 +793,7 @@ describe("The `parseHDML` function", () => {
                   },
                   aggregation: 0,
                   order: 0,
+                  key: null,
                 },
               ],
             },
@@ -799,6 +813,7 @@ describe("The `parseHDML` function", () => {
                   },
                   aggregation: 0,
                   order: 0,
+                  key: null,
                 },
                 {
                   name: "high",
@@ -810,6 +825,7 @@ describe("The `parseHDML` function", () => {
                   },
                   aggregation: 0,
                   order: 0,
+                  key: null,
                 },
                 {
                   name: "low",
@@ -821,6 +837,7 @@ describe("The `parseHDML` function", () => {
                   },
                   aggregation: 0,
                   order: 0,
+                  key: null,
                 },
                 {
                   name: "close",
@@ -832,6 +849,7 @@ describe("The `parseHDML` function", () => {
                   },
                   aggregation: 0,
                   order: 0,
+                  key: null,
                 },
                 {
                   name: "adj_close",
@@ -843,6 +861,7 @@ describe("The `parseHDML` function", () => {
                   },
                   aggregation: 0,
                   order: 0,
+                  key: null,
                 },
                 {
                   name: "volume",
@@ -854,6 +873,7 @@ describe("The `parseHDML` function", () => {
                   },
                   aggregation: 0,
                   order: 0,
+                  key: null,
                 },
                 {
                   name: "date",
@@ -865,6 +885,7 @@ describe("The `parseHDML` function", () => {
                   },
                   aggregation: 0,
                   order: 0,
+                  key: null,
                 },
               ],
             },
@@ -885,6 +906,7 @@ describe("The `parseHDML` function", () => {
                   },
                   aggregation: 0,
                   order: 0,
+                  key: null,
                 },
                 {
                   name: "high",
@@ -896,6 +918,7 @@ describe("The `parseHDML` function", () => {
                   },
                   aggregation: 0,
                   order: 0,
+                  key: null,
                 },
                 {
                   name: "low",
@@ -907,6 +930,7 @@ describe("The `parseHDML` function", () => {
                   },
                   aggregation: 0,
                   order: 0,
+                  key: null,
                 },
                 {
                   name: "close",
@@ -918,6 +942,7 @@ describe("The `parseHDML` function", () => {
                   },
                   aggregation: 0,
                   order: 0,
+                  key: null,
                 },
                 {
                   name: "adj_close",
@@ -929,6 +954,7 @@ describe("The `parseHDML` function", () => {
                   },
                   aggregation: 0,
                   order: 0,
+                  key: null,
                 },
                 {
                   name: "volume",
@@ -940,6 +966,7 @@ describe("The `parseHDML` function", () => {
                   },
                   aggregation: 0,
                   order: 0,
+                  key: null,
                 },
                 {
                   name: "date",
@@ -951,6 +978,7 @@ describe("The `parseHDML` function", () => {
                   },
                   aggregation: 0,
                   order: 0,
+                  key: null,
                 },
               ],
             },
@@ -971,6 +999,7 @@ describe("The `parseHDML` function", () => {
                   },
                   aggregation: 0,
                   order: 0,
+                  key: null,
                 },
                 {
                   name: "high",
@@ -982,6 +1011,7 @@ describe("The `parseHDML` function", () => {
                   },
                   aggregation: 0,
                   order: 0,
+                  key: null,
                 },
                 {
                   name: "low",
@@ -993,6 +1023,7 @@ describe("The `parseHDML` function", () => {
                   },
                   aggregation: 0,
                   order: 0,
+                  key: null,
                 },
                 {
                   name: "close",
@@ -1004,6 +1035,7 @@ describe("The `parseHDML` function", () => {
                   },
                   aggregation: 0,
                   order: 0,
+                  key: null,
                 },
                 {
                   name: "adj_close",
@@ -1015,6 +1047,7 @@ describe("The `parseHDML` function", () => {
                   },
                   aggregation: 0,
                   order: 0,
+                  key: null,
                 },
                 {
                   name: "volume",
@@ -1026,6 +1059,7 @@ describe("The `parseHDML` function", () => {
                   },
                   aggregation: 0,
                   order: 0,
+                  key: null,
                 },
                 {
                   name: "date",
@@ -1037,6 +1071,7 @@ describe("The `parseHDML` function", () => {
                   },
                   aggregation: 0,
                   order: 0,
+                  key: null,
                 },
               ],
             },
@@ -1159,6 +1194,7 @@ describe("The `parseHDML` function", () => {
               },
               aggregation: 0,
               order: 0,
+              key: null,
             },
             {
               name: "month",
@@ -1171,6 +1207,7 @@ describe("The `parseHDML` function", () => {
               },
               aggregation: 0,
               order: 0,
+              key: null,
             },
             {
               name: "day",
@@ -1183,6 +1220,7 @@ describe("The `parseHDML` function", () => {
               },
               aggregation: 0,
               order: 0,
+              key: null,
             },
             {
               name: "amazon_open",
@@ -1194,6 +1232,7 @@ describe("The `parseHDML` function", () => {
               },
               aggregation: 0,
               order: 0,
+              key: null,
             },
             {
               name: "amazon_high",
@@ -1205,6 +1244,7 @@ describe("The `parseHDML` function", () => {
               },
               aggregation: 0,
               order: 0,
+              key: null,
             },
             {
               name: "amazon_low",
@@ -1216,6 +1256,7 @@ describe("The `parseHDML` function", () => {
               },
               aggregation: 0,
               order: 0,
+              key: null,
             },
             {
               name: "amazon_close",
@@ -1227,6 +1268,7 @@ describe("The `parseHDML` function", () => {
               },
               aggregation: 0,
               order: 0,
+              key: null,
             },
             {
               name: "amazon_adj_close",
@@ -1238,6 +1280,7 @@ describe("The `parseHDML` function", () => {
               },
               aggregation: 0,
               order: 0,
+              key: null,
             },
             {
               name: "amazon_volume",
@@ -1249,6 +1292,7 @@ describe("The `parseHDML` function", () => {
               },
               aggregation: 0,
               order: 0,
+              key: null,
             },
             {
               name: "apple_open",
@@ -1260,6 +1304,7 @@ describe("The `parseHDML` function", () => {
               },
               aggregation: 0,
               order: 0,
+              key: null,
             },
             {
               name: "apple_high",
@@ -1271,6 +1316,7 @@ describe("The `parseHDML` function", () => {
               },
               aggregation: 0,
               order: 0,
+              key: null,
             },
             {
               name: "apple_low",
@@ -1282,6 +1328,7 @@ describe("The `parseHDML` function", () => {
               },
               aggregation: 0,
               order: 0,
+              key: null,
             },
             {
               name: "apple_close",
@@ -1293,6 +1340,7 @@ describe("The `parseHDML` function", () => {
               },
               aggregation: 0,
               order: 0,
+              key: null,
             },
             {
               name: "apple_adj_close",
@@ -1304,6 +1352,7 @@ describe("The `parseHDML` function", () => {
               },
               aggregation: 0,
               order: 0,
+              key: null,
             },
             {
               name: "apple_volume",
@@ -1315,6 +1364,7 @@ describe("The `parseHDML` function", () => {
               },
               aggregation: 0,
               order: 0,
+              key: null,
             },
             {
               name: "google_open",
@@ -1326,6 +1376,7 @@ describe("The `parseHDML` function", () => {
               },
               aggregation: 0,
               order: 0,
+              key: null,
             },
             {
               name: "google_high",
@@ -1337,6 +1388,7 @@ describe("The `parseHDML` function", () => {
               },
               aggregation: 0,
               order: 0,
+              key: null,
             },
             {
               name: "google_low",
@@ -1348,6 +1400,7 @@ describe("The `parseHDML` function", () => {
               },
               aggregation: 0,
               order: 0,
+              key: null,
             },
             {
               name: "google_close",
@@ -1359,6 +1412,7 @@ describe("The `parseHDML` function", () => {
               },
               aggregation: 0,
               order: 0,
+              key: null,
             },
             {
               name: "google_adj_close",
@@ -1370,6 +1424,7 @@ describe("The `parseHDML` function", () => {
               },
               aggregation: 0,
               order: 0,
+              key: null,
             },
             {
               name: "google_volume",
@@ -1381,6 +1436,7 @@ describe("The `parseHDML` function", () => {
               },
               aggregation: 0,
               order: 0,
+              key: null,
             },
             {
               name: "microsoft_open",
@@ -1392,6 +1448,7 @@ describe("The `parseHDML` function", () => {
               },
               aggregation: 0,
               order: 0,
+              key: null,
             },
             {
               name: "microsoft_high",
@@ -1403,6 +1460,7 @@ describe("The `parseHDML` function", () => {
               },
               aggregation: 0,
               order: 0,
+              key: null,
             },
             {
               name: "microsoft_low",
@@ -1414,6 +1472,7 @@ describe("The `parseHDML` function", () => {
               },
               aggregation: 0,
               order: 0,
+              key: null,
             },
             {
               name: "microsoft_close",
@@ -1425,6 +1484,7 @@ describe("The `parseHDML` function", () => {
               },
               aggregation: 0,
               order: 0,
+              key: null,
             },
             {
               name: "microsoft_adj_close",
@@ -1436,6 +1496,7 @@ describe("The `parseHDML` function", () => {
               },
               aggregation: 0,
               order: 0,
+              key: null,
             },
             {
               name: "microsoft_volume",
@@ -1447,6 +1508,7 @@ describe("The `parseHDML` function", () => {
               },
               aggregation: 0,
               order: 0,
+              key: null,
             },
             {
               name: "netflix_open",
@@ -1458,6 +1520,7 @@ describe("The `parseHDML` function", () => {
               },
               aggregation: 0,
               order: 0,
+              key: null,
             },
             {
               name: "netflix_high",
@@ -1469,6 +1532,7 @@ describe("The `parseHDML` function", () => {
               },
               aggregation: 0,
               order: 0,
+              key: null,
             },
             {
               name: "netflix_low",
@@ -1480,6 +1544,7 @@ describe("The `parseHDML` function", () => {
               },
               aggregation: 0,
               order: 0,
+              key: null,
             },
             {
               name: "netflix_close",
@@ -1491,6 +1556,7 @@ describe("The `parseHDML` function", () => {
               },
               aggregation: 0,
               order: 0,
+              key: null,
             },
             {
               name: "netflix_adj_close",
@@ -1502,6 +1568,7 @@ describe("The `parseHDML` function", () => {
               },
               aggregation: 0,
               order: 0,
+              key: null,
             },
             {
               name: "netflix_volume",
@@ -1513,6 +1580,7 @@ describe("The `parseHDML` function", () => {
               },
               aggregation: 0,
               order: 0,
+              key: null,
             },
           ],
           filter_by: {
@@ -1570,6 +1638,7 @@ describe("The `parseHDML` function", () => {
               },
               aggregation: 0,
               order: 0,
+              key: null,
             },
             {
               name: "month",
@@ -1581,6 +1650,7 @@ describe("The `parseHDML` function", () => {
               },
               aggregation: 0,
               order: 0,
+              key: null,
             },
             {
               name: "day",
@@ -1592,6 +1662,7 @@ describe("The `parseHDML` function", () => {
               },
               aggregation: 0,
               order: 0,
+              key: null,
             },
           ],
           sort_by: [
@@ -1605,6 +1676,7 @@ describe("The `parseHDML` function", () => {
               },
               aggregation: 0,
               order: 1,
+              key: null,
             },
             {
               name: "month",
@@ -1616,6 +1688,7 @@ describe("The `parseHDML` function", () => {
               },
               aggregation: 0,
               order: 1,
+              key: null,
             },
             {
               name: "day",
@@ -1627,6 +1700,7 @@ describe("The `parseHDML` function", () => {
               },
               aggregation: 0,
               order: 2,
+              key: null,
             },
           ],
           split_by: [
@@ -1640,6 +1714,7 @@ describe("The `parseHDML` function", () => {
               },
               aggregation: 0,
               order: 0,
+              key: null,
             },
           ],
         },
@@ -2148,5 +2223,163 @@ describe("A dropped container with a surviving child", () => {
     expect(frame.sort_by.map((f) => f.name)).toEqual(["s"]);
     expect(frame.split_by.map((f) => f.name)).toEqual(["p"]);
     expect(frame.filter_by.filters.length).toBe(1);
+  });
+});
+
+/**
+ * ★★ **Gate (c) — item 3's V-rule** (019 step 11, RFC 019/001 §4.7).
+ *
+ * `key` is meaningful only on an `<hdml-field>` whose parent is
+ * `<hdml-dataset>`. In the other four positions it is REPORTED AND
+ * IGNORED: a `warning`, and the field still reaches the `HDOM`.
+ *
+ * ★ **These go through `parseHDML`, never through a helper.** The
+ * rule lives in `appendHddmChild`, not in `getFieldData` -- the
+ * helper is handed `attrs` and never sees the field's parent -- so a
+ * unit test on `getFieldData` can never exercise it (C103). And the
+ * seam that lets a diagnostic raised during APPEND reach the
+ * caller's array is itself the thing most likely to be wrong, which
+ * only an end-to-end parse can see.
+ *
+ * ★ Every document carries wrapper `<div>` markup so the `path`
+ * assertions are real (C91); the anchors are derived with `at()`.
+ */
+const MISPLACED_KEY_MESSAGE =
+  "`key` is meaningful only on a field under `hdml-dataset`; " +
+  "here it is ignored.";
+
+const KEYED_FIELD = '<hdml-field name="f" key="pk"></hdml-field>';
+
+/** A keyed field directly under `<hdml-dataset>` — the one legal
+ * position. */
+function underDataset(): string {
+  return `
+  <div class="wrap">
+    <section>
+      <hdml-model name="m">
+        <hdml-dataset name="d" type="table" identifier="t">
+          ${KEYED_FIELD}
+        </hdml-dataset>
+      </hdml-model>
+    </section>
+  </div>
+`;
+}
+
+/**
+ * A keyed field under `<hdml-frame>`, either directly (`slot ===
+ * null`) or wrapped in one of the three positional slots.
+ */
+function underFrame(slot: null | string): string {
+  const inner = slot
+    ? `<${slot}>${KEYED_FIELD}</${slot}>`
+    : KEYED_FIELD;
+  return `
+  <div class="wrap">
+    <section>
+      <hdml-frame name="fr" source="/m.html">
+        ${inner}
+      </hdml-frame>
+    </section>
+  </div>
+`;
+}
+
+describe("item 3's `key` V-rule", () => {
+  it("says NOTHING for a key under `hdml-dataset`", () => {
+    const d: HdqlDiagnostic[] = [];
+    const hdom = parseHDML(underDataset(), d);
+
+    // ★ The whole point: the legal position is silent.
+    expect(d.length).toBe(0);
+    // ...and the declaration actually arrived.
+    expect(hdom.models[0].tables[0].fields[0].key).toBe("pk");
+  });
+
+  /** The four positions where `key` means nothing. */
+  const MISPLACED: { slot: null | string; label: string }[] = [
+    { slot: null, label: "hdml-frame" },
+    { slot: "hdml-group-by", label: "hdml-group-by" },
+    { slot: "hdml-sort-by", label: "hdml-sort-by" },
+    { slot: "hdml-split-by", label: "hdml-split-by" },
+  ];
+
+  MISPLACED.forEach(({ slot, label }) => {
+    it(`warns for a key under \`${label}\``, () => {
+      // `slot === null` means the field is a DIRECT child of the
+      // frame, which is the `hdml-frame` position itself.
+      const src = underFrame(slot);
+      const d: HdqlDiagnostic[] = [];
+      const hdom = parseHDML(src, d);
+
+      // ★ ONE diagnostic, and it reached the CALLER'S array --
+      // the only clause that tells a real seam from one that
+      // collects nothing.
+      expect(d.length).toBe(1);
+      expect(d[0].code).toBe(HDQL_DIAGNOSTIC_CODES.MISPLACED_KEY);
+      // ★ The first `warning` in the project.
+      expect(d[0].severity).toBe("warning");
+      expect(d[0].message).toBe(MISPLACED_KEY_MESSAGE);
+
+      // A real anchor, and no wrapper segment in it.
+      expect(d[0].path).not.toBeNull();
+      expect(d[0].path).not.toContain("div");
+      expect(d[0].path).not.toContain("section");
+      expect(d[0].path).toContain("hdml-field[0]");
+      const anchor = at(src, '<hdml-field name="f" key="pk">');
+      expect(d[0].line).toBe(anchor.line);
+      expect(d[0].column).toBe(anchor.column);
+      expect(d[0].offset).toBe(anchor.offset);
+
+      // ★★ AND THE FIELD IS STILL THERE. "Reported and ignored"
+      // is not "dropped": this is the first diagnostic in 019
+      // that does not accompany a drop, and a `warning` that
+      // removed the element would be an `error` wearing the
+      // wrong severity.
+      const frame = hdom.frames[0];
+      const slots = [
+        ...frame.fields,
+        ...frame.group_by,
+        ...frame.sort_by,
+        ...frame.split_by,
+      ];
+      expect(slots.length).toBe(1);
+      expect(slots[0].name).toBe("f");
+      // ★ The declaration is CARRIED, not blanked -- it is
+      // simply inert where it sits.
+      expect(slots[0].key).toBe("pk");
+    });
+  });
+
+  it("says nothing when a misplaced field has no `key`", () => {
+    // The negative control for the rule's own condition: the
+    // position alone must not warn.
+    const d: HdqlDiagnostic[] = [];
+    parseHDML(
+      underFrame("hdml-group-by").replace(' key="pk"', ""),
+      d,
+    );
+
+    expect(d.length).toBe(0);
+  });
+
+  it("does not warn for a field under a DROPPED frame", () => {
+    // ★ Gated on `attached` deliberately. A dropped parent takes
+    // its subtree with it (step 10, S13) and its own `error` is
+    // the explanation; a second diagnostic would report two
+    // problems for one mistake and would break the invariant that
+    // `severity === "warning"` implies the element is in the HDOM.
+    const d: HdqlDiagnostic[] = [];
+    const hdom = parseHDML(
+      underFrame("hdml-group-by").replace(' source="/m.html"', ""),
+      d,
+    );
+
+    expect(d.length).toBe(1);
+    expect(d[0].code).toBe(
+      HDQL_DIAGNOSTIC_CODES.MISSING_FRAME_NAME_OR_SOURCE,
+    );
+    expect(d[0].severity).toBe("error");
+    expect(hdom.frames.length).toBe(0);
   });
 });

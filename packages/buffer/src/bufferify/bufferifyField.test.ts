@@ -37,6 +37,7 @@ describe("The `bufferifyField` function", () => {
       clause: null,
       aggregation: AggregationTypeEnum.None,
       order: OrderTypeEnum.None,
+      key: null,
       description: null,
     };
 
@@ -60,6 +61,7 @@ describe("The `bufferifyField` function", () => {
       clause: null,
       aggregation: AggregationTypeEnum.None,
       order: OrderTypeEnum.None,
+      key: null,
       description: null,
     };
 
@@ -81,6 +83,7 @@ describe("The `bufferifyField` function", () => {
       clause: null,
       aggregation: AggregationTypeEnum.None,
       order: OrderTypeEnum.None,
+      key: null,
       description: null,
     };
 
@@ -102,6 +105,7 @@ describe("The `bufferifyField` function", () => {
       clause: null,
       aggregation: AggregationTypeEnum.None,
       order: OrderTypeEnum.None,
+      key: null,
       description: "description",
     };
 
@@ -124,6 +128,7 @@ describe("The `bufferifyField` function", () => {
       clause: null,
       aggregation: AggregationTypeEnum.None,
       order: OrderTypeEnum.None,
+      key: null,
       description: "description",
     };
 

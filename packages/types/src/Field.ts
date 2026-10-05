@@ -324,4 +324,19 @@ export interface Field {
   type: FieldType;
   aggregation: AggregationTypeEnum;
   order: OrderTypeEnum;
+  /**
+   * The named key group this field belongs to, e.g. `"pk"` or
+   * `"natural"`, or `null`. A named group rather than a boolean
+   * because a key is a SET: a boolean cannot tell one column of a
+   * composite primary key from an alternate unique key on its own,
+   * and that is the distinction the fan-out detector this field
+   * exists for needs (RFC 019/001 §4.4). Free-form -- the
+   * vocabulary does not enumerate key names.
+   *
+   * ★ Meaningful only on a field under `<hdml-dataset>`. In the
+   * other four positions the parser reports `misplaced-key` as a
+   * WARNING and ignores it; the field itself still survives
+   * (RFC 019/001 §4.7).
+   */
+  key: null | string;
 }

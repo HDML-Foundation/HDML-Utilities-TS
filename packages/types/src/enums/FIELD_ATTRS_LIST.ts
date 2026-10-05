@@ -12,6 +12,7 @@ export enum FIELD_ATTRS_LIST {
   TYPE = "type",
   AGGREGATION = "aggregation",
   ORDER = "order",
+  KEY = "key",
   SCALE = "scale",
   PRECISION = "precision",
   BITWIDTH = "bit-width",

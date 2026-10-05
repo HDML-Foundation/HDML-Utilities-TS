@@ -58,6 +58,7 @@ describe("bufferifyHDOM", () => {
                   },
                   aggregation: AggregationTypeEnum.None,
                   order: OrderTypeEnum.None,
+                  key: null,
                 },
               ],
             },
@@ -83,6 +84,7 @@ describe("bufferifyHDOM", () => {
               },
               aggregation: AggregationTypeEnum.None,
               order: OrderTypeEnum.None,
+              key: null,
             },
           ],
           filter_by: {

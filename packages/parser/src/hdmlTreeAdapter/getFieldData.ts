@@ -54,6 +54,7 @@ export function getFieldData(
   let unit: TimeUnitEnum = TimeUnitEnum.Millisecond;
   let timezone: TimeZoneEnum = TimeZoneEnum.UTC;
   let nullable: null | string = null;
+  let key: null | string = null;
   let aggregation: AggregationTypeEnum = AggregationTypeEnum.None;
   let order: OrderTypeEnum = OrderTypeEnum.None;
 
@@ -222,6 +223,9 @@ export function getFieldData(
             break;
         }
         break;
+      case FIELD_ATTRS_LIST.KEY:
+        key = attr.value;
+        break;
       case FIELD_ATTRS_LIST.ORDER:
         switch (attr.value as ORDER_VALUES) {
           case ORDER_VALUES.ASC:
@@ -258,6 +262,16 @@ export function getFieldData(
     },
     aggregation,
     order,
+    // ★ Read unconditionally. The V-rule -- `key` is meaningful
+    // only under `<hdml-dataset>` -- is NOT enforceable here:
+    // this helper is handed `attrs` and nothing else, and the
+    // field's parent does not exist yet when `createElement`
+    // calls it. The rule lives in `appendHddmChild`, which is
+    // the first place the parent is known (RFC 019/001 §4.7).
+    // ★ And it is a WARNING, so even a misplaced `key` is
+    // carried: the field survives and the declaration is merely
+    // inert, which is what "reported and ignored" means.
+    key: key || null,
   };
 
   if (type) {

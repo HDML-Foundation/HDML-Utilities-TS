@@ -86,6 +86,7 @@ export function bufferifyField(
   const clauseOffset = field.clause
     ? builder.createString(field.clause)
     : 0;
+  const keyOffset = field.key ? builder.createString(field.key) : 0;
 
   let typeOffset = 0;
   let optionsOffset = 0;
@@ -176,6 +177,7 @@ export function bufferifyField(
     typeOffset,
     aggregation,
     order,
+    keyOffset,
   );
 }
 
@@ -338,6 +340,8 @@ function createTimestampOptions(
  *
  * @param order The order type.
  *
+ * @param keyOffset The offset for the named key group string.
+ *
  * @returns The FlatBuffers offset for the FieldStruct structure.
  */
 function createField(
@@ -349,6 +353,7 @@ function createField(
   typeOffset: number,
   aggregation: AggregationTypeEnum,
   order: OrderTypeEnum,
+  keyOffset: number,
 ): number {
   FieldStruct.startFieldStruct(builder);
   FieldStruct.addName(builder, nameOffset);
@@ -358,5 +363,6 @@ function createField(
   FieldStruct.addType(builder, typeOffset);
   FieldStruct.addAggregation(builder, aggregation);
   FieldStruct.addOrder(builder, order);
+  FieldStruct.addKey(builder, keyOffset);
   return FieldStruct.endFieldStruct(builder);
 }

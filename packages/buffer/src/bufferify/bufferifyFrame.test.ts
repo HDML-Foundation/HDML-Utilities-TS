@@ -51,6 +51,7 @@ describe("The `bufferifyFrame` function", () => {
           },
           aggregation: AggregationTypeEnum.None,
           order: OrderTypeEnum.None,
+          key: null,
         },
       ],
       filter_by: {
@@ -106,6 +107,7 @@ describe("The `bufferifyFrame` function", () => {
           },
           aggregation: AggregationTypeEnum.None,
           order: OrderTypeEnum.None,
+          key: null,
         },
         {
           name: "field2",
@@ -117,6 +119,7 @@ describe("The `bufferifyFrame` function", () => {
           },
           aggregation: AggregationTypeEnum.None,
           order: OrderTypeEnum.None,
+          key: null,
         },
       ],
       filter_by: {
@@ -179,6 +182,7 @@ describe("The `bufferifyFrame` function", () => {
           },
           aggregation: AggregationTypeEnum.Sum,
           order: OrderTypeEnum.Ascending,
+          key: null,
         },
       ],
       filter_by: {
@@ -197,6 +201,7 @@ describe("The `bufferifyFrame` function", () => {
           },
           aggregation: AggregationTypeEnum.None,
           order: OrderTypeEnum.None,
+          key: null,
         },
       ],
       split_by: [
@@ -210,6 +215,7 @@ describe("The `bufferifyFrame` function", () => {
           },
           aggregation: AggregationTypeEnum.None,
           order: OrderTypeEnum.None,
+          key: null,
         },
       ],
       sort_by: [
@@ -223,6 +229,7 @@ describe("The `bufferifyFrame` function", () => {
           },
           aggregation: AggregationTypeEnum.None,
           order: OrderTypeEnum.None,
+          key: null,
         },
       ],
     };

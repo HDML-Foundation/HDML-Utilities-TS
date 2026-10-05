@@ -7,6 +7,7 @@
 import { HDML_TAG_NAMES } from "@hdml/types";
 import { html, Token } from "parse5";
 import { HDMLTreeAdapterMap, ChildNode } from "./HDMLTreeAdapterMap";
+import { DiagnosticSink } from "../diagnostics";
 
 type DOCUMENT_MODE = html.DOCUMENT_MODE;
 type NS = html.NS;
@@ -26,7 +27,17 @@ type ElementLocation = Token.ElementLocation;
 export interface HDMLTreeAdapter<
   T extends HDMLTreeAdapterMap = HDMLTreeAdapterMap,
 > {
-  appendHddmChild(element: ChildNode): void;
+  /**
+   * Hangs a structurized element onto its structurized parent, and
+   * raises item 3's V-rule when the element is an `<hdml-field>`
+   * carrying `key` outside `<hdml-dataset>` (019 step 11).
+   *
+   * @param element The element to attach.
+   * @param sink The parse's diagnostics sink. **Optional**: the
+   * module-singleton adapter collects nothing, and an absent sink
+   * discards.
+   */
+  appendHddmChild(element: ChildNode, sink?: DiagnosticSink): void;
   getHdmlParentTag(
     element: ChildNode,
     hdmlTag: HDML_TAG_NAMES[],

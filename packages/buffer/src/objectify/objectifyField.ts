@@ -50,6 +50,7 @@ export function objectifyField(fieldStruct: FieldStruct): Field {
   const description = fieldStruct.description();
   const origin = fieldStruct.origin();
   const clause = fieldStruct.clause();
+  const key = fieldStruct.key();
   const aggregation =
     fieldStruct.aggregation() ?? AggregationTypeEnum.None;
   const order = fieldStruct.order() ?? OrderTypeEnum.None;
@@ -72,6 +73,7 @@ export function objectifyField(fieldStruct: FieldStruct): Field {
     type,
     aggregation,
     order,
+    key,
   };
 }
 

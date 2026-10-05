@@ -14,6 +14,7 @@ import {
   FilterClause,
   Filter,
   HDML_TAG_NAMES,
+  HDQL_DIAGNOSTIC_CODES,
 } from "@hdml/types";
 import { html, Token } from "parse5";
 import {
@@ -37,7 +38,19 @@ import { getJoinData } from "./getJoinData";
 import { getConnectiveData } from "./getConnectiveData";
 import { getFilterData } from "./getFilterData";
 import { elementPath } from "./elementPath";
-import { DiagnosticSink, anchorDiagnostics } from "../diagnostics";
+import {
+  DiagnosticSink,
+  anchorDiagnostics,
+  pushDiagnostic,
+} from "../diagnostics";
+
+/**
+ * Item 3's V-rule message (RFC 019/002 §10.3). ★ Contract: a gate
+ * asserts the exact string, and step 18's publish freezes it.
+ */
+const MISPLACED_KEY_MESSAGE =
+  "`key` is meaningful only on a field under `hdml-dataset`; " +
+  "here it is ignored.";
 
 /**
  * Builds the `Element` and, when a sink is supplied, records every
@@ -112,6 +125,67 @@ function buildElement(
   return element;
 }
 
+/**
+ * Links `newNode` under `parentNode` and structurizes it. Factored
+ * out of the adapter literal for the same reason
+ * {@link buildElement} was: `appendChild`'s signature is fixed by
+ * `parse5`'s `TreeAdapter` and cannot carry a sink, so
+ * {@link createHdmlTreeAdapter} binds this instead.
+ *
+ * ★ **Why `appendChild` had to join the seam at 019 step 11.** Step
+ * 09 rebound only `createElement`, on the measurement that every
+ * other adapter method is a pure function of its arguments. That
+ * stopped being true when item 3's V-rule landed: the rule needs
+ * the field's PARENT, which only exists by the time
+ * `appendHddmChild` runs, so a diagnostic is now raised during
+ * append. And the spread copy could not reach it -- the literal's
+ * `appendChild` called `hdmlTreeAdapter.appendHddmChild`, a HARD
+ * reference to the module singleton, so rebinding
+ * `appendHddmChild` alone would have collected nothing while
+ * compiling and passing every other gate.
+ *
+ * ★ Two smaller options were rejected. Copying this body into the
+ * factory duplicates the `rootNode`/`hddm`/`path` logic, which is
+ * exactly what step 09's spread form exists to avoid. Changing the
+ * self-call to `this.appendHddmChild(...)` is a one-line diff but
+ * makes correctness depend on `this` surviving however `parse5`
+ * invokes the adapter, which nothing in the suite would catch.
+ *
+ * @param parentNode The parent to append to.
+ * @param newNode The node to append.
+ * @param sink The parse's sink, or `undefined` to discard.
+ */
+function attachChild(
+  parentNode: ParentNode,
+  newNode: ChildNode,
+  sink?: DiagnosticSink,
+): void {
+  if (
+    parentNode &&
+    hdmlTreeAdapter.isElementNode(parentNode) &&
+    parentNode.parentNode === null
+  ) {
+    parentNode.rootNode = parentNode;
+    parentNode.hddm = {
+      connections: [],
+      models: [],
+      frames: [],
+    };
+  }
+  if (newNode) {
+    if (hdmlTreeAdapter.isElementNode(parentNode)) {
+      newNode.rootNode = parentNode.rootNode;
+    }
+    parentNode.childNodes.push(newNode);
+    newNode.parentNode = parentNode;
+    // The first moment the child<->parent link exists in both
+    // directions, and appending only appends, so the node's count
+    // of preceding same-tag siblings is already final.
+    newNode.path = elementPath(newNode);
+    hdmlTreeAdapter.appendHddmChild(newNode, sink);
+  }
+}
+
 export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
   // HDML related methods
   createDocumentFragment(): HDMLDocument {
@@ -132,30 +206,8 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
   },
 
   appendChild(parentNode: ParentNode, newNode: ChildNode): void {
-    if (
-      parentNode &&
-      hdmlTreeAdapter.isElementNode(parentNode) &&
-      parentNode.parentNode === null
-    ) {
-      parentNode.rootNode = parentNode;
-      parentNode.hddm = {
-        connections: [],
-        models: [],
-        frames: [],
-      };
-    }
-    if (newNode) {
-      if (hdmlTreeAdapter.isElementNode(parentNode)) {
-        newNode.rootNode = parentNode.rootNode;
-      }
-      parentNode.childNodes.push(newNode);
-      newNode.parentNode = parentNode;
-      // The first moment the child<->parent link exists in both
-      // directions, and `appendChild` only appends, so the node's
-      // count of preceding same-tag siblings is already final.
-      newNode.path = elementPath(newNode);
-      hdmlTreeAdapter.appendHddmChild(newNode);
-    }
+    // No sink: the module singleton collects nothing.
+    attachChild(parentNode, newNode);
   },
 
   /**
@@ -189,9 +241,16 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
    * outer `if (parent)` would silently stop every grouped,
    * sorted and split field from being attached.
    *
+   * ★ **It also raises item 3's V-rule** (019 step 11), which is
+   * the reason it takes a sink at all. The rule needs the field's
+   * PARENT, and this is the first place the parent is known --
+   * `getFieldData` is handed `attrs` and nothing else. See the
+   * `FIELD` case below.
+   *
    * @param element The element to attach.
+   * @param sink The parse's sink, or `undefined` to discard.
    */
-  appendHddmChild(element: ChildNode): void {
+  appendHddmChild(element: ChildNode, sink?: DiagnosticSink): void {
     let parent: null | ChildNode = null;
     let data: null | Model | Table | Frame | Join | FilterClause =
       null;
@@ -304,12 +363,24 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
             HDML_TAG_NAMES.SPLIT_BY,
           ]);
           if (parent) {
-            switch (parent.nodeName as HDML_TAG_NAMES) {
+            // ★ Captured BEFORE the switch. The GROUP_BY/SORT_BY/
+            // SPLIT_BY branches REASSIGN `parent` to the enclosing
+            // frame, so reading the position after the switch
+            // would report `hdml-frame` for all three. Typed as
+            // the enum, not `string`, so comparing it to a member
+            // below is not a `no-unsafe-enum-comparison` error.
+            const position = parent.nodeName as HDML_TAG_NAMES;
+            // Whether the field reached the document. A dropped
+            // parent attaches nothing -- see the note above on
+            // why the orphan gets no diagnostic of its own.
+            let attached = false;
+            switch (position) {
               case HDML_TAG_NAMES.DATASET:
               case HDML_TAG_NAMES.FRAME:
                 if (parent.hddmData) {
                   data = parent.hddmData as Table | Frame;
                   data.fields.push(element.hddmData as Field);
+                  attached = true;
                 }
                 break;
               case HDML_TAG_NAMES.GROUP_BY:
@@ -319,6 +390,7 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
                 if (parent?.hddmData) {
                   data = parent.hddmData as Frame;
                   data.group_by.push(element.hddmData as Field);
+                  attached = true;
                 }
                 break;
               case HDML_TAG_NAMES.SORT_BY:
@@ -328,6 +400,7 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
                 if (parent?.hddmData) {
                   data = parent.hddmData as Frame;
                   data.sort_by.push(element.hddmData as Field);
+                  attached = true;
                 }
                 break;
               case HDML_TAG_NAMES.SPLIT_BY:
@@ -337,8 +410,48 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
                 if (parent?.hddmData) {
                   data = parent.hddmData as Frame;
                   data.split_by.push(element.hddmData as Field);
+                  attached = true;
                 }
                 break;
+            }
+            // ★★ ITEM 3's V-RULE (RFC 019/001 §4.7). `key` is
+            // meaningful only on a field under `<hdml-dataset>`;
+            // in the other four positions it is REPORTED AND
+            // IGNORED -- a `warning`, and the field is NOT
+            // dropped. It is already in `fields`/`group_by`/
+            // `sort_by`/`split_by` by the time this runs, and
+            // that ordering is deliberate: a warning in 019 means
+            // "your markup survived, your declaration did not",
+            // so it must never fire for a field that is absent.
+            //
+            // ★ Gated on `attached` for exactly that reason. A
+            // dropped parent takes its subtree with it (step 10,
+            // S13) and its own `error` is the explanation; adding
+            // a second diagnostic for the orphan would report two
+            // problems for one mistake and would break the
+            // invariant that `severity === "warning"` implies the
+            // element is in the HDOM.
+            if (
+              attached &&
+              position !== HDML_TAG_NAMES.DATASET &&
+              (element.hddmData as Field).key
+            ) {
+              // Marked before the push, exactly as
+              // `buildElement` does: `sink` is optional, so
+              // `sink.length` is not safe to read afterwards.
+              // ★ Anchored to `element` -- the field itself --
+              // and the anchor stays LAZY: `drainDiagnostics`
+              // reads `path` and `loc` once the parse is over,
+              // which is the only moment `_adoptNodes` has
+              // finished re-stamping them.
+              const mark = sink ? sink.length : 0;
+              pushDiagnostic(
+                sink,
+                HDQL_DIAGNOSTIC_CODES.MISPLACED_KEY,
+                MISPLACED_KEY_MESSAGE,
+                "warning",
+              );
+              anchorDiagnostics(sink, mark, element);
             }
           }
         }
@@ -564,11 +677,20 @@ export const hdmlTreeAdapter: HDMLTreeAdapter<HDMLTreeAdapterMap> = {
  * silently; the gate that catches it parses a bad document and then
  * a clean one and asserts the second is empty.
  *
- * ★ Only `createElement` is rebound. Every other method on the
- * adapter is a pure function of its arguments — none reads or
- * writes adapter state — so the spread copies share the
- * singleton's implementations, including their `hdmlTreeAdapter.*`
- * self-calls, with identical behaviour.
+ * ★ **`createElement` AND `appendChild` are rebound.** Step 09
+ * rebound only the first, on the measurement that no other adapter
+ * method read or wrote parse state. ⚠ **That stopped being true at
+ * step 11**: item 3's V-rule is raised in `appendHddmChild`,
+ * because the rule needs the field's parent and `getFieldData`
+ * never sees it. Rebinding `appendHddmChild` would NOT have been
+ * enough -- the literal's `appendChild` self-calls the module
+ * singleton's copy by name, so the spread's `appendChild` would
+ * have kept calling the sinkless one and the warning would have
+ * reached no caller, silently. See {@link attachChild}.
+ *
+ * Every remaining method is still a pure function of its
+ * arguments, so the spread copies share the singleton's
+ * implementations with identical behaviour.
  *
  * @param sink The sink this adapter's `createElement` pushes onto.
  *
@@ -585,6 +707,9 @@ export function createHdmlTreeAdapter(
       attrs: Token.Attribute[],
     ): Element {
       return buildElement(tagName, attrs, sink);
+    },
+    appendChild(parentNode: ParentNode, newNode: ChildNode): void {
+      attachChild(parentNode, newNode, sink);
     },
   };
 }

@@ -1141,7 +1141,10 @@ function attrs(o: Record<string, string>): {
 /** The one diagnostic a dropped connection produced. */
 function dropped(o: Record<string, string>): {
   code: HDQL_DIAGNOSTIC_CODES;
-  severity: "error";
+  // ★ Widened at step 11 with `HdqlDiagnostic.severity` itself.
+  // The narrowing was never the gate: `:1164` asserts
+  // `toBe("error")` behaviourally, and that still holds.
+  severity: "error" | "warning";
   message: string;
 } {
   const sink: DiagnosticSink = [];

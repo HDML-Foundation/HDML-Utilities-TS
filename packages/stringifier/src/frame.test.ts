@@ -44,6 +44,7 @@ describe("The `getFrameSQL` and `getFrameHTML` functions", () => {
               },
               aggregation: AggregationTypeEnum.None,
               order: OrderTypeEnum.None,
+              key: null,
             },
           ],
           filter_by: {
@@ -96,6 +97,7 @@ describe("The `getFrameSQL` and `getFrameHTML` functions", () => {
               },
               aggregation: AggregationTypeEnum.None,
               order: OrderTypeEnum.None,
+              key: null,
             },
           ],
           filter_by: {
@@ -148,6 +150,7 @@ describe("The `getFrameSQL` and `getFrameHTML` functions", () => {
               },
               aggregation: AggregationTypeEnum.None,
               order: OrderTypeEnum.None,
+              key: null,
             },
           ],
           filter_by: {
@@ -200,6 +203,7 @@ describe("The `getFrameSQL` and `getFrameHTML` functions", () => {
               },
               aggregation: AggregationTypeEnum.None,
               order: OrderTypeEnum.None,
+              key: null,
             },
             {
               name: "F1",
@@ -211,6 +215,7 @@ describe("The `getFrameSQL` and `getFrameHTML` functions", () => {
               },
               aggregation: AggregationTypeEnum.None,
               order: OrderTypeEnum.None,
+              key: null,
             },
             {
               name: "F2",
@@ -222,6 +227,7 @@ describe("The `getFrameSQL` and `getFrameHTML` functions", () => {
               },
               aggregation: AggregationTypeEnum.None,
               order: OrderTypeEnum.None,
+              key: null,
             },
             {
               name: "F2",
@@ -233,6 +239,7 @@ describe("The `getFrameSQL` and `getFrameHTML` functions", () => {
               },
               aggregation: AggregationTypeEnum.None,
               order: OrderTypeEnum.None,
+              key: null,
             },
           ],
           filter_by: {
@@ -285,6 +292,7 @@ describe("The `getFrameSQL` and `getFrameHTML` functions", () => {
               },
               aggregation: AggregationTypeEnum.None,
               order: OrderTypeEnum.None,
+              key: null,
             },
             {
               name: "F1",
@@ -296,6 +304,7 @@ describe("The `getFrameSQL` and `getFrameHTML` functions", () => {
               },
               aggregation: AggregationTypeEnum.None,
               order: OrderTypeEnum.None,
+              key: null,
             },
             {
               name: "F4",
@@ -307,6 +316,7 @@ describe("The `getFrameSQL` and `getFrameHTML` functions", () => {
               },
               aggregation: AggregationTypeEnum.None,
               order: OrderTypeEnum.None,
+              key: null,
             },
             {
               name: "F2",
@@ -318,6 +328,7 @@ describe("The `getFrameSQL` and `getFrameHTML` functions", () => {
               },
               aggregation: AggregationTypeEnum.None,
               order: OrderTypeEnum.None,
+              key: null,
             },
           ],
           filter_by: {
@@ -379,6 +390,7 @@ describe("The `getFrameSQL` and `getFrameHTML` functions", () => {
               },
               aggregation: AggregationTypeEnum.None,
               order: OrderTypeEnum.None,
+              key: null,
             },
             {
               name: "F1",
@@ -390,6 +402,7 @@ describe("The `getFrameSQL` and `getFrameHTML` functions", () => {
               },
               aggregation: AggregationTypeEnum.None,
               order: OrderTypeEnum.None,
+              key: null,
             },
             {
               name: "F4",
@@ -401,6 +414,7 @@ describe("The `getFrameSQL` and `getFrameHTML` functions", () => {
               },
               aggregation: AggregationTypeEnum.None,
               order: OrderTypeEnum.None,
+              key: null,
             },
             {
               name: "F2",
@@ -412,6 +426,7 @@ describe("The `getFrameSQL` and `getFrameHTML` functions", () => {
               },
               aggregation: AggregationTypeEnum.None,
               order: OrderTypeEnum.None,
+              key: null,
             },
           ],
           filter_by: {
@@ -430,6 +445,7 @@ describe("The `getFrameSQL` and `getFrameHTML` functions", () => {
               },
               aggregation: AggregationTypeEnum.None,
               order: OrderTypeEnum.None,
+              key: null,
             },
             {
               name: "F3",
@@ -441,6 +457,7 @@ describe("The `getFrameSQL` and `getFrameHTML` functions", () => {
               },
               aggregation: AggregationTypeEnum.None,
               order: OrderTypeEnum.None,
+              key: null,
             },
           ],
           sort_by: [],
@@ -487,6 +504,7 @@ describe("The `getFrameSQL` and `getFrameHTML` functions", () => {
               },
               aggregation: AggregationTypeEnum.None,
               order: OrderTypeEnum.None,
+              key: null,
             },
             {
               name: "F1",
@@ -498,6 +516,7 @@ describe("The `getFrameSQL` and `getFrameHTML` functions", () => {
               },
               aggregation: AggregationTypeEnum.None,
               order: OrderTypeEnum.None,
+              key: null,
             },
             {
               name: "F4",
@@ -509,6 +528,7 @@ describe("The `getFrameSQL` and `getFrameHTML` functions", () => {
               },
               aggregation: AggregationTypeEnum.None,
               order: OrderTypeEnum.None,
+              key: null,
             },
             {
               name: "F2",
@@ -520,6 +540,7 @@ describe("The `getFrameSQL` and `getFrameHTML` functions", () => {
               },
               aggregation: AggregationTypeEnum.None,
               order: OrderTypeEnum.None,
+              key: null,
             },
           ],
           filter_by: {
@@ -539,6 +560,7 @@ describe("The `getFrameSQL` and `getFrameHTML` functions", () => {
               },
               aggregation: AggregationTypeEnum.None,
               order: OrderTypeEnum.None,
+              key: null,
             },
             {
               name: "F4",
@@ -550,6 +572,7 @@ describe("The `getFrameSQL` and `getFrameHTML` functions", () => {
               },
               aggregation: AggregationTypeEnum.None,
               order: OrderTypeEnum.None,
+              key: null,
             },
           ],
           split_by: [],

@@ -61,6 +61,7 @@ describe("objectifyHDOM", () => {
                   },
                   aggregation: AggregationTypeEnum.None,
                   order: OrderTypeEnum.None,
+                  key: null,
                 },
               ],
             },
@@ -86,6 +87,7 @@ describe("objectifyHDOM", () => {
               },
               aggregation: AggregationTypeEnum.None,
               order: OrderTypeEnum.None,
+              key: null,
             },
           ],
           filter_by: {
