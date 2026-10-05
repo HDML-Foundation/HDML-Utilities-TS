@@ -28,7 +28,7 @@ flowchart TD
     parser["@hdml/parser<br/>parseHDML · parseHTML · sortFrames"]
     buffer["@hdml/buffer<br/>serialize · deserialize · structurize · fileifize<br/>+ bufferify/* · objectify/*"]
     stringifier["@hdml/stringifier<br/>get{Connection,Model,Frame}{SQL,HTML}"]
-    hooks["@hdml/hooks<br/>read/write {String,Json,Uint8Array}<br/>(Javy.IO stdin/stdout)"]
+    hooks["@hdml/hooks<br/>read/write {String,Json,Uint8Array}<br/>(Javy.IO stdin/stdout)<br/>+ the parser / compiler bin entries"]
 
     fbs -. "flatc --ts" .-> schemas
     schemas --> types
@@ -59,10 +59,52 @@ interface HDOM {
 }
 ```
 
-The HDML tag vocabulary lives in [packages/types/src/enums/HDML_TAG_NAMES.ts](../packages/types/src/enums/HDML_TAG_NAMES.ts):
-`hdml-connection`, `hdml-model`, `hdml-table`, `hdml-join`, `hdml-frame`,
-`hdml-field`, `hdml-filter-by`, `hdml-connective`, `hdml-filter`, `hdml-group-by`,
-`hdml-split-by`, `hdml-sort-by`.
+The HDML tag vocabulary lives in [packages/types/src/enums/HDML_TAG_NAMES.ts](../packages/types/src/enums/HDML_TAG_NAMES.ts)
+— **34 members in one flat enum**, in two halves. The **twelve data tags**
+(HDQL) are the ones this repo parses, serializes and stringifies:
+`hdml-connection`, `hdml-frame`, `hdml-model`, `hdml-dataset`, `hdml-join`,
+`hdml-connective`, `hdml-filter-by`, `hdml-filter`, `hdml-group-by`,
+`hdml-split-by`, `hdml-sort-by`, `hdml-field`. The **twenty-two display tags**
+(HDVL) are vocabulary only here — `@hdml/components` implements them — and the
+enum carries them so one source names the whole language.
+
+> **`hdml-dataset`, not `hdml-table`.** The tag, `DATASET_ATTRS_LIST` and
+> `DATASET_TYPE_VALUES` were renamed at 019 step 07. The TS interface is still
+> `Table`, the struct is still `TableStruct`, the enum is still `TableTypeEnum`
+> and the tree-adapter handler is still `getTableData` — renaming those is a
+> `.fbs` change and is deliberately **not** part of the vocabulary rename.
+> So *tag* `hdml-dataset` ↔ *type* `Table` is expected, not drift.
+
+A model field also carries a **`key`** — `hdml-field@key`, `Field.key:
+null | string`, the named key group the field belongs to (`"pk"`, an alternate
+unique key, …). It is a **string rather than a boolean** because a key is a
+*set*: a boolean cannot tell one column of a composite primary key from an
+alternate unique key. `key` is legal only on a field directly inside an
+`hdml-dataset`; in the other four positions the parser reports
+`misplaced-key`, the 11th `HDQL_DIAGNOSTIC_CODES` member.
+
+### The display half is vocabulary, and 019 moved some of it into CSS
+
+The 22 display tags and their 21 `*_ATTRS_LIST` enums are **names only** in this
+repo — nothing here parses, serializes or stringifies them; `@hdml/components`
+implements them. Three of 019's changes therefore land here as pure vocabulary
+edits with no reader in this monorepo:
+
+- **`count` and `format` left the vocabulary** (step 16, items 18 + 19).
+  `TICK_`, `GRID_`, `LABEL_` and `LEGEND_ATTRS_LIST` go **18 → 12** members;
+  both attributes are now registered CSS properties (`--hdml-tick-count`,
+  `--hdml-text-format`), because how many ticks a guide draws and how a label
+  formats a value are appearance, not data. **Breaking** — hence
+  `0.0.2-alpha.26` rather than a patch. ⚠ Not to be confused with
+  `AGGREGATION_VALUES.COUNT`, the `count` *value* of `hdml-field@aggregation`,
+  which is untouched.
+- **`hdml-text` joined as the 25th tag** (step 14), inserted with the marks
+  after `hdml-rule`, and **50 `initial-{slot}` members** joined the ten mark
+  enums (step 15), taking them to **116** members. Both ship with no reader
+  for one publish; the consumers are steps 41 and 43, in `@hdml/components`.
+
+★ **The asymmetry is the point**: this repo is where the whole language is
+*named*, and only the data half is where it is *executed*.
 
 ## End-to-end pipeline
 
@@ -155,6 +197,38 @@ declare global {
 The Go host (HDIO-Server) wires its own files to those fds when running predefined modules
 (`hdml_parser.wasm`, `hdml_compiler.wasm`). See [docs/integration.md](integration.md) for the
 ABI as enforced by the host.
+
+### The two bin entries, and why they echo the plugin version
+
+`@hdml/hooks` also ships the **module bodies** those two `.wasm` files are built
+from — [`src/parser.ts`](../packages/hooks/src/parser.ts) and
+[`src/compiler.ts`](../packages/hooks/src/compiler.ts), bundled to
+`bin/{parser,compiler}.min.js` by `compile_bin`. Each is a **top-level IIFE**:
+it `readJson()`s its input, computes, and `writeJson()`s its envelope, all at
+module scope, so *importing* one runs it. Neither resolves `@hdml/*` through a
+TS import — both destructure the real functions off `globalThis`, which the
+Javy plugin populates — so a broken `hdio-javy-core` link throws at `_start`
+instead of silently importing nothing.
+
+Both entries now set **`plugin: globalThis["@hdml/version"]`** on the envelope
+they write (019 step 16, A4; RFC 019/002 §4.6). The reason is that a
+predefined module's import surface carries **no version and no hash**: it
+imports exactly `hdio-javy-core::{cabi_realloc, invoke, memory}`, and the
+plugin's only identity marker is a custom wasm section holding the bare string
+`hdio-javy-core`. A module built against one plugin and run against another
+therefore binds to the *running* plugin's globals, with no instantiate error
+and byte-identical output — measured. The echo is what makes the pairing
+legible; HDIO-Server embeds its `.fetched-version` marker and compares.
+
+- ⚠ The **field** is `plugin`; the **global** is `@hdml/version`. The names
+  differ on purpose — Go reads `json:"plugin,omitempty"`.
+- ★ It is set at the **bin entry**, wrapping whatever came back, not inside
+  `buildManifest` or the `compile*` branches. Those have nine-plus return
+  sites and most of them are errors, and a skewed plugin that *fails* is
+  exactly the case worth versioning — so one site per entry covers every shape.
+- An absent global leaves the field `undefined`, which `JSON.stringify` drops.
+  That is the `omitempty` the Go side expects, and it is what an older plugin
+  produces.
 
 ## globalThis side-effects (every entry point)
 

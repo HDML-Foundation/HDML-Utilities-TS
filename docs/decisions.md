@@ -64,7 +64,7 @@ Without the registration, tenant hooks fail at runtime. See
 
 ## Lockstep versioning
 
-All eight packages publish at the same version (`0.0.2-alpha.13` today). Why not loosen
+All eight packages publish at the same version (`0.0.2-alpha.24` today). Why not loosen
 versions per package, given they're separately scoped?
 
 - The bufferify / objectify functions assume the generated struct shapes are identical

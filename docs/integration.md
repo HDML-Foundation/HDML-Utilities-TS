@@ -15,8 +15,9 @@
 
 ## Versioning
 
-**All eight packages publish at the same version.** A single semver string (`0.0.2-alpha.13`
-at the time of writing) is mirrored across every `packages/*/package.json` and every
+**All eight packages publish at the same version.** A single semver string
+(`0.0.2-alpha.24` as of 019 step 16; the pass publishes `0.0.2-alpha.26` at step 18) is
+mirrored across every `packages/*/package.json` and every
 cross-package `@hdml/*` dependency. [scripts/release.sh](../scripts/release.sh) is the
 mechanism that enforces this — it sed-rewrites every `version` and every
 `"@hdml/<peer>": "<old>"` to the new value, commits, tags, and pushes; CI then publishes.
@@ -26,9 +27,10 @@ Implications:
 - A consumer that wants `@hdml/parser@X` must also use `@hdml/types@X` and `@hdml/schemas@X`.
   Cross-version mixing is unsupported because the bufferify/objectify functions assume the
   generated struct shapes are identical.
-- `HDML-Components` (one repo over) currently lags by one alpha (`^0.0.2-alpha.12` against
-  this repo's `0.0.2-alpha.13`) — track that drift in the workspace root's
-  [CLAUDE.md §6](../../../CLAUDE.md). `TODO(confirm: bump HDML-Components to match.)`
+- `HDML-Components` (one repo over) lags this repo — track that drift in the workspace
+  root's [CLAUDE.md §3](../../../CLAUDE.md). This repo is at `0.0.2-alpha.24`.
+  `TODO(confirm: what @hdml/* range HDML-Components pins at 7773be4 — not measured
+  here, because 019 slice B does not open that repo. 019 step 40 bumps it.)`
 
 ## globalThis convention (every runtime entry point)
 

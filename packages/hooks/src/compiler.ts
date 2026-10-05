@@ -53,6 +53,11 @@ const _export = globalThis as unknown as {
     parseHDML: typeof parseHDML;
   };
   env?: Record<string, string>;
+  // The plugin's own version string, a hand-maintained literal at
+  // `src/lib.rs:48` of HDIO-Javy-Plugin. Optional because an older
+  // plugin does not set it, and that absence must be readable rather
+  // than fatal -- see the `plugin` echo below.
+  "@hdml/version"?: string;
 };
 
 const { readJson: read, writeJson: write } = _export["@hdml/hooks"];
@@ -79,22 +84,46 @@ const input = read<CompilerInput>();
 // the connection branch injects ${env.*} explicitly upstream.
 _export.env = input?.env ?? {};
 
-write(
-  compile(
-    {
-      deserialize: des,
-      serialize: ser,
-      structurize: struct,
-      base64ToBytes: fromBase64,
-      getConnectionSQLs: connSQLs,
-      getModelHTML: modelHTML,
-      getFrameHTML: frameHTML,
-      getModelSQL: modelSQL,
-      getFrameSQL: frameSQL,
-      parseHTML: parseHtml,
-      parseHDML: parseHdml,
-      StructType: structType,
-    },
-    input ?? {},
-  ),
+const result = compile(
+  {
+    deserialize: des,
+    serialize: ser,
+    structurize: struct,
+    base64ToBytes: fromBase64,
+    getConnectionSQLs: connSQLs,
+    getModelHTML: modelHTML,
+    getFrameHTML: frameHTML,
+    getModelSQL: modelSQL,
+    getFrameSQL: frameSQL,
+    parseHTML: parseHtml,
+    parseHDML: parseHdml,
+    StructType: structType,
+  },
+  input ?? {},
 );
+
+// A4's version echo (RFC 019/002 §4.6, specified there once and
+// cited from RFC 019/001 §8.5). A predefined module's import surface
+// carries NO version and NO hash -- it imports exactly
+// `hdio-javy-core::{cabi_realloc, invoke, memory}`, and the plugin's
+// only identity marker is the custom section `import_namespace`
+// holding the bare string `hdio-javy-core`. So a module built
+// against plugin A and run against plugin B silently binds to B's
+// globals: measured by execution, byte-identical output, exit 0. The
+// echo is what makes that visible.
+//
+// ⚠ The FIELD is `plugin`; the GLOBAL is `@hdml/version`. The two
+// names differ deliberately -- the Go side reads it as
+// `Plugin string` tagged `json:"plugin,omitempty"` -- and nothing in
+// this repo catches a mix-up, because the compare is step 24's.
+//
+// ★ It is spread onto the OUTERMOST layer here, at the bin entry,
+// rather than inside the five `compile*` branches: `compile` alone
+// dispatches to four of them plus an `invalid_output` default, and
+// each branch has error returns of its own, so one site here covers
+// every shape uniformly and makes step 24's compare total over every
+// response instead of conditional on success. A skewed plugin that
+// FAILS is exactly the case you most want versioned (C153, D11).
+// An absent global leaves `plugin` undefined, which `JSON.stringify`
+// drops -- the `omitempty` the Go side already expects.
+write({ ...result, plugin: _export["@hdml/version"] });
