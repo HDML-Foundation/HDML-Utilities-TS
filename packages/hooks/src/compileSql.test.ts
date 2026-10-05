@@ -112,6 +112,83 @@ function singleFrameInput(
   };
 }
 
+// ── Item 14 fixtures (RFC 019/001 §7.1) ─────────────────────────
+
+/**
+ * RFC 019/001 §7.1's injection string, verbatim. Two `"`, so it is
+ * also the detector for a fix that replaces only the first one.
+ */
+const INJECTION = 'a" , (select 1) as "b';
+
+/**
+ * Scans a `projectColumns` select list back into column names,
+ * undoing SQL's `""` doubling, and throws on anything that is not a
+ * `", "`-separated run of well-formed `"…"` identifiers.
+ *
+ * The scan *is* the structural half of item 14's gate: an unescaped
+ * injection parses as one closed identifier followed by bare SQL,
+ * which cannot round-trip to the single name that was requested.
+ */
+function scanProjection(list: string): string[] {
+  const names: string[] = [];
+  let i = 0;
+  while (i < list.length) {
+    if (list[i] !== '"') {
+      throw new Error(`not an identifier at ${i}: ${list}`);
+    }
+    i = i + 1;
+    let name = "";
+    for (;;) {
+      if (i >= list.length) {
+        throw new Error(`unterminated identifier: ${list}`);
+      }
+      if (list[i] === '"') {
+        if (list[i + 1] === '"') {
+          name = name + '"';
+          i = i + 2;
+          continue;
+        }
+        i = i + 1;
+        break;
+      }
+      name = name + list[i];
+      i = i + 1;
+    }
+    names.push(name);
+    if (i === list.length) {
+      break;
+    }
+    if (list.slice(i, i + 2) !== ", ") {
+      throw new Error(`not a separator at ${i}: ${list}`);
+    }
+    i = i + 2;
+  }
+  return names;
+}
+
+/** The select list `projectColumns` emitted, without its keyword. */
+function projectionOf(sql: string): string {
+  const open = "\nselect ";
+  const at = sql.lastIndexOf(open);
+  if (at < 0) {
+    throw new Error(`no projection in:\n${sql}`);
+  }
+  const from = sql.indexOf("\nfrom _projection", at);
+  if (from < 0) {
+    throw new Error(`no 'from _projection' in:\n${sql}`);
+  }
+  return sql.slice(at + open.length, from);
+}
+
+/** The compiled SQL for a `columns` list, via the real pipeline. */
+function sqlFor(columns: string[]): string {
+  const out = compileSql(
+    deps,
+    singleFrameInput({ columns }),
+  ) as CompilerResult;
+  return out.result[0];
+}
+
 describe("compileSql", () => {
   it("injects env + scope into the composed WITH … SELECT", () => {
     const out = compileSql(
@@ -210,6 +287,61 @@ describe("compileSql", () => {
     expect(empty.result[0]).toContain("with _projection as (");
     expect(empty.result[0]).toContain("select *");
     expect(empty.result[0]).toContain("from _projection");
+  });
+
+  // ── Item 14 — a column name cannot close its own identifier ────
+  // RFC 019/001 §7.1. Defence in depth behind 018 Slice C's O17
+  // allowlist (`^[A-Za-z_][A-Za-z0-9_]*$` → 400), in the other repo
+  // and the other language, where the allowlist does not reach.
+
+  it("escapes a quote instead of closing the identifier", () => {
+    const sql = sqlFor([INJECTION]);
+    // Verbatim, so a red reads as a diff rather than a throw.
+    expect(sql).toContain('select "a"" , (select 1) as ""b"\n');
+    // And the pre-fix shape — a closed identifier, an injected
+    // subquery, and a second identifier — is gone.
+    expect(sql).not.toContain('select "a" , (select 1) as "b"');
+  });
+
+  it("keeps an injected subquery inside one identifier", () => {
+    // The structural half, in its own case because the verbatim
+    // assertion above fires first and would otherwise shadow it:
+    // the select list is ONE delimited identifier that round-trips
+    // to the name that was asked for, so `(select 1) as` is inert
+    // text rather than SQL between two identifiers.
+    const names = scanProjection(projectionOf(sqlFor([INJECTION])));
+    expect(names).toHaveLength(1);
+    expect(names).toEqual([INJECTION]);
+  });
+
+  it("doubles every quote, not only the first", () => {
+    // The detector for `replace` in place of `replaceAll`: the §7.1
+    // string carries two quotes, so a single-shot fix leaves the
+    // second one closing the identifier early.
+    const projection = projectionOf(sqlFor([INJECTION]));
+    expect(projection.split('""').length - 1).toBe(2);
+  });
+
+  it("doubles a quote rather than stripping it", () => {
+    // Doubling, never stripping or rejecting: a column legitimately
+    // named `a"b` must survive as `"a""b"` and still resolve. A strip
+    // would silently rename it — worse than the injection for any
+    // tenant who has one.
+    const sql = sqlFor(['a"b']);
+    expect(sql).toContain('select "a""b"\n');
+    expect(sql).not.toContain('select "ab"');
+    expect(scanProjection(projectionOf(sql))).toEqual(['a"b']);
+  });
+
+  it("leaves an allowlist-legal name byte-identical", () => {
+    // The whole reason item 14 is safe to ship in the same publish:
+    // `^[A-Za-z_][A-Za-z0-9_]*$` admits no `"`, so the fix is a
+    // no-op for every name that can reach `projectColumns` today.
+    // Green before AND after.
+    expect(projectionOf(sqlFor(["revenue"]))).toBe('"revenue"');
+    expect(projectionOf(sqlFor(["open", "close"]))).toBe(
+      '"open", "close"',
+    );
   });
 
   it("returns missing_model when no model is supplied", () => {

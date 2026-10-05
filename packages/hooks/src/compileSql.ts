@@ -55,6 +55,22 @@ function frameToStruct(
  * frame). The wrapper is unconditional so the chain's nesting depth
  * is uniform (`frames.length + 1`); the frame's internal grouping /
  * sorting / filtering is untouched, only the result columns narrow.
+ *
+ * Every inner `"` in a column name is **doubled, never stripped or
+ * rejected** (item 14, RFC 019/001 §7.1). SQL and Trino escape a
+ * quote inside a delimited identifier by doubling it, so a column
+ * legitimately named `a"b` survives as `"a""b"` and still resolves,
+ * while a name that tries to close its own identifier — `a" ,
+ * (select 1) as "b` — becomes one identifier of inert text instead
+ * of two identifiers with a subquery between them. Stripping would
+ * neutralise the injection too, and silently rename a legal column.
+ *
+ * This is **defence in depth**, in the other repo and the other
+ * language: 018 Slice C closed the service-boundary half (O17) with
+ * an `^[A-Za-z_][A-Za-z0-9_]*$` allowlist → 400, and that allowlist
+ * does not reach here. It admits no `"`, so the doubling is a
+ * **no-op for every name that can reach this function today** —
+ * which is why the fix is safe to ship in the same publish.
  */
 function projectColumns(
   composed: string,
@@ -62,7 +78,7 @@ function projectColumns(
 ): string {
   const projection =
     columns && columns.length
-      ? columns.map((c) => `"${c}"`).join(", ")
+      ? columns.map((c) => `"${c.replaceAll('"', '""')}"`).join(", ")
       : "*";
   return (
     `with _projection as (\n${composed})\n` +
