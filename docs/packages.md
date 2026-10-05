@@ -5,7 +5,7 @@
 > For how packages depend on each other and the end-to-end pipeline, see [architecture.md](architecture.md).
 > For wire formats, see [schemas.md](schemas.md).
 
-All packages publish at the **same version** (currently `0.0.2-alpha.24`). All emit CJS +
+All packages publish at the **same version** (currently `0.0.2-alpha.26`). All emit CJS +
 ESM + `.d.ts` + minified IIFE. Each runtime-bearing `index.ts` also registers itself on
 `globalThis["@hdml/<name>"]` as a side-effect — see [architecture.md#globalthis-side-effects](architecture.md#globalthis-side-effects-every-entry-point).
 
@@ -127,9 +127,10 @@ emit them):
     properties, `--hdml-tick-count` and `--hdml-text-format`, authored in a
     stylesheet rather than on the element, because how many ticks a guide
     draws and how a label formats its value are appearance, not data.
-    **This is breaking**, which is why the pass publishes `0.0.2-alpha.26`
-    rather than a patch. ⚠ **`AGGREGATION_VALUES.COUNT` is a different
-    thing** — the `count` *value* of `hdml-field@aggregation` — and survives.
+    **This is breaking**, which is why the pass published `0.0.2-alpha.26`
+    rather than a patch (019 step 18, 2026-10-05). ⚠ **`AGGREGATION_VALUES.COUNT`
+    is a different thing** — the `count` *value* of `hdml-field@aggregation`
+    — and survives.
   - ★ **Ten of the display enums carry 50 `initial-{slot}` members** (019
     step 15, item 1): the ten mark enums (`POINT_`, `BAR_`, `LINE_`, `AREA_`,
     `ARC_`, `RULE_`, `STACK_`, `CLUSTER_`, `PIE_`, `TEXT_`) declare an

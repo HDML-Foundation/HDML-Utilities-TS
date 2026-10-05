@@ -136,10 +136,10 @@ GitHub Actions then runs the **release.yml** workflow, which is
 `set -e && npm ci && npm run build --workspaces && npm publish --workspaces`.
 
 Versions are **lockstep** — all eight packages publish at the same version. Currently
-**0.0.2-alpha.24**. See [docs/integration.md#versioning](integration.md#versioning).
+**0.0.2-alpha.26**. See [docs/integration.md#versioning](integration.md#versioning).
 
 ```bash
-bash scripts/release.sh 0.0.2-alpha.25
+bash scripts/release.sh 0.0.2-alpha.26
 ```
 
 **`bash`, not `sh`, and not `./scripts/release.sh`.** The file is committed mode `100644`, so

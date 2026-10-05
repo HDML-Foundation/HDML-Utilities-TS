@@ -16,7 +16,7 @@
 ## Versioning
 
 **All eight packages publish at the same version.** A single semver string
-(`0.0.2-alpha.24` as of 019 step 16; the pass publishes `0.0.2-alpha.26` at step 18) is
+(`0.0.2-alpha.26` — published by 019 step 18 on 2026-10-05, tag `0.0.2-alpha.26`) is
 mirrored across every `packages/*/package.json` and every
 cross-package `@hdml/*` dependency. [scripts/release.sh](../scripts/release.sh) is the
 mechanism that enforces this — it sed-rewrites every `version` and every
@@ -28,7 +28,7 @@ Implications:
   Cross-version mixing is unsupported because the bufferify/objectify functions assume the
   generated struct shapes are identical.
 - `HDML-Components` (one repo over) lags this repo — track that drift in the workspace
-  root's [CLAUDE.md §3](../../../CLAUDE.md). This repo is at `0.0.2-alpha.24`.
+  root's [CLAUDE.md §3](../../../CLAUDE.md). This repo is at `0.0.2-alpha.26`.
   `TODO(confirm: what @hdml/* range HDML-Components pins at 7773be4 — not measured
   here, because 019 slice B does not open that repo. 019 step 40 bumps it.)`
 
