@@ -25,7 +25,7 @@ function isElement(node: null | ParentNode): node is Element {
 }
 
 /**
- * Whether the node is one of the 33 HDML elements. Membership of
+ * Whether the node is one of the 34 HDML elements. Membership of
  * `HDML_TAG_NAMES` rather than an `hdml-` prefix test, so a
  * misspelled `<hdml-fild>` is not treated as vocabulary.
  */

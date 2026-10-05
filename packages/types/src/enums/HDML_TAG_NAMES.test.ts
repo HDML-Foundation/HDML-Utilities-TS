@@ -25,6 +25,7 @@ import { POINT_ATTRS_LIST } from "./POINT_ATTRS_LIST";
 import { POLAR_PLANE_ATTRS_LIST } from "./POLAR_PLANE_ATTRS_LIST";
 import { RULE_ATTRS_LIST } from "./RULE_ATTRS_LIST";
 import { STACK_ATTRS_LIST } from "./STACK_ATTRS_LIST";
+import { TEXT_ATTRS_LIST } from "./TEXT_ATTRS_LIST";
 import { TICK_ATTRS_LIST } from "./TICK_ATTRS_LIST";
 import { VIEW_ATTRS_LIST } from "./VIEW_ATTRS_LIST";
 
@@ -58,7 +59,7 @@ const DATA_TAGS = [
 ];
 
 /**
- * The twenty-one display (HDVL) tags, in SPEC §2's inventory order.
+ * The twenty-two display (HDVL) tags, in SPEC §2's inventory order.
  */
 const DISPLAY_TAGS = [
   "hdml-view",
@@ -73,6 +74,7 @@ const DISPLAY_TAGS = [
   "hdml-point",
   "hdml-arc",
   "hdml-rule",
+  "hdml-text",
   "hdml-pie",
   "hdml-cluster",
   "hdml-stack",
@@ -108,6 +110,7 @@ const ATTRS_LISTS: Record<string, Record<string, string>> = {
   POLAR_PLANE_ATTRS_LIST,
   RULE_ATTRS_LIST,
   STACK_ATTRS_LIST,
+  TEXT_ATTRS_LIST,
   TICK_ATTRS_LIST,
   VIEW_ATTRS_LIST,
 };
@@ -134,8 +137,8 @@ const HIDDEN_OWNERS = [
 ];
 
 describe("HDML_TAG_NAMES", () => {
-  it("HDML_TAG_NAMES has exactly 33 members", () => {
-    expect(Object.keys(HDML_TAG_NAMES).length).toBe(33);
+  it("HDML_TAG_NAMES has exactly 34 members", () => {
+    expect(Object.keys(HDML_TAG_NAMES).length).toBe(34);
   });
 
   it("every tag name matches /^hdml-[a-z0-9-]+$/", () => {
@@ -146,7 +149,7 @@ describe("HDML_TAG_NAMES", () => {
 
   it("every tag name is unique", () => {
     const values = Object.values(HDML_TAG_NAMES);
-    expect(new Set(values).size).toBe(33);
+    expect(new Set(values).size).toBe(34);
   });
 
   it("the twelve data tags are unchanged", () => {
@@ -154,7 +157,7 @@ describe("HDML_TAG_NAMES", () => {
     expect(values.slice(0, 12)).toEqual(DATA_TAGS);
   });
 
-  it("the twenty-one display tags match SPEC §2's inventory", () => {
+  it("the twenty-two display tags match SPEC §2's inventory", () => {
     const values = Object.values(HDML_TAG_NAMES) as string[];
     expect(values.slice(12)).toEqual(DISPLAY_TAGS);
   });
@@ -162,7 +165,7 @@ describe("HDML_TAG_NAMES", () => {
 
 describe("*_ATTRS_LIST", () => {
   it("there is one enum per display element but hdml-fallback", () => {
-    expect(Object.keys(ATTRS_LISTS).length).toBe(20);
+    expect(Object.keys(ATTRS_LISTS).length).toBe(21);
   });
 
   it("every *_ATTRS_LIST value is unique within its enum", () => {

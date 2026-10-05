@@ -75,6 +75,7 @@ export { POINT_ATTRS_LIST } from "./enums/POINT_ATTRS_LIST";
 export { POLAR_PLANE_ATTRS_LIST } from "./enums/POLAR_PLANE_ATTRS_LIST";
 export { RULE_ATTRS_LIST } from "./enums/RULE_ATTRS_LIST";
 export { STACK_ATTRS_LIST } from "./enums/STACK_ATTRS_LIST";
+export { TEXT_ATTRS_LIST } from "./enums/TEXT_ATTRS_LIST";
 export { TICK_ATTRS_LIST } from "./enums/TICK_ATTRS_LIST";
 export { TIMEZONE_VALUES } from "./enums/TIMEZONE_VALUES";
 export { VIEW_ATTRS_LIST } from "./enums/VIEW_ATTRS_LIST";

@@ -33,8 +33,12 @@
  * (RFC 019/001 §4.7, RFC 019/002 §10.2 D11).
  *
  * ★ It must NOT be added to `HDML_TAG_NAMES.test.ts`'s
- * `ATTRS_LISTS` record, whose `:165` asserts the size is exactly
- * 20.
+ * `ATTRS_LISTS` record, whose "one enum per display element but
+ * hdml-fallback" case asserts the size is exactly 21. That
+ * record is display-element attribute enums only; this enum is
+ * neither, which is why it is deliberately absent from it. The
+ * case is cited by name as well as by line (`:168`) because
+ * the line has already moved once and the name has not.
  */
 export enum HDQL_DIAGNOSTIC_CODES {
   MISSING_FIELD_NAME = "missing-field-name",
