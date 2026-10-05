@@ -129,6 +129,74 @@ const HTML_GLOBALS = [
   "dir",
 ];
 
+/**
+ * The 50 slots that take an `initial-{slot}`, per element (RFC
+ * 019/001 §5.3). ★ Hard-coded, NOT derived from the enums: an enum
+ * member carries no mark of whether it is a slot, so `source`,
+ * `hidden`, `closed` and `offset` are indistinguishable from `x`
+ * and `color` by shape alone. This table is the seam 021 inherits
+ * (§5.6) stated as data — `initial-` plus the exact slot attribute
+ * name, no transformation — so moving a line in it is a decision,
+ * never a fix.
+ *
+ * The eleven display enums absent from it take none: the three
+ * scales, the two planes, the five guides and `hdml-view`. That is
+ * §5.6's right-hand column, and it is asserted below rather than
+ * left implicit.
+ */
+const SLOTS: Record<string, string[]> = {
+  POINT_ATTRS_LIST: ["x", "y", "angle", "radius", "color", "size"],
+  BAR_ATTRS_LIST: ["x", "x0", "x1", "y", "y0", "y1", "color"],
+  LINE_ATTRS_LIST: ["x", "y", "angle", "radius", "color"],
+  AREA_ATTRS_LIST: [
+    "x",
+    "x0",
+    "x1",
+    "y",
+    "y0",
+    "y1",
+    "angle",
+    "radius",
+    "r0",
+    "r1",
+    "color",
+  ],
+  ARC_ATTRS_LIST: [
+    "a0",
+    "a1",
+    "angle",
+    "radius",
+    "r0",
+    "r1",
+    "color",
+  ],
+  RULE_ATTRS_LIST: ["x", "y"],
+  STACK_ATTRS_LIST: ["x", "y"],
+  CLUSTER_ATTRS_LIST: ["x", "y"],
+  PIE_ATTRS_LIST: ["angle", "color"],
+  TEXT_ATTRS_LIST: ["x", "y", "angle", "radius", "color", "text"],
+};
+
+/**
+ * The four non-slot attributes, measured across the ten
+ * slot-bearing enums: `source` ×10, `hidden` ×3, `closed` ×2,
+ * `offset` ×1 — 16 of the 66 pre-item-1 members. None of them
+ * takes an `initial-`: `source` is the frame binding rather than a
+ * slot, and the other three are flags with no datum behind them.
+ */
+const NON_SLOTS = ["source", "hidden", "closed", "offset"];
+
+/**
+ * A display attribute value: a plain name, or `initial-` plus a
+ * plain name. ★ S3 decided the guard widens rather than the
+ * spelling bending, and named a hyphen-segmented regex; **D10**
+ * narrowed that to this optional prefix, because segmentation also
+ * admits `co-lor` and every other hyphen typo in the 123
+ * non-`initial` values, buying permissiveness nothing asked for.
+ * This spelling is RFC 019/001 §5.6's rule itself.
+ */
+const VALUE_PATTERN = /^(initial-)?[a-z][a-z0-9]*[0-9]?$/;
+
 /** The three elements on which `hidden` is vocabulary (SPEC §7, V17). */
 const HIDDEN_OWNERS = [
   "AREA_ATTRS_LIST",
@@ -178,12 +246,16 @@ describe("*_ATTRS_LIST", () => {
     }
   });
 
-  it("every *_ATTRS_LIST value matches /^[a-z][a-z0-9]*[0-9]?$/", () => {
+  it("every *_ATTRS_LIST value is a name or initial- a name", () => {
     for (const [name, list] of Object.entries(ATTRS_LISTS)) {
       for (const value of Object.values(list)) {
+        // S3: widened for item 1's 50 `initial-{slot}` members,
+        // whose values are the only hyphenated ones in any display
+        // enum. A new hyphenated attribute still reds here, which
+        // is a decision worth forcing rather than a fix.
         expect([name, value]).toEqual([
           name,
-          expect.stringMatching(/^[a-z][a-z0-9]*[0-9]?$/) as string,
+          expect.stringMatching(VALUE_PATTERN) as string,
         ]);
       }
     }
@@ -192,7 +264,14 @@ describe("*_ATTRS_LIST", () => {
   it("every *_ATTRS_LIST key is the value in SCREAMING_SNAKE", () => {
     for (const [name, list] of Object.entries(ATTRS_LISTS)) {
       for (const [key, value] of Object.entries(list)) {
-        expect([name, key]).toEqual([name, value.toUpperCase()]);
+        // S3: a hyphen becomes an underscore, so `initial-x0` keys
+        // as `INITIAL_X0` — house style and dot-accessible. Until
+        // item 1 no display value had a hyphen, so the bare
+        // `toUpperCase()` agreed with this title by accident.
+        expect([name, key]).toEqual([
+          name,
+          value.toUpperCase().replaceAll("-", "_"),
+        ]);
       }
     }
   });
@@ -213,5 +292,74 @@ describe("*_ATTRS_LIST", () => {
         HIDDEN_OWNERS.includes(name),
       ]);
     }
+  });
+});
+
+/**
+ * Item 1's `initial-{slot}` surface, asserted in BOTH directions
+ * against `SLOTS`.
+ *
+ * ★ The forward direction alone is not a gate. Every `initial-*`
+ * value equalling `"initial-" + v` for exactly one non-`initial`
+ * sibling is satisfied by a spurious `initial-source` as readily
+ * as by `initial-x`, and says nothing about a slot that is
+ * MISSING one — so a +1/−1 pair cancels inside the total and the
+ * whole set passes. The backward direction and the exclusion list
+ * are what close that, and the counts come last.
+ */
+describe("initial-{slot}", () => {
+  it("every initial-* names a slot of its own element", () => {
+    for (const [name, slots] of Object.entries(SLOTS)) {
+      for (const value of Object.values(ATTRS_LISTS[name])) {
+        if (!value.startsWith("initial-")) continue;
+        expect([name, value, slots.includes(value.slice(8))]).toEqual(
+          [name, value, true],
+        );
+      }
+    }
+  });
+
+  it("every slot has an initial-* on its own element", () => {
+    for (const [name, slots] of Object.entries(SLOTS)) {
+      const values = Object.values(ATTRS_LISTS[name]);
+      for (const slot of slots) {
+        expect([
+          name,
+          slot,
+          values.includes("initial-" + slot),
+        ]).toEqual([name, slot, true]);
+      }
+    }
+  });
+
+  it("no non-slot attribute has an initial-, in any enum", () => {
+    for (const [name, list] of Object.entries(ATTRS_LISTS)) {
+      const values = Object.values(list);
+      for (const banned of NON_SLOTS) {
+        expect([
+          name,
+          banned,
+          values.includes("initial-" + banned),
+        ]).toEqual([name, banned, false]);
+      }
+    }
+  });
+
+  it("the ten slot-bearing enums hold 50, the other eleven 0", () => {
+    let ten = 0;
+    let other = 0;
+    let others = 0;
+    for (const [name, list] of Object.entries(ATTRS_LISTS)) {
+      const n = Object.values(list).filter((v) =>
+        v.startsWith("initial-"),
+      ).length;
+      if (name in SLOTS) {
+        ten += n;
+      } else {
+        others += 1;
+        other += n;
+      }
+    }
+    expect([ten, others, other]).toEqual([50, 11, 0]);
   });
 });
