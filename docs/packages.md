@@ -313,6 +313,49 @@ purpose, because Go reads `json:"plugin,omitempty"`. An absent global leaves the
 ⚠ **Nothing compares it yet** — the Go side is 019 **step 24's** — so for one publish the
 field is written and unread.
 
+**The `diagnostics` field (019 step 26).** Both entries now carry **`diagnostics`** on
+**every** return shape — the parser on its manifest, the compiler on `connection` /
+`source` / `sql` / `effective` **and** its error path — `[]` when there is nothing to say,
+never omitted. Like `plugin` it is spread on at the **entry**, and for a stronger reason:
+RFC 019/002 §2.3's A3 makes the post-019 envelope the floor, so an **absent** set means
+*a skewed bundle*, and a single shape that omitted the key would make a correctly paired
+bundle read as skewed. ⓘ The asymmetry with `plugin` is deliberate — an absent
+`@hdml/version` global legitimately drops its field, while `[]` must always reach the wire.
+
+The shape is the parser's, exactly: **flat**
+`{ code, severity, message, path, line, column, offset }`, anchor members at the **top
+level**, spelled **`column`**, and `null` rather than omitted when the element carries no
+`loc`. ⚠ **There is no nested `anchor` object.** RFC 019/002 §2.1 sketches one and is the
+stale document: a reader written to it unmarshals *successfully* into a zero-valued anchor
+and silently discards every location, which is how it went unnoticed on the Go side for a
+release (019 C231). A test asserts the two emitters' **key sets are equal**.
+
+⚠⚠ **What the compiler's set does and does not contain.** `parseHDML` is the only emitter
+of HDQL diagnostics, and **`sql` is the only mode that calls it** — `connection`
+deserializes `ConnectionStruct`s, `source` re-stringifies structs, and `effective` parses
+only the HTML DOM. The other three therefore report `[]` **by construction, permanently**;
+that empty set is a structural fact, not an unwired leg, and must not be read as "the
+document is clean".
+
+★ And even `sql`'s set is **not the author's drop set**. The envelope carries post-parse
+`ModelStruct` / `FrameStruct` bytes, so anything the parser dropped at ingest is already
+absent from them and cannot be re-dropped: a badly authored document re-parses **clean**
+here, and its diagnostics live on the parser manifest instead (measured, 019 C234). What
+this set reports is **adaptation breaking the document for one role** — the one failure the
+ingest parse cannot see, because the policy is applied here and nowhere else. A
+`set-attribute` rule writing an unrecognized value *empties* the element it matched
+(`type="bogus"` on an `hdml-dataset` → `missing-dataset-attrs` and a model with **zero**
+datasets, whose SQL is a `with`/`select`/`from` Trino rejects), and before this field
+existed there was no record of that anywhere. ⓘ `remove-element` emits nothing — the
+element is gone before the parse, and its removal is what the policy asked for.
+
+★ **The anchors are the ADAPTED document's.** That parse runs *after* `applyAdaptation`, so
+every `path` ordinal counts siblings in the role-scoped tree: an anchor resolves against
+that role's `…/effective` document, never the author's source, and because the ordinals are
+same-tag, a policy that removed a sibling makes the same path point at a different element
+upstream. ⚠ **A diagnostic never fails the compile** (D11) — the envelope still carries a
+`result`, which is precisely why the set is the only signal that the result is wrong.
+
 **Compiler branch (`compiler.min.js`):** beyond the I/O helpers, `@hdml/hooks` ships the
 `hdml_compiler.wasm` body — the `connection` / `source` / `sql` / `effective` output modes
 ([compileConnections.ts](../packages/hooks/src/compileConnections.ts),
@@ -325,6 +368,8 @@ field is written and unread.
 |---|---|
 | `applyAdaptation(dom, policy, role): void` | Mutates the reconstructed-document DOM **in place** for the caller's single active `role` (single-role contract, Slice D D1). Selects only `policy.roles[role]` and applies its rules in **array order** — a later `set-attribute` on the same `(node, attribute)` overwrites an earlier one, so broad-then-specific resolves to the specific value (D5). `remove-element` deletes the matched element and its whole subtree; `set-attribute` writes `String(rule.value)` (Go `interface{}` → string coercion) to **any** attribute, structural ones (`source` / `identifier` / `name`) included — no allowlist (D6). A `${scope.*}` / `${env.*}` in a forced value is left literal here; in `sql` it runs **before** injection, which then resolves it. |
 | `AdaptationError` (extends `Error`) | Fail-loud carrier (D3): thrown on a selector the DOM rejects or an unknown `action`. The `sql` / `effective` branches' round-trip `try/catch` map it to `adaptation_failed`. |
+| `compile(deps, input, diagnostics?)` | Dispatches on `input.output`; unknown modes fall through to `invalid_output`. ★ `diagnostics` is forwarded to `compileSql` and **to nothing else** — the other three branches have no `parseHDML` call, so none can contribute an entry. Optional: the existing direct callers of the branches collect nothing. |
+| `compileSql(deps, input, diagnostics?)` | The `sql` mode. ★ The compiler's **only** producer of HDQL diagnostics, appended to by the post-adaptation `parseHDML`. ⚠ Reports **adaptation** damage, not authoring — see the `diagnostics` section above. |
 | `compileEffective(deps, input)` | The `effective` mode (Slice D, D2): reconstruct the document (shared `reconstructDocument`) → `parseHTML` → `applyAdaptation` for `input.role` → return `{ result: [dom.toString()] }`, length 1. **Stops** at the adapted DOM — no `parseHDML`, no `${…}` injection, no `getFrameSQL`, so templates stay literal. Lenient (no `missing_model` gate); with no policy / role it is byte-identical to `source` (D5). Errors: `structurize_failed` (reconstruct) \| `adaptation_failed` (parse / adapt / serialize). |
 
 No-op identity (D5): an absent `policy`, a `role` not in `policy.roles`, or a selector

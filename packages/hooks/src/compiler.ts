@@ -9,6 +9,8 @@
 // (provided by the Javy plugin): a broken hdio-javy-core link leaves
 // these undefined and throws at _start, so the link is load-bearing.
 // The `sql`/`source` modes also pull @hdml/parser (DOM round-trip).
+// The entry also owns the HDQL diagnostic sink and guarantees the
+// `diagnostics` field on every response shape -- see the write below.
 
 import type { readJson, writeJson } from "./index";
 import type {
@@ -25,7 +27,11 @@ import type {
   getModelSQL,
   getFrameSQL,
 } from "@hdml/stringifier";
-import type { parseHTML, parseHDML } from "@hdml/parser";
+import type {
+  parseHTML,
+  parseHDML,
+  HdqlDiagnostic,
+} from "@hdml/parser";
 import { CompilerInput } from "./compileConnections";
 import { compile } from "./compile";
 
@@ -84,6 +90,13 @@ const input = read<CompilerInput>();
 // the connection branch injects ${env.*} explicitly upstream.
 _export.env = input?.env ?? {};
 
+// Declared BEFORE the call so it is in scope in the write literal
+// below -- the same reason `buildManifest` declares its sink ahead of
+// its `try`. `compile` forwards it to the `sql` branch and to nothing
+// else; see `compile`'s docblock for why the other three modes cannot
+// contribute an entry.
+const diagnostics: HdqlDiagnostic[] = [];
+
 const result = compile(
   {
     deserialize: des,
@@ -100,6 +113,7 @@ const result = compile(
     StructType: structType,
   },
   input ?? {},
+  diagnostics,
 );
 
 // A4's version echo (RFC 019/002 §4.6, specified there once and
@@ -126,4 +140,32 @@ const result = compile(
 // FAILS is exactly the case you most want versioned (C153, D11).
 // An absent global leaves `plugin` undefined, which `JSON.stringify`
 // drops -- the `omitempty` the Go side already expects.
-write({ ...result, plugin: _export["@hdml/version"] });
+//
+// ★ `diagnostics` is spread here for the SAME reason and at the SAME
+// site, and the placement is the whole point of it (RFC 019/002 §2.3,
+// A3): the post-019 envelope is the floor, so an ABSENT set means a
+// skewed bundle rather than "this version has nothing to say". If any
+// one of the five return shapes omitted the key, a correctly paired
+// bundle would read as skewed on that shape -- so the guarantee has
+// to be total, and one site is the only way it can be. `[]` survives
+// `JSON.stringify` (unlike an undefined `plugin`), which is exactly
+// the asymmetry the floor needs: the version echo may be absent, the
+// diagnostic set may not.
+//
+// ⚠ It is spread AFTER `...result` deliberately. No branch sets the
+// key today; if one ever does, the sink -- which is what the parse
+// actually appended to -- must win over a branch's local guess.
+//
+// ⚠⚠ The shape is FLAT and the anchor member is spelled `column`:
+// `drainDiagnostics` returns `{code, severity, message, path, line,
+// column, offset}` with `null` rather than an omitted key, and the Go
+// reader follows the wire (019 step 26's C231 -- a nested `anchor`
+// object unmarshals SUCCESSFULLY into a zero value and silently
+// discards every location, so the mismatch has no error value).
+// RFC 019/002 §2.1's nested sketch is the stale document; this is the
+// contract, and 022 is written against it.
+write({
+  ...result,
+  diagnostics,
+  plugin: _export["@hdml/version"],
+});
