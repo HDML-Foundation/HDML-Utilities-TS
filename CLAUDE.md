@@ -72,13 +72,14 @@ Per-format compile targets (`compile_cjs`, `compile_esm`, `compile_dts`, `compil
 | Every runtime `index.ts` registers itself on `globalThis["@hdml/<name>"]` (Javy/WASM linkage) | each package's `src/index.ts` | [docs/integration.md#globalthis-convention-every-runtime-entry-point](docs/integration.md#globalthis-convention-every-runtime-entry-point) |
 | `@hdml/hooks` ABI = `Javy.IO.readSync/writeSync` on fds 0/1/2 | [packages/hooks/src/types/global.ts](packages/hooks/src/types/global.ts) | [docs/integration.md#wasm-host-abi-hdio-server--hdmlhooks](docs/integration.md#wasm-host-abi-hdio-server--hdmlhooks) |
 | All eight packages publish at the **same** semver | [scripts/release.sh](scripts/release.sh) | [docs/integration.md#versioning](docs/integration.md#versioning) |
+| ★★ **The HDML authoring vocabulary is FROZEN at `0.0.2-alpha.27`** (2026-10-13, project 019's closeout). `HDML_TAG_NAMES` is **34** members, the `*_ATTRS_LIST` enums are the v1 attribute surface, and `HDQL_DIAGNOSTIC_CODES` is **11**. These are closed sets: a change to any of them is a breaking change and needs a project that says so. | [@hdml/types](packages/types/src/) | [docs/packages.md](docs/packages.md#hdmltypes) |
 
 ## Cross-repo dependencies
 
 | Other repo | What flows where | Notes |
 |---|---|---|
 | `HDML-Schemas` (submodule) | `.fbs` → `@hdml/schemas` (via `flatc --ts`) | Pinned by git SHA. Schema changes are breaking. [docs/schemas.md](docs/schemas.md) |
-| `HDML-Components` | npm consumes `@hdml/parser`, `@hdml/types`, `@hdml/schemas`, etc. | Currently one alpha behind; bump together. |
+| `HDML-Components` | npm consumes `@hdml/parser`, `@hdml/types`, `@hdml/common`, `@hdml/hash`, `@hdml/buffer` | **Aligned at `0.0.2-alpha.27`** since 019 step 41, pinned exactly (no caret); bump together. |
 | `HDIO-Javy-Plugin` | `npm ci` in its `.hdml/` pulls `@hdml/*` → bundled into `hdio.wasm` | Tenant hooks resolve `@hdml/*` via `globalThis`. |
 | `HDIO-Server` | Embeds `hdio.wasm`; also pulls `.fbs` directly via its own submodule and `flatc --go` | TS isn't consumed; Go bindings are. Both must come from the same `flatc`/schema rev. |
 

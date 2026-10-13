@@ -159,6 +159,16 @@ emit them):
 - `HDQL_DIAGNOSTIC_CODES` — the 11 reasons `parseHDML` drops an element, each
   reported as an out-parameter diagnostic rather than thrown. The 11th,
   `misplaced-key`, arrived with `hdml-field@key` at 019 step 11.
+  ★ **Published deliberately ahead of its only consumer.** Measured at 019's
+  closeout, **nothing in HDML-Components imports this enum**, and the
+  browser's one `parseHDML` call (`src/hdio/parse.ts`) passes no diagnostics
+  array, so it collects nothing. That is by design, not an omission: HDQL
+  diagnostics are meant to reach an author through the **server** envelope
+  (`Manifest.diagnostics` → the compiler envelope →
+  `QueryStatusResponse.diagnostics`), while the browser's `HDML.diagnostics()`
+  stays purely HDVL. The first importer will be project 022's renderer, and
+  wiring a local collector in the browser would contradict that split. Do not
+  "fix" it by adding a consumer.
 
 **No runtime side-effects.** Pure types + constants. `test` script is intentionally empty.
 
